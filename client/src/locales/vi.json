@@ -1,0 +1,234 @@
+{
+  "counter": "Khắc chế",
+  "combo_kill": "Combo Kill",
+  "skill": "Kỹ năng",
+  "meta_tier": "Meta Tier",
+  "win_rate": "Tỉ lệ thắng",
+  "pick_rate": "Tỉ lệ chọn",
+  "ban_rate": "Tỉ lệ cấm",
+  "back_to_list": "← Quay lại danh sách",
+  "ally": "Đồng minh",
+  "allies": "Đồng minh",
+  "skin": "Trang phục",
+  "lore": "Xuất thân",
+  "role": "Vai trò",
+  "lane": "Đường",
+  "skills": "Kỹ năng",
+  "description": "Mô tả",
+  "no_data": "Không có dữ liệu",
+  "nav": {
+    "home": "Trang chủ",
+    "heroes": "Tướng",
+    "equipment": "Trang bị",
+    "arcana": "Arcana",
+    "meta": "Meta",
+    "news": "Tin tức"
+  },
+  "home": {
+    "welcome": {
+      "title": "Chào mừng đến với BlogHok!",
+      "subtitle": "Nơi chia sẻ thông tin tướng, trang bị, ngọc và meta game mới nhất."
+    },
+    "featured": {
+      "title": "Bài viết nổi bật"
+    },
+    "latest": {
+      "title": "Bài viết mới nhất"
+    },
+    "champions": {
+      "title": "Tướng nổi bật"
+    },
+    "items": {
+      "title": "Trang bị hot"
+    }
+  },
+  "footer": {
+    "about": {
+      "title": "Về BlogHok",
+      "description": "BlogHok là nơi chia sẻ thông tin, hướng dẫn và cập nhật mới nhất về game Honor of Kings."
+    },
+    "links": {
+      "title": "Liên kết nhanh"
+    },
+    "contact": {
+      "title": "Liên hệ",
+      "email": "contact@bloghok.com"
+    },
+    "copyright": "Bản quyền thuộc về BlogHok",
+    "privacy": "Chính sách bảo mật",
+    "terms": "Điều khoản sử dụng"
+  },
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "notFound": "Không tìm thấy trang",
+    "backToHome": "Về trang chủ",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "update": "Cập nhật",
+    "create": "Tạo",
+    "add": "Thêm",
+    "upload": "Upload",
+    "actions": "Thao tác",
+    "name": "Tên",
+    "image": "Ảnh",
+    "tier": "Cấp độ",
+    "sort": "Sắp xếp",
+    "price": "Giá",
+    "logout": "Đăng xuất"
+  },
+  "heroes": {
+    "title": "Danh sách Tướng",
+    "name": "Tên",
+    "title": "Danh sách tướng",
+    "roles": "Vai trò",
+    "lanes": "Đường",
+    "metaTier": "Xếp hạng Meta",
+    "winRate": "Tỷ lệ thắng",
+    "pickRate": "Tỷ lệ chọn",
+    "banRate": "Tỷ lệ cấm",
+    "skills": "Kỹ năng",
+    "allies": "Đồng minh",
+    "counters": "Đối thủ",
+    "lore": "Tiểu sử",
+    "profile": "Hồ sơ",
+    "combo": "Combo",
+    "skins": "Trang phục"
+  },
+  "equipment": {
+    "title": "Trang bị",
+    "search": "Tìm kiếm trang bị...",
+    "filter": "Lọc theo loại",
+    "noResults": "Không tìm thấy trang bị",
+    "mainEffect": "Tác dụng chính",
+    "activeEffect": "Chủ động",
+    "passiveEffect": "Bị động",
+    "categories": {
+      "all": "Tất cả",
+      "attack": "Tấn công",
+      "defense": "Phòng thủ",
+      "magic": "Phép thuật",
+      "movement": "Di chuyển",
+      "jungle": "Rừng",
+      "support": "Hỗ trợ",
+      "boots": "Giày"
+    },
+    "sortName": "Tên (A-Z)",
+    "sortPrice": "Giá (Cao → Thấp)"
+  },
+  "arcana": {
+    "title": "Arcana",
+    "search": "Tìm kiếm arcana...",
+    "filter": "Lọc theo màu",
+    "noResults": "Không tìm thấy arcana",
+    "colors": {
+      "all": "Tất cả màu",
+      "red": "Đỏ",
+      "blue": "Xanh dương",
+      "green": "Xanh lá"
+    },
+    "tiers": {
+      "all": "Tất cả cấp",
+      "1": "Cấp 1",
+      "2": "Cấp 2",
+      "3": "Cấp 3"
+    },
+    "attributes": "Thuộc tính",
+    "effects": "Hiệu ứng",
+    "recommendedFor": "Phù hợp với"
+  },
+  "news": {
+    "title": "Tiêu đề",
+    "pageTitle": "Tin tức & Cập nhật",
+    "latestNews": "Tin tức mới nhất",
+    "readMore": "Đọc thêm",
+    "noNews": "Không có tin tức",
+    "search": "Tìm kiếm bài viết...",
+    "filter": "Lọc theo phân loại",
+    "sort": "Sắp xếp",
+    "sort.latest": "Mới nhất",
+    "sort.oldest": "Cũ nhất",
+    "sort.title": "Tiêu đề (A-Z)",
+    "noResults": "Không tìm thấy bài viết nào",
+    "categories": {
+      "all": "Tất cả",
+      "guides": "Hướng dẫn",
+      "updates": "Cập nhật",
+      "events": "Sự kiện",
+      "esports": "Thể thao điện tử"
+    },
+    "author": "Tác giả",
+    "publishDate": "Ngày đăng",
+    "category": "Phân loại",
+    "content": "Nội dung",
+    "relatedPosts": "Bài viết liên quan",
+    "sameCategoryPosts": "Cùng danh mục",
+    "featuredPosts": "Bài viết nổi bật",
+    "prevPost": "Bài trước",
+    "nextPost": "Bài tiếp"
+  },
+  "admin": {
+    "title": "Quản trị",
+    "addPost": "Thêm bài viết mới",
+    "editPost": "Chỉnh sửa bài viết",
+    "postList": "Danh sách bài viết",
+    "addArcana": "Thêm Arcana mới",
+    "arcanaList": "Danh sách Arcana",
+    "addSuccess": "Thêm thành công!",
+    "updateSuccess": "Cập nhật thành công!",
+    "deleteConfirm": "Bạn có chắc chắn muốn xóa?",
+    "fillRequired": "Vui lòng điền đầy đủ thông tin bắt buộc",
+    "uploadError": "Upload ảnh thất bại",
+    "markdownHelp": "Hỗ trợ Markdown: **bold**, *italic*, [link](url), ![image](url)",
+    "changeImage": "Thay đổi ảnh",
+    "uploadImage": "Upload ảnh",
+    "uploadNewImage": "Upload ảnh mới",
+    "mainAttributes": "Thuộc tính chính",
+    "noData": "Không có dữ liệu",
+    "createdAt": "Ngày tạo"
+  },
+  "meta": {
+    "title": "Meta Tướng",
+    "description": "Danh sách các tướng đang mạnh trong meta hiện tại, được xếp hạng từ S đến C tier",
+    "roles": {
+      "all": "Tất cả vai trò"
+    },
+    "tiers": {
+      "all": "Tất cả tier",
+      "S": "S Tier",
+      "A": "A Tier",
+      "B": "B Tier",
+      "C": "C Tier"
+    },
+    "tierLabels": {
+      "S": "S - Cực mạnh",
+      "A": "A - Rất mạnh",
+      "B": "B - Mạnh",
+      "C": "C - Ổn định"
+    },
+    "noHeroes": "Không tìm thấy tướng nào trong meta",
+    "heroCount": "tướng"
+  },
+  "lanes": {
+    "Farm Lane": "Đường rồng",
+    "Jungle": "Rừng",
+    "Mid Lane": "Đường giữa",
+    "Abyssal Dragon Lane": "Đường rồng",
+    "Dark Slayer Lane": "Đường Caesar"
+  },
+  "roles": {
+    "Marksman": "Xạ thủ",
+    "Mage": "Pháp sư",
+    "Tank": "Đỡ đòn",
+    "Support": "Hỗ trợ",
+    "Assassin": "Sát thủ",
+    "Fighter": "Đấu sĩ"
+  },
+  "hero": {
+    "skills": "Kỹ năng",
+    "skins": "Trang phục",
+    "origin": "Xuất thân"
+  }
+} 

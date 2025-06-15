@@ -1,0 +1,234 @@
+{
+  "counter": "Counter",
+  "combo_kill": "Combo Kill",
+  "skill": "Skill",
+  "meta_tier": "Meta Tier",
+  "win_rate": "Win Rate",
+  "pick_rate": "Pick Rate",
+  "ban_rate": "Ban Rate",
+  "back_to_list": "← Back to list",
+  "ally": "Ally",
+  "allies": "Allies",
+  "skin": "Skins",
+  "lore": "Lore",
+  "role": "Role",
+  "lane": "Lane",
+  "skills": "Skills",
+  "description": "Description",
+  "no_data": "No data available",
+  "nav": {
+    "home": "Home",
+    "heroes": "Heroes",
+    "equipment": "Equipment",
+    "arcana": "Arcana",
+    "meta": "Meta",
+    "news": "News"
+  },
+  "home": {
+    "welcome": {
+      "title": "Welcome to BlogHok!",
+      "subtitle": "Your source for the latest champion, item, rune, and meta game information."
+    },
+    "featured": {
+      "title": "Featured Posts"
+    },
+    "latest": {
+      "title": "Latest Posts"
+    },
+    "champions": {
+      "title": "Featured Champions"
+    },
+    "items": {
+      "title": "Hot Items"
+    }
+  },
+  "footer": {
+    "about": {
+      "title": "About BlogHok",
+      "description": "BlogHok is your go-to source for Honor of Kings guides, updates, and the latest meta information."
+    },
+    "links": {
+      "title": "Quick Links"
+    },
+    "contact": {
+      "title": "Contact",
+      "email": "contact@bloghok.com"
+    },
+    "copyright": "All rights reserved",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "notFound": "Page not found",
+    "backToHome": "Back to Home",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "update": "Update",
+    "create": "Create",
+    "add": "Add",
+    "upload": "Upload",
+    "actions": "Actions",
+    "name": "Name",
+    "image": "Image",
+    "tier": "Tier",
+    "sort": "Sort",
+    "price": "Price",
+    "logout": "Logout"
+  },
+  "heroes": {
+    "title": "Hero List",
+    "name": "Name",
+    "title": "Hero List",
+    "roles": "Roles",
+    "lanes": "Lanes",
+    "metaTier": "Meta Tier",
+    "winRate": "Win Rate",
+    "pickRate": "Pick Rate",
+    "banRate": "Ban Rate",
+    "skills": "Skills",
+    "allies": "Allies",
+    "counters": "Counters",
+    "lore": "Lore",
+    "profile": "Profile",
+    "combo": "Combo",
+    "skins": "Skins"
+  },
+  "equipment": {
+    "title": "Equipment",
+    "search": "Search equipment...",
+    "filter": "Filter by category",
+    "noResults": "No equipment found",
+    "mainEffect": "Main Effect",
+    "activeEffect": "Active",
+    "passiveEffect": "Passive",
+    "categories": {
+      "all": "All categories",
+      "attack": "Attack",
+      "defense": "Defense",
+      "magic": "Magic",
+      "movement": "Movement",
+      "jungle": "Jungle",
+      "support": "Support",
+      "boots": "Boots"
+    },
+    "sortName": "Name (A-Z)",
+    "sortPrice": "Price (High → Low)"
+  },
+  "arcana": {
+    "title": "Arcana",
+    "search": "Search arcana...",
+    "filter": "Filter by color",
+    "noResults": "No arcana found",
+    "colors": {
+      "all": "All colors",
+      "red": "Red",
+      "blue": "Blue",
+      "green": "Green"
+    },
+    "tiers": {
+      "all": "All tiers",
+      "1": "Tier 1",
+      "2": "Tier 2",
+      "3": "Tier 3"
+    },
+    "attributes": "Attributes",
+    "effects": "Effects",
+    "recommendedFor": "Recommended for"
+  },
+  "news": {
+    "title": "Title",
+    "pageTitle": "News & Updates",
+    "latestNews": "Latest News",
+    "readMore": "Read More",
+    "noNews": "No news available",
+    "search": "Search articles...",
+    "filter": "Filter by category",
+    "sort": "Sort by",
+    "sort.latest": "Latest",
+    "sort.oldest": "Oldest",
+    "sort.title": "Title (A-Z)",
+    "noResults": "No articles found",
+    "categories": {
+      "all": "All categories",
+      "guides": "Guides",
+      "updates": "Updates",
+      "events": "Events",
+      "esports": "Esports"
+    },
+    "author": "Author",
+    "publishDate": "Published on",
+    "category": "Category",
+    "content": "Content",
+    "relatedPosts": "Related Posts",
+    "sameCategoryPosts": "Same Category",
+    "featuredPosts": "Featured Posts",
+    "prevPost": "Previous",
+    "nextPost": "Next"
+  },
+  "admin": {
+    "title": "Administration",
+    "addPost": "Add New Post",
+    "editPost": "Edit Post",
+    "postList": "Post List",
+    "addArcana": "Add New Arcana",
+    "arcanaList": "Arcana List",
+    "addSuccess": "Added successfully!",
+    "updateSuccess": "Updated successfully!",
+    "deleteConfirm": "Are you sure you want to delete?",
+    "fillRequired": "Please fill in all required fields",
+    "uploadError": "Image upload failed",
+    "markdownHelp": "Markdown support: **bold**, *italic*, [link](url), ![image](url)",
+    "changeImage": "Change image",
+    "uploadImage": "Upload image",
+    "uploadNewImage": "Upload new image",
+    "mainAttributes": "Main attributes",
+    "noData": "No data",
+    "createdAt": "Created at"
+  },
+  "meta": {
+    "title": "Meta Heroes",
+    "description": "List of currently strong heroes in the meta, ranked from S to C tier",
+    "roles": {
+      "all": "All roles"
+    },
+    "tiers": {
+      "all": "All tiers",
+      "S": "S Tier",
+      "A": "A Tier",
+      "B": "B Tier",
+      "C": "C Tier"
+    },
+    "tierLabels": {
+      "S": "S - Overpowered",
+      "A": "A - Very Strong",
+      "B": "B - Strong",
+      "C": "C - Balanced"
+    },
+    "noHeroes": "No heroes found in meta",
+    "heroCount": "heroes"
+  },
+  "lanes": {
+    "Farm Lane": "Farm Lane",
+    "Jungle": "Jungle",
+    "Mid Lane": "Mid Lane",
+    "Abyssal Dragon Lane": "Abyssal Dragon Lane",
+    "Dark Slayer Lane": "Dark Slayer Lane"
+  },
+  "roles": {
+    "Marksman": "Marksman",
+    "Mage": "Mage",
+    "Tank": "Tank",
+    "Support": "Support",
+    "Assassin": "Assassin",
+    "Fighter": "Fighter"
+  },
+  "hero": {
+    "skills": "Skills",
+    "skins": "Skins",
+    "origin": "Lore"
+  }
+} 

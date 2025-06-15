@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'Tuffy';
+  src: url('/fonts/Tuffy-Regular.ttf') format('truetype');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+body {
+  margin: 0;
+  font-family: 'Tuffy', serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.MuiGrid-root > .MuiGrid-item {
+  padding-left: 0 !important;
+  padding-top: 0 !important;
+}

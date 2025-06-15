@@ -1,0 +1,195 @@
+{
+  "counter": "Penangkal",
+  "combo_kill": "Combo Kill",
+  "skill": "Skill",
+  "meta_tier": "Meta Tier",
+  "win_rate": "Tingkat Kemenangan",
+  "pick_rate": "Tingkat Pilihan",
+  "ban_rate": "Tingkat Larangan",
+  "back_to_list": "← Kembali ke daftar",
+  "ally": "Sekutu",
+  "allies": "Sekutu",
+  "skin": "Skin",
+  "lore": "Asal-usul",
+  "role": "Peran",
+  "lane": "Jalur",
+  "skills": "Skill",
+  "description": "Deskripsi",
+  "no_data": "Tidak ada data",
+  "nav": {
+    "home": "Beranda",
+    "champions": "Champion",
+    "items": "Item",
+    "arcana": "Arcana",
+    "meta": "Meta",
+    "news": "Berita"
+  },
+  "home": {
+    "welcome": {
+      "title": "Selamat Datang di BlogHok!",
+      "subtitle": "Sumber informasi terbaru tentang champion, item, rune, dan meta game."
+    },
+    "featured": {
+      "title": "Artikel Unggulan"
+    },
+    "latest": {
+      "title": "Artikel Terbaru"
+    },
+    "champions": {
+      "title": "Champion Unggulan"
+    },
+    "items": {
+      "title": "Item Populer"
+    }
+  },
+  "footer": {
+    "about": {
+      "title": "Tentang BlogHok",
+      "description": "BlogHok adalah sumber informasi terpercaya untuk panduan, pembaruan, dan informasi meta terbaru Honor of Kings."
+    },
+    "links": {
+      "title": "Tautan Cepat"
+    },
+    "contact": {
+      "title": "Kontak",
+      "email": "contact@bloghok.com"
+    },
+    "copyright": "Hak Cipta Dilindungi",
+    "privacy": "Kebijakan Privasi",
+    "terms": "Syarat Penggunaan"
+  },
+  "common": {
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan",
+    "notFound": "Halaman tidak ditemukan",
+    "backToHome": "Kembali ke Beranda",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "cancel": "Batal",
+    "save": "Simpan",
+    "update": "Perbarui",
+    "create": "Buat",
+    "add": "Tambah",
+    "upload": "Upload",
+    "actions": "Aksi",
+    "name": "Nama",
+    "image": "Gambar",
+    "tier": "Tingkat",
+    "sort": "Urutkan",
+    "price": "Harga",
+    "logout": "Keluar"
+  },
+  "heroes": {
+    "title": "Daftar Hero",
+    "name": "Nama",
+    "title": "Daftar Pahlawan",
+    "roles": "Peran",
+    "lanes": "Jalur",
+    "metaTier": "Tier Meta",
+    "winRate": "Tingkat Kemenangan",
+    "pickRate": "Tingkat Pemilihan",
+    "banRate": "Tingkat Larangan",
+    "skills": "Kemampuan",
+    "allies": "Sekutu",
+    "counters": "Penangkal",
+    "lore": "Kisah",
+    "profile": "Profil",
+    "combo": "Combo",
+    "skins": "Kulit"
+  },
+  "items": {
+    "title": "Item",
+    "search": "Cari item...",
+    "filter": "Filter berdasarkan kategori",
+    "noResults": "Item tidak ditemukan"
+  },
+  "arcana": {
+    "title": "Arcana",
+    "search": "Cari arcana...",
+    "filter": "Filter berdasarkan warna",
+    "noResults": "Tidak ditemukan arcana",
+    "colors": {
+      "all": "Semua warna",
+      "red": "Merah",
+      "blue": "Biru",
+      "green": "Hijau"
+    },
+    "tiers": {
+      "all": "Semua tingkat",
+      "1": "Tingkat 1",
+      "2": "Tingkat 2",
+      "3": "Tingkat 3"
+    },
+    "attributes": "Atribut",
+    "effects": "Efek",
+    "recommendedFor": "Direkomendasikan untuk"
+  },
+  "news": {
+    "title": "Judul",
+    "pageTitle": "Berita & Pembaruan",
+    "latestNews": "Berita Terbaru",
+    "readMore": "Baca Selengkapnya",
+    "noNews": "Tidak ada berita",
+    "search": "Cari artikel...",
+    "filter": "Filter berdasarkan kategori",
+    "sort": "Urut berdasarkan",
+    "sort.latest": "Terbaru",
+    "sort.oldest": "Terlama",
+    "sort.title": "Judul (A-Z)",
+    "noResults": "Artikel tidak ditemukan",
+    "categories": {
+      "all": "Semua kategori",
+      "guides": "Panduan",
+      "updates": "Pembaruan",
+      "events": "Acara",
+      "esports": "Esports"
+    },
+    "author": "Penulis",
+    "publishDate": "Diterbitkan pada",
+    "category": "Kategori",
+    "content": "Konten"
+  },
+  "lanes": {
+    "Farm Lane": "Jalur Bawah",
+    "Jungle": "Hutan",
+    "Mid Lane": "Jalur Tengah",
+    "Abyssal Dragon Lane": "Jalur Naga",
+    "Dark Slayer Lane": "Jalur Dark Slayer"
+  },
+  "roles": {
+    "Marksman": "Penembak Jitu",
+    "Mage": "Penyihir",
+    "Tank": "Tank",
+    "Support": "Pendukung",
+    "Assassin": "Pembunuh",
+    "Fighter": "Petarung"
+  },
+  "hero": {
+    "skills": "Skill",
+    "skins": "Skin",
+    "origin": "Asal-usul"
+  },
+  "news": {
+    "title": "Berita",
+    "author": "Penulis",
+    "publishDate": "Tanggal Terbit",
+    "content": "Konten",
+    "category": "Kategori",
+    "relatedPosts": "Artikel Terkait",
+    "sameCategoryPosts": "Kategori Sama",
+    "featuredPosts": "Artikel Unggulan",
+    "prevPost": "Sebelumnya",
+    "nextPost": "Selanjutnya",
+    "categories": {
+      "general": "Umum",
+      "update": "Pembaruan",
+      "guide": "Panduan",
+      "event": "Acara",
+      "patch": "Patch"
+    }
+  },
+  "equipment": {
+    "sortName": "Nama (A-Z)",
+    "sortPrice": "Harga (Tinggi → Rendah)"
+  }
+}

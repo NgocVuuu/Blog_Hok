@@ -1,0 +1,194 @@
+{
+  "counter": "克制",
+  "combo_kill": "连招击杀",
+  "skill": "技能",
+  "meta_tier": "版本等级",
+  "win_rate": "胜率",
+  "pick_rate": "选择率",
+  "ban_rate": "禁用率",
+  "back_to_list": "← 返回列表",
+  "ally": "盟友",
+  "allies": "盟友",
+  "skin": "皮肤",
+  "lore": "背景故事",
+  "role": "角色",
+  "lane": "路线",
+  "skills": "技能",
+  "description": "描述",
+  "no_data": "暂无数据",
+  "nav": {
+    "home": "首页",
+    "heroes": "英雄",
+    "items": "装备",
+    "arcana": "奥义",
+    "meta": "版本",
+    "news": "新闻"
+  },
+  "home": {
+    "welcome": {
+      "title": "欢迎来到 BlogHok！",
+      "subtitle": "获取最新的英雄、装备、符文和版本信息。"
+    },
+    "featured": {
+      "title": "精选文章"
+    },
+    "latest": {
+      "title": "最新文章"
+    },
+    "champions": {
+      "title": "热门英雄"
+    },
+    "items": {
+      "title": "热门装备"
+    }
+  },
+  "footer": {
+    "about": {
+      "title": "关于 BlogHok",
+      "description": "BlogHok 是您获取王者荣耀攻略、更新和最新版本信息的首选来源。"
+    },
+    "links": {
+      "title": "快速链接"
+    },
+    "contact": {
+      "title": "联系我们",
+      "email": "contact@bloghok.com"
+    },
+    "copyright": "版权所有",
+    "privacy": "隐私政策",
+    "terms": "使用条款"
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "发生错误",
+    "notFound": "页面未找到",
+    "backToHome": "返回首页",
+    "edit": "编辑",
+    "delete": "删除",
+    "cancel": "取消",
+    "save": "保存",
+    "update": "更新",
+    "create": "创建",
+    "add": "添加",
+    "upload": "上传",
+    "actions": "操作",
+    "name": "名称",
+    "image": "图片",
+    "tier": "等级",
+    "sort": "排序",
+    "price": "价格",
+    "logout": "退出"
+  },
+  "heroes": {
+    "title": "英雄列表",
+    "name": "名称",
+    "roles": "角色",
+    "lanes": "路线",
+    "metaTier": "版本等级",
+    "winRate": "胜率",
+    "pickRate": "选择率",
+    "banRate": "禁用率",
+    "skills": "技能",
+    "allies": "盟友",
+    "counters": "克制",
+    "lore": "背景故事",
+    "profile": "资料",
+    "combo": "连招",
+    "skins": "皮肤"
+  },
+  "hero": {
+    "skills": "技能",
+    "skins": "皮肤",
+    "origin": "背景故事"
+  },
+  "items": {
+    "title": "装备",
+    "search": "搜索装备...",
+    "filter": "按类别筛选",
+    "noResults": "未找到装备"
+  },
+  "arcana": {
+    "title": "奥义",
+    "search": "搜索奥义...",
+    "filter": "按颜色筛选",
+    "noResults": "未找到奥义",
+    "colors": {
+      "all": "所有颜色",
+      "red": "红色",
+      "blue": "蓝色",
+      "green": "绿色"
+    },
+    "tiers": {
+      "all": "所有等级",
+      "1": "1级",
+      "2": "2级",
+      "3": "3级"
+    },
+    "attributes": "属性",
+    "effects": "效果",
+    "recommendedFor": "推荐给"
+  },
+  "news": {
+    "title": "标题",
+    "pageTitle": "新闻与更新",
+    "latestNews": "最新消息",
+    "readMore": "阅读更多",
+    "noNews": "暂无新闻",
+    "search": "搜索文章...",
+    "filter": "按类别筛选",
+    "sort": "排序方式",
+    "sort.latest": "最新",
+    "sort.oldest": "最早",
+    "sort.title": "标题 (A-Z)",
+    "noResults": "未找到文章",
+    "categories": {
+      "all": "所有类别",
+      "guides": "指南",
+      "updates": "更新",
+      "events": "活动",
+      "esports": "电子竞技"
+    },
+    "author": "作者",
+    "publishDate": "发布日期",
+    "category": "类别",
+    "content": "内容",
+    "relatedPosts": "相关文章",
+    "sameCategoryPosts": "同类文章",
+    "featuredPosts": "精选文章",
+    "prevPost": "上一篇",
+    "nextPost": "下一篇"
+  },
+  "lanes": {
+    "Farm Lane": "龙路",
+    "Mid Lane": "中路",
+    "Roam": "游走",
+    "Jungle": "打野",
+    "Abyssal Lane": "深渊路"
+  },
+  "roles": {
+    "Marksman": "射手",
+    "Mage": "法师",
+    "Tank": "坦克",
+    "Support": "辅助",
+    "Assassin": "刺客",
+    "Fighter": "战士"
+  },
+  "champion": {
+    "skills": "技能",
+    "skins": "皮肤",
+    "origin": "背景",
+    "meta_tier": "版本等级",
+    "win_rate": "胜率",
+    "pick_rate": "选择率",
+    "ban_rate": "禁用率",
+    "back_to_list": "← 返回列表",
+    "ally": "盟友",
+    "allies": "盟友",
+    "counter": "克制",
+    "combo_kill": "连招击杀"
+  },
+  "equipment": {
+    "sortName": "名称 (A-Z)",
+    "sortPrice": "价格 (高 → 低)"
+  }
+}

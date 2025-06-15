@@ -1,0 +1,145 @@
+.navbar {
+  background: linear-gradient(90deg, #1a1a1a 0%, #2d2d2d 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+  background: linear-gradient(45deg, #C9A063, #ffa500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nav-links .MuiButton-root {
+  font-weight: 500;
+  text-transform: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.language-selector {
+  margin-left: 1rem;
+}
+
+.language-selector .MuiIconButton-root {
+  transition: transform 0.3s ease;
+}
+
+.language-selector .MuiIconButton-root:hover {
+  transform: scale(1.1);
+}
+
+.MuiMenu-paper {
+  background: rgba(30, 30, 40, 0.85) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37) !important;
+  backdrop-filter: blur(8px) !important;
+  border-radius: 18px !important;
+  border: 1.5px solid #C9A063 !important;
+  min-width: 180px !important;
+  animation: menu-fade-in 0.35s cubic-bezier(0.4,0,0.2,1);
+  overflow: hidden !important;
+}
+@keyframes menu-fade-in {
+  0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.MuiMenuItem-root {
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #fff !important;
+  border-radius: 10px !important;
+  margin: 4px 8px !important;
+  transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.MuiMenuItem-root:hover, .MuiMenuItem-root:focus {
+  background: linear-gradient(90deg, #ffd70033 0%, #a259ff33 100%) !important;
+  color: #C9A063 !important;
+  box-shadow: 0 2px 8px #ffd70044;
+}
+
+/* Responsive for mobile */
+.mobile-only {
+  display: none !important;
+}
+
+@media (max-width: 960px) {
+  .nav-links.desktop-only,
+  .language-selector.desktop-only,
+  .desktop-only {
+    display: none !important;
+  }
+  .mobile-only {
+    display: inline-flex !important;
+  }
+  .logo {
+    font-size: 1.1rem;
+  }
+  .navbar {
+    display: flex !important;
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1300 !important;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+  }
+  body {
+    padding-top: 56px !important;
+    margin: 0 !important;
+  }
+  .MuiAppBar-root {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+  .MuiToolbar-root {
+    padding: 0 12px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
+.language-scroll-x {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: #C9A063 #222;
+}
+.language-scroll-x::-webkit-scrollbar {
+  height: 4px;
+}
+.language-scroll-x::-webkit-scrollbar-thumb {
+  background: #C9A063;
+  border-radius: 2px;
+}
+.language-scroll-x::-webkit-scrollbar-track {
+  background: #222;
+}
+
+.logo-rotate {
+  animation: logo-spin 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+@keyframes logo-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+} 

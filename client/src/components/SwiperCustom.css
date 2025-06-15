@@ -1,0 +1,237 @@
+.swiper-button-next, .swiper-button-prev {
+  color: #C9A063 !important;
+  background: none !important;
+  border-radius: 50%;
+  font-size: 2.6rem !important;
+  width: 48px;
+  height: 48px;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: none !important;
+}
+.swiper-button-prev {
+  left: -13px !important;
+}
+.swiper-button-next {
+  right: -13px !important;
+}
+.swiper-button-next:after, .swiper-button-prev:after {
+  font-size: 2.6rem !important;
+  color: #C9A063 !important;
+}
+
+/* Swiper pagination custom */
+.swiper-pagination-bullet {
+  background: #cfc6b0 !important;
+  opacity: 1 !important;
+}
+.swiper-pagination-bullet-active {
+  background: #C9A063 !important;
+}
+
+/* Water effect animations */
+@keyframes waterFlow {
+  0% {
+    transform: translateX(-100%) translateY(-100%);
+    opacity: 0.03;
+  }
+  25% {
+    opacity: 0.08;
+  }
+  50% {
+    transform: translateX(0%) translateY(0%);
+    opacity: 0.05;
+  }
+  75% {
+    opacity: 0.08;
+  }
+  100% {
+    transform: translateX(100%) translateY(100%);
+    opacity: 0.03;
+  }
+}
+
+@keyframes waterRipple {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.04;
+  }
+  33% {
+    transform: scale(1.2) rotate(120deg);
+    opacity: 0.08;
+  }
+  66% {
+    transform: scale(0.8) rotate(240deg);
+    opacity: 0.06;
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 0.04;
+  }
+}
+
+@keyframes waterWave {
+  0% {
+    transform: translateX(-100%) scaleY(1);
+    opacity: 0.1;
+  }
+  50% {
+    transform: translateX(50%) scaleY(1.5);
+    opacity: 0.15;
+  }
+  100% {
+    transform: translateX(200%) scaleY(1);
+    opacity: 0.1;
+  }
+}
+
+@keyframes waterBubble {
+  0% {
+    transform: translateY(100%) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.3;
+    transform: translateY(90%) scale(0.3);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(50%) scale(1);
+  }
+  90% {
+    opacity: 0.3;
+    transform: translateY(10%) scale(0.8);
+  }
+  100% {
+    transform: translateY(-10%) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes waterShimmer {
+  0% {
+    background-position: -200% 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    background-position: 200% 0;
+    opacity: 0;
+  }
+}
+
+@keyframes waterDroplet {
+  0% {
+    transform: translateY(-20px) scale(0);
+    opacity: 0;
+  }
+  10% {
+    transform: translateY(-10px) scale(0.3);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.8;
+  }
+  80% {
+    transform: translateY(5px) scale(1.2);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(10px) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes waterCurrent {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+    opacity: 0.1;
+  }
+  50% {
+    transform: translateX(50%) skewX(0deg);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateX(200%) skewX(15deg);
+    opacity: 0.1;
+  }
+}
+
+/* Floating animation for decorative elements */
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotate(15deg);
+    opacity: 0.15;
+  }
+  33% {
+    transform: translateY(-15px) rotate(18deg);
+    opacity: 0.2;
+  }
+  66% {
+    transform: translateY(-5px) rotate(12deg);
+    opacity: 0.18;
+  }
+  100% {
+    transform: translateY(0px) rotate(15deg);
+    opacity: 0.15;
+  }
+}
+
+/* Pulse animation for decorative elements */
+@keyframes decorativePulse {
+  0% {
+    opacity: 0.05;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.15;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.05;
+    transform: scale(1);
+  }
+}
+
+/* Gentle rotation animation */
+@keyframes gentleRotate {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.08;
+  }
+  50% {
+    transform: rotate(5deg);
+    opacity: 0.12;
+  }
+  100% {
+    transform: rotate(0deg);
+    opacity: 0.08;
+  }
+}
+
+/* Slow drift animation for ef4 */
+@keyframes slowDrift {
+  0% {
+    transform: translateX(0px) translateY(0px) rotate(20deg);
+    opacity: 0.1;
+  }
+  25% {
+    transform: translateX(10px) translateY(-5px) rotate(22deg);
+    opacity: 0.12;
+  }
+  50% {
+    transform: translateX(5px) translateY(-10px) rotate(18deg);
+    opacity: 0.08;
+  }
+  75% {
+    transform: translateX(-5px) translateY(-5px) rotate(25deg);
+    opacity: 0.11;
+  }
+  100% {
+    transform: translateX(0px) translateY(0px) rotate(20deg);
+    opacity: 0.1;
+  }
+}
