@@ -18,9 +18,9 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-        value: https://bloghok-frontend.onrender.com
+        value: https://blog-hok-fe.onrender.com
       - key: FRONTEND_URL
-        value: https://bloghok-frontend.onrender.com
+        value: https://blog-hok-fe.onrender.com
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
       - key: CLOUDINARY_API_KEY
@@ -37,7 +37,7 @@ services:
     staticPublishPath: client/build
     envVars:
       - key: REACT_APP_API_URL
-        value: https://bloghok-api.onrender.com
+        value: https://blog-hok.onrender.com
 
 databases:
   - name: bloghok-db

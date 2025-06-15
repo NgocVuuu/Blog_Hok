@@ -176,13 +176,15 @@ const corsOptions = {
       'http://localhost:3001',
       'http://127.0.0.1:3000',
       'https://bloghok-frontend.onrender.com',
+      'https://blog-hok-fe.onrender.com',
+      'https://blog-hok.onrender.com',
       process.env.FRONTEND_URL,
       process.env.CORS_ORIGIN
     ].filter(Boolean);
-    
+
     // Allow requests with no origin (mobile apps, etc.)
     if (!origin) return callback(null, true);
-    
+
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {

@@ -75,6 +75,22 @@ app.use('/api/heroes', heroesRouter);
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Root route handler
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'BlogHok API Server',
+    version: '1.0.0',
+    status: 'running',
+    timestamp: new Date().toISOString(),
+    endpoints: {
+      health: '/health',
+      api: '/api',
+      documentation: 'https://github.com/your-repo/bloghok'
+    }
+  });
+});
+
 // Error logging middleware (before error handler)
 app.use(errorLogger);
 
