@@ -3,7 +3,13 @@ const mongoose = require('mongoose');
 // Disable mongoose buffering globally
 mongoose.set('bufferCommands', false);
 
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/bloghok';
+const mongoURI = process.env.MONGODB_URI;
+
+// Validate MongoDB URI
+if (!mongoURI) {
+  console.error('MONGODB_URI environment variable is not set');
+  process.exit(1);
+}
 
 const connectDB = async () => {
   try {
