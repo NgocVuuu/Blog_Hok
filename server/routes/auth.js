@@ -96,7 +96,8 @@ router.post('/logout', enhancedAuth, (req, res) => {
   }
 });
 
-// Enhanced registration with validation
+// Registration disabled for security - use seeder to create admin accounts
+/*
 router.post('/register', authLimiter, validateAuth, async (req, res) => {
   const { email, password } = req.body;
 
@@ -135,5 +136,6 @@ router.post('/register', authLimiter, validateAuth, async (req, res) => {
     });
   }
 });
+*/
 
 module.exports = router; 
