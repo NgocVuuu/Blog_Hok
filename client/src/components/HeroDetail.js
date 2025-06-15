@@ -98,11 +98,11 @@ const HeroDetail = () => {
     Fighter: <img src="/img/roles/Fighter.png" alt="Fighter" style={{ width: 16, height: 16, marginRight: 4 }} />,
   };
   const laneIcons = {
-    'Farm Lane': <img src="/img/lanes/Farm_Lane.png" alt="Farm Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    'Jungle': <img src="/img/lanes/Jungle.png" alt="Jungle" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    'Mid Lane': <img src="/img/lanes/Mid_Lane.png" alt="Mid Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    'Roam': <img src="/img/lanes/Roam.png" alt="Abyssal Dragon Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    'Abyssal Lane': <img src="/img/lanes/Abyssal_Lane.png" alt="Dark Slayer Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Farm Lane': <img src={`${process.env.PUBLIC_URL}/img/lanes/Farm_Lane.png`} alt="Farm Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Jungle': <img src={`${process.env.PUBLIC_URL}/img/lanes/Jungle.png`} alt="Jungle" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Mid Lane': <img src={`${process.env.PUBLIC_URL}/img/lanes/Mid_Lane.png`} alt="Mid Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Roam': <img src={`${process.env.PUBLIC_URL}/img/lanes/Roam.png`} alt="Abyssal Dragon Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Abyssal Lane': <img src={`${process.env.PUBLIC_URL}/img/lanes/Abyssal_Lane.png`} alt="Dark Slayer Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
   };
 
   return (

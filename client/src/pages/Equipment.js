@@ -20,42 +20,49 @@ const Equipment = () => {
   const [sortBy, setSortBy] = useState('name');
   const API_URL = process.env.REACT_APP_API_URL;
 
+  // Import lane icons
+  const roamIcon = `${process.env.PUBLIC_URL}/img/lanes/Roam.png`;
+  const farmLaneIcon = `${process.env.PUBLIC_URL}/img/lanes/Farm_Lane.png`;
+  const midLaneIcon = `${process.env.PUBLIC_URL}/img/lanes/Mid_Lane.png`;
+  const abyssalLaneIcon = `${process.env.PUBLIC_URL}/img/lanes/Abyssal_Lane.png`;
+  const jungleIcon = `${process.env.PUBLIC_URL}/img/lanes/Jungle.png`;
+
   // Category options - 5 main categories with lane icons
   const categories = [
     {
       value: 'all',
       label: t('equipment.categories.all', 'Tất cả'),
-      icon: '/img/lanes/Roam.png',
+      icon: roamIcon,
       color: '#666'
     },
     {
       value: 'Attack',
       label: t('equipment.categories.physical', 'Vật lý'),
-      icon: '/img/lanes/Farm_Lane.png',
+      icon: farmLaneIcon,
       color: '#d32f2f'
     },
     {
       value: 'Magic',
       label: t('equipment.categories.magic', 'Phép thuật'),
-      icon: '/img/lanes/Mid_Lane.png',
+      icon: midLaneIcon,
       color: '#7b2ff2'
     },
     {
       value: 'Defense',
       label: t('equipment.categories.defense', 'Phòng thủ'),
-      icon: '/img/lanes/Abyssal_Lane.png',
+      icon: abyssalLaneIcon,
       color: '#43a047'
     },
     {
       value: 'Movement',
       label: t('equipment.categories.movement', 'Di chuyển'),
-      icon: '/img/lanes/Roam.png',
+      icon: roamIcon,
       color: '#ff9800'
     },
     {
       value: 'Jungle',
       label: t('equipment.categories.jungle', 'Jungling'),
-      icon: '/img/lanes/Jungle.png',
+      icon: jungleIcon,
       color: '#795548'
     }
   ];
