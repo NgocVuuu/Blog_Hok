@@ -17,7 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "i18next": "^25.2.1",
+    "i18next": "^23.15.1",
     "jest": "^27.5.1",
     "jsonwebtoken": "^9.0.2",
     "lottie-react": "^2.4.1",
@@ -65,5 +65,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "overrides": {
+    "typescript": "^4.9.5"
   }
 }
