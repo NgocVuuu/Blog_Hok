@@ -72,14 +72,17 @@ const checkDiskSpace = () => {
 const checkExternalServices = async () => {
   const checks = {};
 
-  // Temporarily disable Cloudinary check for deployment
   // Check Cloudinary (if configured)
   if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY) {
     try {
-      // Skip actual ping for now to avoid deployment issues
+      const cloudinary = require('cloudinary').v2;
+      const start = Date.now();
+      await cloudinary.api.ping();
+      const duration = Date.now() - start;
+
       checks.cloudinary = {
         status: 'healthy',
-        note: 'Cloudinary check skipped for deployment'
+        responseTime: `${duration}ms`
       };
     } catch (error) {
       checks.cloudinary = {
@@ -152,26 +155,14 @@ const performHealthCheck = async () => {
   }
 };
 
-// Basic health endpoint - simplified for deployment
+// Basic health endpoint
 router.get('/', async (req, res) => {
   try {
-    // Simple check - just database and basic info
-    const dbCheck = await checkDatabase();
-    const isHealthy = dbCheck.status === 'healthy';
+    const health = await performHealthCheck();
 
-    const health = {
-      status: isHealthy ? 'healthy' : 'unhealthy',
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      version: '1.0.0',
-      environment: process.env.NODE_ENV || 'production',
-      nodeVersion: process.version,
-      checks: {
-        database: dbCheck
-      }
-    };
+    const statusCode = health.status === 'healthy' ? 200 :
+                      health.status === 'warning' ? 200 : 503;
 
-    const statusCode = isHealthy ? 200 : 503;
     res.status(statusCode).json(health);
   } catch (error) {
     res.status(503).json({
