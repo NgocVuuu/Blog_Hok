@@ -1,3 +1,6 @@
+// Load environment variables first
+require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
+
 const mongoose = require('mongoose');
 const { mongoURI } = require('../config/db');
 

@@ -85,7 +85,7 @@ const CardItem = ({ item, type }) => {
           image={item.image}
           title={item.name}
           sx={{
-            width: '60%', height: '60%', borderRadius: 8, objectFit: 'cover', margin: '0 auto 2px auto',
+            width: '60%', height: '60%', borderRadius: 1, objectFit: 'cover', margin: '0 auto 2px auto',
             '@media (min-width:601px)': { width: 36, height: 36 },
           }}
         />

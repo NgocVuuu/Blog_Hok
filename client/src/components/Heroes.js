@@ -96,6 +96,8 @@ const Heroes = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     textDecoration: 'none',
+                    borderRadius: { xs: 1, md: 2 },
+                    overflow: 'hidden',
                     '&:hover': {
                       transform: 'scale(1.03)',
                       transition: 'transform 0.2s',
@@ -106,7 +108,11 @@ const Heroes = () => {
                     src={hero.image}
                     alt={hero.name}
                     height={{ xs: "80px", sm: "90px", md: "110px" }}
-                    sx={{ objectFit: 'cover' }}
+                    sx={{
+                      objectFit: 'cover',
+                      borderRadius: 0,
+                      width: '100%'
+                    }}
                   />
                   <CardContent sx={{
                     p: { xs: '2px 4px', sm: 0.75, md: 1 },
