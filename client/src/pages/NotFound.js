@@ -25,7 +25,7 @@ const NotFound = () => {
           {t('common.notFound', 'Không tìm thấy trang')}
         </Typography>
         <Typography variant="body1" color="text.secondary" mb={4}>
-          Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.
+          {t('common.notFoundMessage', 'Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.')}
         </Typography>
         <Button
           component={Link}

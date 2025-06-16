@@ -16,6 +16,11 @@
   "skills": "Kỹ năng",
   "description": "Mô tả",
   "no_data": "Không có dữ liệu",
+  "common": {
+    "notFound": "Không tìm thấy trang",
+    "notFoundMessage": "Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.",
+    "backToHome": "Về trang chủ"
+  },
   "nav": {
     "home": "Trang chủ",
     "heroes": "Tướng",

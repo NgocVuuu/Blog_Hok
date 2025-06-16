@@ -72,25 +72,25 @@ const checkDiskSpace = () => {
 const checkExternalServices = async () => {
   const checks = {};
 
-  // Check Cloudinary (if configured)
-  if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY) {
-    try {
-      const cloudinary = require('cloudinary').v2;
-      const start = Date.now();
-      await cloudinary.api.ping();
-      const duration = Date.now() - start;
+  // Check Cloudinary (if configured) - TEMPORARILY DISABLED
+  // if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY) {
+  //   try {
+  //     const cloudinary = require('cloudinary').v2;
+  //     const start = Date.now();
+  //     await cloudinary.api.ping();
+  //     const duration = Date.now() - start;
 
-      checks.cloudinary = {
-        status: 'healthy',
-        responseTime: `${duration}ms`
-      };
-    } catch (error) {
-      checks.cloudinary = {
-        status: 'unhealthy',
-        error: error.message
-      };
-    }
-  }
+  //     checks.cloudinary = {
+  //       status: 'healthy',
+  //       responseTime: `${duration}ms`
+  //     };
+  //   } catch (error) {
+  //     checks.cloudinary = {
+  //       status: 'unhealthy',
+  //       error: error.message
+  //     };
+  //   }
+  // }
 
   return checks;
 };

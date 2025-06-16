@@ -16,6 +16,11 @@
   "skills": "Skills",
   "description": "Description",
   "no_data": "No data available",
+  "common": {
+    "notFound": "Page Not Found",
+    "notFoundMessage": "The page you are looking for does not exist or has been moved.",
+    "backToHome": "Back to Home"
+  },
   "nav": {
     "home": "Home",
     "heroes": "Heroes",

@@ -1,9 +1,12 @@
+// Load environment variables FIRST
+const dotenv = require('dotenv');
+const path = require('path');
+dotenv.config({ path: path.join(__dirname, '.env') });
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const morgan = require('morgan');
-const path = require('path');
 const { connectDB } = require('./config/db');
 const heroesRouter = require('./routes/heroes');
 
@@ -16,8 +19,7 @@ const {
 } = require('./middleware/security');
 const { sanitizeInput } = require('./middleware/validation');
 
-// Load environment variables
-dotenv.config();
+
 
 // Create Express app
 const app = express();
