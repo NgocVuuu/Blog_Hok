@@ -7,15 +7,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-// Import role icons
-import allRolesIcon from '../assets/images/roles/all-roles.png';
-import marksmanIcon from '../assets/images/roles/marksman.png';
-import mageIcon from '../assets/images/roles/mage.png';
-import tankIcon from '../assets/images/roles/tank.png';
-import supportIcon from '../assets/images/roles/support.png';
-import assassinIcon from '../assets/images/roles/assassin.png';
-import fighterIcon from '../assets/images/roles/fighter.png';
-
 const Meta = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
@@ -27,13 +18,13 @@ const Meta = () => {
 
   // Role options for tabs
   const roles = [
-    { value: 'all', label: t('meta.roles.all', 'Tất cả'), icon: allRolesIcon },
-    { value: 'Marksman', label: t('roles.Marksman', 'Xạ thủ'), icon: marksmanIcon },
-    { value: 'Mage', label: t('roles.Mage', 'Pháp sư'), icon: mageIcon },
-    { value: 'Tank', label: t('roles.Tank', 'Đỡ đòn'), icon: tankIcon },
-    { value: 'Support', label: t('roles.Support', 'Hỗ trợ'), icon: supportIcon },
-    { value: 'Assassin', label: t('roles.Assassin', 'Sát thủ'), icon: assassinIcon },
-    { value: 'Fighter', label: t('roles.Fighter', 'Đấu sĩ'), icon: fighterIcon }
+    { value: 'all', label: t('meta.roles.all', 'Tất cả') },
+    { value: 'Marksman', label: t('roles.Marksman', 'Xạ thủ') },
+    { value: 'Mage', label: t('roles.Mage', 'Pháp sư') },
+    { value: 'Tank', label: t('roles.Tank', 'Đỡ đòn') },
+    { value: 'Support', label: t('roles.Support', 'Hỗ trợ') },
+    { value: 'Assassin', label: t('roles.Assassin', 'Sát thủ') },
+    { value: 'Fighter', label: t('roles.Fighter', 'Đấu sĩ') }
   ];
 
   // Tier options
@@ -134,7 +125,7 @@ const Meta = () => {
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
           <Tabs
             value={selectedRole}
-            onChange={(e, newValue) => setSelectedRole(newValue)}
+            onChange={(_, newValue) => setSelectedRole(newValue)}
             variant="scrollable"
             scrollButtons="auto"
             sx={{
@@ -148,23 +139,7 @@ const Meta = () => {
               <Tab
                 key={role.value}
                 value={role.value}
-                label={
-                  <Box display="flex" alignItems="center" gap={0.5}>
-                    <img
-                      src={role.icon}
-                      alt={role.label}
-                      style={{
-                        width: 20,
-                        height: 20,
-                        filter: 'brightness(0) saturate(100%) invert(58%) sepia(45%) saturate(1352%) hue-rotate(25deg) brightness(95%) contrast(90%)'
-                      }}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                    <span>{role.label}</span>
-                  </Box>
-                }
+                label={role.label}
               />
             ))}
           </Tabs>
