@@ -8,6 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
+import LazyImage from '../components/LazyImage';
 // import postService from '../services/postService'; // Chưa có, sẽ dùng fetch tạm
 
 const PostDetail = () => {
@@ -124,13 +125,13 @@ const PostDetail = () => {
 
           {post.image && (
             <Box mb={3}>
-              <img
+              <LazyImage
                 src={post.image}
                 alt={post.title}
-                style={{
+                height="400px"
+                sx={{
                   width: '100%',
-                  borderRadius: 12,
-                  maxHeight: 400,
+                  borderRadius: 3,
                   objectFit: 'cover'
                 }}
               />
@@ -162,7 +163,7 @@ const PostDetail = () => {
                   </Typography>
                 ),
                 img: ({ src, alt }) => (
-                  <Box component="img"
+                  <LazyImage
                     src={src}
                     alt={alt}
                     sx={{
@@ -286,13 +287,12 @@ const PostDetail = () => {
                       }}
                     >
                       {relatedPost.image && (
-                        <Box
-                          component="img"
+                        <LazyImage
                           src={relatedPost.image}
                           alt={relatedPost.title}
+                          width="80px"
+                          height="80px"
                           sx={{
-                            width: 80,
-                            height: 80,
                             objectFit: 'cover',
                             borderRadius: '8px 0 0 8px',
                             flexShrink: 0
@@ -334,13 +334,12 @@ const PostDetail = () => {
                       }}
                     >
                       {featuredPost.image ? (
-                        <Box
-                          component="img"
+                        <LazyImage
                           src={featuredPost.image}
                           alt={featuredPost.title}
+                          width="80px"
+                          height="80px"
                           sx={{
-                            width: 80,
-                            height: 80,
                             objectFit: 'cover',
                             borderRadius: '8px 0 0 8px',
                             flexShrink: 0
@@ -398,13 +397,12 @@ const PostDetail = () => {
                       }}
                     >
                       {relatedPost.image && (
-                        <Box
-                          component="img"
+                        <LazyImage
                           src={relatedPost.image}
                           alt={relatedPost.title}
+                          width="80px"
+                          height="80px"
                           sx={{
-                            width: 80,
-                            height: 80,
                             objectFit: 'cover',
                             borderRadius: '8px 0 0 8px',
                             flexShrink: 0

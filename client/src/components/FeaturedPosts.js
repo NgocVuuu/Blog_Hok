@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, Card, CardContent, Grid, CircularProgress } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import LazyImage from './LazyImage';
 
 const FeaturedPosts = () => {
   const { t } = useTranslation();
@@ -44,10 +45,15 @@ const FeaturedPosts = () => {
             <Link to={`/news/${post.slug || post._id}`} style={{ textDecoration: 'none' }}>
               <Card>
                 {post.image && (
-                  <img
+                  <LazyImage
                     src={post.image}
                     alt={post.title}
-                    style={{ width: '100%', maxHeight: 180, objectFit: 'cover', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
+                    height="180px"
+                    sx={{
+                      width: '100%',
+                      objectFit: 'cover',
+                      borderRadius: '8px 8px 0 0'
+                    }}
                   />
                 )}
                 <CardContent>

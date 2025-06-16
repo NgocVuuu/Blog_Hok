@@ -34,7 +34,9 @@ const LazyImage = ({
     ...style,
     opacity: loaded ? 1 : 0,
     transition: 'opacity 0.3s ease-in-out',
-    display: loaded ? 'block' : 'none'
+    display: loaded ? 'block' : 'none',
+    width: '100%',
+    height: '100%'
   };
 
   return (
@@ -49,7 +51,7 @@ const LazyImage = ({
       {...props}
     >
       {/* Skeleton loader */}
-      {!loaded && (
+      {!loaded && inView && (
         <Skeleton
           variant={skeletonVariant}
           width={typeof width === 'object' ? '100%' : (width || '100%')}
@@ -59,7 +61,8 @@ const LazyImage = ({
             top: 0,
             left: 0,
             right: 0,
-            bottom: 0
+            bottom: 0,
+            borderRadius: sx.borderRadius || 0
           }}
         />
       )}
@@ -73,6 +76,7 @@ const LazyImage = ({
           onLoad={handleLoad}
           onError={handleError}
           style={imageStyle}
+          loading="lazy"
           sx={{
             width: '100%',
             height: '100%',
@@ -81,6 +85,26 @@ const LazyImage = ({
             ...sx
           }}
         />
+      )}
+
+      {/* Error state */}
+      {error && (
+        <Box
+          sx={{
+            width: '100%',
+            height: height || 200,
+            backgroundColor: '#f5f5f5',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: sx.borderRadius || 0,
+            color: 'text.secondary'
+          }}
+        >
+          <Typography variant="caption">
+            Không thể tải ảnh
+          </Typography>
+        </Box>
       )}
       
       {/* Error fallback */}

@@ -1,8 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
 
+/* Tuffy font declarations for fallback */
+@font-face {
+  font-family: 'Tuffy';
+  src: url('/fonts/Tuffy-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tuffy';
+  src: url('/fonts/Tuffy-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tuffy';
+  src: url('/fonts/Tuffy-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tuffy';
+  src: url('/fonts/Tuffy-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 body {
   margin: 0;
-  font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+  font-family: 'Tuffy', 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
@@ -18,4 +51,31 @@ code {
 .MuiGrid-root > .MuiGrid-item {
   padding-left: 0 !important;
   padding-top: 0 !important;
+}
+
+/* Mobile optimizations */
+@media (max-width: 600px) {
+  /* Ensure images load properly on mobile */
+  img, .MuiBox-root img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Better font rendering on mobile */
+  body, * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Ensure hero cards have proper height on mobile */
+  .MuiCard-root {
+    min-height: auto !important;
+  }
+
+  /* Better spacing for mobile */
+  .MuiContainer-root {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
 }

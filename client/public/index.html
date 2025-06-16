@@ -10,6 +10,49 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Honor of Kings Blog</title>
 
+    <!-- Preload Tuffy fonts for better performance -->
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Tuffy-Regular.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Tuffy-Bold.ttf" as="font" type="font/ttf" crossorigin>
+
+    <style>
+      @font-face {
+        font-family: 'Tuffy';
+        src: url('%PUBLIC_URL%/fonts/Tuffy-Regular.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: 'Tuffy';
+        src: url('%PUBLIC_URL%/fonts/Tuffy-Bold.ttf') format('truetype');
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: 'Tuffy';
+        src: url('%PUBLIC_URL%/fonts/Tuffy-Italic.ttf') format('truetype');
+        font-weight: 400;
+        font-style: italic;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: 'Tuffy';
+        src: url('%PUBLIC_URL%/fonts/Tuffy-BoldItalic.ttf') format('truetype');
+        font-weight: 700;
+        font-style: italic;
+        font-display: swap;
+      }
+
+      /* Ensure fonts load on mobile */
+      body {
+        font-family: 'Tuffy', serif;
+      }
+    </style>
+
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

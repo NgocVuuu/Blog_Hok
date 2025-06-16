@@ -92,12 +92,13 @@ const Heroes = () => {
                   component={Link}
                   to={`/heroes/${hero.slug}`}
                   sx={{
-                    height: { xs: 90, sm: 180, md: 220 },
+                    height: { xs: 120, sm: 180, md: 220 },
                     display: 'flex',
                     flexDirection: 'column',
                     textDecoration: 'none',
                     borderRadius: { xs: 1, md: 2 },
                     overflow: 'hidden',
+                    minHeight: { xs: 120, sm: 180, md: 220 },
                     '&:hover': {
                       transform: 'scale(1.03)',
                       transition: 'transform 0.2s',
@@ -107,28 +108,35 @@ const Heroes = () => {
                   <LazyImage
                     src={hero.image}
                     alt={hero.name}
-                    height={{ xs: "80px", sm: "90px", md: "110px" }}
+                    height={{ xs: "85px", sm: "90px", md: "110px" }}
                     sx={{
                       objectFit: 'cover',
                       borderRadius: 0,
-                      width: '100%'
+                      width: '100%',
+                      minHeight: { xs: "85px", sm: "90px", md: "110px" }
                     }}
                   />
                   <CardContent sx={{
-                    p: { xs: '2px 4px', sm: 0.75, md: 1 },
+                    p: { xs: '4px 6px', sm: 0.75, md: 1 },
                     flexGrow: 1,
-                    minHeight: 'auto',
-                    '&:last-child': { pb: '2px' }
+                    minHeight: { xs: '35px', sm: 'auto', md: 'auto' },
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    '&:last-child': { pb: { xs: '4px', sm: '6px', md: '8px' } }
                   }}>
                     <Typography
                       variant="subtitle1"
                       component="h2"
                       noWrap
                       sx={{
-                        fontSize: { xs: '0.6rem', sm: '0.8rem', md: '1rem' },
-                        mb: { xs: '1px', sm: 0.5, md: 1 },
-                        lineHeight: 1.1,
-                        fontWeight: 600
+                        fontSize: { xs: '0.65rem', sm: '0.8rem', md: '1rem' },
+                        mb: { xs: '2px', sm: 0.5, md: 1 },
+                        lineHeight: { xs: 1.2, sm: 1.1, md: 1.1 },
+                        fontWeight: 600,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
                       }}
                     >
                       {hero.name}
