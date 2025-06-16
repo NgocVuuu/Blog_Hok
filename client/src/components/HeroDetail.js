@@ -10,6 +10,21 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import './SwiperCustom.css';
 
+// Import lane icons, effect images, and role icons
+import farmLaneIcon from '../assets/images/lanes/Farm_Lane.png';
+import jungleIcon from '../assets/images/lanes/Jungle.png';
+import midLaneIcon from '../assets/images/lanes/Mid_Lane.png';
+import roamIcon from '../assets/images/lanes/Roam.png';
+import abyssalLaneIcon from '../assets/images/lanes/Abyssal_Lane.png';
+import ef1Image from '../assets/images/ef1.jpg';
+import ef2Image from '../assets/images/ef2.jpg';
+import marksmanIcon from '../assets/images/roles/Marksman.png';
+import mageIcon from '../assets/images/roles/Mage.png';
+import tankIcon from '../assets/images/roles/Tank.png';
+import supportIcon from '../assets/images/roles/Support.png';
+import assassinIcon from '../assets/images/roles/Assassin.png';
+import fighterIcon from '../assets/images/roles/Fighter.png';
+
 
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -90,19 +105,19 @@ const HeroDetail = () => {
   if (!hero) return null;
 
   const roleIcons = {
-    Marksman: <img src="/img/roles/Marksman.png" alt="Marksman" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    Mage: <img src="/img/roles/Mage.png" alt="Mage" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    Tank: <img src="/img/roles/Tank.png" alt="Tank" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    Support: <img src="/img/roles/Support.png" alt="Support" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    Assassin: <img src="/img/roles/Assassin.png" alt="Assassin" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    Fighter: <img src="/img/roles/Fighter.png" alt="Fighter" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    Marksman: <img src={marksmanIcon} alt="Marksman" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    Mage: <img src={mageIcon} alt="Mage" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    Tank: <img src={tankIcon} alt="Tank" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    Support: <img src={supportIcon} alt="Support" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    Assassin: <img src={assassinIcon} alt="Assassin" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    Fighter: <img src={fighterIcon} alt="Fighter" style={{ width: 16, height: 16, marginRight: 4 }} />,
   };
   const laneIcons = {
-    'Farm Lane': <img src={`${process.env.PUBLIC_URL}/img/lanes/Farm_Lane.png`} alt="Farm Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    'Jungle': <img src={`${process.env.PUBLIC_URL}/img/lanes/Jungle.png`} alt="Jungle" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    'Mid Lane': <img src={`${process.env.PUBLIC_URL}/img/lanes/Mid_Lane.png`} alt="Mid Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    'Roam': <img src={`${process.env.PUBLIC_URL}/img/lanes/Roam.png`} alt="Abyssal Dragon Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    'Abyssal Lane': <img src={`${process.env.PUBLIC_URL}/img/lanes/Abyssal_Lane.png`} alt="Dark Slayer Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Farm Lane': <img src={farmLaneIcon} alt="Farm Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Jungle': <img src={jungleIcon} alt="Jungle" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Mid Lane': <img src={midLaneIcon} alt="Mid Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Roam': <img src={roamIcon} alt="Abyssal Dragon Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Abyssal Lane': <img src={abyssalLaneIcon} alt="Dark Slayer Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
   };
 
   return (
@@ -125,7 +140,7 @@ const HeroDetail = () => {
           right: '-10%',
           width: '400px',
           height: '400px',
-          backgroundImage: 'url(/img/ef1.jpg)',
+          backgroundImage: `url(${ef1Image})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
@@ -141,7 +156,7 @@ const HeroDetail = () => {
           left: '-5%',
           width: '350px',
           height: '350px',
-          backgroundImage: 'url(/img/ef2.jpg)',
+          backgroundImage: `url(${ef2Image})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
@@ -157,7 +172,7 @@ const HeroDetail = () => {
           right: '5%',
           width: '200px',
           height: '200px',
-          backgroundImage: 'url(/img/ef1.jpg)',
+          backgroundImage: `url(${ef1Image})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
@@ -187,7 +202,7 @@ const HeroDetail = () => {
           right: '20px',
           width: '120px',
           height: '120px',
-          backgroundImage: 'url(/img/ef1.jpg)',
+          backgroundImage: `url(${ef1Image})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           opacity: 0.2,
@@ -203,7 +218,7 @@ const HeroDetail = () => {
           left: '20px',
           width: '80px',
           height: '80px',
-          backgroundImage: 'url(/img/ef2.jpg)',
+          backgroundImage: `url(${ef2Image})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           opacity: 0.15,
@@ -311,7 +326,7 @@ const HeroDetail = () => {
           right: '-20px',
           width: '80px',
           height: '80px',
-          backgroundImage: 'url(/img/ef2.jpg)',
+          backgroundImage: `url(${ef2Image})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           opacity: 0.1,
@@ -500,7 +515,7 @@ const HeroDetail = () => {
           left: '-15px',
           width: '60px',
           height: '60px',
-          backgroundImage: 'url(/img/ef1.jpg)',
+          backgroundImage: `url(${ef1Image})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           opacity: 0.08,
@@ -557,7 +572,7 @@ const HeroDetail = () => {
           transform: 'translateX(-50%)',
           width: '100px',
           height: '100px',
-          backgroundImage: 'url(/img/ef2.jpg)',
+          backgroundImage: `url(${ef2Image})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           opacity: 0.06,
@@ -656,7 +671,7 @@ const HeroDetail = () => {
           right: '10px',
           width: '40px',
           height: '40px',
-          backgroundImage: 'url(/img/ef1.jpg)',
+          backgroundImage: `url(${ef1Image})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           opacity: 0.06,
@@ -672,7 +687,7 @@ const HeroDetail = () => {
           left: '10px',
           width: '35px',
           height: '35px',
-          backgroundImage: 'url(/img/ef2.jpg)',
+          backgroundImage: `url(${ef2Image})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           opacity: 0.05,

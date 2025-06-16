@@ -10,6 +10,13 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { useTranslation } from 'react-i18next';
 import LazyImage from '../components/LazyImage';
 
+// Import lane icons
+import roamIcon from '../assets/images/lanes/Roam.png';
+import farmLaneIcon from '../assets/images/lanes/Farm_Lane.png';
+import midLaneIcon from '../assets/images/lanes/Mid_Lane.png';
+import abyssalLaneIcon from '../assets/images/lanes/Abyssal_Lane.png';
+import jungleIcon from '../assets/images/lanes/Jungle.png';
+
 const Equipment = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
@@ -20,12 +27,7 @@ const Equipment = () => {
   const [sortBy, setSortBy] = useState('name');
   const API_URL = process.env.REACT_APP_API_URL;
 
-  // Import lane icons
-  const roamIcon = `${process.env.PUBLIC_URL}/img/lanes/Roam.png`;
-  const farmLaneIcon = `${process.env.PUBLIC_URL}/img/lanes/Farm_Lane.png`;
-  const midLaneIcon = `${process.env.PUBLIC_URL}/img/lanes/Mid_Lane.png`;
-  const abyssalLaneIcon = `${process.env.PUBLIC_URL}/img/lanes/Abyssal_Lane.png`;
-  const jungleIcon = `${process.env.PUBLIC_URL}/img/lanes/Jungle.png`;
+
 
   // Category options - 5 main categories with lane icons
   const categories = [
@@ -554,7 +556,7 @@ const Equipment = () => {
                         <Box display="flex" alignItems="center" mb={2}>
                           <AttachMoneyIcon sx={{ fontSize: '1rem', color: '#C9A063', mr: 0.5 }} />
                           <Typography variant="body2" color="#C9A063" fontWeight={700}>
-                            {formatPrice(item.price)} Gold
+                            {formatPrice(item.price)} {t('equipment.gold', 'Gold')}
                           </Typography>
                         </Box>
 
@@ -562,7 +564,7 @@ const Equipment = () => {
                         {item.stats && Object.keys(item.stats).length > 0 && (
                           <Box mb={2}>
                             <Typography variant="subtitle2" fontWeight={600} mb={1} color="text.primary">
-                              Chỉ số:
+                              {t('equipment.stats', 'Chỉ số')}:
                             </Typography>
                             <Box sx={{ pl: 1 }}>
                               {Object.entries(item.stats).map(([stat, value]) => (
@@ -617,7 +619,7 @@ const Equipment = () => {
                               mb={1}
                               sx={{ color: '#ff6b35' }}
                             >
-                              Kích hoạt: {item.active.name}
+                              {t('equipment.active', 'Kích hoạt')}: {item.active.name}
                             </Typography>
                             <Typography
                               variant="caption"
@@ -641,7 +643,7 @@ const Equipment = () => {
                                   mt: 0.5
                                 }}
                               >
-                                Hồi chiêu: {item.active.cooldown}s
+                                {t('equipment.cooldown', 'Hồi chiêu')}: {item.active.cooldown}s
                               </Typography>
                             )}
                           </Box>

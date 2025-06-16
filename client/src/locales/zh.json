@@ -189,6 +189,10 @@
   },
   "equipment": {
     "sortName": "名称 (A-Z)",
-    "sortPrice": "价格 (高 → 低)"
+    "sortPrice": "价格 (高 → 低)",
+    "stats": "属性",
+    "active": "主动",
+    "cooldown": "冷却时间",
+    "gold": "金币"
   }
 }

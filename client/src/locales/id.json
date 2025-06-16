@@ -190,6 +190,10 @@
   },
   "equipment": {
     "sortName": "Nama (A-Z)",
-    "sortPrice": "Harga (Tinggi → Rendah)"
+    "sortPrice": "Harga (Tinggi → Rendah)",
+    "stats": "Statistik",
+    "active": "Aktif",
+    "cooldown": "Cooldown",
+    "gold": "Emas"
   }
 }

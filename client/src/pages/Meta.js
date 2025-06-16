@@ -7,6 +7,15 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+// Import role icons
+import allRolesIcon from '../assets/images/roles/all-roles.png';
+import marksmanIcon from '../assets/images/roles/marksman.png';
+import mageIcon from '../assets/images/roles/mage.png';
+import tankIcon from '../assets/images/roles/tank.png';
+import supportIcon from '../assets/images/roles/support.png';
+import assassinIcon from '../assets/images/roles/assassin.png';
+import fighterIcon from '../assets/images/roles/fighter.png';
+
 const Meta = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
@@ -18,13 +27,13 @@ const Meta = () => {
 
   // Role options for tabs
   const roles = [
-    { value: 'all', label: t('meta.roles.all', 'Tất cả'), icon: '/img/roles/all-roles.png' },
-    { value: 'Marksman', label: t('roles.Marksman', 'Xạ thủ'), icon: '/img/roles/marksman.png' },
-    { value: 'Mage', label: t('roles.Mage', 'Pháp sư'), icon: '/img/roles/mage.png' },
-    { value: 'Tank', label: t('roles.Tank', 'Đỡ đòn'), icon: '/img/roles/tank.png' },
-    { value: 'Support', label: t('roles.Support', 'Hỗ trợ'), icon: '/img/roles/support.png' },
-    { value: 'Assassin', label: t('roles.Assassin', 'Sát thủ'), icon: '/img/roles/assassin.png' },
-    { value: 'Fighter', label: t('roles.Fighter', 'Đấu sĩ'), icon: '/img/roles/fighter.png' }
+    { value: 'all', label: t('meta.roles.all', 'Tất cả'), icon: allRolesIcon },
+    { value: 'Marksman', label: t('roles.Marksman', 'Xạ thủ'), icon: marksmanIcon },
+    { value: 'Mage', label: t('roles.Mage', 'Pháp sư'), icon: mageIcon },
+    { value: 'Tank', label: t('roles.Tank', 'Đỡ đòn'), icon: tankIcon },
+    { value: 'Support', label: t('roles.Support', 'Hỗ trợ'), icon: supportIcon },
+    { value: 'Assassin', label: t('roles.Assassin', 'Sát thủ'), icon: assassinIcon },
+    { value: 'Fighter', label: t('roles.Fighter', 'Đấu sĩ'), icon: fighterIcon }
   ];
 
   // Tier options

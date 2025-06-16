@@ -116,7 +116,11 @@
       "boots": "Giày"
     },
     "sortName": "Tên (A-Z)",
-    "sortPrice": "Giá (Cao → Thấp)"
+    "sortPrice": "Giá (Cao → Thấp)",
+    "stats": "Chỉ số",
+    "active": "Kích hoạt",
+    "cooldown": "Hồi chiêu",
+    "gold": "Vàng"
   },
   "arcana": {
     "title": "Arcana",

@@ -116,7 +116,11 @@
       "boots": "Boots"
     },
     "sortName": "Name (A-Z)",
-    "sortPrice": "Price (High → Low)"
+    "sortPrice": "Price (High → Low)",
+    "stats": "Stats",
+    "active": "Active",
+    "cooldown": "Cooldown",
+    "gold": "Gold"
   },
   "arcana": {
     "title": "Arcana",
