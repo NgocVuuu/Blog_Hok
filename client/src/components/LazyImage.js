@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { Box, Skeleton } from '@mui/material';
+import { Box, Skeleton, Typography } from '@mui/material';
 
 const LazyImage = ({ 
   src, 
