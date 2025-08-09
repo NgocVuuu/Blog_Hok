@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Alert, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const AdminPostForm = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('guides');
@@ -16,6 +18,7 @@ const AdminPostForm = () => {
   const [imagePreview, setImagePreview] = useState('');
   const [message, setMessage] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
+  const [videoUploading, setVideoUploading] = useState(false);
 
   // Categories for dropdown
   const categories = [
@@ -40,15 +43,73 @@ const AdminPostForm = () => {
   const handleUpload = async (file) => {
     const formData = new FormData();
     formData.append('image', file);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      throw new Error('Vui lòng đăng nhập lại');
+    }
     const res = await fetch(`${API_URL}/api/upload`, {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       body: formData,
     });
     if (!res.ok) {
+      if (res.status === 401) {
+        localStorage.removeItem('token');
+        navigate('/login');
+        return;
+      }
       throw new Error('Upload ảnh thất bại');
     }
     const data = await res.json();
     return data.imageUrl;
+  };
+
+  const handleVideoUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('video', file);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      throw new Error('Vui lòng đăng nhập lại');
+    }
+    const res = await fetch(`${API_URL}/api/upload/video`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+    if (!res.ok) {
+      if (res.status === 401) {
+        localStorage.removeItem('token');
+        navigate('/login');
+        return;
+      }
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Upload video thất bại');
+    }
+    const data = await res.json();
+    return data.videoUrl;
+  };
+
+  const onVideoFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      setVideoUploading(true);
+      const url = await handleVideoUpload(file);
+      setContent(prev => `${prev}${prev ? '\n\n' : ''}![video](${url})`);
+      setMessage({ type: 'success', text: 'Đã tải video và chèn vào nội dung' });
+    } catch (err) {
+      setMessage({ type: 'error', text: err.message || 'Upload video thất bại' });
+    } finally {
+      setVideoUploading(false);
+      // reset input value so same file can be uploaded again if needed
+      e.target.value = '';
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -166,6 +227,16 @@ const AdminPostForm = () => {
         >
           {t('admin.uploadImage', 'Upload ảnh')}
           <input type="file" hidden accept="image/*,.avif" onChange={handleImageChange} />
+        </Button>
+        <Button
+          sx={{ ml: 2 }}
+          variant="outlined"
+          component="label"
+          disabled={videoUploading}
+          startIcon={<UploadIcon />}
+        >
+          {videoUploading ? t('admin.uploadingVideo', 'Đang upload video...') : t('admin.uploadVideo', 'Upload video')}
+          <input type="file" hidden accept="video/*" onChange={onVideoFileChange} />
         </Button>
         {imageFile && <Typography ml={2}>{imageFile.name}</Typography>}
         {(imagePreview || imageUrl) && (

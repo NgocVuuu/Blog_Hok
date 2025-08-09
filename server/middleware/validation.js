@@ -14,13 +14,9 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// Sanitize MongoDB injection
-const sanitizeInput = (req, res, next) => {
-  req.body = mongoSanitize(req.body);
-  req.query = mongoSanitize(req.query);
-  req.params = mongoSanitize(req.params);
-  next();
-};
+// Sanitize MongoDB injection (use library middleware correctly)
+// This middleware will remove prohibited characters like $ and . from req.body/query/params
+const sanitizeInput = mongoSanitize({ replaceWith: '_' });
 
 // Validation rules for different entities
 const validateHero = [
@@ -78,8 +74,7 @@ const validateNews = [
   body('title')
     .trim()
     .isLength({ min: 1, max: 200 })
-    .withMessage('News title must be between 1 and 200 characters')
-    .escape(),
+    .withMessage('News title must be between 1 and 200 characters'),
   body('content')
     .trim()
     .isLength({ min: 1, max: 10000 })
@@ -92,8 +87,7 @@ const validateNews = [
     .optional()
     .trim()
     .isLength({ max: 100 })
-    .withMessage('Author name must be less than 100 characters')
-    .escape(),
+    .withMessage('Author name must be less than 100 characters'),
   handleValidationErrors
 ];
 
@@ -139,8 +133,9 @@ const validateArcana = [
 const validateAuth = [
   body('email')
     .isEmail()
-    .normalizeEmail()
-    .withMessage('Please provide a valid email'),
+    .withMessage('Please provide a valid email')
+    // Avoid Gmail dot-removal which breaks lookup for stored emails with dots
+    .customSanitizer((value) => String(value).trim().toLowerCase()),
   body('password')
     .isLength({ min: 6, max: 128 })
     .withMessage('Password must be between 6 and 128 characters')

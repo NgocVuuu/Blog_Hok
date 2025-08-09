@@ -4,7 +4,7 @@ const path = require('path');
 const router = express.Router();
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const { enhancedAuth, uploadLimiter } = require('../middleware/security');
+const { enhancedAuth, uploadLimiter, adminOpsGuard } = require('../middleware/security');
 
 // Cloudinary configuration
 cloudinary.config({
@@ -84,6 +84,7 @@ const handleUploadError = (error, req, res, next) => {
 
 // Secure upload route (admin only)
 router.post('/',
+  adminOpsGuard,
   uploadLimiter,
   enhancedAuth,
   upload.single('image'),
@@ -117,6 +118,71 @@ router.post('/',
         success: false,
         message: 'Internal server error during upload'
       });
+    }
+  }
+);
+
+
+// Video upload configuration
+const videoFileFilter = (req, file, cb) => {
+  const allowedMimes = ['video/mp4', 'video/webm', 'video/ogg'];
+  if (!allowedMimes.includes(file.mimetype)) {
+    return cb(new Error('Invalid file type. Only MP4, WebM and OGG videos are allowed.'), false);
+  }
+  const allowedExtensions = ['.mp4', '.webm', '.ogg'];
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (!allowedExtensions.includes(ext)) {
+    return cb(new Error('Invalid file extension.'), false);
+  }
+  cb(null, true);
+};
+
+const videoStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'BlogHok/videos',
+    resource_type: 'video',
+    allowed_formats: ['mp4', 'webm', 'ogg']
+  }
+});
+
+const uploadVideo = multer({
+  storage: videoStorage,
+  fileFilter: videoFileFilter,
+  limits: {
+    fileSize: 50 * 1024 * 1024, // 50MB
+    files: 1
+  }
+});
+
+// Secure video upload route (admin only)
+router.post(
+  '/video',
+  adminOpsGuard,
+  uploadLimiter,
+  enhancedAuth,
+  uploadVideo.single('video'),
+  handleUploadError,
+  (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ success: false, message: 'No file uploaded' });
+      }
+      res.json({
+        success: true,
+        message: 'Video uploaded successfully',
+        videoUrl: req.file.path,
+        data: {
+          public_id: req.file.public_id,
+          secure_url: req.file.secure_url,
+          bytes: req.file.bytes,
+          format: req.file.format,
+          duration: req.file.duration
+        }
+      });
+    } catch (error) {
+      console.error('Upload video error:', error);
+      res.status(500).json({ success: false, message: 'Internal server error during video upload' });
     }
   }
 );

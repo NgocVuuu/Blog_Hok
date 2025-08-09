@@ -30,9 +30,9 @@ const createRateLimit = (windowMs, max, message, skipSuccessfulRequests = false)
   return rateLimit({
     windowMs,
     max,
-    message: { 
+    message: {
       success: false,
-      error: message 
+      error: message
     },
     standardHeaders: true,
     legacyHeaders: false,
@@ -80,14 +80,14 @@ const verifyToken = (token) => {
   if (blacklistedTokens.has(token)) {
     throw new Error('Token has been revoked');
   }
-  
+
   return jwt.verify(token, process.env.JWT_SECRET);
 };
 
 // Blacklist token
 const blacklistToken = (token) => {
   blacklistedTokens.add(token);
-  
+
   // Auto-remove expired tokens (cleanup)
   setTimeout(() => {
     blacklistedTokens.delete(token);
@@ -98,48 +98,48 @@ const blacklistToken = (token) => {
 const enhancedAuth = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         success: false,
         error: 'Access denied. No token provided.'
       });
     }
-    
+
     const token = authHeader.split(' ')[1];
-    
+
     if (!token) {
       return res.status(401).json({
         success: false,
         error: 'Access denied. Invalid token format.'
       });
     }
-    
+
     try {
       const decoded = verifyToken(token);
-      
+
       // Check if user still exists and has admin role
       const User = require('../models/User');
       const user = await User.findById(decoded.id).select('-password');
-      
+
       if (!user) {
         return res.status(401).json({
           success: false,
           error: 'Access denied. User not found.'
         });
       }
-      
+
       if (user.role !== 'admin') {
         return res.status(403).json({
           success: false,
           error: 'Access denied. Admin privileges required.'
         });
       }
-      
+
       req.user = user;
       req.token = token;
       next();
-      
+
     } catch (jwtError) {
       if (jwtError.name === 'TokenExpiredError') {
         return res.status(401).json({
@@ -158,7 +158,7 @@ const enhancedAuth = async (req, res, next) => {
         });
       }
     }
-    
+
   } catch (error) {
     console.error('Auth middleware error:', error);
     return res.status(500).json({
@@ -205,14 +205,14 @@ const corsOptions = {
 const requestSizeLimiter = (req, res, next) => {
   const contentLength = parseInt(req.headers['content-length']);
   const maxSize = 10 * 1024 * 1024; // 10MB
-  
+
   if (contentLength && contentLength > maxSize) {
     return res.status(413).json({
       success: false,
       error: 'Request entity too large'
     });
   }
-  
+
   next();
 };
 
@@ -220,10 +220,10 @@ const requestSizeLimiter = (req, res, next) => {
 const adminIPWhitelist = (req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
     const allowedIPs = (process.env.ADMIN_ALLOWED_IPS || '').split(',').filter(Boolean);
-    
+
     if (allowedIPs.length > 0) {
       const clientIP = req.ip || req.connection.remoteAddress;
-      
+
       if (!allowedIPs.includes(clientIP)) {
         return res.status(403).json({
           success: false,
@@ -232,7 +232,19 @@ const adminIPWhitelist = (req, res, next) => {
       }
     }
   }
-  
+
+  next();
+};
+
+// Guard: disable admin operations on production unless explicitly allowed
+const adminOpsGuard = (req, res, next) => {
+  const disabled = process.env.NODE_ENV === 'production' && process.env.ALLOW_ADMIN_OPERATIONS !== 'true';
+  if (disabled) {
+    return res.status(403).json({
+      success: false,
+      error: 'Admin operations are disabled in production'
+    });
+  }
   next();
 };
 
@@ -247,5 +259,6 @@ module.exports = {
   requestSizeLimiter,
   adminIPWhitelist,
   blacklistToken,
-  verifyToken
+  verifyToken,
+  adminOpsGuard
 };

@@ -55,11 +55,23 @@ const AdminArcanaForm = () => {
   const handleUpload = async (file) => {
     const formDataUpload = new FormData();
     formDataUpload.append('image', file);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Vui lòng đăng nhập lại');
+    }
     const res = await fetch(`${API_URL}/api/upload`, {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       body: formDataUpload,
     });
     if (!res.ok) {
+      if (res.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+        return;
+      }
       throw new Error('Upload ảnh thất bại');
     }
     const data = await res.json();

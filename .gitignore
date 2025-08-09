@@ -15,6 +15,14 @@ server/dist/
 server/.env
 client/.env
 
+# Ignore all env variants in server and client (but keep examples)
+server/.env*
+client/.env*
+!.env.example
+!server/.env.example
+!client/.env.example
+server/.env.production
+
 # Logs
 logs/
 *.log
@@ -93,3 +101,13 @@ server/uploads/
 # Temporary files
 tmp/
 temp/
+
+
+# Seeder scripts that may contain or set credentials
+server/seeders/createAdmin.js
+server/seeders/resetAdminPassword.js
+server/seeders/seedData.js
+server/seeders/seed.js
+
+# Local testing helpers that may contain secrets
+server/test-env.js

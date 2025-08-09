@@ -65,10 +65,12 @@ function App() {
                     <Route path="/news/:slug" element={<PostDetail />} />
                     <Route path="/edit-post/:id" element={<EditPost />} />
                     {/* <Route path="/register" element={<AdminRegister />} /> */}
-                    <Route
-                      path="/admin"
-                      element={admin ? <AdminDashboard /> : <AdminLogin onLogin={() => setAdmin(true)} />}
-                    />
+                    {process.env.NODE_ENV !== 'production' && (
+                      <Route
+                        path="/admin"
+                        element={admin ? <AdminDashboard /> : <AdminLogin onLogin={() => setAdmin(true)} />}
+                      />
+                    )}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>

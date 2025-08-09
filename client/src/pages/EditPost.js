@@ -21,6 +21,7 @@ const EditPost = () => {
   const [message, setMessage] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
+  const [videoUploading, setVideoUploading] = useState(false);
   const API_URL = process.env.REACT_APP_API_URL;
 
   // Categories for dropdown
@@ -86,6 +87,40 @@ const EditPost = () => {
     }
     const data = await res.json();
     return data.imageUrl;
+  };
+
+  const handleVideoUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('video', file);
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_URL}/api/upload/video`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Upload video thất bại');
+    }
+    const data = await res.json();
+    return data.videoUrl;
+  };
+
+  const onVideoFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      setVideoUploading(true);
+      const url = await handleVideoUpload(file);
+      setContent(prev => `${prev}${prev ? '\n\n' : ''}![video](${url})`);
+    } catch (err) {
+      setMessage({ type: 'error', text: err.message || 'Upload video thất bại' });
+    } finally {
+      setVideoUploading(false);
+      e.target.value = '';
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -198,7 +233,7 @@ const EditPost = () => {
           multiline
           rows={8}
           margin="normal"
-          helperText={t('admin.markdownHelp', 'Hỗ trợ Markdown: **bold**, *italic*, [link](url), ![image](url)')}
+          helperText={t('admin.markdownHelp', 'Hỗ trợ Markdown: **bold**, *italic*, [link](url), ![image](url), ![video](https://...mp4) hoặc dán link YouTube riêng trên 1 dòng để tự nhúng')}
         />
 
         <Box mt={2} mb={2}>
@@ -209,6 +244,16 @@ const EditPost = () => {
           >
             {imageFile ? t('admin.changeImage', 'Thay đổi ảnh') : t('admin.uploadNewImage', 'Upload ảnh mới')}
             <input type="file" hidden accept="image/*,.avif" onChange={handleImageChange} />
+          </Button>
+          <Button
+            sx={{ ml: 2 }}
+            variant="outlined"
+            component="label"
+            disabled={videoUploading}
+            startIcon={<UploadIcon />}
+          >
+            {videoUploading ? t('admin.uploadingVideo', 'Đang upload video...') : t('admin.uploadVideo', 'Upload video')}
+            <input type="file" hidden accept="video/*" onChange={onVideoFileChange} />
           </Button>
           {imageFile && <Typography ml={2}>{imageFile.name}</Typography>}
           {imagePreview && (

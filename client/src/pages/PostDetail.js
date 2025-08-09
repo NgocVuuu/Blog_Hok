@@ -134,6 +134,7 @@ const PostDetail = () => {
                   borderRadius: 3,
                   objectFit: 'cover'
                 }}
+                referrerPolicy="no-referrer"
               />
             </Box>
           )}
@@ -163,14 +164,17 @@ const PostDetail = () => {
                   </Typography>
                 ),
                 img: ({ src, alt }) => (
-                  <LazyImage
+                  <img
                     src={src}
                     alt={alt}
-                    sx={{
-                      maxWidth: '100%',
-                      height: 'auto',
-                      borderRadius: 2,
-                      my: 2
+                    referrerPolicy="no-referrer"
+                    style={{
+                      width: 180,
+                      height: 180,
+                      objectFit: 'cover',
+                      borderRadius: 8,
+                      display: 'block',
+                      margin: '8px 0'
                     }}
                   />
                 )
@@ -281,29 +285,33 @@ const PostDetail = () => {
                       component={Link}
                       to={`/news/${relatedPost.slug || relatedPost._id}`}
                       sx={{
-                        display: 'flex',
+                        display: 'grid',
+                        gridTemplateColumns: '60px 1fr',
                         textDecoration: 'none',
-                        '&:hover': { boxShadow: 2 }
+                        '&:hover': { boxShadow: 2 },
+                        alignItems: 'stretch',
+                        height: 60,
+                        overflow: 'hidden'
                       }}
                     >
-                      {relatedPost.image && (
-                        <LazyImage
-                          src={relatedPost.image}
-                          alt={relatedPost.title}
-                          width="80px"
-                          height="80px"
-                          sx={{
-                            objectFit: 'cover',
-                            borderRadius: '8px 0 0 8px',
-                            flexShrink: 0
-                          }}
-                        />
-                      )}
-                      <CardContent sx={{ flex: 1, p: 1.5 }}>
-                        <Typography variant="body2" fontWeight={600} color="text.primary" mb={0.5}>
+                      <Box sx={{ width: 60, height: 60, flexShrink: 0, borderTopLeftRadius: 'inherit', borderBottomLeftRadius: 'inherit', borderTopRightRadius: 0, borderBottomRightRadius: 0, overflow: 'hidden' }}>
+                        {relatedPost.image ? (
+                          <LazyImage
+                            src={relatedPost.image}
+                            alt={relatedPost.title}
+                            width="100%"
+                            height="100%"
+                            sx={{ objectFit: 'cover', display: 'block' }}
+                          />
+                        ) : (
+                          <Box sx={{ width: '100%', height: '100%', backgroundColor: '#f5f5f5' }} />
+                        )}
+                      </Box>
+                      <CardContent sx={{ flex: 1, p: '6px 10px', '&:last-child': { pb: '6px' }, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 60, overflow: 'hidden' }}>
+                        <Typography variant="body2" fontWeight={600} color="text.primary" sx={{ lineHeight: (relatedPost.title && relatedPost.title.length > 40) ? 1.05 : 1.2, mb: (relatedPost.title && relatedPost.title.length > 40) ? 0.2 : 0.25, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {relatedPost.title}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1 }}>
                           {new Date(relatedPost.createdAt).toLocaleDateString()}
                         </Typography>
                       </CardContent>
@@ -330,7 +338,8 @@ const PostDetail = () => {
                         display: 'flex',
                         textDecoration: 'none',
                         '&:hover': { boxShadow: 2 },
-                        minHeight: 80
+                        height: 80,
+                        alignItems: 'center'
                       }}
                     >
                       {featuredPost.image ? (
@@ -363,8 +372,8 @@ const PostDetail = () => {
                           </Typography>
                         </Box>
                       )}
-                      <CardContent sx={{ flex: 1, p: 1.5 }}>
-                        <Typography variant="body2" fontWeight={600} color="text.primary" mb={0.5}>
+                      <CardContent sx={{ flex: 1, p: 1.25 }}>
+                        <Typography variant="body2" fontWeight={600} color="text.primary" sx={{ lineHeight: 1.2, mb: 0.25, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {featuredPost.title}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
@@ -391,9 +400,12 @@ const PostDetail = () => {
                       component={Link}
                       to={`/news/${relatedPost.slug || relatedPost._id}`}
                       sx={{
-                        display: 'flex',
+                        display: 'grid',
+                        gridTemplateColumns: '80px 1fr',
                         textDecoration: 'none',
-                        '&:hover': { boxShadow: 2 }
+                        '&:hover': { boxShadow: 2 },
+                        height: 80,
+                        overflow: 'hidden'
                       }}
                     >
                       {relatedPost.image && (
@@ -409,8 +421,8 @@ const PostDetail = () => {
                           }}
                         />
                       )}
-                      <CardContent sx={{ flex: 1, p: 1.5 }}>
-                        <Typography variant="body2" fontWeight={600} color="text.primary" mb={0.5}>
+                      <CardContent sx={{ flex: 1, p: '8px 10px', '&:last-child': { pb: '8px' }, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 80, overflow: 'hidden' }}>
+                        <Typography variant="body2" fontWeight={600} color="text.primary" sx={{ lineHeight: 1.2, mb: 0.25, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {relatedPost.title}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const newsController = require('../controllers/newsController');
-const { enhancedAuth, searchLimiter } = require('../middleware/security');
+const { enhancedAuth, searchLimiter, adminOpsGuard } = require('../middleware/security');
 const {
   validateNews,
   validateSearch,
@@ -15,8 +15,8 @@ router.get('/slug/:slug', validateSlug, newsController.getNewsBySlug);
 router.get('/:id', validateId, newsController.getNewsById);
 
 // Protected routes (admin only)
-router.post('/', enhancedAuth, validateNews, newsController.createNews);
-router.patch('/:id', enhancedAuth, validateId, validateNews, newsController.updateNews);
-router.delete('/:id', enhancedAuth, validateId, newsController.deleteNews);
+router.post('/', adminOpsGuard, enhancedAuth, validateNews, newsController.createNews);
+router.patch('/:id', adminOpsGuard, enhancedAuth, validateId, validateNews, newsController.updateNews);
+router.delete('/:id', adminOpsGuard, enhancedAuth, validateId, newsController.deleteNews);
 
 module.exports = router; 

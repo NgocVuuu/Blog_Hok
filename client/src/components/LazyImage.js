@@ -30,13 +30,14 @@ const LazyImage = ({
     setLoaded(true);
   };
 
+  const hasExplicitHeight = !!height || (sx && typeof sx.height !== 'undefined');
   const imageStyle = {
     ...style,
     opacity: loaded ? 1 : 0,
     transition: 'opacity 0.3s ease-in-out',
     display: loaded ? 'block' : 'none',
     width: '100%',
-    height: '100%'
+    height: hasExplicitHeight ? '100%' : 'auto'
   };
 
   return (
@@ -79,9 +80,10 @@ const LazyImage = ({
           loading="lazy"
           sx={{
             width: '100%',
-            height: '100%',
+            height: hasExplicitHeight ? '100%' : 'auto',
             objectFit: sx.objectFit || 'cover',
             borderRadius: sx.borderRadius || 0,
+            display: loaded ? 'block' : 'none',
             ...sx
           }}
         />
