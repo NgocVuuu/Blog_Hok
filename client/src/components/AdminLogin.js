@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Alert } from '@mui/material';
+import { useAuth } from '../contexts/AuthContext';
 
-const AdminLogin = ({ onLogin }) => {
+const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,8 +19,7 @@ const AdminLogin = ({ onLogin }) => {
       });
       const data = await res.json();
       if (res.ok) {
-        localStorage.setItem('token', data.token);
-        if (onLogin) onLogin(data.user);
+        login(data.token, data.user);
       } else {
         setError(data.message || 'Đăng nhập thất bại');
       }

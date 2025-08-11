@@ -115,6 +115,8 @@ const Heroes = () => {
                       width: '100%',
                       minHeight: { xs: "85px", sm: "90px", md: "110px" }
                     }}
+                    priority={false}
+                    rootMargin="500px 0px"
                   />
                   <CardContent sx={{
                     p: { xs: '4px 6px', sm: 0.75, md: 1 },

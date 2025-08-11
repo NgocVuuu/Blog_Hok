@@ -17,9 +17,11 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { GiBroadsword } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../contexts/AuthContext';
 
 const AdminEquipmentForm = () => {
   const { t } = useTranslation();
+  const { fetchWithAuth, openLogin } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     category: 'Attack',
@@ -193,21 +195,14 @@ const AdminEquipmentForm = () => {
   const handleUpload = async (file) => {
     const formDataUpload = new FormData();
     formDataUpload.append('image', file);
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Vui lòng đăng nhập lại');
-    }
-    const res = await fetch(`${API_URL}/api/upload`, {
+    const res = await fetchWithAuth(`${API_URL}/api/upload`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: {},
       body: formDataUpload,
     });
     if (!res.ok) {
       if (res.status === 401) {
-        localStorage.removeItem('token');
-        window.location.href = '/login';
+        openLogin();
         return;
       }
       throw new Error('Upload ảnh thất bại');
@@ -307,14 +302,10 @@ const AdminEquipmentForm = () => {
 
       console.log('Sending equipment data:', JSON.stringify(backendData, null, 2));
 
-      const token = localStorage.getItem('token');
-      console.log('Token:', token ? 'Token exists' : 'No token found');
-
-      const res = await fetch(`${API_URL}/api/equipment`, {
+  const res = await fetchWithAuth(`${API_URL}/api/equipment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(backendData),
       });

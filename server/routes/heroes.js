@@ -16,8 +16,8 @@ router.get('/:id', validateId, heroController.getHeroById);
 
 // Protected routes (admin only)
 router.post('/', adminOpsGuard, enhancedAuth, validateHero, heroController.createHero);
-router.put('/:id', adminOpsGuard, enhancedAuth, validateId, validateHero, heroController.updateHero);
-router.patch('/:id', adminOpsGuard, enhancedAuth, validateId, validateHero, heroController.updateHero);
+router.put('/:id', adminOpsGuard, enhancedAuth, validateId, heroController.updateHero);
+router.patch('/:id', adminOpsGuard, enhancedAuth, validateId, heroController.updateHero);
 router.delete('/:id', adminOpsGuard, enhancedAuth, validateId, heroController.deleteHero);
 
 module.exports = router; 

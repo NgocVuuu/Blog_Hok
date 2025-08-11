@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, MenuItem, Select, InputLabel, FormControl, Chip, OutlinedInput, Grid, CircularProgress, Alert } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import UploadIcon from '@mui/icons-material/Upload';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -8,18 +9,25 @@ const rolesList = ['Marksman', 'Mage', 'Tank', 'Fighter', 'Assassin', 'Support']
 const lanesList = ['Farm Lane', 'Mid Lane', 'Roam', 'Jungle', 'Abyssal Lane'];
 const metaTiers = ['S+', 'S', 'A', 'B', 'C'];
 
+// UI hiển thị tối đa 5 ô kỹ năng. Yêu cầu mới: chỉ cần >= 1 kỹ năng (tên + mô tả) đầy đủ.
+// Các kỹ năng khác đều tùy chọn; chỉ gửi những kỹ năng đủ cả tên & mô tả.
+// Slug được backend tự sinh từ name nên client không cần gửi.
 const defaultSkills = [
-  { icon: '', description: '', iconPreview: '', name: '' },
-  { icon: '', description: '', iconPreview: '', name: '' },
-  { icon: '', description: '', iconPreview: '', name: '' },
-  { icon: '', description: '', iconPreview: '', name: '' },
-  { icon: '', description: '', iconPreview: '', name: '' },
+  { icon: '', description: '', iconPreview: '', name: '' }, // Nội tại
+  { icon: '', description: '', iconPreview: '', name: '' }, // Chiêu 1
+  { icon: '', description: '', iconPreview: '', name: '' }, // Chiêu 2
+  { icon: '', description: '', iconPreview: '', name: '' }, // Chiêu 3 (Ultimate)
+  { icon: '', description: '', iconPreview: '', name: '' }, // Chiêu 4 (Optional)
 ];
 
-const skillLabels = ['Nội tại', 'Chiêu 1', 'Chiêu 2', 'Chiêu 3', 'Chiêu 4', 'Đánh thường'];
+const skillLabels = ['Nội tại', 'Chiêu 1', 'Chiêu 2', 'Chiêu 3', 'Chiêu 4'];
+// Basic attack is treated as virtual index after the (up to) 5 skills.
+const BASIC_ATTACK_INDEX = 5;
+const BASIC_ATTACK_LABEL = 'Đánh thường';
 
 const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
-  const navigate = useNavigate();
+  const { id: routeHeroId } = useParams();
+  const { fetchWithAuth, openLogin } = useAuth();
   const [name, setName] = useState('');
   const [title, setTitle] = useState('');
   const [roles, setRoles] = useState([]);
@@ -35,23 +43,24 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   const [allHeroes, setAllHeroes] = useState([]);
   const [allies, setAllies] = useState([]);
   const [counters, setCounters] = useState([]);
-  const [allyDescs, setAllyDescs] = useState({});
-  const [counterDescs, setCounterDescs] = useState({});
+  const [goodAgainst, setGoodAgainst] = useState([]);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [lore, setLore] = useState('');
   const [combo, setCombo] = useState([]);
   const [skins, setSkins] = useState([]);
+  const [fetchedHero, setFetchedHero] = useState(null);
+  // Use fetchedHero (full detail) to override initial partial editingHero from list
+  const editingHeroData = fetchedHero || editingHero;
 
   useEffect(() => {
     const fetchHeroes = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/heroes`);
-        if (!res.ok) {
-          throw new Error('Failed to fetch heroes');
-        }
-        const data = await res.json();
+  const res = await fetch(`${API_URL}/api/heroes`); // public list
+        if (!res.ok) throw new Error('Failed to fetch heroes');
+        const response = await res.json();
+        const data = response?.success ? response.data : (Array.isArray(response) ? response : []);
         setAllHeroes(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Error fetching heroes:', err);
@@ -62,49 +71,78 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
     fetchHeroes();
   }, []);
 
+  // Auto fetch hero if route has id and no editingHero prop passed
   useEffect(() => {
-    if (editingHero) {
-      setName(editingHero.name);
-      setTitle(editingHero.title);
-      setRoles(editingHero.roles);
-      setLanes(editingHero.lanes);
-      setMetaTier(editingHero.metaTier);
-      setWinRate(editingHero.winRate.toString());
-      setPickRate(editingHero.pickRate.toString());
-      setBanRate(editingHero.banRate.toString());
-      setImageUrl(editingHero.image);
-      setSkills(editingHero.skills.map(skill => ({
-        ...skill,
-        iconPreview: skill.icon
-      })));
-      setAllies(editingHero.allies.map(ally => ally.hero));
-      setCounters(editingHero.counters.map(counter => counter.hero));
-      setAllyDescs(
-        editingHero.allies.reduce((acc, ally) => ({
-          ...acc,
-          [ally.hero]: ally.description
-        }), {})
-      );
-      setCounterDescs(
-        editingHero.counters.reduce((acc, counter) => ({
-          ...acc,
-          [counter.hero]: counter.description
-        }), {})
-      );
-      setLore(editingHero.lore || '');
-      setCombo(editingHero.combo || []);
-      setSkins(editingHero.skins || []);
+    let ignore = false;
+    const fetchHero = async () => {
+      if (!editingHero && routeHeroId) {
+        try {
+          const res = await fetch(`${API_URL}/api/heroes/${routeHeroId}`);
+          if (!res.ok) throw new Error('Không lấy được dữ liệu tướng');
+          const data = await res.json();
+          if (!ignore) setFetchedHero(data);
+        } catch (e) {
+          console.error(e);
+          if (!ignore) setMessage({ type: 'error', text: 'Không tải được dữ liệu tướng để sửa' });
+        }
+      }
+    };
+    fetchHero();
+    return () => { ignore = true; };
+  }, [routeHeroId, editingHero]);
+
+  // Populate form when we have editingHeroData
+  useEffect(() => {
+    if (editingHeroData) {
+  console.log('Editing hero data loaded:', editingHeroData);
+      setName(editingHeroData.name || '');
+      setTitle(editingHeroData.title || '');
+      setRoles(Array.isArray(editingHeroData.roles) ? editingHeroData.roles : []);
+      setLanes(Array.isArray(editingHeroData.lanes) ? editingHeroData.lanes : []);
+      setMetaTier(editingHeroData.metaTier || 'S');
+      setWinRate(editingHeroData.winRate != null ? String(editingHeroData.winRate) : '');
+      setPickRate(editingHeroData.pickRate != null ? String(editingHeroData.pickRate) : '');
+      setBanRate(editingHeroData.banRate != null ? String(editingHeroData.banRate) : '');
+      setImageUrl(editingHeroData.image || '');
+  // Normalize skills list to always show 5 slots (last one optional)
+  let normalizedSkills = Array.isArray(editingHeroData.skills) ? editingHeroData.skills.map(s => ({ ...s, iconPreview: s.icon })) : [];
+  while (normalizedSkills.length < 5) normalizedSkills.push({ icon: '', description: '', iconPreview: '', name: '' });
+  if (normalizedSkills.length > 5) normalizedSkills = normalizedSkills.slice(0,5);
+      setSkills(normalizedSkills);
+      const alliesArr = Array.isArray(editingHeroData.allies) ? editingHeroData.allies : [];
+      setAllies(alliesArr.map(a => a.hero));
+      const countersArr = Array.isArray(editingHeroData.counters) ? editingHeroData.counters : [];
+      setCounters(countersArr.map(c => c.hero));
+      const goodAgainstArr = Array.isArray(editingHeroData.goodAgainst) ? editingHeroData.goodAgainst : [];
+      setGoodAgainst(goodAgainstArr.map(g => g.hero));
+      setLore(editingHeroData.lore || '');
+      setCombo(Array.isArray(editingHeroData.combo) ? editingHeroData.combo : []);
+      setSkins(Array.isArray(editingHeroData.skins) ? editingHeroData.skins : []);
+    }
+  }, [editingHeroData]);
+
+  // If editingHero prop is partial, fetch full details
+  useEffect(() => {
+    if (editingHero && (!editingHero.skills || editingHero.skills.length === 0 || editingHero.lore === undefined)) {
+      (async () => {
+        try {
+          const res = await fetch(`${API_URL}/api/heroes/${editingHero._id}`);
+          if (res.ok) {
+            const data = await res.json();
+            setFetchedHero(data);
+          }
+        } catch (err) {
+          console.error('Failed to fetch full hero details', err);
+        }
+      })();
     }
   }, [editingHero]);
 
   const validateNumber = (value, field) => {
+    // Relaxed: only check not negative; let server enforce 0-100 if still desired
     const num = parseFloat(value);
-    if (isNaN(num) || num < 0 || num > 100) {
-      setErrors(prev => ({ ...prev, [field]: 'Giá trị phải từ 0 đến 100' }));
-      return false;
-    }
-    setErrors(prev => ({ ...prev, [field]: '' }));
-    return true;
+    if (isNaN(num) || num < 0) { setErrors(p => ({ ...p, [field]: 'Sai định dạng số' })); return false; }
+    setErrors(p => ({ ...p, [field]: '' })); return true;
   };
 
   const handleImageChange = (e) => {
@@ -139,17 +177,14 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
     if (!token) {
       throw new Error('Vui lòng đăng nhập lại');
     }
-    const res = await fetch(`${API_URL}/api/upload`, {
+    const res = await fetchWithAuth(`${API_URL}/api/upload`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: {},
       body: formData,
     });
     if (!res.ok) {
       if (res.status === 401) {
-        localStorage.removeItem('token');
-        navigate('/login');
+        openLogin();
         return;
       }
       throw new Error('Upload ảnh thất bại');
@@ -169,21 +204,18 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
     if (!validateNumber(winRate, 'winRate')) newErrors.winRate = true;
     if (!validateNumber(pickRate, 'pickRate')) newErrors.pickRate = true;
     if (!validateNumber(banRate, 'banRate')) newErrors.banRate = true;
-    
-    if (skills.length === 0) {
-      newErrors.skills = 'Vui lòng nhập thông tin kỹ năng';
-    } else {
-      const skillsWithDescription = skills.filter(s => s.description.trim());
-      if (skillsWithDescription.length === 0) {
-        newErrors.skills = 'Vui lòng nhập mô tả cho ít nhất một kỹ năng';
-      } else {
-        const invalidSkills = skillsWithDescription.filter(s => !s.name.trim());
-        if (invalidSkills.length > 0) {
-          newErrors.skills = 'Vui lòng nhập tên cho các kỹ năng đã có mô tả';
-        }
-      }
+
+    // Chỉ cần >=1 skill có name hoặc description
+    const fullSkills = skills.filter(s => {
+      if (!s) return false;
+      const hasName = !!(s.name && s.name.trim());
+      const hasDesc = !!(s.description && s.description.trim());
+      return hasName || hasDesc;
+    });
+    if (fullSkills.length === 0) {
+      newErrors.skills = 'Vui lòng nhập ít nhất một kỹ năng (tên hoặc mô tả)';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -204,6 +236,12 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       setMessage({ type: 'error', text: 'Vui lòng kiểm tra lại thông tin' });
       return;
     }
+    // Validate skins (each skin must have both name & image if provided)
+    const incompleteSkin = skins.find(s => (s.name.trim() && !s.image) || (!s.name.trim() && s.image));
+    if (incompleteSkin) {
+      setMessage({ type: 'error', text: 'Vui lòng điền đầy đủ tên và ảnh cho mỗi trang phục hoặc xóa dòng chưa hoàn chỉnh' });
+      return;
+    }
     setLoading(true);
     try {
       let img = imageUrl;
@@ -211,22 +249,21 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         img = await handleUpload(imageFile);
         setImageUrl(img);
       }
-      
-      const processedSkills = await Promise.all(skills.map(async (skill, index) => {
-        if (!skill.description || !skill.description.trim()) {
-          return null;
-        }
 
+  const processedSkills = await Promise.all(skills.map(async (skill, index) => {
+        if (!skill) return null;
+        const hasName = !!(skill.name && skill.name.trim());
+        const hasDesc = !!(skill.description && skill.description.trim());
+        if (!hasName && !hasDesc) return null;
         let iconUrl = '';
         if (skill.icon instanceof File) {
           iconUrl = await handleUpload(skill.icon);
         } else if (typeof skill.icon === 'string') {
           iconUrl = skill.icon;
         }
-        
         return {
-          name: skill.name.trim() || `Skill ${index + 1}`,
-          description: skill.description.trim(),
+          name: hasName ? skill.name.trim() : '',
+          description: hasDesc ? skill.description.trim() : '',
           icon: iconUrl
         };
       }));
@@ -235,7 +272,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       if (filteredSkills.length === 0) {
         throw new Error('Vui lòng nhập ít nhất một kỹ năng');
       }
-      
+
       const payload = {
         name,
         title,
@@ -247,51 +284,73 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         pickRate: parseFloat(pickRate),
         banRate: parseFloat(banRate),
         skills: filteredSkills,
-        allies: allies.map(id => ({ hero: id, description: allyDescs[id] || '' })),
-        counters: counters.map(id => ({ hero: id, description: counterDescs[id] || '' })),
+  allies: allies.map(id => ({ hero: id })),
+  counters: counters.map(id => ({ hero: id })),
+  goodAgainst: goodAgainst.map(id => ({ hero: id })),
         lore,
-        skins,
+  skins: skins.filter(s => s.name.trim() && s.image),
         combo,
       };
-      
+
+      // Debug: log derived counts to help identify validation issues
+      console.log('[DEBUG] Prepared hero payload', {
+        name, rolesCount: roles.length, lanesCount: lanes.length, skillsProvided: skills.length, skillsSent: filteredSkills.length,
+        alliesCount: allies.length, countersCount: counters.length, goodAgainstCount: goodAgainst.length,
+        skinsCount: (skins.filter(s => s.name.trim() && s.image)).length,
+        winRate, pickRate, banRate
+      });
+
       // Debug log
       console.log('Sending payload:', payload);
-      console.log('URL:', editingHero ? `${API_URL}/api/heroes/${editingHero._id}` : `${API_URL}/api/heroes`);
-      console.log('Method:', editingHero ? 'PUT' : 'POST');
-      
+  const isEditing = !!editingHeroData;
+  console.log('URL:', isEditing ? `${API_URL}/api/heroes/${editingHeroData._id}` : `${API_URL}/api/heroes`);
+  console.log('Method:', isEditing ? 'PUT' : 'POST');
+
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('Vui lòng đăng nhập lại');
       }
-      
-      const url = editingHero 
-        ? `${API_URL}/api/heroes/${editingHero._id}`
-        : `${API_URL}/api/heroes`;
-      
-      const method = editingHero ? 'PUT' : 'POST';
-      
-      const res = await fetch(url, {
+
+  const url = isEditing ? `${API_URL}/api/heroes/${editingHeroData._id}` : `${API_URL}/api/heroes`;
+  const method = isEditing ? 'PUT' : 'POST';
+
+    const res = await fetchWithAuth(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
-      
+
       if (!res.ok) {
         if (res.status === 401) {
-          localStorage.removeItem('token');
-          navigate('/login');
+      openLogin();
           return;
         }
-        const error = await res.json();
-        throw new Error(error.message || 'Có lỗi xảy ra khi thêm tướng');
+  const error = await res.json().catch(() => ({}));
+  console.warn('[SERVER VALIDATION ERROR]', error);
+  if (error.duplicate && error.field === 'name') {
+    setErrors(prev => ({ ...prev, name: 'Tên tướng đã tồn tại' }));
+  }
+  const detailMsg = error.details ? error.details.join('; ') : '';
+  // Map field specific errors for UI
+  if (Array.isArray(error.fields) && Array.isArray(error.details)) {
+    const fieldErrors = {};
+    error.fields.forEach((f, i) => { fieldErrors[f] = error.details[i] || 'Lỗi'; });
+    setErrors(prev => ({ ...prev, ...fieldErrors }));
+  }
+  // Fallback for express-validator style { errors: [ { param, msg } ] }
+  if (Array.isArray(error.errors)) {
+    const fieldErrors2 = {};
+    error.errors.forEach(e => { if (e.param) fieldErrors2[e.param] = e.msg || 'Lỗi'; });
+    if (Object.keys(fieldErrors2).length) setErrors(prev => ({ ...prev, ...fieldErrors2 }));
+  }
+  throw new Error(detailMsg || error.message || (error.duplicate ? 'Tên tướng đã tồn tại' : 'Có lỗi xảy ra khi thêm/cập nhật tướng'));
       }
-      
-      setMessage({ type: 'success', text: editingHero ? 'Cập nhật tướng thành công!' : 'Thêm tướng thành công!' });
-      
-      if (!editingHero) {
+
+  setMessage({ type: 'success', text: isEditing ? 'Cập nhật tướng thành công!' : 'Thêm tướng thành công!' });
+
+  if (!isEditing) {
         setName('');
         setTitle('');
         setRoles([]);
@@ -306,19 +365,17 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         setSkills(defaultSkills);
         setAllies([]);
         setCounters([]);
-        setAllyDescs({});
-        setCounterDescs({});
         setLore('');
         setCombo([]);
         setSkins([]);
       }
-      
+
       if (onFormSubmit) {
         onFormSubmit();
       }
     } catch (err) {
-      console.error('Error submitting form:', err);
-      setMessage({ type: 'error', text: err.message || 'Có lỗi xảy ra khi thêm tướng' });
+  console.error('Error submitting form:', err);
+  setMessage({ type: 'error', text: err.message || 'Có lỗi xảy ra khi thêm/cập nhật tướng' });
     } finally {
       setLoading(false);
     }
@@ -327,32 +384,32 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 800, mx: 'auto', mt: 4 }}>
       <Typography variant="h5" mb={2}>
-        {editingHero ? 'Chỉnh sửa tướng' : 'Thêm tướng mới'}
+        {editingHeroData ? 'Chỉnh sửa tướng' : 'Thêm tướng mới'}
       </Typography>
-      
+
       {message.text && (
         <Alert severity={message.type} sx={{ mb: 2 }}>
           {message.text}
         </Alert>
       )}
 
-      <TextField 
-        label="Tên tướng" 
-        value={name} 
-        onChange={e => setName(e.target.value)} 
-        fullWidth 
+      <TextField
+        label="Tên tướng"
+        value={name}
+        onChange={e => setName(e.target.value)}
+        fullWidth
         required
         margin="normal"
         error={!!errors.name}
         helperText={errors.name}
       />
 
-      <TextField 
-        label="Danh hiệu" 
-        value={title} 
-        onChange={e => setTitle(e.target.value)} 
-        fullWidth 
-        required 
+      <TextField
+        label="Danh hiệu"
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+        fullWidth
+        required
         margin="normal"
         error={!!errors.title}
         helperText={errors.title}
@@ -395,9 +452,9 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       </Grid>
 
       <Box mt={2} mb={2}>
-        <Button 
-          variant="contained" 
-          component="label" 
+        <Button
+          variant="contained"
+          component="label"
           startIcon={<UploadIcon />}>
           Upload ảnh tướng
           <input type="file" hidden accept="image/*,.avif" onChange={handleImageChange} />
@@ -417,50 +474,56 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
 
       <Box mt={2}>
         <Typography variant="subtitle1">Kỹ năng</Typography>
-        {skills.map((skill, idx) => (
+    {skills.map((skill, idx) => {
+        const hasName = !!(skill.name && skill.name.trim());
+        const hasDesc = !!(skill.description && skill.description.trim());
+        const nameError = !!errors.skills && !hasName && hasDesc; // desc filled but name missing
+        const descError = !!errors.skills && !hasDesc && hasName; // name filled but desc missing
+        return (
           <Box key={idx} display="flex" gap={2} mb={1} alignItems="center">
             <Typography sx={{ minWidth: 80 }}>{skillLabels[idx]}</Typography>
-            <TextField 
-              label="Tên kỹ năng" 
-              value={skill.name} 
-              onChange={e => handleSkillChange(idx, 'name', e.target.value)} 
-              required={idx < 4 && !!skill.description}
-              error={!!errors.skills && !!skill.description && !skill.name && idx < 4}
+            <TextField
+              label="Tên kỹ năng"
+              value={skill.name}
+              onChange={e => handleSkillChange(idx, 'name', e.target.value)}
+              required={false}
+              error={nameError}
               sx={{ minWidth: 200 }}
             />
-            <Button 
-              variant="outlined" 
-              component="label" 
-              size="small" 
+            <Button
+              variant="outlined"
+              component="label"
+              size="small"
               startIcon={<UploadIcon />}
             >
               Upload icon
-              <input 
-                type="file" 
-                hidden 
-                accept="image/*,.avif" 
-                onChange={e => handleSkillIconChange(idx, e.target.files[0])} 
+              <input
+                type="file"
+                hidden
+                accept="image/*,.avif"
+                onChange={e => handleSkillIconChange(idx, e.target.files[0])}
               />
             </Button>
             {(skill.iconPreview || skill.icon) && (
               <Box>
-                <img 
-                  src={skill.iconPreview || skill.icon} 
-                  alt="icon" 
-                  style={{ maxHeight: 40, maxWidth: 40, objectFit: 'contain' }} 
+                <img
+                  src={skill.iconPreview || skill.icon}
+                  alt="icon"
+                  style={{ maxHeight: 40, maxWidth: 40, objectFit: 'contain' }}
                 />
               </Box>
             )}
-            <TextField 
-              label="Mô tả" 
-              value={skill.description} 
-              onChange={e => handleSkillChange(idx, 'description', e.target.value)} 
-              required={idx < 4}
-              error={!!errors.skills && !skill.description && idx < 4}
+            <TextField
+              label="Mô tả"
+              value={skill.description}
+              onChange={e => handleSkillChange(idx, 'description', e.target.value)}
+              required={false}
+              error={descError}
               fullWidth
             />
           </Box>
-        ))}
+        );
+      })}
         {errors.skills && (
           <Typography color="error" variant="caption">
             {errors.skills}
@@ -470,20 +533,20 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
 
       <Box mt={2} mb={2}>
         <Typography variant="h6">Đồng minh</Typography>
-        <Select 
-          multiple 
-          value={allies} 
-          onChange={e => setAllies(e.target.value)} 
-          fullWidth 
+        <Select
+          multiple
+          value={allies}
+          onChange={e => setAllies(e.target.value)}
+          fullWidth
           renderValue={selected => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {selected.map(id => {
                 const hero = allHeroes.find(h => h._id === id);
                 return hero ? (
-                  <Chip 
-                    key={id} 
-                    label={hero.name} 
-                    avatar={<img src={hero.image} alt="" width={24} height={24} />} 
+                  <Chip
+                    key={id}
+                    label={hero.name}
+                    avatar={<img src={hero.image} alt="" width={24} height={24} />}
                   />
                 ) : null;
               })}
@@ -496,34 +559,24 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
             </MenuItem>
           ))}
         </Select>
-        {allies.map(id => (
-          <TextField 
-            key={id} 
-            label={`Mô tả cho ${allHeroes.find(h => h._id === id)?.name || ''}`} 
-            value={allyDescs[id] || ''} 
-            onChange={e => setAllyDescs({ ...allyDescs, [id]: e.target.value })} 
-            fullWidth 
-            margin="dense" 
-          />
-        ))}
       </Box>
 
       <Box mt={2} mb={2}>
-        <Typography variant="h6">Khắc chế</Typography>
-        <Select 
-          multiple 
-          value={counters} 
-          onChange={e => setCounters(e.target.value)} 
-          fullWidth 
+        <Typography variant="h6">Khắc chế bởi</Typography>
+        <Select
+          multiple
+          value={counters}
+          onChange={e => setCounters(e.target.value)}
+          fullWidth
           renderValue={selected => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {selected.map(id => {
                 const hero = allHeroes.find(h => h._id === id);
                 return hero ? (
-                  <Chip 
-                    key={id} 
-                    label={hero.name} 
-                    avatar={<img src={hero.image} alt="" width={24} height={24} />} 
+                  <Chip
+                    key={id}
+                    label={hero.name}
+                    avatar={<img src={hero.image} alt="" width={24} height={24} />}
                     onDelete={() => setCounters(counters.filter(c => c !== id))}
                   />
                 ) : null;
@@ -545,23 +598,52 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
             </MenuItem>
           ))}
         </Select>
-        {counters.map(id => (
-          <TextField 
-            key={id} 
-            label={`Mô tả cho ${allHeroes.find(h => h._id === id)?.name || ''}`} 
-            value={counterDescs[id] || ''} 
-            onChange={e => setCounterDescs({ ...counterDescs, [id]: e.target.value })} 
-            fullWidth 
-            margin="dense" 
-          />
-        ))}
       </Box>
 
-      <TextField 
-        label="Xuất thân/Lore" 
-        value={lore} 
-        onChange={e => setLore(e.target.value)} 
-        fullWidth 
+      <Box mt={2} mb={2}>
+        <Typography variant="h6">Đối đầu tốt</Typography>
+        <Select
+          multiple
+          value={goodAgainst}
+          onChange={e => setGoodAgainst(e.target.value)}
+          fullWidth
+          renderValue={selected => (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              {selected.map(id => {
+                const hero = allHeroes.find(h => h._id === id);
+                return hero ? (
+                  <Chip
+                    key={id}
+                    label={hero.name}
+                    avatar={<img src={hero.image} alt="" width={24} height={24} />}
+                    onDelete={() => setGoodAgainst(goodAgainst.filter(g => g !== id))}
+                  />
+                ) : null;
+              })}
+              {selected.length > 0 && (
+                <Chip
+                  label="Xóa tất cả"
+                  color="error"
+                  onClick={() => setGoodAgainst([])}
+                  sx={{ ml: 1 }}
+                />
+              )}
+            </Box>
+          )}
+        >
+          {Array.isArray(allHeroes) && allHeroes.map(hero => (
+            <MenuItem key={hero._id} value={hero._id}>
+              {hero.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </Box>
+
+      <TextField
+        label="Xuất thân/Lore"
+        value={lore}
+        onChange={e => setLore(e.target.value)}
+        fullWidth
         margin="normal"
         multiline
         minRows={2}
@@ -596,7 +678,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                 </Box>
               ))}
             </Box>
-            {[0,1,2,3,4,5].map(skillIdx => (
+      {[0,1,2,3,4,BASIC_ATTACK_INDEX].map(skillIdx => (
               <Button
                 key={skillIdx}
                 variant="outlined"
@@ -604,11 +686,11 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                 sx={{ minWidth: 40, p: 0.5, mx: 0.5 }}
                 onClick={() => setCombo(combo => combo.map((s, i) => i === idx ? { ...s, skills: [...s.skills, skillIdx] } : s))}
               >
-                {skillIdx === 5 ? (
-                  <span role="img" aria-label="Đánh thường">🗡️</span>
+        {skillIdx === BASIC_ATTACK_INDEX ? (
+                  <span role="img" aria-label={BASIC_ATTACK_LABEL}>🗡️</span>
                 ) : skills[skillIdx]?.iconPreview ? (
                   <img src={skills[skillIdx].iconPreview} alt={skills[skillIdx].name} style={{ width: 32, height: 32, borderRadius: '50%' }} />
-                ) : skillLabels[skillIdx]}
+                ) : skillLabels[skillIdx] || BASIC_ATTACK_LABEL}
               </Button>
             ))}
             <TextField
@@ -666,17 +748,17 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         <Button variant="outlined" onClick={() => setSkins([...skins, { name: '', image: '' }])}>Thêm skin</Button>
       </Box>
 
-      <Button 
-        type="submit" 
-        variant="contained" 
-        color="primary" 
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
         sx={{ mt: 2 }}
         disabled={loading}
       >
-        {loading ? <CircularProgress size={24} /> : (editingHero ? 'Cập nhật tướng' : 'Thêm tướng')}
+  {loading ? <CircularProgress size={24} /> : (editingHeroData ? 'Cập nhật tướng' : 'Thêm tướng')}
       </Button>
     </Box>
   );
 };
 
-export default AdminHeroForm; 
+export default AdminHeroForm;

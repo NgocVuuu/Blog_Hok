@@ -1,5 +1,5 @@
 {
-  "counter": "Penangkal",
+  "counter": "Dilawan oleh",
   "combo_kill": "Combo Kill",
   "skill": "Skill",
   "meta_tier": "Meta Tier",
@@ -91,11 +91,13 @@
     "banRate": "Tingkat Larangan",
     "skills": "Kemampuan",
     "allies": "Sekutu",
-    "counters": "Penangkal",
+    "counters": "Dilawan oleh",
     "lore": "Kisah",
     "profile": "Profil",
     "combo": "Combo",
     "skins": "Kulit"
+,
+    "goodAgainst": "Unggul melawan"
   },
   "items": {
     "title": "Item",

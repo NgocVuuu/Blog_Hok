@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Alert, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const AdminPostForm = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const { fetchWithAuth, openLogin } = useAuth();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('guides');
@@ -43,22 +43,14 @@ const AdminPostForm = () => {
   const handleUpload = async (file) => {
     const formData = new FormData();
     formData.append('image', file);
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-      throw new Error('Vui lòng đăng nhập lại');
-    }
-    const res = await fetch(`${API_URL}/api/upload`, {
+    const res = await fetchWithAuth(`${API_URL}/api/upload`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: {},
       body: formData,
     });
     if (!res.ok) {
       if (res.status === 401) {
-        localStorage.removeItem('token');
-        navigate('/login');
+        openLogin();
         return;
       }
       throw new Error('Upload ảnh thất bại');
@@ -70,22 +62,14 @@ const AdminPostForm = () => {
   const handleVideoUpload = async (file) => {
     const formData = new FormData();
     formData.append('video', file);
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-      throw new Error('Vui lòng đăng nhập lại');
-    }
-    const res = await fetch(`${API_URL}/api/upload/video`, {
+    const res = await fetchWithAuth(`${API_URL}/api/upload/video`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: {},
       body: formData,
     });
     if (!res.ok) {
       if (res.status === 401) {
-        localStorage.removeItem('token');
-        navigate('/login');
+        openLogin();
         return;
       }
       const err = await res.json().catch(() => ({}));
@@ -127,12 +111,10 @@ const AdminPostForm = () => {
         setImageUrl(img);
       }
 
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_URL}/api/news`, {
+  const res = await fetchWithAuth(`${API_URL}/api/news`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           title,

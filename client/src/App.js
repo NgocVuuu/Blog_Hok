@@ -1,6 +1,8 @@
-import React, { useState, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Box, CssBaseline, ThemeProvider } from '@mui/material';
+import LoginModal from './components/LoginModal';
+import { useAuth } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PageTransition from './components/PageTransition';
@@ -22,11 +24,16 @@ const PostDetail = React.lazy(() => import('./pages/PostDetail'));
 const EditPost = React.lazy(() => import('./pages/EditPost'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 const AdminDashboard = React.lazy(() => import('./components/AdminDashboard'));
-const AdminLogin = React.lazy(() => import('./components/AdminLogin'));
-const AdminRegister = React.lazy(() => import('./components/AdminRegister'));
+
+const AdminGate = ({ openLogin }) => {
+  React.useEffect(() => {
+    openLogin();
+  }, [openLogin]);
+  return null; // Nothing rendered; modal will appear
+};
 
 function App() {
-  const [admin, setAdmin] = useState(!!localStorage.getItem('token'));
+  const { isAuthenticated, openLogin } = useAuth();
 
   return (
     <ErrorBoundary>
@@ -66,10 +73,7 @@ function App() {
                     <Route path="/edit-post/:id" element={<EditPost />} />
                     {/* <Route path="/register" element={<AdminRegister />} /> */}
                     {process.env.NODE_ENV !== 'production' && (
-                      <Route
-                        path="/admin"
-                        element={admin ? <AdminDashboard /> : <AdminLogin onLogin={() => setAdmin(true)} />}
-                      />
+                      <Route path="/admin" element={isAuthenticated ? <AdminDashboard /> : <AdminGate openLogin={openLogin} />} />
                     )}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
@@ -80,6 +84,7 @@ function App() {
           </Box>
         </ThemeProvider>
       </ToastProvider>
+      <LoginModal />
     </ErrorBoundary>
   );
 }

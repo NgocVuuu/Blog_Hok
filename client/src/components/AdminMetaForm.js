@@ -6,15 +6,14 @@ const AdminMetaForm = () => {
   const [description, setDescription] = useState('');
   const [message, setMessage] = useState('');
   const API_URL = process.env.REACT_APP_API_URL;
+  const { fetchWithAuth, openLogin } = require('../contexts/AuthContext');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
-    const res = await fetch(`${API_URL}/api/meta`, {
+  const res = await fetchWithAuth(`${API_URL}/api/meta`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ title, description }),
     });

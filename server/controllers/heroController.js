@@ -139,12 +139,39 @@ exports.updateHero = async (req, res, next) => {
     // Log for debugging
     console.log('Updating hero:', idPart);
     console.log('Request body:', req.body);
+    console.log('Existing hero before assign:', { name: hero.name, slug: hero.slug, id: hero._id });
     
     Object.assign(hero, req.body);
-    const updatedHero = await hero.save();
+    console.log('Hero after assign (pre-save):', { name: hero.name, slug: hero.slug, id: hero._id });
     
-    console.log('Updated hero successfully');
-    res.json(updatedHero);
+    try {
+      const updatedHero = await hero.save();
+      console.log('Updated hero successfully');
+      return res.json(updatedHero);
+    } catch (err) {
+      if (err.name === 'ValidationError') {
+  console.error('Hero validation error messages:', Object.values(err.errors).map(e => e.message));
+  console.error('Hero validation error raw:', Object.keys(err.errors).reduce((acc,k)=>{acc[k]={ message: err.errors[k].message, value: err.errors[k].value }; return acc;}, {}));
+        return res.status(400).json({
+          success: false,
+            message: 'Validation Error',
+            details: Object.values(err.errors).map(e => e.message),
+            fields: Object.keys(err.errors)
+        });
+      }
+      if (err && err.code === 11000) { // duplicate key
+        console.error('Duplicate key error updating hero:', err.keyValue);
+        const field = Object.keys(err.keyPattern || err.keyValue || {})[0] || 'field';
+        return res.status(400).json({
+          success: false,
+          message: field === 'slug' || field === 'name' ? 'Tên tướng đã tồn tại' : 'Giá trị đã tồn tại',
+          duplicate: true,
+          field,
+          keyValue: err.keyValue
+        });
+      }
+      throw err;
+    }
   } catch (err) {
     console.error('Error updating hero:', err);
     next(err);
@@ -184,6 +211,10 @@ exports.getHeroBySlug = async (req, res, next) => {
       .populate({
         path: 'counters.hero',
         select: 'name slug image roles',
+      })
+      .populate({
+        path: 'goodAgainst.hero',
+        select: 'name slug image roles',
       });
     if (!hero) return res.status(404).json({ message: 'Không tìm thấy tướng' });
 
@@ -194,7 +225,6 @@ exports.getHeroBySlug = async (req, res, next) => {
       slug: a.hero.slug,
       image: a.hero.image,
       roles: a.hero.roles,
-      description: a.description || ''
     }) : null).filter(Boolean);
     const counters = (hero.counters || []).map(c => c.hero ? ({
       _id: c.hero._id,
@@ -202,15 +232,22 @@ exports.getHeroBySlug = async (req, res, next) => {
       slug: c.hero.slug,
       image: c.hero.image,
       roles: c.hero.roles,
-      description: c.description || ''
+    }) : null).filter(Boolean);
+    const goodAgainst = (hero.goodAgainst || []).map(g => g.hero ? ({
+      _id: g.hero._id,
+      name: g.hero.name,
+      slug: g.hero.slug,
+      image: g.hero.image,
+      roles: g.hero.roles,
     }) : null).filter(Boolean);
 
     const heroObj = hero.toObject();
     heroObj.allies = allies;
     heroObj.counters = counters;
+    heroObj.goodAgainst = goodAgainst;
 
     res.json(heroObj);
   } catch (err) {
     next(err);
   }
-}; 
+};

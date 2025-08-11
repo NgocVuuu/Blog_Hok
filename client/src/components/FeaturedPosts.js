@@ -11,19 +11,26 @@ const FeaturedPosts = () => {
   const API_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    fetch(`${API_URL}/api/news?sort=latest&limit=3`)
-      .then(res => res.json())
-      .then(response => {
-        // Handle new API response format
+    let aborted = false;
+    const controller = new AbortController();
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/news?sort=latest&limit=3`, { signal: controller.signal });
+        const response = await res.json();
+        if (aborted) return;
         const postsData = response.success ? response.data : (Array.isArray(response) ? response : []);
         setPosts(postsData);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching posts:', error);
-        setPosts([]);
-        setLoading(false);
-      });
+      } catch (error) {
+        if (!aborted) {
+          console.error('Error fetching posts:', error);
+          setPosts([]);
+        }
+      } finally {
+        if (!aborted) setLoading(false);
+      }
+    };
+    fetchPosts();
+    return () => { aborted = true; controller.abort(); };
   }, [API_URL]);
 
   if (loading) return <CircularProgress />;
@@ -49,6 +56,7 @@ const FeaturedPosts = () => {
                     src={post.image}
                     alt={post.title}
                     height="180px"
+                    rootMargin="500px 0px"
                     sx={{
                       width: '100%',
                       objectFit: 'cover',
@@ -71,4 +79,4 @@ const FeaturedPosts = () => {
   );
 };
 
-export default FeaturedPosts; 
+export default FeaturedPosts;

@@ -5,9 +5,11 @@ import {
 } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../contexts/AuthContext';
 
 const AdminArcanaForm = () => {
   const { t } = useTranslation();
+  const { fetchWithAuth, openLogin } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     color: 'red',
@@ -55,21 +57,14 @@ const AdminArcanaForm = () => {
   const handleUpload = async (file) => {
     const formDataUpload = new FormData();
     formDataUpload.append('image', file);
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Vui lòng đăng nhập lại');
-    }
-    const res = await fetch(`${API_URL}/api/upload`, {
+    const res = await fetchWithAuth(`${API_URL}/api/upload`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: {},
       body: formDataUpload,
     });
     if (!res.ok) {
       if (res.status === 401) {
-        localStorage.removeItem('token');
-        window.location.href = '/login';
+        openLogin();
         return;
       }
       throw new Error('Upload ảnh thất bại');
@@ -95,12 +90,10 @@ const AdminArcanaForm = () => {
       const effectsArray = formData.effects.split('\n').filter(effect => effect.trim());
       const recommendedForArray = formData.recommendedFor;
 
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_URL}/api/arcana`, {
+  const res = await fetchWithAuth(`${API_URL}/api/arcana`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...formData,

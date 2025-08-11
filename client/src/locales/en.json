@@ -1,5 +1,5 @@
 {
-  "counter": "Counter",
+  "counter": "Countered by",
   "combo_kill": "Combo Kill",
   "skill": "Skill",
   "meta_tier": "Meta Tier",
@@ -96,11 +96,12 @@
     "banRate": "Ban Rate",
     "skills": "Skills",
     "allies": "Allies",
-    "counters": "Counters",
+    "counters": "Countered by",
     "lore": "Lore",
     "profile": "Profile",
     "combo": "Combo",
-    "skins": "Skins"
+    "skins": "Skins",
+    "goodAgainst": "Good Against"
   },
   "equipment": {
     "title": "Equipment",
@@ -240,4 +241,4 @@
     "skins": "Skins",
     "origin": "Lore"
   }
-} 
+}

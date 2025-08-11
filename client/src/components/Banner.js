@@ -16,12 +16,16 @@ const Banner = () => {
         overflow: 'hidden',
         mb: 4,
         minHeight: 420,
+        willChange: 'transform'
       }}
     >
       {/* Background image with lazy loading */}
       <LazyImage
         src="/banner.jpg"
         alt="Banner"
+        priority
+        rootMargin="600px 0px"
+        threshold={0}
         sx={{
           position: 'absolute',
           inset: 0,

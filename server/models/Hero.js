@@ -28,28 +28,22 @@ const heroSchema = new mongoose.Schema({
     enum: ['S+', 'S', 'A', 'B', 'C'],
   },
   winRate: {
-    type: Number,
-    required: true,
-    min: 0,
-    max: 100,
+  type: Number,
+  required: false,
   },
   pickRate: {
-    type: Number,
-    required: true,
-    min: 0,
-    max: 100,
+  type: Number,
+  required: false,
   },
   banRate: {
-    type: Number,
-    required: true,
-    min: 0,
-    max: 100,
+  type: Number,
+  required: false,
     get: v => Number(v.toFixed(2)) // Làm tròn đến 2 chữ số thập phân
   },
   skills: [{
     name: {
       type: String,
-      required: true,
+      required: false,
       trim: true
     },
     icon: {
@@ -58,7 +52,7 @@ const heroSchema = new mongoose.Schema({
     },
     description: {
       type: String,
-      required: true,
+      required: false,
       trim: true
     }
   }],
@@ -68,7 +62,6 @@ const heroSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Hero',
       },
-      description: String,
     }
   ],
   counters: [
@@ -77,13 +70,19 @@ const heroSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Hero',
       },
-      description: String,
+    }
+  ],
+  goodAgainst: [
+    {
+      hero: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hero',
+      },
     }
   ],
   slug: {
-    type: String,
-    required: true,
-    unique: true,
+  type: String,
+  unique: true,
   },
   createdAt: {
     type: Date,
@@ -115,39 +114,31 @@ const heroSchema = new mongoose.Schema({
   ],
 });
 
-// Validate skills array
+// Relaxed skill validation: just keep skills with either name or description; require at least one
 heroSchema.pre('validate', function(next) {
-  // Kiểm tra skills có phải là array không
   if (!Array.isArray(this.skills)) {
-    this.invalidate('skills', 'Skills must be an array');
-    return next();
+    this.skills = [];
   }
-
-  // Lọc bỏ những skill không có description
-  this.skills = this.skills.filter(skill => skill && skill.description && skill.description.trim());
-
-  // Kiểm tra số lượng skills
+  this.skills = this.skills.filter(skill => skill && (
+    (skill.name && skill.name.trim()) || (skill.description && skill.description.trim())
+  ));
   if (this.skills.length === 0) {
-    this.invalidate('skills', 'Hero must have at least one skill with description');
-    return next();
+    this.invalidate('skills', 'At least one skill (name or description) is required');
   }
+  // Auto-trim
+  this.skills = this.skills.map(s => ({
+    name: s.name ? s.name.trim() : '',
+    icon: s.icon || '',
+    description: s.description ? s.description.trim() : ''
+  })).slice(0,5); // still cap at 5 silently
 
-  if (this.skills.length > 5) {
-    this.invalidate('skills', 'Hero cannot have more than 5 skills');
-    return next();
-  }
-
-  // Kiểm tra từng skill
-  for (let i = 0; i < this.skills.length; i++) {
-    const skill = this.skills[i];
-    if (!skill.name || !skill.name.trim()) {
-      this.invalidate(`skills.${i}.name`, 'Skill name is required');
-    }
-    if (!skill.description || !skill.description.trim()) {
-      this.invalidate(`skills.${i}.description`, 'Skill description is required');
+  // Ensure slug exists before required validation kicks in (since slug field is unique)
+  if (this.name) {
+    const generated = this.name.toLowerCase().trim().replace(/\s+/g, '-');
+    if (!this.slug || this.isModified('name')) {
+      this.slug = generated;
     }
   }
-
   next();
 });
 

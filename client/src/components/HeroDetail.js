@@ -416,9 +416,9 @@ const HeroDetail = () => {
               ))}
             </Box>
           </Box>
-          {/* Counters */}
+          {/* Counters (Khắc chế bởi) */}
           <Box flex={1}>
-            <Typography variant="h6" sx={{ mb: { xs: 1, md: 2 }, color: '#d32f2f', fontWeight: 700, fontSize: { xs: '1rem', md: '1.25rem' } }}>{t('heroes.counters', 'Counters')}</Typography>
+            <Typography variant="h6" sx={{ mb: { xs: 1, md: 2 }, color: '#d32f2f', fontWeight: 700, fontSize: { xs: '1rem', md: '1.25rem' } }}>{t('counter', 'Countered by')}</Typography>
             <Box display="flex" gap={{ xs: 1, md: 2 }} flexWrap="wrap" alignItems="center">
               {hero.counters && hero.counters.map((counter) => (
                 <Box
@@ -496,6 +496,30 @@ const HeroDetail = () => {
               ))}
             </Box>
           </Box>
+
+          {/* Good Against */}
+          {hero.goodAgainst && hero.goodAgainst.length > 0 && (
+            <Box mt={{ xs: 2, md: 0 }} flex={1}>
+              <Typography variant="h6" sx={{ mb: { xs: 1, md: 2 }, color: '#43a047', fontWeight: 700, fontSize: { xs: '1rem', md: '1.25rem' } }}>{t('heroes.goodAgainst', 'Good Against')}</Typography>
+              <Box display="flex" gap={{ xs: 1, md: 2 }} flexWrap="wrap" alignItems="center">
+                {hero.goodAgainst.map((ga) => (
+                  <Box
+                    key={ga._id || ga.id}
+                    onClick={() => navigate(`/heroes/${ga.slug}`)}
+                    sx={{ cursor: 'pointer', textAlign: 'center' }}
+                  >
+                    <Box sx={{ width: { xs: 50, md: 70 }, height: { xs: 50, md: 70 }, borderRadius: { xs: 1, md: '50%' }, overflow: 'hidden', border: { xs: '2px solid rgba(67, 160, 71, 0.3)', md: '3px solid rgba(67, 160, 71, 0.3)' } }}>
+                      <img src={ga.image} alt={ga.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </Box>
+                    <Typography fontWeight={600} fontSize={{ xs: 10, md: 13 }} sx={{ mt: { xs: 0.5, md: 1 }, maxWidth: { xs: 50, md: 70 }, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {ga.name}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          )}
+
         </Box>
       </Box>
       {/* Skills */}
@@ -540,16 +564,52 @@ const HeroDetail = () => {
         }}>
           <Typography variant="h5" sx={{ mb: 2 }}>{t('heroes.combo', 'Combo Kill')}</Typography>
           {hero.combo.map((step, idx) => (
-            <Box key={idx} display="flex" alignItems="center" gap={2} mb={2}>
-              <Box display="flex" gap={1}>
-                {step.skills && step.skills.map((skillIdx, sidx) => {
-                  const skill = hero.skills[skillIdx];
-                  return skill ? (
-                    <img key={sidx} src={skill.icon} alt={skill.name} title={skill.name} style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'cover', background: 'none', marginRight: 4 }} />
-                  ) : null;
-                })}
+            <Box key={idx} display="flex" flexDirection={{ xs: 'column', sm: 'row' }} alignItems={{ xs: 'flex-start', sm: 'center' }} gap={2} mb={2}>
+              <Typography variant="subtitle2" sx={{ minWidth: 72 }}>
+                Combo {idx + 1}
+              </Typography>
+              <Box display="flex" alignItems="center" flexWrap="wrap">
+                {step.skills && step.skills.length > 0 ? step.skills.map((skillIdx, sidx) => {
+                  const BASIC_ATTACK_INDEX = 5; // must match form constant
+                  const isBasic = skillIdx === BASIC_ATTACK_INDEX;
+                  const skill = !isBasic ? hero.skills[skillIdx] : null;
+                  const skillOrderLabels = ['Nội tại', 'Chiêu 1', 'Chiêu 2', 'Chiêu 3', 'Chiêu 4'];
+                  const orderLabel = isBasic ? 'Đánh thường' : (skillOrderLabels[skillIdx] || `Skill ${skillIdx+1}`);
+                  return (
+                    <React.Fragment key={sidx}>
+                      <Box sx={{ textAlign: 'center', mr: 0.5 }}>
+                        {isBasic ? (
+                          <Box title={orderLabel} sx={{ width: 40, height: 40, borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(201,160,99,0.12)', fontSize: 22 }}>
+                            🗡️
+                          </Box>
+                        ) : skill ? (
+                          <img
+                            src={skill.icon}
+                            alt={skill.name}
+                            title={skill.name || orderLabel}
+                            style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'cover', background: 'none' }}
+                          />
+                        ) : (
+                          <Box sx={{ width: 40, height: 40, borderRadius: 2, background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>?</Box>
+                        )}
+                        <Typography variant="caption" sx={{ display: 'block', mt: 0.3, fontSize: 10, lineHeight: 1.1 }}>
+                          {isBasic ? 'BA' : (skillIdx === 0 ? 'P' : skillIdx)}
+                        </Typography>
+                      </Box>
+                      {sidx < step.skills.length - 1 && (
+                        <Typography component="span" sx={{ mx: 0.5, fontWeight: 600 }}>+</Typography>
+                      )}
+                    </React.Fragment>
+                  );
+                }) : (
+                  <Typography variant="body2" color="text.secondary">(Không có kỹ năng)</Typography>
+                )}
               </Box>
-              <Typography variant="body2" color="text.secondary">{step.description}</Typography>
+              {step.description && (
+                <Typography variant="body2" color="text.secondary" sx={{ flex: 1 }}>
+                  {step.description}
+                </Typography>
+              )}
             </Box>
           ))}
         </Box>
@@ -726,7 +786,7 @@ const HeroDetail = () => {
           </Typography>
         )}
       </Box>
-      
+
     </Box>
   );
 };

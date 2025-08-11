@@ -1,5 +1,5 @@
 {
-  "counter": "克制",
+  "counter": "被克制于",
   "combo_kill": "连招击杀",
   "skill": "技能",
   "meta_tier": "版本等级",
@@ -90,11 +90,13 @@
     "banRate": "禁用率",
     "skills": "技能",
     "allies": "盟友",
-    "counters": "克制",
+    "counters": "被克制于",
     "lore": "背景故事",
     "profile": "资料",
     "combo": "连招",
     "skins": "皮肤"
+,
+    "goodAgainst": "克制于"
   },
   "hero": {
     "skills": "技能",

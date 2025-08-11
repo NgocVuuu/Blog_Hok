@@ -5,10 +5,13 @@ const mongoSanitize = require('express-mongo-sanitize');
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    const arr = errors.array();
     return res.status(400).json({
       success: false,
       message: 'Validation failed',
-      errors: errors.array()
+      errors: arr,
+      details: arr.map(e => e.msg),
+      fields: arr.map(e => e.param)
     });
   }
   next();
@@ -23,50 +26,47 @@ const validateHero = [
   body('name')
     .trim()
     .isLength({ min: 1, max: 100 })
-    .withMessage('Hero name must be between 1 and 100 characters')
-    .escape(),
+    .withMessage('Hero name must be between 1 and 100 characters'),
   body('title')
     .trim()
     .isLength({ min: 1, max: 200 })
-    .withMessage('Hero title must be between 1 and 200 characters')
-    .escape(),
+    .withMessage('Hero title must be between 1 and 200 characters'),
   body('roles')
     .isArray({ min: 1 })
     .withMessage('Hero must have at least one role'),
   body('roles.*')
-    .isIn(['Tank', 'Fighter', 'Assassin', 'Mage', 'Marksman', 'Support'])
+    .isIn(['Marksman', 'Mage', 'Tank', 'Fighter', 'Assassin', 'Support'])
     .withMessage('Invalid role'),
   body('lanes')
     .isArray({ min: 1 })
     .withMessage('Hero must have at least one lane'),
   body('lanes.*')
-    .isIn(['Top', 'Jungle', 'Mid', 'Bot', 'Support'])
+    .isIn(['Farm Lane', 'Mid Lane', 'Roam', 'Jungle', 'Abyssal Lane'])
     .withMessage('Invalid lane'),
   body('metaTier')
     .isIn(['S+', 'S', 'A', 'B', 'C'])
     .withMessage('Invalid meta tier'),
   body('winRate')
+    .optional()
     .isFloat({ min: 0, max: 100 })
     .withMessage('Win rate must be between 0 and 100'),
   body('pickRate')
+    .optional()
     .isFloat({ min: 0, max: 100 })
     .withMessage('Pick rate must be between 0 and 100'),
   body('banRate')
+    .optional()
     .isFloat({ min: 0, max: 100 })
     .withMessage('Ban rate must be between 0 and 100'),
   body('skills')
     .isArray({ min: 1, max: 5 })
-    .withMessage('Hero must have 1-5 skills'),
-  body('skills.*.name')
-    .trim()
-    .isLength({ min: 1, max: 100 })
-    .withMessage('Skill name must be between 1 and 100 characters')
-    .escape(),
-  body('skills.*.description')
-    .trim()
-    .isLength({ min: 1, max: 1000 })
-    .withMessage('Skill description must be between 1 and 1000 characters')
-    .escape(),
+    .withMessage('Hero must have 1-5 skills')
+    .custom((arr) => {
+      if (!Array.isArray(arr)) return false;
+      const anySkill = arr.some(s => s && ((s.name && String(s.name).trim()) || (s.description && String(s.description).trim())));
+      if (!anySkill) throw new Error('At least one skill (name or description) is required');
+      return true;
+    }),
   handleValidationErrors
 ];
 

@@ -1,5 +1,5 @@
 {
-  "counter": "Khắc chế",
+  "counter": "Khắc chế bởi",
   "combo_kill": "Combo Kill",
   "skill": "Kỹ năng",
   "meta_tier": "Meta Tier",
@@ -96,11 +96,13 @@
     "banRate": "Tỷ lệ cấm",
     "skills": "Kỹ năng",
     "allies": "Đồng minh",
-    "counters": "Đối thủ",
+    "counters": "Khắc chế bởi",
     "lore": "Tiểu sử",
     "profile": "Hồ sơ",
     "combo": "Combo",
     "skins": "Trang phục"
+,
+    "goodAgainst": "Đối đầu tốt"
   },
   "equipment": {
     "title": "Trang bị",
@@ -240,4 +242,4 @@
     "skins": "Trang phục",
     "origin": "Xuất thân"
   }
-} 
+}

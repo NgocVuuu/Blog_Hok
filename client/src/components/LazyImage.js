@@ -2,23 +2,28 @@ import React, { useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Box, Skeleton, Typography } from '@mui/material';
 
-const LazyImage = ({ 
-  src, 
-  alt, 
-  width, 
-  height, 
-  style = {}, 
+const LazyImage = ({
+  src,
+  alt,
+  width,
+  height,
+  style = {},
   sx = {},
   component = 'img',
   skeletonVariant = 'rectangular',
-  ...props 
+  priority = false,
+  rootMargin = '300px 0px',
+  threshold = 0,
+  ...props
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
-  
+
   const { ref, inView } = useInView({
-    threshold: 0.1,
-    triggerOnce: true
+    threshold,
+    rootMargin,
+    triggerOnce: true,
+    initialInView: priority
   });
 
   const handleLoad = () => {
@@ -37,7 +42,8 @@ const LazyImage = ({
     transition: 'opacity 0.3s ease-in-out',
     display: loaded ? 'block' : 'none',
     width: '100%',
-    height: hasExplicitHeight ? '100%' : 'auto'
+    height: hasExplicitHeight ? '100%' : 'auto',
+    willChange: 'opacity'
   };
 
   return (
