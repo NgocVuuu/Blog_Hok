@@ -176,7 +176,7 @@ const corsOptions = {
       'http://localhost:3001',
       'http://127.0.0.1:3000',
       'https://bloghok-frontend.onrender.com',
-      'https://blog-hok-fe.onrender.com',
+  'https://blog-hok-fe.pages.dev',
       'https://blog-hok.onrender.com',
       process.env.FRONTEND_URL,
       process.env.CORS_ORIGIN

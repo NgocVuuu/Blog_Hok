@@ -18,9 +18,9 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-        value: https://blog-hok-fe.onrender.com
+  value: https://blog-hok-fe.pages.dev
       - key: FRONTEND_URL
-        value: https://blog-hok-fe.onrender.com
+  value: https://blog-hok-fe.pages.dev
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
       - key: CLOUDINARY_API_KEY
