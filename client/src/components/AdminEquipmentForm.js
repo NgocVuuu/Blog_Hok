@@ -9,7 +9,6 @@ import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import ShieldIcon from '@mui/icons-material/Shield';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
@@ -21,17 +20,6 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 
 // Keep quick stat labels consistent on edit
-
-// Normalize quick stat type labels like "passive: Swift - Movement Speed" -> "Movement Speed"
-const normalizeQuickStatType = (raw) => {
-  if (!raw) return '';
-  let s = String(raw).trim();
-  s = s.replace(/^passive\s*:\s*/i, '').replace(/^active\s*:\s*/i, '');
-  // If there are separators, take the last segment as the stat label
-  const parts = s.split(/[-–:]/).map(p => p.trim()).filter(Boolean);
-  if (parts.length > 1) s = parts[parts.length - 1];
-  return s.replace(/\s+/g, ' ');
-};
 
 // Map legacy or generic keys to canonical keys used in options
 const normalizeQuickStatTypeKey = (key) => {
