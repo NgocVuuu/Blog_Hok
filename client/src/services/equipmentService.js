@@ -19,7 +19,7 @@ export const createEquipment = async (data) => {
 };
 
 export const updateEquipment = async (id, data) => {
-  const res = await axios.patch(`${API_URL}/${id}`, data);
+  const res = await axios.put(`${API_URL}/${id}`, data);
   return res.data;
 };
 

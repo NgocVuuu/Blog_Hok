@@ -105,9 +105,74 @@ exports.getHeroById = async (req, res, next) => {
       return res.status(400).json({ message: 'ID tướng không hợp lệ' });
     }
     
-    const hero = await Hero.findById(idPart);
+    const hero = await Hero.findById(idPart)
+      .populate({ path: 'suggestedArcana.arcana', select: 'name image color tier' })
+      .populate({ path: 'suggestedEquipment.equipment', select: 'name image category tier price' })
+      .populate({ path: 'arcanaBuilds.items.arcana', select: 'name image color tier attributes' });
     if (!hero) return res.status(404).json({ message: 'Không tìm thấy tướng' });
-    res.json(hero);
+    const heroObj = hero.toObject();
+    if (Array.isArray(heroObj.suggestedArcana)) {
+      heroObj.suggestedArcana = heroObj.suggestedArcana
+        .filter(i => i && i.arcana)
+        .sort((a,b) => (a.order||0) - (b.order||0))
+        .map(i => ({
+          _id: i.arcana._id,
+          name: i.arcana.name,
+          image: i.arcana.image,
+          color: i.arcana.color,
+          tier: i.arcana.tier,
+          note: i.note || '',
+          order: i.order || 0
+        }));
+    }
+    if (Array.isArray(heroObj.suggestedEquipment)) {
+      heroObj.suggestedEquipment = heroObj.suggestedEquipment
+        .filter(i => i && i.equipment)
+        .sort((a,b) => (a.order||0) - (b.order||0))
+        .map(i => ({
+          _id: i.equipment._id,
+          name: i.equipment.name,
+          image: i.equipment.image,
+          category: i.equipment.category,
+          tier: i.equipment.tier,
+          price: i.equipment.price,
+          note: i.note || '',
+          order: i.order || 0,
+          build: typeof i.build === 'number' ? i.build : 1
+        }));
+    }
+    // Normalize arcanaBuilds to flattened items and computed totals (same as /slug)
+    if (Array.isArray(heroObj.arcanaBuilds)) {
+      const fields = ['attack','defense','magic','health','mana','speed','criticalRate','criticalDamage','penetration','magicPenetration','lifeSteal','magicLifeSteal','cooldownReduction','attackSpeed','movementSpeed'];
+      heroObj.arcanaBuilds = heroObj.arcanaBuilds.map(build => {
+        let totals = { ...(build.totals || {}) };
+        fields.forEach(f => { if (typeof totals[f] !== 'number') totals[f] = 0; });
+        const needRecompute = Object.values(totals).every(v => v === 0);
+        if (needRecompute) {
+          (build.items || []).forEach(it => {
+            if (it.arcana && it.arcana.attributes) {
+              fields.forEach(f => {
+                totals[f] += (it.arcana.attributes[f] || 0) * (it.count || 0);
+              });
+            }
+          });
+        }
+        return {
+          name: build.name,
+          description: build.description || '',
+          items: (build.items || []).filter(it => it.arcana).map(it => ({
+            _id: it.arcana._id,
+            name: it.arcana.name,
+            image: it.arcana.image,
+            color: it.arcana.color,
+            tier: it.arcana.tier,
+            count: it.count || 1
+          })),
+          totals
+        };
+      });
+    }
+    res.json(heroObj);
   } catch (err) {
     next(err);
   }
@@ -115,6 +180,15 @@ exports.getHeroById = async (req, res, next) => {
 
 exports.createHero = async (req, res, next) => {
   try {
+    console.log('[HERO][CREATE] Incoming body keys:', Object.keys(req.body));
+    if (Array.isArray(req.body.arcanaBuilds)) {
+      console.log('[HERO][CREATE] arcanaBuilds count:', req.body.arcanaBuilds.length);
+      req.body.arcanaBuilds.forEach((b,i)=>{
+        console.log(`  Build[${i}] name=${b.name} items=${b.items?b.items.length:0}`);
+      });
+    } else {
+      console.log('[HERO][CREATE] arcanaBuilds missing or not array');
+    }
     const hero = new Hero(req.body);
     const newHero = await hero.save();
     res.status(201).json(newHero);
@@ -142,6 +216,7 @@ exports.updateHero = async (req, res, next) => {
     console.log('Existing hero before assign:', { name: hero.name, slug: hero.slug, id: hero._id });
     
     Object.assign(hero, req.body);
+  console.log('[HERO][UPDATE] After assign arcanaBuilds type:', Array.isArray(hero.arcanaBuilds) ? 'array' : typeof hero.arcanaBuilds, 'length:', Array.isArray(hero.arcanaBuilds)?hero.arcanaBuilds.length:0);
     console.log('Hero after assign (pre-save):', { name: hero.name, slug: hero.slug, id: hero._id });
     
     try {
@@ -215,6 +290,18 @@ exports.getHeroBySlug = async (req, res, next) => {
       .populate({
         path: 'goodAgainst.hero',
         select: 'name slug image roles',
+  })
+      .populate({
+        path: 'suggestedArcana.arcana',
+        select: 'name image color tier',
+      })
+      .populate({
+        path: 'suggestedEquipment.equipment',
+        select: 'name image category tier price',
+      })
+      .populate({
+        path: 'arcanaBuilds.items.arcana',
+        select: 'name image color tier attributes'
       });
     if (!hero) return res.status(404).json({ message: 'Không tìm thấy tướng' });
 
@@ -245,6 +332,70 @@ exports.getHeroBySlug = async (req, res, next) => {
     heroObj.allies = allies;
     heroObj.counters = counters;
     heroObj.goodAgainst = goodAgainst;
+    // Normalize suggested builds sorting by order
+    if (Array.isArray(heroObj.suggestedArcana)) {
+      heroObj.suggestedArcana = heroObj.suggestedArcana
+        .filter(i => i && i.arcana)
+        .sort((a,b) => (a.order||0) - (b.order||0))
+        .map(i => ({
+          _id: i.arcana._id,
+            name: i.arcana.name,
+            image: i.arcana.image,
+            color: i.arcana.color,
+            tier: i.arcana.tier,
+            note: i.note || '',
+            order: i.order || 0
+        }));
+    }
+    if (Array.isArray(heroObj.suggestedEquipment)) {
+      heroObj.suggestedEquipment = heroObj.suggestedEquipment
+        .filter(i => i && i.equipment)
+        .sort((a,b) => (a.order||0) - (b.order||0))
+        .map(i => ({
+          _id: i.equipment._id,
+            name: i.equipment.name,
+            image: i.equipment.image,
+            category: i.equipment.category,
+            tier: i.equipment.tier,
+            price: i.equipment.price,
+            note: i.note || '',
+            order: i.order || 0,
+            build: typeof i.build === 'number' ? i.build : 1
+        }));
+    }
+    if (Array.isArray(heroObj.arcanaBuilds)) {
+      const fields = ['attack','defense','magic','health','mana','speed','criticalRate','criticalDamage','penetration','magicPenetration','lifeSteal','magicLifeSteal','cooldownReduction','attackSpeed','movementSpeed'];
+      heroObj.arcanaBuilds = heroObj.arcanaBuilds.map(build => {
+        // Compute totals from populated arcana attributes if not provided
+        let totals = { ...(build.totals || {}) };
+        fields.forEach(f => { if (typeof totals[f] !== 'number') totals[f] = 0; });
+        const shouldRecompute = Object.values(totals).every(v => v === 0);
+        if (shouldRecompute) {
+          (build.items || []).forEach(it => {
+            if (it.arcana && it.arcana.attributes) {
+              fields.forEach(f => {
+                totals[f] += (it.arcana.attributes[f] || 0) * (it.count || 0);
+              });
+            }
+          });
+        }
+        // Flatten items for FE (avoid requiring global arcana list)
+        const items = (build.items || []).filter(it => it.arcana).map(it => ({
+          _id: it.arcana._id,
+          name: it.arcana.name,
+          image: it.arcana.image,
+          color: it.arcana.color,
+          tier: it.arcana.tier,
+          count: it.count || 1
+        }));
+        return {
+          name: build.name,
+          description: build.description || '',
+          items,
+          totals
+        };
+      });
+    }
 
     res.json(heroObj);
   } catch (err) {

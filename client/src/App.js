@@ -24,6 +24,9 @@ const PostDetail = React.lazy(() => import('./pages/PostDetail'));
 const EditPost = React.lazy(() => import('./pages/EditPost'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 const AdminDashboard = React.lazy(() => import('./components/AdminDashboard'));
+const Privacy = React.lazy(() => import('./pages/Privacy'));
+const Terms = React.lazy(() => import('./pages/Terms'));
+const Contact = React.lazy(() => import('./pages/Contact'));
 
 const AdminGate = ({ openLogin }) => {
   React.useEffect(() => {
@@ -70,6 +73,9 @@ function App() {
                     <Route path="/meta" element={<Meta />} />
                     <Route path="/news" element={<News />} />
                     <Route path="/news/:slug" element={<PostDetail />} />
+                    <Route path="/privacy" element={<Privacy />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="/contact" element={<Contact />} />
                     <Route path="/edit-post/:id" element={<EditPost />} />
                     {/* <Route path="/register" element={<AdminRegister />} /> */}
                     {process.env.NODE_ENV !== 'production' && (

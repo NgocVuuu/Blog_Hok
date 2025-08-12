@@ -27,7 +27,7 @@
   "home": {
     "welcome": {
       "title": "Selamat Datang di BlogHok!",
-      "subtitle": "Sumber informasi terbaru tentang champion, item, rune, dan meta game."
+      "subtitle": "Sumber terbaru untuk informasi hero, equipment, arcana, dan meta game."
     },
     "featured": {
       "title": "Artikel Unggulan"
@@ -52,7 +52,7 @@
     },
     "contact": {
       "title": "Kontak",
-      "email": "contact@bloghok.com"
+  "email": "paulvu@swqpz.onmicrosoft.com"
     },
     "copyright": "Hak Cipta Dilindungi",
     "privacy": "Kebijakan Privasi",
@@ -82,7 +82,6 @@
   "heroes": {
     "title": "Daftar Hero",
     "name": "Nama",
-    "title": "Daftar Pahlawan",
     "roles": "Peran",
     "lanes": "Jalur",
     "metaTier": "Tier Meta",
@@ -95,8 +94,7 @@
     "lore": "Kisah",
     "profile": "Profil",
     "combo": "Combo",
-    "skins": "Kulit"
-,
+  "skins": "Kulit",
     "goodAgainst": "Unggul melawan"
   },
   "items": {
@@ -126,7 +124,7 @@
     "effects": "Efek",
     "recommendedFor": "Direkomendasikan untuk"
   },
-  "news": {
+  "newsGeneral": {
     "title": "Judul",
     "pageTitle": "Berita & Pembaruan",
     "latestNews": "Berita Terbaru",
@@ -169,7 +167,9 @@
   "hero": {
     "skills": "Skill",
     "skins": "Skin",
-    "origin": "Asal-usul"
+  "origin": "Asal-usul",
+  "suggestedEquipment": "Peralatan Rekomendasi",
+  "equipmentSet": "Build {{number}}"
   },
   "news": {
     "title": "Berita",
@@ -196,6 +196,51 @@
     "stats": "Statistik",
     "active": "Aktif",
     "cooldown": "Cooldown",
-    "gold": "Emas"
+    "gold": "Emas",
+    "categories": {
+      "all": "Semua kategori",
+      "physical": "Fisik",
+      "magic": "Sihir",
+      "defense": "Pertahanan",
+      "movement": "Pergerakan",
+      "jungle": "Jungle",
+      "support": "Dukungan",
+      "boots": "Sepatu"
+    },
+    "statLabels": {
+      "magicArmor": "Perisai Sihir",
+      "physicalArmor": "Perisai Fisik",
+      "magicAttack": "Serangan Sihir",
+      "physicalAttack": "Serangan Fisik",
+      "lifeSteal": "Lifesteal",
+      "physicalLifeSteal": "Lifesteal Fisik",
+      "movementSpeed": "Kecepatan Gerak",
+      "attackSpeed": "Kecepatan Serang",
+      "cooldownReduction": "Pengurangan Cooldown",
+      "manaRegen": "Regen Mana"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Kebijakan Privasi",
+      "intro": "Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan BlogHok.",
+      "data": {"title": "Data yang Dikumpulkan", "body": "Kami dapat mengumpulkan analitik penggunaan dan info akun opsional untuk meningkatkan pengalaman."},
+      "usage": {"title": "Penggunaan Data", "body": "Data digunakan untuk optimasi performa, personalisasi, dan keamanan."},
+      "contact": {"title": "Kontak"}
+    },
+    "terms": {
+      "title": "Syarat Penggunaan",
+      "intro": "Dengan mengakses BlogHok Anda menyetujui syarat ini. Jika tidak setuju mohon berhenti menggunakan.",
+      "acceptable": {"title": "Penggunaan yang Diperbolehkan", "body": "Jangan menyalahgunakan layanan, mencoba akses tidak sah, atau menyalahgunakan batasan rate."},
+      "disclaimer": {"title": "Penafian", "body": "Konten disediakan untuk informasi tanpa jaminan."}
+    },
+    "contact": {
+      "title": "Kontak",
+      "intro": "Punya pertanyaan atau masukan? Kirim pesan atau email langsung.",
+      "thanks": "Terima kasih! Pesan Anda telah diterima.",
+      "emailAlternative": "Anda juga dapat menghubungi kami di",
+      "emailLabel": "Hubungi kami di",
+      "form": {"name": "Nama", "email": "Email", "message": "Pesan", "submit": "Kirim"}
+    }
   }
 }

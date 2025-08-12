@@ -13,16 +13,15 @@ const AdminArcanaForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     color: 'red',
-    tier: 1,
     description: '',
-    effects: '',
-    usage: '',
     recommendedFor: []
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [message, setMessage] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
+  const [autoReset, setAutoReset] = useState(true); // auto clear after add
+  const [addCount, setAddCount] = useState(0); // count added this session
   const API_URL = process.env.REACT_APP_API_URL;
 
   const colors = [
@@ -31,16 +30,12 @@ const AdminArcanaForm = () => {
     { value: 'green', label: t('arcana.colors.green', 'Xanh lá') }
   ];
 
-  // Roles removed - not used in current form
-
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
-
-
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -76,7 +71,7 @@ const AdminArcanaForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.description) {
-      setMessage({ type: 'error', text: 'Vui lòng điền đầy đủ thông tin bắt buộc' });
+      setMessage({ type: 'error', text: 'Vui lòng điền tên và mô tả' });
       return;
     }
 
@@ -87,39 +82,39 @@ const AdminArcanaForm = () => {
         imageUrl = await handleUpload(imageFile);
       }
 
-      const effectsArray = formData.effects.split('\n').filter(effect => effect.trim());
       const recommendedForArray = formData.recommendedFor;
+      const payload = { ...formData, image: imageUrl, recommendedFor: recommendedForArray };
+      delete payload.tier; // ensure not sent
+      console.log('[Arcana][SUBMIT] Payload:', payload);
 
-  const res = await fetchWithAuth(`${API_URL}/api/arcana`, {
+      const res = await fetchWithAuth(`${API_URL}/api/arcana`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          image: imageUrl,
-          effects: effectsArray,
-          recommendedFor: recommendedForArray
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
-        setMessage({ type: 'success', text: 'Thêm arcana thành công!' });
-        // Reset form
-        setFormData({
-          name: '',
-          color: 'red',
-          tier: 1,
-          description: '',
-          effects: '',
-          usage: '',
-          recommendedFor: []
-        });
-        setImageFile(null);
-        setImagePreview('');
+        setMessage({ type: 'success', text: 'Đã thêm arcana #' + (addCount + 1) });
+        setAddCount(c => c + 1);
+        if (autoReset) {
+          setFormData({
+            name: '',
+            color: 'red',
+            description: '',
+            recommendedFor: []
+          });
+          setImageFile(null);
+          setImagePreview('');
+        }
       } else {
-        const error = await res.json();
-        setMessage({ type: 'error', text: error.message || 'Có lỗi xảy ra khi thêm arcana' });
+        const error = await res.json().catch(()=>({}));
+        console.warn('[Arcana][SUBMIT][ERROR]', error);
+        let msg = error.message || 'Có lỗi xảy ra khi thêm arcana';
+        if (error.duplicate) msg = 'Tên arcana đã tồn tại';
+        if (Array.isArray(error.details)) msg += ' - ' + error.details.join('; ');
+        setMessage({ type: 'error', text: msg });
       }
     } catch (err) {
       setMessage({ type: 'error', text: err.message || 'Có lỗi xảy ra khi thêm arcana' });
@@ -167,21 +162,6 @@ const AdminArcanaForm = () => {
           </FormControl>
         </Grid>
 
-        <Grid item xs={12} md={3}>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Cấp độ</InputLabel>
-            <Select
-              value={formData.tier}
-              onChange={e => handleInputChange('tier', e.target.value)}
-              label="Cấp độ"
-            >
-              <MenuItem value={1}>Cấp 1</MenuItem>
-              <MenuItem value={2}>Cấp 2</MenuItem>
-              <MenuItem value={3}>Cấp 3</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-
         <Grid item xs={12}>
           <TextField
             label="Mô tả"
@@ -197,29 +177,7 @@ const AdminArcanaForm = () => {
 
 
 
-        <Grid item xs={12}>
-          <TextField
-            label="Hiệu ứng (mỗi dòng một hiệu ứng)"
-            value={formData.effects}
-            onChange={e => handleInputChange('effects', e.target.value)}
-            fullWidth
-            multiline
-            rows={3}
-            margin="normal"
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <TextField
-            label="Cách sử dụng"
-            value={formData.usage}
-            onChange={e => handleInputChange('usage', e.target.value)}
-            fullWidth
-            multiline
-            rows={2}
-            margin="normal"
-          />
-        </Grid>
+  {/* Removed effects & usage fields as requested */}
 
         <Grid item xs={12}>
           <Box mt={2} mb={2}>
@@ -249,11 +207,23 @@ const AdminArcanaForm = () => {
         type="submit"
         variant="contained"
         color="primary"
-        sx={{ mt: 2 }}
+        sx={{ mt: 2, mr: 2 }}
         disabled={loading}
       >
         {loading ? <CircularProgress size={24} /> : 'Thêm Arcana'}
       </Button>
+      <Button
+        type="button"
+        variant="outlined"
+        sx={{ mt: 2, mr: 2 }}
+        onClick={() => setAutoReset(r => !r)}
+      >{autoReset ? 'Giữ lại sau khi thêm' : 'Tự reset sau khi thêm'}</Button>
+      <Button
+        type="button"
+        variant="text"
+        sx={{ mt: 2 }}
+        onClick={() => setAddCount(0)}
+      >Reset bộ đếm ({addCount})</Button>
     </Box>
   );
 };

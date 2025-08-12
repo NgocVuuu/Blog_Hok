@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box, TextField, Button, Typography, Alert, CircularProgress,
   FormControl, InputLabel, Select, MenuItem, Grid, Divider,
@@ -13,13 +13,37 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { GiBroadsword } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 
-const AdminEquipmentForm = () => {
+// Keep quick stat labels consistent on edit
+
+// Normalize quick stat type labels like "passive: Swift - Movement Speed" -> "Movement Speed"
+const normalizeQuickStatType = (raw) => {
+  if (!raw) return '';
+  let s = String(raw).trim();
+  s = s.replace(/^passive\s*:\s*/i, '').replace(/^active\s*:\s*/i, '');
+  // If there are separators, take the last segment as the stat label
+  const parts = s.split(/[-–:]/).map(p => p.trim()).filter(Boolean);
+  if (parts.length > 1) s = parts[parts.length - 1];
+  return s.replace(/\s+/g, ' ');
+};
+
+// Map legacy or generic keys to canonical keys used in options
+const normalizeQuickStatTypeKey = (key) => {
+  const k = String(key || '').trim();
+  if (!k) return '';
+  // Treat any generic lifeSteal as physicalLifeSteal per UI decision
+  if (k === 'lifeSteal') return 'physicalLifeSteal';
+  // Keep existing keys
+  return k;
+};
+
+const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
   const { t } = useTranslation();
   const { fetchWithAuth, openLogin } = useAuth();
   const [formData, setFormData] = useState({
@@ -50,14 +74,14 @@ const AdminEquipmentForm = () => {
     },
     passive: { name: '', description: '' },
     active: { name: '', description: '', cooldown: 0 },
-    quickStats: [], // Array of quick stats for UI only
+  quickStats: [], // Array of quick stats
     customAttributes: [], // Array of custom attributes for UI only
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [message, setMessage] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
 
   // Categories for equipment
   const categories = [
@@ -72,59 +96,69 @@ const AdminEquipmentForm = () => {
   const quickStatsOptions = [
     {
       value: 'magicArmor',
-      label: t('equipment.stats.magicArmor', 'Giáp phép'),
+      label: t('equipment.stats.magicArmor', { lng: 'en', defaultValue: 'Magical Defense' }),
       icon: ShieldIcon,
       color: '#7b2ff2'
     },
     {
       value: 'physicalArmor',
-      label: t('equipment.stats.physicalArmor', 'Giáp vật lý'),
+      label: t('equipment.stats.physicalArmor', { lng: 'en', defaultValue: 'Physical Defense' }),
       icon: ShieldIcon,
       color: '#ff9800'
     },
     {
       value: 'magicAttack',
-      label: t('equipment.stats.magicAttack', 'Tấn công phép'),
+      label: t('equipment.stats.magicAttack', { lng: 'en', defaultValue: 'Magic Attack' }),
       icon: GiBroadsword,
       color: '#7b2ff2'
     },
     {
       value: 'physicalAttack',
-      label: t('equipment.stats.physicalAttack', 'Tấn công vật lý'),
+      label: t('equipment.stats.physicalAttack', { lng: 'en', defaultValue: 'Physical Attack' }),
       icon: GiBroadsword,
       color: '#ff9800'
     },
+    // Physical Life Steal (new)
     {
-      value: 'lifeSteal',
-      label: t('equipment.stats.lifeSteal', 'Hồi máu'),
-      icon: FavoriteIcon,
-      color: '#43a047'
+      value: 'physicalLifeSteal',
+      label: t('equipment.stats.physicalLifeSteal', { lng: 'en', defaultValue: 'Physical Life Steal' }),
+      icon: LocalFireDepartmentIcon,
+      color: '#ff9800'
     },
     {
       value: 'movementSpeed',
-      label: t('equipment.stats.movementSpeed', 'Tốc chạy'),
+      label: t('equipment.stats.movementSpeed', { lng: 'en', defaultValue: 'Movement Speed' }),
       icon: DirectionsRunIcon,
       color: '#43a047'
     },
     {
       value: 'attackSpeed',
-      label: t('equipment.stats.attackSpeed', 'Tốc đánh'),
+      label: t('equipment.stats.attackSpeed', { lng: 'en', defaultValue: 'Attack Speed' }),
       icon: GiBroadsword,
       color: '#43a047'
     },
     {
       value: 'cooldownReduction',
-      label: t('equipment.stats.cooldownReduction', 'Giảm hồi chiêu'),
+      label: t('equipment.stats.cooldownReduction', { lng: 'en', defaultValue: 'Cooldown Reduction' }),
       icon: AccessTimeIcon,
       color: '#43a047'
     },
+    // Critical Rate (new)
+    {
+      value: 'criticalRate',
+      label: t('equipment.stats.criticalRate', { lng: 'en', defaultValue: 'Critical Rate' }),
+      icon: GpsFixedIcon,
+      color: '#C9A063'
+    },
     {
       value: 'manaRegen',
-      label: t('equipment.stats.manaRegen', 'Hồi mana'),
+      label: t('equipment.stats.manaRegen', { lng: 'en', defaultValue: 'Mana Regen' }),
       icon: LocalFireDepartmentIcon,
       color: '#7b2ff2'
     }
   ];
+
+  // Utilities to derive quick stats from text when backend/data lacks them
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -267,43 +301,46 @@ const AdminEquipmentForm = () => {
         imageUrl = await handleUpload(imageFile);
       }
 
-      // Transform data to match backend schema
+  // Transform data to match backend schema
+      const passiveAttr = formData.customAttributes.find(attr => attr.type === 'passive');
+      const activeAttr = formData.customAttributes.find(attr => attr.type === 'active');
+
       const backendData = {
         name: formData.name,
         category: formData.category,
-        price: formData.price,
+        price: Number(formData.price) || 0,
         image: imageUrl,
         description: formData.customAttributes.length > 0
           ? formData.customAttributes.map(attr => `${attr.type}: ${attr.name} - ${attr.description}`).join('\n')
-          : 'Mô tả trang bị',
-        tier: 'Basic',
-        attributes: {
-          attack: 0,
-          defense: 0,
-          magic: 0,
-          health: 0,
-          mana: 0,
-          speed: 0,
-          criticalRate: 0,
-          criticalDamage: 0,
-          penetration: 0,
-          magicPenetration: 0,
-          lifeSteal: 0,
-          magicLifeSteal: 0,
-          cooldownReduction: 0,
-          attackSpeed: 0,
-          movementSpeed: 0,
-          armor: 0,
-          magicResist: 0
-        },
-        passive: formData.customAttributes.find(attr => attr.type === 'passive') || { name: '', description: '' },
-        active: formData.customAttributes.find(attr => attr.type === 'active') || { name: '', description: '', cooldown: 0 }
+          : (formData.description || ''),
+        tier: formData.tier || 'Basic',
+        attributes: { ...formData.attributes },
+        passive: passiveAttr
+          ? { name: passiveAttr.name || '', description: passiveAttr.description || '' }
+          : (formData.passive || { name: '', description: '' }),
+        active: activeAttr
+          ? { name: activeAttr.name || '', description: activeAttr.description || '', cooldown: formData.active?.cooldown || 0 }
+          : (formData.active || { name: '', description: '', cooldown: 0 }),
+        quickStats: Array.isArray(formData.quickStats)
+          ? formData.quickStats.map(q => ({
+              type: normalizeQuickStatTypeKey(q.type) || '',
+              label: q.label || '',
+              value: q.value || '',
+              description: q.description || ''
+            }))
+          : []
       };
 
       console.log('Sending equipment data:', JSON.stringify(backendData, null, 2));
 
-  const res = await fetchWithAuth(`${API_URL}/api/equipment`, {
-        method: 'POST',
+      const isEditing = Boolean(editingEquipment && editingEquipment._id);
+      const url = isEditing
+        ? `${API_URL}/api/equipment/${editingEquipment._id}`
+        : `${API_URL}/api/equipment`;
+      const method = isEditing ? 'PUT' : 'POST';
+
+      const res = await fetchWithAuth(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -311,7 +348,7 @@ const AdminEquipmentForm = () => {
       });
 
       if (res.ok) {
-        setMessage({ type: 'success', text: t('admin.addEquipmentSuccess', 'Thêm trang bị thành công!') });
+        setMessage({ type: 'success', text: isEditing ? t('admin.updateEquipmentSuccess', 'Cập nhật trang bị thành công!') : t('admin.addEquipmentSuccess', 'Thêm trang bị thành công!') });
         // Reset form
         setFormData({
           name: '',
@@ -346,6 +383,7 @@ const AdminEquipmentForm = () => {
         });
         setImageFile(null);
         setImagePreview('');
+  if (onFormSubmit) onFormSubmit();
       } else {
         const error = await res.json();
         console.error('Server error response:', error);
@@ -358,9 +396,66 @@ const AdminEquipmentForm = () => {
     }
   };
 
+  // Prefill form when editingEquipment changes
+  useEffect(() => {
+    if (editingEquipment) {
+      // Build quickStats from available fields
+      let nextQuickStats = [];
+      if (Array.isArray(editingEquipment.quickStats) && editingEquipment.quickStats.length) {
+        nextQuickStats = editingEquipment.quickStats.map(q => ({
+          type: normalizeQuickStatTypeKey(q.type || q.label || ''),
+          value: q.value || '',
+          description: q.description || ''
+        }));
+      } else if (editingEquipment.stats && typeof editingEquipment.stats === 'object') {
+        nextQuickStats = Object.entries(editingEquipment.stats)
+          .filter(([, v]) => v !== null && v !== undefined && v !== '')
+          .slice(0, 5)
+          .map(([k, v]) => ({ type: normalizeQuickStatTypeKey(k), value: `+${v}`, description: '' }));
+      } else if (editingEquipment.attributes && typeof editingEquipment.attributes === 'object') {
+        nextQuickStats = Object.entries(editingEquipment.attributes)
+          .filter(([, v]) => typeof v === 'number' && v !== 0)
+          .slice(0, 5)
+          .map(([k, v]) => ({ type: normalizeQuickStatTypeKey(k), value: `+${v}`, description: '' }));
+      }
+
+  // Do NOT parse from passive/active text to avoid mixing attribute names into quick stats
+
+      // Build customAttributes from passive/active if present
+      const nextCustomAttributes = [];
+      if (editingEquipment.passive && (editingEquipment.passive.name || editingEquipment.passive.description)) {
+        nextCustomAttributes.push({
+          type: 'passive',
+          name: editingEquipment.passive.name || '',
+          description: editingEquipment.passive.description || ''
+        });
+      }
+      if (editingEquipment.active && (editingEquipment.active.name || editingEquipment.active.description)) {
+        nextCustomAttributes.push({
+          type: 'active',
+          name: editingEquipment.active.name || '',
+          description: editingEquipment.active.description || ''
+        });
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        name: editingEquipment.name || '',
+        category: editingEquipment.category || 'Attack',
+        price: editingEquipment.price || 0,
+        image: editingEquipment.image || '',
+        description: editingEquipment.description || '',
+        tier: editingEquipment.tier || 'Basic',
+        quickStats: nextQuickStats,
+        customAttributes: nextCustomAttributes.length ? nextCustomAttributes : prev.customAttributes,
+      }));
+      setImagePreview(editingEquipment.image || '');
+    }
+  }, [editingEquipment]);
+
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 900, mx: 'auto', mt: 4 }}>
-      <Typography variant="h5" mb={3}>{t('admin.addEquipment', 'Thêm trang bị mới')}</Typography>
+  <Typography variant="h5" mb={3}>{editingEquipment ? t('admin.editEquipment', 'Sửa trang bị') : t('admin.addEquipment', 'Thêm trang bị mới')}</Typography>
 
       {message.text && (
         <Alert severity={message.type} sx={{ mb: 3 }}>
@@ -441,7 +536,7 @@ const AdminEquipmentForm = () => {
           </Box>
         </Grid>
 
-        {/* Quick Stats Section */}
+  {/* Quick Stats Section */}
         <Grid item xs={12}>
           <Divider sx={{ my: 2 }} />
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
@@ -484,6 +579,10 @@ const AdminEquipmentForm = () => {
                       value={stat.type}
                       onChange={e => updateQuickStat(index, 'type', e.target.value)}
                       label={t('equipment.statType', 'Loại thông số')}
+                      renderValue={(selected) => {
+                        const found = quickStatsOptions.find(o => o.value === selected);
+                        return found ? found.label : (selected || t('equipment.chooseStat', 'Chọn loại'));
+                      }}
                     >
                       {quickStatsOptions.map(option => {
                         const IconComponent = option.icon;
@@ -505,6 +604,7 @@ const AdminEquipmentForm = () => {
                           </MenuItem>
                         );
                       })}
+                      {/* Allow custom free values not in the list by keeping current value */}
                     </Select>
                   </FormControl>
                 </Grid>
@@ -642,6 +742,30 @@ const AdminEquipmentForm = () => {
           </Grid>
         ))}
 
+        {/* Readonly Preview of current quick stats */}
+        {formData.quickStats.length > 0 && (
+          <Grid item xs={12}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: -1 }}>
+              {formData.quickStats.map((s, i) => (
+                <Typography
+                  key={`qs-prev-${i}`}
+                  variant="caption"
+                  sx={{
+                    px: 0.75,
+                    py: 0.25,
+                    borderRadius: 1,
+                    bgcolor: 'rgba(201,160,99,0.08)',
+                    border: '1px solid rgba(201,160,99,0.25)',
+                    color: 'text.primary'
+                  }}
+                >
+                  {(s.value || '').toString()} {s.type}
+                </Typography>
+              ))}
+            </Box>
+          </Grid>
+        )}
+
         {/* Submit Button */}
         <Grid item xs={12}>
           <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
@@ -652,7 +776,9 @@ const AdminEquipmentForm = () => {
               disabled={loading}
               startIcon={loading && <CircularProgress size={20} />}
             >
-              {loading ? t('admin.adding', 'Đang thêm...') : t('admin.addEquipment', 'Thêm trang bị')}
+              {loading
+                ? (editingEquipment ? t('admin.saving', 'Đang lưu...') : t('admin.adding', 'Đang thêm...'))
+                : (editingEquipment ? t('admin.updateEquipment', 'Cập nhật trang bị') : t('admin.addEquipment', 'Thêm trang bị'))}
             </Button>
           </Box>
         </Grid>

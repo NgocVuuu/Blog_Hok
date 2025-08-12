@@ -32,7 +32,7 @@
   "home": {
     "welcome": {
       "title": "Chào mừng đến với BlogHok!",
-      "subtitle": "Nơi chia sẻ thông tin tướng, trang bị, ngọc và meta game mới nhất."
+      "subtitle": "Nguồn thông tin mới nhất về tướng, trang bị, arcana và meta game."
     },
     "featured": {
       "title": "Bài viết nổi bật"
@@ -57,13 +57,13 @@
     },
     "contact": {
       "title": "Liên hệ",
-      "email": "contact@bloghok.com"
+  "email": "paulvu@swqpz.onmicrosoft.com"
     },
     "copyright": "Bản quyền thuộc về BlogHok",
     "privacy": "Chính sách bảo mật",
     "terms": "Điều khoản sử dụng"
   },
-  "common": {
+  "commonExtra": {
     "loading": "Đang tải...",
     "error": "Đã xảy ra lỗi",
     "notFound": "Không tìm thấy trang",
@@ -85,9 +85,8 @@
     "logout": "Đăng xuất"
   },
   "heroes": {
-    "title": "Danh sách Tướng",
-    "name": "Tên",
     "title": "Danh sách tướng",
+    "name": "Tên",
     "roles": "Vai trò",
     "lanes": "Đường",
     "metaTier": "Xếp hạng Meta",
@@ -100,8 +99,7 @@
     "lore": "Tiểu sử",
     "profile": "Hồ sơ",
     "combo": "Combo",
-    "skins": "Trang phục"
-,
+  "skins": "Trang phục",
     "goodAgainst": "Đối đầu tốt"
   },
   "equipment": {
@@ -114,6 +112,7 @@
     "passiveEffect": "Bị động",
     "categories": {
       "all": "Tất cả",
+      "physical": "Vật lý",
       "attack": "Tấn công",
       "defense": "Phòng thủ",
       "magic": "Phép thuật",
@@ -127,7 +126,19 @@
     "stats": "Chỉ số",
     "active": "Kích hoạt",
     "cooldown": "Hồi chiêu",
-    "gold": "Vàng"
+  "gold": "Vàng",
+  "statLabels": {
+      "magicArmor": "Giáp phép",
+      "physicalArmor": "Giáp vật lý",
+      "magicAttack": "Tấn công phép",
+      "physicalAttack": "Tấn công vật lý",
+      "lifeSteal": "Hồi máu",
+      "physicalLifeSteal": "Hút máu vật lý",
+      "movementSpeed": "Tốc chạy",
+      "attackSpeed": "Tốc đánh",
+      "cooldownReduction": "Giảm hồi chiêu",
+      "manaRegen": "Hồi mana"
+    }
   },
   "arcana": {
     "title": "Arcana",
@@ -240,6 +251,32 @@
   "hero": {
     "skills": "Kỹ năng",
     "skins": "Trang phục",
-    "origin": "Xuất thân"
+  "origin": "Xuất thân",
+  "suggestedArcanaBuilds": "Arcana gợi ý",
+  "suggestedEquipment": "Trang bị gợi ý",
+  "equipmentSet": "Build {{number}}"
+  },
+  "legal": {
+    "privacy": {
+      "title": "Chính sách bảo mật",
+      "intro": "Chính sách này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ thông tin của bạn khi dùng BlogHok.",
+      "data": {"title": "Dữ liệu thu thập", "body": "Chúng tôi có thể thu thập thống kê sử dụng và thông tin tài khoản tùy chọn để cải thiện trải nghiệm."},
+      "usage": {"title": "Cách sử dụng dữ liệu", "body": "Dữ liệu dùng để tối ưu hiệu năng, cá nhân hóa và bảo mật."},
+      "contact": {"title": "Liên hệ"}
+    },
+    "terms": {
+      "title": "Điều khoản sử dụng",
+      "intro": "Khi truy cập BlogHok bạn đồng ý với các điều khoản này. Nếu không, vui lòng ngừng sử dụng.",
+      "acceptable": {"title": "Sử dụng hợp lệ", "body": "Không lạm dụng dịch vụ, truy cập trái phép hoặc vượt giới hạn tần suất."},
+      "disclaimer": {"title": "Tuyên bố miễn trừ", "body": "Nội dung chỉ mang tính tham khảo, không bảo đảm."}
+    },
+    "contact": {
+      "title": "Liên hệ",
+      "intro": "Có câu hỏi hoặc góp ý? Gửi tin nhắn bên dưới hoặc email cho chúng tôi.",
+      "thanks": "Cảm ơn! Chúng tôi đã nhận được tin nhắn của bạn.",
+      "emailAlternative": "Bạn cũng có thể liên hệ tại",
+      "emailLabel": "Liên hệ tại",
+      "form": {"name": "Tên", "email": "Email", "message": "Nội dung", "submit": "Gửi"}
+    }
   }
 }

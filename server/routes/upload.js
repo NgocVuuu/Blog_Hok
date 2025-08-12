@@ -13,16 +13,16 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Enhanced file filter for security
+// Enhanced file filter for security (include SVG)
 const fileFilter = (req, file, cb) => {
   // Check MIME type
-  const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/avif'];
+  const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/avif', 'image/svg+xml'];
   if (!allowedMimes.includes(file.mimetype)) {
-    return cb(new Error('Invalid file type. Only JPEG, PNG, WebP, and AVIF images are allowed.'), false);
+    return cb(new Error('Invalid file type. Only JPEG, PNG, WebP, AVIF, and SVG images are allowed.'), false);
   }
 
   // Check file extension
-  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.avif', '.svg'];
   const ext = path.extname(file.originalname).toLowerCase();
   if (!allowedExtensions.includes(ext)) {
     return cb(new Error('Invalid file extension.'), false);
@@ -31,17 +31,26 @@ const fileFilter = (req, file, cb) => {
   cb(null, true);
 };
 
+// Use dynamic params to handle SVG (no transformations on vectors)
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: {
-    folder: 'BlogHok',
-    allowed_formats: ['jpg', 'png', 'jpeg', 'avif', 'webp'],
-    transformation: [
-      { width: 1200, height: 1200, crop: 'limit' }, // Limit max size
-      { quality: 'auto:good' }, // Auto optimize quality
-      { fetch_format: 'auto' } // Auto format selection
-    ]
-  },
+  params: async (req, file) => {
+    const isSvg = file.mimetype === 'image/svg+xml' || (path.extname(file.originalname).toLowerCase() === '.svg');
+    const base = {
+      folder: isSvg ? 'BlogHok/svg' : 'BlogHok',
+      resource_type: 'image',
+      allowed_formats: isSvg ? ['svg'] : ['jpg', 'png', 'jpeg', 'avif', 'webp']
+    };
+    if (isSvg) return base; // No transformations for SVG
+    return {
+      ...base,
+      transformation: [
+        { width: 1200, height: 1200, crop: 'limit' },
+        { quality: 'auto:good' },
+        { fetch_format: 'auto' }
+      ]
+    };
+  }
 });
 
 const upload = multer({

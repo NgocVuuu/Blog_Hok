@@ -112,6 +112,53 @@ const heroSchema = new mongoose.Schema({
       image: { type: String, required: true },
     }
   ],
+  // Suggested Arcana build (ordered)
+  suggestedArcana: [
+    {
+      arcana: { type: mongoose.Schema.Types.ObjectId, ref: 'Arcana' },
+      note: { type: String, default: '' },
+      order: { type: Number, default: 0 }
+    }
+  ],
+  // Suggested Equipment build (ordered)
+  suggestedEquipment: [
+    {
+      equipment: { type: mongoose.Schema.Types.ObjectId, ref: 'Equipment' },
+      note: { type: String, default: '' },
+  order: { type: Number, default: 0 },
+  build: { type: Number, default: 1 } // 1..3
+    }
+  ],
+  // Full arcana page builds with counts & precomputed totals
+  arcanaBuilds: [
+    {
+      name: { type: String, required: true },
+      description: { type: String, default: '' },
+      items: [
+        {
+          arcana: { type: mongoose.Schema.Types.ObjectId, ref: 'Arcana', required: true },
+          count: { type: Number, required: true, min: 1, max: 10 }
+        }
+      ],
+      totals: {
+        attack: { type: Number, default: 0 },
+        defense: { type: Number, default: 0 },
+        magic: { type: Number, default: 0 },
+        health: { type: Number, default: 0 },
+        mana: { type: Number, default: 0 },
+        speed: { type: Number, default: 0 },
+        criticalRate: { type: Number, default: 0 },
+        criticalDamage: { type: Number, default: 0 },
+        penetration: { type: Number, default: 0 },
+        magicPenetration: { type: Number, default: 0 },
+        lifeSteal: { type: Number, default: 0 },
+        magicLifeSteal: { type: Number, default: 0 },
+        cooldownReduction: { type: Number, default: 0 },
+        attackSpeed: { type: Number, default: 0 },
+        movementSpeed: { type: Number, default: 0 }
+      }
+    }
+  ],
 });
 
 // Relaxed skill validation: just keep skills with either name or description; require at least one
@@ -149,6 +196,29 @@ heroSchema.pre('save', function(next) {
   
   this.slug = this.name.toLowerCase().replace(/\s+/g, '-');
   this.updatedAt = Date.now();
+
+  // Recompute arcanaBuilds totals if items present
+  if (Array.isArray(this.arcanaBuilds)) {
+    const fields = ['attack','defense','magic','health','mana','speed','criticalRate','criticalDamage','penetration','magicPenetration','lifeSteal','magicLifeSteal','cooldownReduction','attackSpeed','movementSpeed'];
+    this.arcanaBuilds.forEach(build => {
+      if (!Array.isArray(build.items)) return;
+      // Only recompute if totals missing or zeroed
+      let need = !build.totals || fields.every(f => (build.totals[f]||0) === 0);
+      if (!build.totals) build.totals = {};
+      if (need) {
+        fields.forEach(f => { build.totals[f] = 0; });
+        // We can't populate here, so expect client not to send attributes; skip unless arcana subdoc has attributes
+        build.items.forEach(it => {
+          if (it.arcana && it.arcana.attributes) {
+            fields.forEach(f => {
+              const per = it.arcana.attributes[f] || 0;
+              build.totals[f] += per * (it.count || 0);
+            });
+          }
+        });
+      }
+    });
+  }
   
   console.log('Updated slug:', this.slug);
   console.log('Updated timestamp:', this.updatedAt);
@@ -167,5 +237,7 @@ heroSchema.index({ metaTier: 1, winRate: -1 }); // Sort by tier and win rate
 heroSchema.index({ slug: 1 }, { unique: true }); // Unique slug lookup
 heroSchema.index({ lanes: 1 }); // Filter by lanes
 heroSchema.index({ createdAt: -1 }); // Sort by creation date
+heroSchema.index({ 'suggestedArcana.arcana': 1 });
+heroSchema.index({ 'suggestedEquipment.equipment': 1 });
 
 module.exports = mongoose.model('Hero', heroSchema);

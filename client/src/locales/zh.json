@@ -27,7 +27,7 @@
   "home": {
     "welcome": {
       "title": "欢迎来到 BlogHok！",
-      "subtitle": "获取最新的英雄、装备、符文和版本信息。"
+  "subtitle": "获取最新的英雄、装备、铭文与版本资讯。"
     },
     "featured": {
       "title": "精选文章"
@@ -52,7 +52,7 @@
     },
     "contact": {
       "title": "联系我们",
-      "email": "contact@bloghok.com"
+  "email": "paulvu@swqpz.onmicrosoft.com"
     },
     "copyright": "版权所有",
     "privacy": "隐私政策",
@@ -94,14 +94,38 @@
     "lore": "背景故事",
     "profile": "资料",
     "combo": "连招",
-    "skins": "皮肤"
-,
+    "skins": "皮肤",
     "goodAgainst": "克制于"
+  },
+  "legal": {
+    "privacy": {
+      "title": "隐私政策",
+      "intro": "本隐私政策说明我们在您使用 BlogHok 时如何收集、使用和保护您的信息。",
+      "data": {"title": "我们收集的数据", "body": "我们可能收集使用分析以及可选账户信息以改进体验。"},
+      "usage": {"title": "数据使用方式", "body": "数据用于性能优化、个性化与安全。"},
+      "contact": {"title": "联系"}
+    },
+    "terms": {
+      "title": "使用条款",
+      "intro": "访问 BlogHok 即表示您同意这些条款。如不同意请停止使用。",
+      "acceptable": {"title": "可接受使用", "body": "请勿滥用服务、尝试未授权访问或滥用速率限制。"},
+      "disclaimer": {"title": "免责声明", "body": "内容仅供参考，不作任何保证。"}
+    },
+    "contact": {
+      "title": "联系",
+      "intro": "有问题或反馈？请发送消息或直接给我们发邮件。",
+      "thanks": "感谢！我们已收到您的消息。",
+      "emailAlternative": "您也可以通过此邮箱联系",
+      "emailLabel": "联系我们：",
+      "form": {"name": "姓名", "email": "邮箱", "message": "消息", "submit": "发送"}
+    }
   },
   "hero": {
     "skills": "技能",
     "skins": "皮肤",
-    "origin": "背景故事"
+  "origin": "背景故事",
+  "suggestedEquipment": "推荐装备",
+  "equipmentSet": "Build {{number}}"
   },
   "items": {
     "title": "装备",

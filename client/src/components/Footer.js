@@ -21,7 +21,7 @@ const Footer = () => {
             {t('footer.about.title', 'About BlogHok')}
           </Typography>
           <Typography variant="caption" align="center" sx={{ fontSize: '0.7rem', mb: 0.5, color: '#ffe066', display: 'block', wordBreak: 'break-all' }}>
-            {t('footer.contact.email', 'contact@bloghok.com')}
+            {t('footer.contact.email', 'paulvu@swqpz.onmicrosoft.com')}
           </Typography>
           <Typography variant="caption" color="text.secondary" align="center" sx={{ fontSize: '0.75rem', display: 'block' }}>
             © {currentYear} BlogHok. {t('footer.copyright', 'All rights reserved')}

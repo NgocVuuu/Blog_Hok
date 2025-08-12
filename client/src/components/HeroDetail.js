@@ -9,6 +9,7 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import './SwiperCustom.css';
+import { asDangerousHtml } from '../utils/sanitizeHtml';
 
 // Import lane icons, effect images, and role icons
 import farmLaneIcon from '../assets/images/lanes/Farm_Lane.png';
@@ -27,7 +28,7 @@ import fighterIcon from '../assets/images/roles/Fighter.png';
 
 
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
 
 const SkillTabs = ({ skills }) => {
   const [selected, setSelected] = useState(0);
@@ -552,6 +553,94 @@ const HeroDetail = () => {
         {/* Skills Horizontal Selector */}
         <SkillTabs skills={hero.skills} />
       </Box>
+      {/* Suggested Equipment */}
+      {hero.suggestedEquipment && hero.suggestedEquipment.length > 0 && (
+        <Box maxWidth={900} mx="auto" mb={{ xs: 2, md: 3 }} sx={{
+          background: 'none',
+          borderRadius: { xs: 3, md: 6 },
+          border: '1.5px solid rgba(201,160,99,0.35)',
+          boxShadow: '0 8px 32px 0 rgba(201,160,99,0.08)',
+          backdropFilter: 'blur(12px)',
+          p: { xs: 2, md: 3 },
+        }}>
+          <Typography variant="h5" sx={{ mb: 2 }}>{t('hero.suggestedEquipment', 'Trang bị gợi ý')}</Typography>
+          {([1,2,3].map(build => {
+            const group = (hero.suggestedEquipment||[]).filter(e => (e.build||1) === build);
+            if (group.length === 0) return null;
+            return (
+              <Box key={`build-${build}`} sx={{ mb:2 }}>
+                <Typography variant="subtitle1" sx={{ mb: 1, fontWeight:700 }}>{t('hero.equipmentSet', { number: build, defaultValue: `Bộ ${build}` })}</Typography>
+                <Box sx={{ display:'flex', flexDirection:'row', gap:1.5, flexWrap:'wrap', alignItems:'stretch' }}>
+                  {group.map((eq, idx) => (
+                    <Box key={eq._id || idx} sx={{ width:{ xs: 70, md: 90 }, textAlign:'center' }}>
+                      <Box sx={{ width:'100%', aspectRatio:'1/1', borderRadius: 2, overflow:'hidden', border:'1px solid rgba(201,160,99,0.25)', mb:0.5 }}>
+                        <img src={eq.image} alt={eq.name} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight:700, fontSize:{ xs:11, md:13 }, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }} title={eq.name}>{eq.name}</Typography>
+                      {typeof eq.price === 'number' && (
+                        <Typography variant="caption" color="text.secondary">{eq.price}</Typography>
+                      )}
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            );
+          }))}
+        </Box>
+      )}
+  {/* ...existing code... */}
+  {/* Arcana Builds section below */}
+    {hero.arcanaBuilds && hero.arcanaBuilds.length > 0 && (
+        <Box maxWidth={900} mx="auto" mb={{ xs: 2, md: 3 }} sx={{
+          background: 'none',
+          borderRadius: { xs: 3, md: 6 },
+          border: '1.5px solid rgba(201,160,99,0.35)',
+          boxShadow: '0 8px 32px 0 rgba(201,160,99,0.08)',
+          backdropFilter: 'blur(12px)',
+          p: { xs: 2, md: 3 },
+        }}>
+  <Typography variant="h5" sx={{ mb: 2 }}>{t('hero.suggestedArcanaBuilds', 'Arcana gợi ý')}</Typography>
+          {hero.arcanaBuilds.map((build, bIdx) => (
+            <Box key={bIdx} sx={{ mb:3, p:2, border:'1px solid rgba(201,160,99,0.25)', borderRadius:2 }}>
+              <Typography variant="h6" sx={{ fontSize:{ xs:'1rem', md:'1.25rem' }, mb:1 }}>{build.name}</Typography>
+              <Box sx={{ display:'flex', flexDirection:{ xs:'column', md:'row' }, gap:2, alignItems:{ xs:'stretch', md:'flex-start' } }}>
+                <Box sx={{ flex:1, display:'flex', flexDirection:'row', gap:2, flexWrap:'wrap', justifyContent:'flex-start', alignItems:'flex-end' }}>
+                {build.items && build.items.length > 0 ? build.items.map((it, iIdx) => {
+                  // Prefer flattened fields returned by API; fallback to nested arcana object
+                  const arc = it._id ? it : (it.arcana || {});
+                  const name = arc.name;
+                  const image = arc.image;
+                  const color = arc.color;
+                  const colorLabel = color ? t(`arcana.colors.${color}`, color) : '';
+                  return (
+                    <Box key={iIdx} sx={{ display:'flex', flexDirection:'column', alignItems:'center', minWidth:70 }}>
+                      {image ? (
+                        <>
+                          <img src={image} alt={name || 'Arcana'} style={{ width:48, height:48, objectFit:'cover', borderRadius:8, marginBottom:4 }} />
+                          {name && <Typography variant="body2" sx={{ fontWeight:600, textAlign:'center' }}>{name}</Typography>}
+                          {color && <Chip label={colorLabel} size="small" sx={{ bgcolor: color === 'red' ? '#ffcccc' : color === 'green' ? '#ccffcc' : '#cce5ff', color: '#333', mb:0.5 }} />}
+                        </>
+                      ) : (
+                        <Typography variant="body2" sx={{ fontStyle:'italic', color:'text.secondary', py:2 }}>{t('no_data','Không có dữ liệu')}</Typography>
+                      )}
+                      <Typography variant="caption" sx={{ textAlign:'center', color:'#C9A063', fontWeight:700 }}>x{it.count}</Typography>
+                    </Box>
+                  );
+                }) : (
+                  <Typography variant="body2" sx={{ fontStyle:'italic', color:'text.secondary', py:2 }}>{t('no_data','Không có dữ liệu')}</Typography>
+                )}
+                </Box>
+        {build.description && (
+                  <Box sx={{ minWidth:{ md: 260 }, maxWidth:{ md: 320 }, borderLeft:{ md:'1px solid rgba(201,160,99,0.25)' }, pl:{ md:2 }, pt:{ xs:1, md:0 } }}>
+                    <Typography variant="subtitle2" sx={{ mb:0.5 }}>{t('description','Mô tả')}</Typography>
+          <Typography variant="body2" sx={{ color:'text.secondary' }} dangerouslySetInnerHTML={asDangerousHtml(build.description)} />
+                  </Box>
+                )}
+              </Box>
+            </Box>
+          ))}
+        </Box>
+      )}
       {/* Combo Kill */}
       {hero.combo && hero.combo.length > 0 && (
         <Box maxWidth={900} mx="auto" mb={{ xs: 2, md: 3 }} sx={{

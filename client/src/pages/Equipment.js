@@ -7,8 +7,15 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import ShieldIcon from '@mui/icons-material/Shield';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
+import { GiBroadsword } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
 import LazyImage from '../components/LazyImage';
+import { asDangerousHtml } from '../utils/sanitizeHtml';
 
 // Import lane icons
 import roamIcon from '../assets/images/lanes/Roam.png';
@@ -25,7 +32,7 @@ const Equipment = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('name');
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
 
 
 
@@ -70,6 +77,222 @@ const Equipment = () => {
   ];
 
   // Remove tier system - not needed
+
+  // Helpers to normalize stat labels
+  const normalizeQuickStatLabel = (raw) => {
+    if (!raw) return '';
+    let s = String(raw).trim();
+    // strip headings
+    s = s.replace(/^passive\s*:\s*/i, '').replace(/^active\s*:\s*/i, '');
+    // take last segment after common separators
+    const parts = s.split(/[-–:]/).map(p => p.trim()).filter(Boolean);
+    if (parts.length > 1) s = parts[parts.length - 1];
+    // convert snake_case and kebab-case to spaces
+    s = s.replace(/[_.-]+/g, ' ');
+    // insert spaces between camelCase boundaries: criticalRate -> critical Rate
+    s = s.replace(/([a-z])([A-Z])/g, '$1 $2');
+    // collapse whitespace
+    return s.replace(/\s+/g, ' ').trim();
+  };
+
+  // Map a stat label to an icon and color
+  const getQuickStatVisual = (rawLabel) => {
+    const label = normalizeQuickStatLabel(rawLabel).toLowerCase();
+    const has = (s) => label.includes(s);
+    // Movement Speed
+    if (has('movement speed') || label === 'movementspeed' || has('tốc chạy')) {
+      return { type: 'movementSpeed', Icon: DirectionsRunIcon, color: '#43a047', reactIcon: false };
+    }
+    // Attack Speed
+    if (has('attack speed') || label === 'attackspeed' || has('tốc đánh')) {
+      return { type: 'attackSpeed', Icon: GiBroadsword, color: '#43a047', reactIcon: true };
+    }
+    // Cooldown Reduction
+    if (has('cooldown') || has('giảm hồi chiêu')) {
+      return { type: 'cooldownReduction', Icon: AccessTimeIcon, color: '#43a047', reactIcon: false };
+    }
+    // Life Steal (generic) -> Treat as Physical Life Steal
+    if ((has('life steal') || has('lifesteal') || has('hút máu')) && !has('vật lý')) {
+      return { type: 'physicalLifeSteal', Icon: LocalFireDepartmentIcon, color: '#ff9800', reactIcon: false };
+    }
+    // Physical Life Steal (new): Hút máu vật lý
+    if (has('hút máu vật lý') || (has('life') && has('steal') && has('physical'))) {
+      return { type: 'physicalLifeSteal', Icon: LocalFireDepartmentIcon, color: '#ff9800', reactIcon: false };
+    }
+  // Magical Defense (formerly Magic Armor / Resist)
+  if (has('magical defense') || has('magic armor') || has('magic resist') || has('kháng phép')) {
+      return { type: 'magicArmor', Icon: ShieldIcon, color: '#7b2ff2', reactIcon: false };
+    }
+  // Physical Defense (formerly Physical Armor / Armor)
+  if (has('physical defense') || has('physical armor') || (has('armor') && !has('magic')) || has('giáp vật lý')) {
+      return { type: 'physicalArmor', Icon: ShieldIcon, color: '#ff9800', reactIcon: false };
+    }
+    // Magic Attack
+    if ((has('magic attack') || (has('phép') && !has('kháng'))) && !has('resist')) {
+      return { type: 'magicAttack', Icon: GiBroadsword, color: '#7b2ff2', reactIcon: true };
+    }
+    // Physical Attack / Attack
+    if (has('physical attack') || (has('attack') && !has('magic')) || has('vật lý')) {
+      return { type: 'physicalAttack', Icon: GiBroadsword, color: '#ff9800', reactIcon: true };
+    }
+    // Critical Rate
+    if (
+      has('critical rate') || has('critical chance') || has('crit chance') || has('crit rate') ||
+      has('crit') || has('tỉ lệ chí mạng') || has('ti le chi mang')
+    ) {
+      return { type: 'criticalRate', Icon: GpsFixedIcon, color: '#C9A063', reactIcon: false };
+    }
+    // Mana Regen
+    if (has('mana') || has('hồi mana')) {
+      return { type: 'manaRegen', Icon: LocalFireDepartmentIcon, color: '#7b2ff2', reactIcon: false };
+    }
+    // Default
+    return { type: 'unknown', Icon: GiBroadsword, color: '#C9A063', reactIcon: true };
+  };
+
+  // Translate label by detected type; fallback to normalized raw label
+  const getDisplayLabel = (type, rawFallback) => {
+    switch (type) {
+      case 'magicArmor':
+        return t('equipment.stats.magicArmor', { lng: 'en', defaultValue: 'Magical Defense' });
+      case 'physicalArmor':
+        return t('equipment.stats.physicalArmor', { lng: 'en', defaultValue: 'Physical Defense' });
+      case 'lifeSteal':
+        return t('equipment.stats.lifeSteal', { lng: 'en', defaultValue: 'Physical Life Steal' });
+      case 'physicalLifeSteal':
+        return t('equipment.stats.physicalLifeSteal', { lng: 'en', defaultValue: 'Physical Life Steal' });
+      case 'criticalRate':
+        return t('equipment.stats.criticalRate', { lng: 'en', defaultValue: 'Critical Rate' });
+      case 'movementSpeed':
+        return t('equipment.stats.movementSpeed', { lng: 'en', defaultValue: 'Movement Speed' });
+      case 'attackSpeed':
+        return t('equipment.stats.attackSpeed', { lng: 'en', defaultValue: 'Attack Speed' });
+      case 'cooldownReduction':
+        return t('equipment.stats.cooldownReduction', { lng: 'en', defaultValue: 'Cooldown Reduction' });
+      case 'magicAttack':
+        return t('equipment.stats.magicAttack', { lng: 'en', defaultValue: 'Magic Attack' });
+      case 'physicalAttack':
+        return t('equipment.stats.physicalAttack', { lng: 'en', defaultValue: 'Physical Attack' });
+      case 'manaRegen':
+        return t('equipment.stats.manaRegen', { lng: 'en', defaultValue: 'Mana Regen' });
+      default:
+        return normalizeQuickStatLabel(rawFallback || '');
+    }
+  };
+
+  // Derive quick stats from available fields (quickStats | stats | attributes | parsed text)
+  const deriveQuickStats = (item) => {
+    // Preferred: quickStats array from backend
+    if (Array.isArray(item?.quickStats) && item.quickStats.length) {
+      return item.quickStats
+        .filter(q => q && (q.value || q.description || q.type))
+        .slice(0, 5)
+        .map(q => ({ label: normalizeQuickStatLabel(q.label || q.type || ''), value: q.value || '', desc: q.description || '' }));
+    }
+    // Next: stats object
+    if (item?.stats && typeof item.stats === 'object') {
+      return Object.entries(item.stats)
+        .filter(([, v]) => v !== null && v !== undefined && v !== '')
+        .slice(0, 5)
+        .map(([k, v]) => ({ label: k, value: `+${v}` }));
+    }
+    // Fallback: attributes object from model (only non-zero)
+    if (item?.attributes && typeof item.attributes === 'object') {
+      return Object.entries(item.attributes)
+        .filter(([, v]) => typeof v === 'number' && v !== 0)
+        .slice(0, 5)
+        .map(([k, v]) => ({ label: k, value: `+${v}` }));
+    }
+    // Last resort: parse from description/passive/active text
+    const text = [item?.description, item?.passive?.description, item?.active?.description]
+      .filter(Boolean)
+      .join('\n');
+    const parsed = parseQuickStatsFromText(text);
+    return parsed.slice(0, 5);
+  };
+
+  // Parse simple "+50 Attack" or "Movement Speed +60" style lines from text
+  const stripHtmlToText = (html) => {
+    if (!html) return '';
+    const el = document.createElement('div');
+    el.innerHTML = html
+      .replace(/<br\s*\/?>(?=[^\n])/gi, '\n')
+      .replace(/<p[^>]*>/gi, '')
+      .replace(/<\/p>/gi, '\n');
+    return (el.textContent || '').replace(/\u00A0/g, ' ');
+  };
+
+  const parseQuickStatsFromText = (htmlOrText) => {
+    if (!htmlOrText) return [];
+    const text = stripHtmlToText(htmlOrText);
+    const lines = text
+      .split(/\n|[.;•]/)
+      .map(s => s.trim())
+      .filter(Boolean)
+      // drop passive/active heading lines
+      .filter(s => !/^passive\s*:/i.test(s) && !/^active\s*:/i.test(s));
+    const out = [];
+    for (const line of lines) {
+      // value first: +15% Movement Speed OR 50 Attack Speed
+      let m = line.match(/^([+\-–]?\d+(?:\.\d+)?%?)\s+(.{2,40})$/u);
+      if (m) {
+        const value = m[1];
+        const label = m[2].trim();
+        if (label && value) out.push({ label, value });
+        continue;
+      }
+      // label first: Movement Speed +60 OR Attack +50%
+      m = line.match(/^(.{2,40}?)\s+([+\-–]?\d+(?:\.\d+)?%?)$/u);
+      if (m) {
+        const label = m[1].trim();
+        const value = m[2];
+        if (label && value) out.push({ label, value });
+      }
+      if (out.length >= 5) break;
+    }
+    return out;
+  };
+
+  const renderQuickStats = (item) => {
+    const qs = deriveQuickStats(item);
+    if (!qs.length) return null;
+    return (
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1, mt: -0.5 }}>
+        {qs.map((s, i) => (
+          <Typography
+            key={i}
+            variant="caption"
+            sx={{
+              px: 0.75,
+              py: 0.25,
+              borderRadius: 1,
+              bgcolor: 'rgba(201,160,99,0.08)',
+              border: '1px solid rgba(201,160,99,0.25)',
+              color: 'text.primary',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 0.5
+            }}
+            title={s.desc || ''}
+          >
+            {(() => {
+              const v = getQuickStatVisual(s.label);
+              const IconComp = v.Icon;
+              return v.reactIcon ? (
+                <IconComp style={{ color: v.color, fontSize: 14 }} />
+              ) : (
+                <IconComp sx={{ color: v.color, fontSize: 14 }} />
+              );
+            })()}
+            {(() => {
+              const v = getQuickStatVisual(s.label);
+              return `${s.value} ${getDisplayLabel(v.type, s.label)}`;
+            })()}
+          </Typography>
+        ))}
+      </Box>
+    );
+  };
 
   useEffect(() => {
     const fetchEquipment = async () => {
@@ -388,30 +611,8 @@ const Equipment = () => {
                                 </Typography>
                               </Box>
 
-                              {/* Stats */}
-                              {item.stats && Object.keys(item.stats).length > 0 && (
-                                <Box mb={2}>
-                                  <Typography variant="subtitle2" fontWeight={600} mb={1} color="text.primary">
-                                    {t('equipment.stats', 'Chỉ số')}:
-                                  </Typography>
-                                  <Box sx={{ pl: 1 }}>
-                                    {Object.entries(item.stats).map(([stat, value]) => (
-                                      <Typography
-                                        key={stat}
-                                        variant="caption"
-                                        display="block"
-                                        sx={{
-                                          fontSize: '0.75rem',
-                                          color: 'text.secondary',
-                                          mb: 0.3
-                                        }}
-                                      >
-                                        +{value} {stat}
-                                      </Typography>
-                                    ))}
-                                  </Box>
-                                </Box>
-                              )}
+                              {/* Quick Stats under price */}
+                              {renderQuickStats(item)}
 
                               {/* Passive Effect */}
                               {item.passive && (
@@ -433,7 +634,7 @@ const Equipment = () => {
                                       display: 'block'
                                     }}
                                   >
-                                    {item.passive.description}
+                                    <span dangerouslySetInnerHTML={asDangerousHtml(item.passive.description)} />
                                   </Typography>
                                 </Box>
                               )}
@@ -458,7 +659,7 @@ const Equipment = () => {
                                       display: 'block'
                                     }}
                                   >
-                                    {item.active.description}
+                                    <span dangerouslySetInnerHTML={asDangerousHtml(item.active.description)} />
                                   </Typography>
                                   {item.active.cooldown && (
                                     <Typography
@@ -476,24 +677,7 @@ const Equipment = () => {
                                   )}
                                 </Box>
                               )}
-
-                              {/* Description */}
-                              {item.description && (
-                                <Box>
-                                  <Typography
-                                    variant="caption"
-                                    sx={{
-                                      fontSize: '0.7rem',
-                                      lineHeight: 1.3,
-                                      color: 'text.disabled',
-                                      fontStyle: 'italic',
-                                      display: 'block'
-                                    }}
-                                  >
-                                    {item.description}
-                                  </Typography>
-                                </Box>
-                              )}
+                              {/* Bottom small description removed as requested */}
                             </CardContent>
                           </Card>
                         </Grid>
@@ -560,30 +744,8 @@ const Equipment = () => {
                           </Typography>
                         </Box>
 
-                        {/* Stats */}
-                        {item.stats && Object.keys(item.stats).length > 0 && (
-                          <Box mb={2}>
-                            <Typography variant="subtitle2" fontWeight={600} mb={1} color="text.primary">
-                              {t('equipment.stats', 'Chỉ số')}:
-                            </Typography>
-                            <Box sx={{ pl: 1 }}>
-                              {Object.entries(item.stats).map(([stat, value]) => (
-                                <Typography
-                                  key={stat}
-                                  variant="caption"
-                                  display="block"
-                                  sx={{
-                                    fontSize: '0.75rem',
-                                    color: 'text.secondary',
-                                    mb: 0.3
-                                  }}
-                                >
-                                  +{value} {stat}
-                                </Typography>
-                              ))}
-                            </Box>
-                          </Box>
-                        )}
+                        {/* Quick Stats under price (filtered grid) */}
+                        {renderQuickStats(item)}
 
                         {/* Passive Effect */}
                         {item.passive && (

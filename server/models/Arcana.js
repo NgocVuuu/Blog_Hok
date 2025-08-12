@@ -13,13 +13,14 @@ const arcanaSchema = new mongoose.Schema({
   },
   tier: {
     type: Number,
-    required: true,
+    required: false, // made optional (deprecated)
     min: 1,
-    max: 3, // Tier 1, 2, 3
+    max: 3,
   },
   image: {
-    type: String,
-    required: true,
+  type: String,
+  required: false,
+  default: '/images/arcana-placeholder.png'
   },
   description: {
     type: String,

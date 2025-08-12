@@ -57,6 +57,16 @@ const equipmentSchema = new mongoose.Schema({
     description: String,
     cooldown: Number,
   },
+  // Quick stats for UI summary (persisted)
+  quickStats: [
+    {
+      // using nested { type: String } to avoid conflict with mongoose's 'type' key
+      type: { type: String, default: '' },
+      label: { type: String, default: '' },
+      value: { type: String, default: '' },
+      description: { type: String, default: '' }
+    }
+  ],
   buildPath: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Equipment'

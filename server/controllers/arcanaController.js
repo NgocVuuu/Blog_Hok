@@ -50,10 +50,27 @@ exports.getArcanaById = async (req, res) => {
 // Tạo arcana mới
 exports.createArcana = async (req, res) => {
     try {
+        console.log('[Arcana][CREATE] Incoming body:', req.body);
         const newArcana = new Arcana(req.body);
         const savedArcana = await newArcana.save();
+        console.log('[Arcana][CREATE] Saved _id:', savedArcana._id);
         res.status(201).json(savedArcana);
     } catch (error) {
+        console.error('[Arcana][CREATE][ERROR]', error.message);
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({
+                message: 'Validation error',
+                details: Object.values(error.errors).map(e => e.message),
+                fields: Object.keys(error.errors)
+            });
+        }
+        if (error.code === 11000) {
+            return res.status(400).json({
+                message: 'Tên arcana đã tồn tại',
+                duplicate: true,
+                keyValue: error.keyValue
+            });
+        }
         res.status(400).json({ message: error.message });
     }
 };

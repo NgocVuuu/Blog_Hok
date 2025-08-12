@@ -1,7 +1,13 @@
 // Load environment variables FIRST
 const dotenv = require('dotenv');
 const path = require('path');
-dotenv.config({ path: path.join(__dirname, '.env') });
+// Try server/.env first, then fallback to repo root .env
+const serverEnvPath = path.join(__dirname, '.env');
+const rootEnvPath = path.join(__dirname, '..', '.env');
+const envLoaded = dotenv.config({ path: serverEnvPath });
+if (envLoaded.error) {
+  dotenv.config({ path: rootEnvPath });
+}
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -55,24 +61,34 @@ app.use('/api', apiLimiter);
 const { logger, requestLogger, errorLogger } = require('./utils/logger');
 
 // Connect to MongoDB
+logger.info('Checkpoint: invoking connectDB');
 connectDB();
+logger.info('Checkpoint: connectDB call returned (async connection in progress)');
 
-// Request logging (before routes)
-app.use(requestLogger);
+// Wrap route registration to catch any synchronous exception causing silent exit
+try {
+  // Request logging (before routes)
+  app.use(requestLogger);
 
-// Health check routes (before other routes)
-app.use('/health', require('./routes/health'));
+  // Health check routes (before other routes)
+  app.use('/health', require('./routes/health'));
 
-// API Routes
-app.use('/api/champions', require('./routes/heroes'));
-app.use('/api/equipment', require('./routes/equipment'));
-app.use('/api/runes', require('./routes/runes'));
-app.use('/api/arcana', require('./routes/arcana'));
-app.use('/api/meta', require('./routes/meta'));
-app.use('/api/news', require('./routes/news'));
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/upload', require('./routes/upload'));
-app.use('/api/heroes', heroesRouter);
+  // API Routes
+  app.use('/api/champions', require('./routes/heroes'));
+  app.use('/api/equipment', require('./routes/equipment'));
+  app.use('/api/runes', require('./routes/runes'));
+  app.use('/api/arcana', require('./routes/arcana'));
+  app.use('/api/meta', require('./routes/meta'));
+  app.use('/api/news', require('./routes/news'));
+  app.use('/api/auth', require('./routes/auth'));
+  app.use('/api/upload', require('./routes/upload'));
+  app.use('/api/heroes', heroesRouter);
+  app.use('/api/contact', require('./routes/contact'));
+} catch (routeErr) {
+  console.error('Synchronous route setup error:', routeErr);
+  logger.error('Route setup error', { message: routeErr.message, stack: routeErr.stack });
+  process.exit(1);
+}
 
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -152,36 +168,65 @@ app.use((req, res) => {
   });
 });
 
-// Graceful shutdown handling
-const gracefulShutdown = (signal) => {
+// Graceful shutdown handling (Mongoose v7 compatible)
+const gracefulShutdown = async (signal) => {
   logger.info(`Received ${signal}. Starting graceful shutdown...`);
-
-  server.close(() => {
+  const timeoutMs = parseInt(process.env.GRACEFUL_SHUTDOWN_TIMEOUT) || 30000;
+  const timeout = setTimeout(() => {
+    logger.error('Force shutdown after timeout');
+    process.exit(1);
+  }, timeoutMs);
+  try {
+    // Close HTTP server
+    await new Promise((resolve, reject) => {
+      server.close((err) => (err ? reject(err) : resolve()));
+    });
     logger.info('HTTP server closed');
 
-    // Close database connection
-    mongoose.connection.close(false, () => {
+    // Close Mongo connection if open
+    if (mongoose.connection.readyState === 1) {
+      await mongoose.connection.close();
       logger.info('MongoDB connection closed');
-      process.exit(0);
-    });
-  });
-
-  // Force close after configured timeout
-  setTimeout(() => {
-    logger.error('Could not close connections in time, forcefully shutting down');
+    }
+    clearTimeout(timeout);
+    process.exit(0);
+  } catch (err) {
+    logger.error('Graceful shutdown error', { error: { message: err.message, stack: err.stack } });
+    clearTimeout(timeout);
     process.exit(1);
-  }, parseInt(process.env.GRACEFUL_SHUTDOWN_TIMEOUT) || 30000);
+  }
 };
+
+// Simple internal ping for debugging
+app.get('/_ping', (req, res) => res.json({ ok: true, time: Date.now() }));
 
 // Start server
 const PORT = process.env.PORT || 7000;
-const server = app.listen(PORT, () => {
-  logger.info('Server started', {
-    port: PORT,
-    environment: process.env.NODE_ENV,
-    nodeVersion: process.version,
-    timestamp: new Date().toISOString()
+console.log('DEBUG before listen reached');
+logger.info('Checkpoint: about to listen', { port: PORT });
+let server;
+try {
+  server = app.listen(PORT, () => {
+    logger.info('Server started', {
+      port: PORT,
+      environment: process.env.NODE_ENV,
+      nodeVersion: process.version,
+      timestamp: new Date().toISOString()
+    });
   });
+  server.on('error', (err) => {
+    logger.error('Server listen error', { message: err.message, stack: err.stack });
+  });
+} catch (err) {
+  logger.error('Listen threw synchronously', { message: err.message, stack: err.stack });
+  process.exit(1);
+}
+
+process.on('beforeExit', (code) => {
+  logger.warn('Process beforeExit', { code });
+});
+process.on('exit', (code) => {
+  logger.warn('Process exit', { code });
 });
 
 // Handle graceful shutdown

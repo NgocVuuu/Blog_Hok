@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Box, TextField, Button, Typography, MenuItem, Select, InputLabel, FormControl, Chip, OutlinedInput, Grid, CircularProgress, Alert } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import UploadIcon from '@mui/icons-material/Upload';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
 const rolesList = ['Marksman', 'Mage', 'Tank', 'Fighter', 'Assassin', 'Support'];
 const lanesList = ['Farm Lane', 'Mid Lane', 'Roam', 'Jungle', 'Abyssal Lane'];
 const metaTiers = ['S+', 'S', 'A', 'B', 'C'];
@@ -26,8 +27,11 @@ const BASIC_ATTACK_INDEX = 5;
 const BASIC_ATTACK_LABEL = 'Đánh thường';
 
 const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
+  const { t } = useTranslation();
   const { id: routeHeroId } = useParams();
   const { fetchWithAuth, openLogin } = useAuth();
+  // Derived id for eslint-safe dependencies
+  const editingHeroId = editingHero ? editingHero._id : undefined;
   const [name, setName] = useState('');
   const [title, setTitle] = useState('');
   const [roles, setRoles] = useState([]);
@@ -51,6 +55,40 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   const [combo, setCombo] = useState([]);
   const [skins, setSkins] = useState([]);
   const [fetchedHero, setFetchedHero] = useState(null);
+  // New state for suggested builds
+  const [allArcana, setAllArcana] = useState([]);
+  const [arcanaCache, setArcanaCache] = useState({}); // id -> arcana object
+  const [arcanaBuilds, setArcanaBuilds] = useState([]); // { name, description, items:[{arcanaId,count}], totals }
+  // Suggested Equipment state
+  const [allEquipment, setAllEquipment] = useState([]);
+  // Store all suggestions in a flat array with build index
+  const [suggestedEquipment, setSuggestedEquipment] = useState([]); // { equipmentId, equipment?, note, order, build }
+  const [eqSearch, setEqSearch] = useState('');
+  const [eqCategory, setEqCategory] = useState('all');
+  const [activeBuild, setActiveBuild] = useState(1); // 1..3
+
+  const equipmentCategories = useMemo(() => {
+    const set = new Set();
+    (allEquipment || []).forEach(e => { if (e && e.category) set.add(e.category); });
+    return ['all', ...Array.from(set)];
+  }, [allEquipment]);
+
+  const filteredEquipmentOptions = useMemo(() => {
+    const term = (eqSearch || '').toLowerCase();
+    return (allEquipment || []).filter(e => {
+      if (!e) return false;
+      if (eqCategory !== 'all' && e.category !== eqCategory) return false;
+      if (!term) return true;
+      return (e.name || '').toLowerCase().includes(term) || (e.description || '').toLowerCase().includes(term);
+    });
+  }, [allEquipment, eqCategory, eqSearch]);
+
+  // Derived list for current build
+  const currentBuildList = useMemo(() => {
+    return (suggestedEquipment || [])
+      .filter(it => (it.build || 1) === activeBuild)
+      .sort((a,b) => (a.order||0) - (b.order||0));
+  }, [suggestedEquipment, activeBuild]);
   // Use fetchedHero (full detail) to override initial partial editingHero from list
   const editingHeroData = fetchedHero || editingHero;
 
@@ -69,7 +107,62 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       }
     };
     fetchHeroes();
+  // Fetch arcana list only
+    (async () => {
+      try {
+        const arcRes = await fetch(`${API_URL}/api/arcana`);
+        if (arcRes.ok) {
+          const data = await arcRes.json();
+          const arcList = data?.success ? data.data : (Array.isArray(data) ? data : []);
+          console.log('Loaded arcana:', arcList);
+          setAllArcana(arcList);
+          // Warm the cache
+          const cache = {};
+          arcList.forEach(a => { if (a && a._id) cache[a._id] = a; });
+          setArcanaCache(prev => ({ ...cache, ...prev }));
+        }
+      } catch (e) { console.warn('Fetch arcana failed', e); }
+    })();
+    // Fetch equipment list for suggested equipment editor
+    (async () => {
+      try {
+        const eqRes = await fetch(`${API_URL}/api/equipment`);
+        if (eqRes.ok) {
+          const list = await eqRes.json();
+          setAllEquipment(Array.isArray(list) ? list : []);
+        }
+      } catch (e) { console.warn('Fetch equipment failed', e); }
+    })();
   }, []);
+
+  // Fetch any missing arcana objects by ID for preview
+  useEffect(() => {
+    const ids = new Set();
+    arcanaBuilds.forEach(b => (b.items||[]).forEach(it => {
+      const id = typeof it.arcanaId === 'string' && it.arcanaId ? it.arcanaId
+        : (typeof it.arcana === 'string' ? it.arcana : (it.arcana && it.arcana._id));
+      if (id && !arcanaCache[id] && !allArcana.find(a => a._id === id)) ids.add(id);
+    }));
+    if (ids.size === 0) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const results = await Promise.all(Array.from(ids).map(async (id) => {
+          try {
+            const res = await fetch(`${API_URL}/api/arcana/${id}`);
+            if (!res.ok) return null;
+            const data = await res.json();
+            return data && data._id ? data : null;
+          } catch { return null; }
+        }));
+        if (cancelled) return;
+        const add = {};
+        results.filter(Boolean).forEach(a => { add[a._id] = a; });
+        if (Object.keys(add).length) setArcanaCache(prev => ({ ...prev, ...add }));
+      } catch { /* ignore */ }
+    })();
+    return () => { cancelled = true; };
+  }, [arcanaBuilds, allArcana, arcanaCache]);
 
   // Auto fetch hero if route has id and no editingHero prop passed
   useEffect(() => {
@@ -109,34 +202,79 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   while (normalizedSkills.length < 5) normalizedSkills.push({ icon: '', description: '', iconPreview: '', name: '' });
   if (normalizedSkills.length > 5) normalizedSkills = normalizedSkills.slice(0,5);
       setSkills(normalizedSkills);
-      const alliesArr = Array.isArray(editingHeroData.allies) ? editingHeroData.allies : [];
-      setAllies(alliesArr.map(a => a.hero));
-      const countersArr = Array.isArray(editingHeroData.counters) ? editingHeroData.counters : [];
-      setCounters(countersArr.map(c => c.hero));
-      const goodAgainstArr = Array.isArray(editingHeroData.goodAgainst) ? editingHeroData.goodAgainst : [];
-      setGoodAgainst(goodAgainstArr.map(g => g.hero));
+  const alliesArr = Array.isArray(editingHeroData.allies) ? editingHeroData.allies : [];
+  setAllies(alliesArr.map(a => (typeof a === 'string' ? a : (a.hero?._id || a.hero || a._id || ''))).filter(Boolean));
+  const countersArr = Array.isArray(editingHeroData.counters) ? editingHeroData.counters : [];
+  setCounters(countersArr.map(c => (typeof c === 'string' ? c : (c.hero?._id || c.hero || c._id || ''))).filter(Boolean));
+  const goodAgainstArr = Array.isArray(editingHeroData.goodAgainst) ? editingHeroData.goodAgainst : [];
+  setGoodAgainst(goodAgainstArr.map(g => (typeof g === 'string' ? g : (g.hero?._id || g.hero || g._id || ''))).filter(Boolean));
       setLore(editingHeroData.lore || '');
       setCombo(Array.isArray(editingHeroData.combo) ? editingHeroData.combo : []);
       setSkins(Array.isArray(editingHeroData.skins) ? editingHeroData.skins : []);
+  // Removed suggestedArcana and suggestedEquipment population
+  // Populate suggested equipment if available (flattened by API)
+      if (Array.isArray(editingHeroData.suggestedEquipment)) {
+        const se = editingHeroData.suggestedEquipment
+          .filter(it => it && (it._id || it.equipment))
+          .map(it => ({
+            equipmentId: typeof it === 'string' ? it : (it._id || it.equipment?._id || it.equipment || ''),
+            equipment: typeof it === 'object' ? it : undefined,
+            note: (it.note || ''),
+    order: typeof it.order === 'number' ? it.order : 0,
+    build: typeof it.build === 'number' ? it.build : 1,
+          }));
+        setSuggestedEquipment(se);
+      } else {
+        setSuggestedEquipment([]);
+      }
+      if (Array.isArray(editingHeroData.arcanaBuilds)) {
+        console.log('[DEBUG] loaded arcanaBuilds:', editingHeroData.arcanaBuilds);
+        // Normalize to keep id (string) and optional object for preview
+        setArcanaBuilds(editingHeroData.arcanaBuilds.map(b => ({
+          name: b.name,
+          description: b.description || '',
+          items: (b.items||[]).map(it => {
+            // Case 1: API returned flattened item: { _id, name, image, color, tier, count }
+            if (it && typeof it === 'object' && typeof it._id === 'string' && (it.name || it.image || it.color)) {
+              return {
+                arcanaId: it._id,
+                arcana: { _id: it._id, name: it.name, image: it.image, color: it.color, tier: it.tier },
+                color: it.color || '',
+                count: it.count || 1
+              };
+            }
+            // Case 2: Legacy/nested: { arcana: ObjectId | {..}, count }
+            const obj = (it && it.arcana && typeof it.arcana === 'object') ? it.arcana : undefined;
+            const id = obj?._id || (typeof it.arcana === 'string' ? it.arcana : (typeof it.arcanaId === 'string' ? it.arcanaId : ''));
+            return {
+              arcanaId: id || '',
+              arcana: obj,
+              color: it.color || obj?.color || '',
+              count: it.count || 1
+            };
+          })
+        })));
+      }
     }
   }, [editingHeroData]);
 
-  // If editingHero prop is partial, fetch full details
+  // Always fetch full hero details when editing to ensure suggestedArcana / equipment / arcanaBuilds populated
   useEffect(() => {
-    if (editingHero && (!editingHero.skills || editingHero.skills.length === 0 || editingHero.lore === undefined)) {
-      (async () => {
-        try {
-          const res = await fetch(`${API_URL}/api/heroes/${editingHero._id}`);
-          if (res.ok) {
-            const data = await res.json();
-            setFetchedHero(data);
-          }
-        } catch (err) {
-          console.error('Failed to fetch full hero details', err);
+    if (!editingHeroId) return; // not editing
+    let ignore = false;
+    (async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/heroes/${editingHeroId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (!ignore) setFetchedHero(data);
         }
-      })();
-    }
-  }, [editingHero]);
+      } catch (err) {
+        console.error('Failed to fetch full hero details', err);
+      }
+    })();
+    return () => { ignore = true; };
+  }, [editingHeroId]);
 
   const validateNumber = (value, field) => {
     // Relaxed: only check not negative; let server enforce 0-100 if still desired
@@ -284,13 +422,26 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         pickRate: parseFloat(pickRate),
         banRate: parseFloat(banRate),
         skills: filteredSkills,
-  allies: allies.map(id => ({ hero: id })),
-  counters: counters.map(id => ({ hero: id })),
-  goodAgainst: goodAgainst.map(id => ({ hero: id })),
+        allies: allies.map(id => ({ hero: id })),
+        counters: counters.map(id => ({ hero: id })),
+        goodAgainst: goodAgainst.map(id => ({ hero: id })),
         lore,
-  skins: skins.filter(s => s.name.trim() && s.image),
+        skins: skins.filter(s => s.name.trim() && s.image),
         combo,
+        suggestedEquipment: suggestedEquipment
+          .filter(it => it && (it.equipmentId || (it.equipment && it.equipment._id)))
+          .map(it => ({ equipment: it.equipmentId || it.equipment._id, note: it.note || '', order: typeof it.order === 'number' ? it.order : 0, build: typeof it.build === 'number' ? it.build : 1 })),
+        arcanaBuilds: arcanaBuilds.map(build => ({
+          name: build.name,
+          description: build.description,
+          items: build.items && Array.isArray(build.items)
+            ? build.items
+                .filter(it => (typeof it.arcanaId === 'string' && it.arcanaId) || (it.arcana && it.arcana._id))
+                .map(it => ({ arcana: (typeof it.arcanaId === 'string' && it.arcanaId) ? it.arcanaId : it.arcana._id, count: it.count }))
+            : [],
+        })),
       };
+      console.log('[DEBUG] arcanaBuilds payload:', payload.arcanaBuilds);
 
       // Debug: log derived counts to help identify validation issues
       console.log('[DEBUG] Prepared hero payload', {
@@ -707,6 +858,88 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       </Box>
 
       <Box mt={2} mb={2}>
+  <Typography variant="h6">{t('hero.suggestedEquipment', 'Suggested Equipment')}</Typography>
+        {/* Filters first */}
+        <Box display="flex" gap={2} flexWrap="wrap" mb={1}>
+          <TextField
+            size="small"
+            label="Tìm trang bị..."
+            value={eqSearch}
+            onChange={e => setEqSearch(e.target.value)}
+            sx={{ minWidth: 220 }}
+          />
+          <FormControl size="small" sx={{ minWidth: 180 }}>
+            <InputLabel id="eq-cat-label">Loại</InputLabel>
+            <Select
+              labelId="eq-cat-label"
+              label="Loại"
+              value={eqCategory}
+              onChange={e => setEqCategory(e.target.value)}
+            >
+              {equipmentCategories.map(cat => (
+                <MenuItem key={cat} value={cat}>{cat === 'all' ? 'Tất cả' : cat}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        {/* Build selector */}
+        <Box display="flex" gap={1} mb={1}>
+          {[1,2,3].map(b => (
+            <Button key={b} variant={activeBuild===b?'contained':'outlined'} size="small" onClick={()=> setActiveBuild(b)}>
+              {t('hero.equipmentSet', { number: b, defaultValue: `Build ${b}` })}
+            </Button>
+          ))}
+        </Box>
+        {/* Current build items */}
+        {currentBuildList.map((it, idx) => {
+          const selected = it.equipment || allEquipment.find(e => e._id === it.equipmentId);
+          // Find the absolute index in the flat array for mutation mapping
+          const absIndex = suggestedEquipment.findIndex(x => x === it);
+          return (
+            <Box key={absIndex} display="flex" alignItems="center" gap={2} mb={1}>
+              <FormControl size="small" sx={{ minWidth: 240 }}>
+                <InputLabel id={`eq-label-${absIndex}`}>Chọn trang bị</InputLabel>
+                <Select
+                  labelId={`eq-label-${absIndex}`}
+                  label="Chọn trang bị"
+                  value={it.equipmentId || ''}
+                  onChange={e => setSuggestedEquipment(list => list.map((x,i) => i===absIndex ? ({ ...x, equipmentId: e.target.value, equipment: allEquipment.find(eq => eq._id === e.target.value) }) : x))}
+                >
+                  <MenuItem value=""><em>-- Chọn --</em></MenuItem>
+                  {filteredEquipmentOptions.map(eq => (
+                    <MenuItem key={eq._id} value={eq._id}>{eq.name}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <TextField
+                size="small"
+                label="Ghi chú"
+                value={it.note || ''}
+                onChange={e => setSuggestedEquipment(list => list.map((x,i)=> i===absIndex ? ({ ...x, note: e.target.value }) : x))}
+                sx={{ minWidth: 180 }}
+              />
+              <TextField
+                size="small"
+                type="number"
+                label="Thứ tự"
+                value={it.order ?? 0}
+                onChange={e => setSuggestedEquipment(list => list.map((x,i)=> i===absIndex ? ({ ...x, order: parseInt(e.target.value)||0 }) : x))}
+                sx={{ width: 110 }}
+              />
+              {selected && selected.image && (
+                <Box sx={{ display:'flex', alignItems:'center', gap:1 }}>
+                  <img src={selected.image} alt={selected.name} style={{ width:40, height:40, objectFit:'cover', borderRadius:6 }} />
+                  <Typography variant="body2" sx={{ fontWeight:600 }}>{selected.name}</Typography>
+                </Box>
+              )}
+              <Button color="error" size="small" onClick={() => setSuggestedEquipment(list => list.filter((_,i)=> i!==absIndex))}>Xóa</Button>
+            </Box>
+          );
+        })}
+        <Button variant="outlined" size="small" onClick={() => setSuggestedEquipment(list => [...list, { equipmentId:'', note:'', order: currentBuildList.length, build: activeBuild }] )}>Thêm trang bị</Button>
+      </Box>
+
+      <Box mt={2} mb={2}>
         <Typography variant="subtitle1">Skins (Trang phục)</Typography>
         {skins.map((skin, idx) => (
           <Box key={idx} display="flex" alignItems="center" gap={2} mb={1}>
@@ -746,6 +979,76 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
           </Box>
         ))}
         <Button variant="outlined" onClick={() => setSkins([...skins, { name: '', image: '' }])}>Thêm skin</Button>
+      </Box>
+
+  {/* Gợi ý Arcana và Gợi ý Trang Bị sections removed as requested */}
+
+      <Box mt={4} mb={2}>
+        <Typography variant="h6">Bảng Arcana</Typography>
+        {arcanaBuilds.map((build, bIdx) => (
+          <Box key={bIdx} sx={{ border: '1px solid #ddd', borderRadius: 2, p:2, mb:2 }}>
+            <Box display="flex" gap={2} flexWrap="wrap" mb={1}>
+              <TextField label="Tên bảng" size="small" value={build.name} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx?{...b,name:e.target.value}:b))} sx={{ minWidth:200 }} />
+              <TextField label="Mô tả" size="small" value={build.description} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx?{...b,description:e.target.value}:b))} fullWidth multiline minRows={2} />
+              <Button color="error" size="small" onClick={() => setArcanaBuilds(list => list.filter((_,i)=> i!==bIdx))}>Xóa bảng</Button>
+            </Box>
+            {build.items.map((it, iIdx) => {
+              // Resolve arcana object for preview (prefer inline arcana, then list)
+              const selectedId = (typeof it.arcanaId === 'string' ? it.arcanaId : (typeof it.arcana === 'string' ? it.arcana : (it.arcana?._id || '')));
+              let arcanaObj = (it.arcana && typeof it.arcana === 'object') ? it.arcana : undefined;
+              if (!arcanaObj && selectedId) {
+                arcanaObj = arcanaCache[selectedId] || allArcana.find(a => a._id === selectedId);
+              }
+              return (
+                <Box key={iIdx} display="flex" gap={2} alignItems="center" mb={1}>
+                  <FormControl size="small" sx={{ minWidth:120 }}>
+                    <Select value={it.color || (arcanaObj && arcanaObj.color) || ''} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx ? { ...b, items: b.items.map((x,j)=> j===iIdx ? { ...x, color:e.target.value, arcanaId:'', arcana: undefined } : x) } : b))} displayEmpty>
+                      <MenuItem value=""><em>Chọn màu</em></MenuItem>
+                      <MenuItem value="red">Đỏ</MenuItem>
+                      <MenuItem value="green">Lục</MenuItem>
+                      <MenuItem value="blue">Xanh</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl size="small" sx={{ minWidth:160 }}>
+                    <Select
+                      value={selectedId}
+                      onChange={e => setArcanaBuilds(list => list.map((b,i)=> {
+                        if (i !== bIdx) return b;
+                        const id = e.target.value;
+                        const obj = allArcana.find(a => a._id === id);
+                        return {
+                          ...b,
+                          items: b.items.map((x,j)=> j===iIdx ? { ...x, arcanaId:id, arcana: obj, color: obj?.color || x.color } : x)
+                        };
+                      }))}
+                      displayEmpty
+                      disabled={!it.color && !(arcanaObj && arcanaObj.color)}
+                    >
+                      <MenuItem value=""><em>Chọn Arcana</em></MenuItem>
+                      {allArcana.filter(a => a.color === (it.color || (arcanaObj && arcanaObj.color))).map(a => (
+                        <MenuItem key={a._id} value={a._id}>{a.name}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <TextField type="number" size="small" label="Số lượng" inputProps={{ min:1, max:10 }} value={it.count} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx ? { ...b, items: b.items.map((x,j)=> j===iIdx ? { ...x, count:parseInt(e.target.value)||1 } : x) } : b))} sx={{ width:100 }} />
+                  {/* Hiển thị ảnh, tên, màu arcana nếu có */}
+                  {arcanaObj && (
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Box sx={{ width:40, height:40, border:'1px solid #ddd', borderRadius:1, overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                        <img src={arcanaObj.image} alt={arcanaObj.name} style={{ maxWidth:'100%', maxHeight:'100%', objectFit:'cover' }} />
+                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight:600 }}>{arcanaObj.name}</Typography>
+                      <Chip label={arcanaObj.color} size="small" sx={{ bgcolor: arcanaObj.color === 'red' ? '#ffcccc' : arcanaObj.color === 'green' ? '#ccffcc' : '#cce5ff', color: '#333' }} />
+                    </Box>
+                  )}
+                  <Button size="small" color="error" onClick={() => setArcanaBuilds(list => list.map((b,i)=> i===bIdx ? { ...b, items: b.items.filter((_,j)=> j!==iIdx) } : b))}>X</Button>
+                </Box>
+              );
+            })}
+            <Button size="small" variant="outlined" onClick={()=> setArcanaBuilds(list => list.map((b,i)=> i===bIdx?{...b, items:[...b.items,{ arcanaId:'', count:1 }]}:b))}>Thêm Arcana</Button>
+          </Box>
+        ))}
+        <Button variant="contained" size="small" onClick={() => setArcanaBuilds(list => [...list, { name:'', description:'', items:[] }])}>Thêm bảng Arcana</Button>
       </Box>
 
       <Button

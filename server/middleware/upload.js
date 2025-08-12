@@ -15,10 +15,11 @@ const allowedImageTypes = {
   'image/jpg': '.jpg',
   'image/png': '.png',
   'image/gif': '.gif',
-  'image/webp': '.webp'
+  'image/webp': '.webp',
+  'image/svg+xml': '.svg'
 };
 
-const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
 
 // Generate secure filename
 const generateSecureFilename = (originalname) => {
@@ -33,7 +34,7 @@ const fileFilter = (req, file, cb) => {
   try {
     // Check MIME type
     if (!allowedImageTypes[file.mimetype]) {
-      return cb(new Error('Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.'), false);
+  return cb(new Error('Invalid file type. Only JPEG, PNG, GIF, WebP, and SVG images are allowed.'), false);
     }
     
     // Check file extension
@@ -113,11 +114,18 @@ const validateUploadedFile = async (req, res, next) => {
     };
     
     let isValidImage = false;
+    // SVGs are XML text; avoid binary header check and allow based on extension/mimetype
+    const extLower = path.extname(req.file.originalname).toLowerCase();
+    if (extLower === '.svg' || req.file.mimetype === 'image/svg+xml') {
+      isValidImage = true;
+    }
+    if (!isValidImage) {
     for (const [signature, type] of Object.entries(imageSignatures)) {
       if (fileSignature.startsWith(signature)) {
         isValidImage = true;
         break;
       }
+    }
     }
     
     if (!isValidImage) {
