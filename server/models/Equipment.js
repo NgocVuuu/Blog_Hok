@@ -16,7 +16,7 @@ const equipmentSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['Attack', 'Defense', 'Magic', 'Movement', 'Jungle'],
+    enum: ['Physical', 'Defense', 'Magic', 'Movement', 'Roaming', 'Jungle'],
     required: true,
   },
   tier: {

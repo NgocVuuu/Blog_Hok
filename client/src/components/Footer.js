@@ -17,9 +17,24 @@ const Footer = () => {
     <Box component="footer" className="footer">
       {isMobile ? (
         <Box className="footer-bottom" sx={{ p: 0.5, m: 0, textAlign: 'center' }}>
-          <Typography variant="caption" color="text.secondary" align="center" sx={{ fontSize: '0.7rem', mb: 0.5, display: 'block', fontWeight: 500 }}>
-            {t('footer.about.title', 'About BlogHok')}
-          </Typography>
+          {/* Legal links row (mobile) */}
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 2,
+            mb: 0.5,
+          }}>
+            <Link href="/privacy" underline="always" color="inherit" sx={{ fontSize: '0.75rem' }}>
+              {t('footer.privacy', 'Privacy Policy')}
+            </Link>
+            <Link href="/terms" underline="always" color="inherit" sx={{ fontSize: '0.75rem' }}>
+              {t('footer.terms', 'Terms of Use')}
+            </Link>
+            <Link href="/contact" underline="always" color="inherit" sx={{ fontSize: '0.75rem' }}>
+              {t('footer.contact.title', 'Contact')}
+            </Link>
+          </Box>
           <Typography variant="caption" align="center" sx={{ fontSize: '0.7rem', mb: 0.5, color: '#ffe066', display: 'block', wordBreak: 'break-all' }}>
             {t('footer.contact.email', 'paulvu@swqpz.onmicrosoft.com')}
           </Typography>

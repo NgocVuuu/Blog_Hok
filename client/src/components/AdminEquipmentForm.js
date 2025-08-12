@@ -77,6 +77,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
     { value: 'Magic', label: t('equipment.categories.magic', 'Phép thuật') },
     { value: 'Defense', label: t('equipment.categories.defense', 'Phòng thủ') },
     { value: 'Movement', label: t('equipment.categories.movement', 'Di chuyển') },
+    { value: 'Roaming', label: t('equipment.categories.roaming', 'Roaming') },
     { value: 'Jungle', label: t('equipment.categories.jungle', 'Jungling') }
   ];
 
@@ -256,7 +257,8 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
         formattedText = `<span style="color: #43a047">${selectedText || 'text'}</span>`;
         break;
       case 'orange':
-        formattedText = `<span style="color: #ff9800">${selectedText || 'text'}</span>`;
+        // Use a deeper orange for stronger emphasis
+        formattedText = `<span style="color: #ff7a00">${selectedText || 'text'}</span>`;
         break;
       case 'purple':
         formattedText = `<span style="color: #7b2ff2">${selectedText || 'text'}</span>`;
@@ -702,7 +704,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
                       </IconButton>
                     </Tooltip>
                     <Tooltip title={t('editor.orange', 'Màu cam')}>
-                      <IconButton onClick={() => insertAttributeFormatting(index, 'orange')} size="small" sx={{ color: '#ff9800' }}>
+                      <IconButton onClick={() => insertAttributeFormatting(index, 'orange')} size="small" sx={{ color: '#ff7a00' }}>
                         <FormatColorTextIcon />
                       </IconButton>
                     </Tooltip>

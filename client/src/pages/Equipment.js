@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import LazyImage from '../components/LazyImage';
 import { asDangerousHtml } from '../utils/sanitizeHtml';
 
-// Import lane icons
+// Import lane icons (from public/img/lanes via absolute paths for movement)
 import roamIcon from '../assets/images/lanes/Roam.png';
 import farmLaneIcon from '../assets/images/lanes/Farm_Lane.png';
 import midLaneIcon from '../assets/images/lanes/Mid_Lane.png';
@@ -36,7 +36,7 @@ const Equipment = () => {
 
 
 
-  // Category options - 5 main categories with lane icons
+  // Category options - add Roaming; Movement uses shoe icon
   const categories = [
     {
       value: 'all',
@@ -45,7 +45,7 @@ const Equipment = () => {
       color: '#666'
     },
     {
-      value: 'Attack',
+      value: 'Physical',
       label: t('equipment.categories.physical', 'Vật lý'),
       icon: farmLaneIcon,
       color: '#d32f2f'
@@ -65,6 +65,12 @@ const Equipment = () => {
     {
       value: 'Movement',
       label: t('equipment.categories.movement', 'Di chuyển'),
+      icon: '/img/lanes/movement.png',
+      color: '#ff9800'
+    },
+    {
+      value: 'Roaming',
+      label: t('equipment.categories.roaming', 'Roaming'),
       icon: roamIcon,
       color: '#ff9800'
     },
@@ -113,11 +119,11 @@ const Equipment = () => {
     }
     // Life Steal (generic) -> Treat as Physical Life Steal
     if ((has('life steal') || has('lifesteal') || has('hút máu')) && !has('vật lý')) {
-      return { type: 'physicalLifeSteal', Icon: LocalFireDepartmentIcon, color: '#ff9800', reactIcon: false };
+      return { type: 'physicalLifeSteal', Icon: LocalFireDepartmentIcon, color: '#ff7a00', reactIcon: false };
     }
     // Physical Life Steal (new): Hút máu vật lý
     if (has('hút máu vật lý') || (has('life') && has('steal') && has('physical'))) {
-      return { type: 'physicalLifeSteal', Icon: LocalFireDepartmentIcon, color: '#ff9800', reactIcon: false };
+      return { type: 'physicalLifeSteal', Icon: LocalFireDepartmentIcon, color: '#ff7a00', reactIcon: false };
     }
   // Magical Defense (formerly Magic Armor / Resist)
   if (has('magical defense') || has('magic armor') || has('magic resist') || has('kháng phép')) {
@@ -125,7 +131,7 @@ const Equipment = () => {
     }
   // Physical Defense (formerly Physical Armor / Armor)
   if (has('physical defense') || has('physical armor') || (has('armor') && !has('magic')) || has('giáp vật lý')) {
-      return { type: 'physicalArmor', Icon: ShieldIcon, color: '#ff9800', reactIcon: false };
+      return { type: 'physicalArmor', Icon: ShieldIcon, color: '#ff7a00', reactIcon: false };
     }
     // Magic Attack
     if ((has('magic attack') || (has('phép') && !has('kháng'))) && !has('resist')) {
@@ -133,7 +139,7 @@ const Equipment = () => {
     }
     // Physical Attack / Attack
     if (has('physical attack') || (has('attack') && !has('magic')) || has('vật lý')) {
-      return { type: 'physicalAttack', Icon: GiBroadsword, color: '#ff9800', reactIcon: true };
+      return { type: 'physicalAttack', Icon: GiBroadsword, color: '#ff7a00', reactIcon: true };
     }
     // Critical Rate
     if (
@@ -251,6 +257,22 @@ const Equipment = () => {
       if (out.length >= 5) break;
     }
     return out;
+  };
+
+  // Helpers to decide if passive/active have meaningful content
+  const hasPassive = (p) => {
+    if (!p) return false;
+    const name = (p.name || '').trim();
+    const descText = stripHtmlToText(p.description || '').trim();
+    return !!(name || descText);
+  };
+
+  const hasActive = (a) => {
+    if (!a) return false;
+    const name = (a.name || '').trim();
+    const descText = stripHtmlToText(a.description || '').trim();
+    const cd = typeof a.cooldown === 'number' && a.cooldown > 0;
+    return !!(name || descText || cd);
   };
 
   const renderQuickStats = (item) => {
@@ -403,15 +425,22 @@ const Equipment = () => {
                       onClick={() => setCategoryFilter(category.value)}
                     >
                       <Box sx={{ mb: 1, display: 'flex', justifyContent: 'center' }}>
-                        <img
-                          src={category.icon}
-                          alt={category.label}
-                          style={{
-                            width: 48,
-                            height: 48,
-                            filter: 'brightness(0) saturate(100%) invert(58%) sepia(69%) saturate(372%) hue-rotate(21deg) brightness(92%) contrast(86%)'
-                          }}
-                        />
+                        {typeof category.icon === 'string' ? (
+                          <img
+                            src={category.icon}
+                            alt={category.label}
+                            style={{
+                              width: 48,
+                              height: 48,
+                              filter: 'brightness(0) saturate(100%) invert(58%) sepia(69%) saturate(372%) hue-rotate(21deg) brightness(92%) contrast(86%)'
+                            }}
+                          />
+                        ) : (
+                          (() => {
+                            const IconComp = category.icon;
+                            return <IconComp style={{ color: category.color, fontSize: 48 }} />;
+                          })()
+                        )}
                       </Box>
                       <Typography variant="h6" fontWeight={600} sx={{ color: '#C9A063' }}>
                         {count}
@@ -467,15 +496,22 @@ const Equipment = () => {
                       color: category.color
                     }}
                   >
-                    <img
-                      src={category.icon}
-                      alt={category.label}
-                      style={{
-                        width: 20,
-                        height: 20,
-                        filter: 'brightness(0) saturate(100%) invert(58%) sepia(69%) saturate(372%) hue-rotate(21deg) brightness(92%) contrast(86%)'
-                      }}
-                    />
+                    {typeof category.icon === 'string' ? (
+                      <img
+                        src={category.icon}
+                        alt={category.label}
+                        style={{
+                          width: 20,
+                          height: 20,
+                          filter: 'brightness(0) saturate(100%) invert(58%) sepia(69%) saturate(372%) hue-rotate(21deg) brightness(92%) contrast(86%)'
+                        }}
+                      />
+                    ) : (
+                      (() => {
+                        const IconComp = category.icon;
+                        return <IconComp style={{ color: category.color, fontSize: 20 }} />;
+                      })()
+                    )}
                     {category.label}
                   </MenuItem>
                 ))}
@@ -615,16 +651,18 @@ const Equipment = () => {
                               {renderQuickStats(item)}
 
                               {/* Passive Effect */}
-                              {item.passive && (
+                              {hasPassive(item.passive) && (
                                 <Box mb={2}>
-                                  <Typography
-                                    variant="subtitle2"
-                                    fontWeight={600}
-                                    mb={1}
-                                    sx={{ color: category.color }}
-                                  >
-                                    {item.passive.name}
-                                  </Typography>
+                                  {item.passive.name && (
+                                    <Typography
+                                      variant="subtitle2"
+                                      fontWeight={600}
+                                      mb={1}
+                                      sx={{ color: category.color }}
+                                    >
+                                      {item.passive.name}
+                                    </Typography>
+                                  )}
                                   <Typography
                                     variant="caption"
                                     sx={{
@@ -640,16 +678,18 @@ const Equipment = () => {
                               )}
 
                               {/* Active Effect */}
-                              {item.active && (
+                              {hasActive(item.active) && (
                                 <Box mb={2}>
-                                  <Typography
-                                    variant="subtitle2"
-                                    fontWeight={600}
-                                    mb={1}
-                                    sx={{ color: '#ff6b35' }}
-                                  >
-                                    {t('equipment.active', 'Kích hoạt')}: {item.active.name}
-                                  </Typography>
+                                  {(item.active.name || stripHtmlToText(item.active.description || '')) && (
+                                    <Typography
+                                      variant="subtitle2"
+                                      fontWeight={600}
+                                      mb={1}
+                                      sx={{ color: '#ff4500' }}
+                                    >
+                                      {t('equipment.active', 'Kích hoạt')}{item.active.name ? `: ${item.active.name}` : ''}
+                                    </Typography>
+                                  )}
                                   <Typography
                                     variant="caption"
                                     sx={{
@@ -748,16 +788,18 @@ const Equipment = () => {
                         {renderQuickStats(item)}
 
                         {/* Passive Effect */}
-                        {item.passive && (
+                        {hasPassive(item.passive) && (
                           <Box mb={2}>
-                            <Typography
-                              variant="subtitle2"
-                              fontWeight={600}
-                              mb={1}
-                              sx={{ color: category.color }}
-                            >
-                              {item.passive.name}
-                            </Typography>
+                            {item.passive.name && (
+                              <Typography
+                                variant="subtitle2"
+                                fontWeight={600}
+                                mb={1}
+                                sx={{ color: category.color }}
+                              >
+                                {item.passive.name}
+                              </Typography>
+                            )}
                             <Typography
                               variant="caption"
                               sx={{
@@ -767,22 +809,24 @@ const Equipment = () => {
                                 display: 'block'
                               }}
                             >
-                              {item.passive.description}
+                              <span dangerouslySetInnerHTML={asDangerousHtml(item.passive.description)} />
                             </Typography>
                           </Box>
                         )}
 
                         {/* Active Effect */}
-                        {item.active && (
+                        {hasActive(item.active) && (
                           <Box mb={2}>
-                            <Typography
-                              variant="subtitle2"
-                              fontWeight={600}
-                              mb={1}
-                              sx={{ color: '#ff6b35' }}
-                            >
-                              {t('equipment.active', 'Kích hoạt')}: {item.active.name}
-                            </Typography>
+                            {(item.active.name || stripHtmlToText(item.active.description || '')) && (
+                              <Typography
+                                variant="subtitle2"
+                                fontWeight={600}
+                                mb={1}
+                                sx={{ color: '#ff6b35' }}
+                              >
+                                {t('equipment.active', 'Kích hoạt')}{item.active.name ? `: ${item.active.name}` : ''}
+                              </Typography>
+                            )}
                             <Typography
                               variant="caption"
                               sx={{
@@ -792,7 +836,7 @@ const Equipment = () => {
                                 display: 'block'
                               }}
                             >
-                              {item.active.description}
+                              <span dangerouslySetInnerHTML={asDangerousHtml(item.active.description)} />
                             </Typography>
                             {item.active.cooldown && (
                               <Typography

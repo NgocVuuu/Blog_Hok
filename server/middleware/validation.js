@@ -105,7 +105,7 @@ const validateEquipment = [
     .isInt({ min: 0 })
     .withMessage('Price must be a positive integer'),
   body('category')
-    .isIn(['Physical', 'Magic', 'Defense', 'Movement', 'Jungling'])
+    .isIn(['Physical', 'Magic', 'Defense', 'Movement', 'Jungle', 'Roaming'])
     .withMessage('Invalid equipment category'),
   handleValidationErrors
 ];

@@ -7,6 +7,7 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "seed": "node seeders/index.js",
+  "migrate-equipment-categories": "node scripts/migrateEquipmentCategories.js",
     "test": "jest",
     "migrate": "node seeders/migrateChampionsToHeroes.js",
     "update-slugs": "node updateSlug.js",

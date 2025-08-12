@@ -131,7 +131,7 @@ const PostDetail = () => {
                 height="400px"
                 sx={{
                   width: '100%',
-                  borderRadius: 3,
+                  borderRadius: '2px',
                   objectFit: 'cover'
                 }}
                 referrerPolicy="no-referrer"
@@ -145,7 +145,19 @@ const PostDetail = () => {
                 h1: ({ children }) => <Typography variant="h4" component="h1" gutterBottom>{children}</Typography>,
                 h2: ({ children }) => <Typography variant="h5" component="h2" gutterBottom>{children}</Typography>,
                 h3: ({ children }) => <Typography variant="h6" component="h3" gutterBottom>{children}</Typography>,
-                p: ({ children }) => <Typography variant="body1" paragraph>{children}</Typography>,
+                // Avoid invalid <div> inside <p> when images are present
+                p: ({ children, node }) => {
+                  const hasImage = Array.isArray(node?.children) && node.children.some((n) => n?.tagName === 'img');
+                  return (
+                    <Typography
+                      variant="body1"
+                      paragraph={!hasImage}
+                      component={hasImage ? 'div' : 'p'}
+                    >
+                      {children}
+                    </Typography>
+                  );
+                },
                 strong: ({ children }) => <Typography component="strong" sx={{ fontWeight: 700 }}>{children}</Typography>,
                 em: ({ children }) => <Typography component="em" sx={{ fontStyle: 'italic' }}>{children}</Typography>,
                 a: ({ href, children }) => (
@@ -163,21 +175,63 @@ const PostDetail = () => {
                     {children}
                   </Typography>
                 ),
-                img: ({ src, alt }) => (
-                  <img
-                    src={src}
-                    alt={alt}
-                    referrerPolicy="no-referrer"
-                    style={{
-                      width: 180,
-                      height: 180,
-                      objectFit: 'cover',
-                      borderRadius: 8,
-                      display: 'block',
-                      margin: '8px 0'
-                    }}
-                  />
-                )
+                img: ({ src, alt }) => {
+                  if (alt === 'video') {
+                    return (
+                      <video
+                        src={src}
+                        controls
+                        style={{ width: '100%', maxHeight: 480, borderRadius: 2, margin: '8px 0' }}
+                      />
+                    );
+                  }
+                  // Support alt format: img|<size>|<shape>
+                  // size: small|medium|large, shape: square|rectangle, align: left|center|right
+                  let width = 180;
+                  let height = 180;
+      let borderRadius = 2;
+                  let objectFit = 'cover';
+                  let align = 'left';
+                  if (alt && typeof alt === 'string' && alt.startsWith('img|')) {
+                    const parts = alt.split('|');
+                    const size = parts[1] || 'medium';
+                    const shape = parts[2] || 'rectangle';
+                    align = parts[3] || 'left';
+                    if (size === 'small') {
+                      width = 160; height = shape === 'square' ? 160 : 120;
+                    } else if (size === 'large') {
+                      width = 640; height = shape === 'square' ? 640 : 360;
+                    } else { // medium default
+                      width = 360; height = shape === 'square' ? 360 : 200;
+                    }
+                    if (shape === 'rectangle') {
+                      borderRadius = 2; objectFit = 'cover';
+                    } else if (shape === 'square') {
+                      borderRadius = 2; objectFit = 'cover';
+                    }
+                  }
+                  const isMobile = typeof window !== 'undefined' && window.innerWidth < 600;
+                  const alignmentStyle = align === 'center'
+                    ? { marginLeft: 'auto', marginRight: 'auto', display: 'block' }
+                    : align === 'right'
+                      ? { marginLeft: 'auto', marginRight: 0, display: 'block' }
+                      : { display: 'block' };
+                  return (
+                    <LazyImage
+                      src={src}
+                      alt={alt}
+                      width={isMobile ? '100%' : `${width}px`}
+                      height={isMobile ? 'auto' : `${height}px`}
+                      sx={{
+                        objectFit,
+                        borderRadius,
+                        margin: '8px 0',
+                        maxWidth: '100%',
+                        ...alignmentStyle
+                      }}
+                    />
+                  );
+                }
               }}
             >
               {post.content}
@@ -342,7 +396,7 @@ const PostDetail = () => {
                         alignItems: 'center'
                       }}
                     >
-                      {featuredPost.image ? (
+          {featuredPost.image ? (
                         <LazyImage
                           src={featuredPost.image}
                           alt={featuredPost.title}
@@ -350,7 +404,7 @@ const PostDetail = () => {
                           height="80px"
                           sx={{
                             objectFit: 'cover',
-                            borderRadius: '8px 0 0 8px',
+            borderRadius: '2px 0 0 2px',
                             flexShrink: 0
                           }}
                         />
@@ -363,7 +417,7 @@ const PostDetail = () => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            borderRadius: '8px 0 0 8px',
+            borderRadius: '2px 0 0 2px',
                             flexShrink: 0
                           }}
                         >
@@ -408,7 +462,7 @@ const PostDetail = () => {
                         overflow: 'hidden'
                       }}
                     >
-                      {relatedPost.image && (
+          {relatedPost.image && (
                         <LazyImage
                           src={relatedPost.image}
                           alt={relatedPost.title}
@@ -416,7 +470,7 @@ const PostDetail = () => {
                           height="80px"
                           sx={{
                             objectFit: 'cover',
-                            borderRadius: '8px 0 0 8px',
+            borderRadius: '2px 0 0 2px',
                             flexShrink: 0
                           }}
                         />

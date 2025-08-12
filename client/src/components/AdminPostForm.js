@@ -19,6 +19,10 @@ const AdminPostForm = () => {
   const [message, setMessage] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
   const [videoUploading, setVideoUploading] = useState(false);
+  const [inlineImgSize, setInlineImgSize] = useState('medium');
+  const [inlineImgShape, setInlineImgShape] = useState('rectangle');
+  const [inlineImgUrl, setInlineImgUrl] = useState('');
+  const [inlineImgAlign, setInlineImgAlign] = useState('left');
 
   // Categories for dropdown
   const categories = [
@@ -94,6 +98,34 @@ const AdminPostForm = () => {
       // reset input value so same file can be uploaded again if needed
       e.target.value = '';
     }
+  };
+
+  const appendInlineImageToContent = (url) => {
+    const meta = `img|${inlineImgSize}|${inlineImgShape}|${inlineImgAlign}`;
+    setContent(prev => `${prev}${prev ? '\n\n' : ''}![${meta}](${url})`);
+  };
+
+  const onInlineImageFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      setLoading(true);
+      const url = await handleUpload(file);
+      appendInlineImageToContent(url);
+      setMessage({ type: 'success', text: t('admin.inlineImageInserted', 'Đã chèn ảnh vào nội dung') });
+    } catch (err) {
+      setMessage({ type: 'error', text: err.message || t('common.error', 'Có lỗi xảy ra') });
+    } finally {
+      setLoading(false);
+      e.target.value = '';
+    }
+  };
+
+  const onInsertInlineFromUrl = () => {
+    if (!inlineImgUrl) return;
+    appendInlineImageToContent(inlineImgUrl.trim());
+    setInlineImgUrl('');
+    setMessage({ type: 'success', text: t('admin.inlineImageInserted', 'Đã chèn ảnh vào nội dung') });
   };
 
   const handleSubmit = async (e) => {
@@ -198,7 +230,7 @@ const AdminPostForm = () => {
         multiline
         rows={10}
         margin="normal"
-        helperText={t('admin.markdownHelp', 'Hỗ trợ Markdown: **bold**, *italic*, [link](url), ![image](url)')}
+        helperText={t('admin.markdownHelp', 'Hỗ trợ Markdown: **bold**, *italic*, [link](url), ![image](url). Khi chèn ảnh bằng nút bên dưới, có thể chọn kích thước (nhỏ/vừa/lớn) và dạng (vuông/chữ nhật).')}
       />
 
       <Box mt={2} mb={2}>
@@ -230,6 +262,47 @@ const AdminPostForm = () => {
             />
           </Box>
         )}
+      </Box>
+
+      {/* Inline image insert controls */}
+      <Box mt={3} p={2} sx={{ border: '1px dashed #ddd', borderRadius: 2 }}>
+        <Typography variant="subtitle1" fontWeight={600} mb={1}>{t('admin.insertInlineImage', 'Chèn ảnh vào nội dung')}</Typography>
+        <Box display="flex" gap={2} flexWrap="wrap">
+          <FormControl size="small" sx={{ minWidth: 160 }}>
+            <InputLabel id="inline-size">{t('admin.imageSize', 'Kích cỡ ảnh')}</InputLabel>
+            <Select labelId="inline-size" value={inlineImgSize} label={t('admin.imageSize', 'Kích cỡ ảnh')} onChange={(e) => setInlineImgSize(e.target.value)}>
+              <MenuItem value="small">{t('admin.size.small', 'Nhỏ')}</MenuItem>
+              <MenuItem value="medium">{t('admin.size.medium', 'Vừa')}</MenuItem>
+              <MenuItem value="large">{t('admin.size.large', 'Lớn')}</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl size="small" sx={{ minWidth: 180 }}>
+            <InputLabel id="inline-shape">{t('admin.imageShape', 'Dạng ảnh')}</InputLabel>
+            <Select labelId="inline-shape" value={inlineImgShape} label={t('admin.imageShape', 'Dạng ảnh')} onChange={(e) => setInlineImgShape(e.target.value)}>
+              <MenuItem value="square">{t('admin.shape.square', 'Vuông')}</MenuItem>
+              <MenuItem value="rectangle">{t('admin.shape.rectangle', 'Chữ nhật')}</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl size="small" sx={{ minWidth: 180 }}>
+            <InputLabel id="inline-align">{t('admin.imageAlign', 'Căn ảnh')}</InputLabel>
+            <Select labelId="inline-align" value={inlineImgAlign} label={t('admin.imageAlign', 'Căn ảnh')} onChange={(e) => setInlineImgAlign(e.target.value)}>
+              <MenuItem value="left">{t('admin.align.left', 'Căn trái')}</MenuItem>
+              <MenuItem value="center">{t('admin.align.center', 'Căn giữa')}</MenuItem>
+              <MenuItem value="right">{t('admin.align.right', 'Căn phải')}</MenuItem>
+            </Select>
+          </FormControl>
+          <Button variant="outlined" component="label" startIcon={<UploadIcon />}>
+            {t('admin.uploadAndInsert', 'Upload & chèn ảnh')}
+            <input type="file" hidden accept="image/*,.avif" onChange={onInlineImageFileChange} />
+          </Button>
+        </Box>
+        <Box display="flex" gap={1.5} mt={2} alignItems="center">
+          <TextField size="small" fullWidth label={t('admin.orPasteImageUrl', 'Hoặc dán URL ảnh')} value={inlineImgUrl} onChange={(e) => setInlineImgUrl(e.target.value)} />
+          <Button variant="contained" onClick={onInsertInlineFromUrl}>{t('common.insert', 'Chèn')}</Button>
+        </Box>
+        <Typography variant="caption" color="text.secondary" display="block" mt={1}>
+          {t('admin.inlineImageHint', 'Mẹo: Cú pháp sẽ là ![img|kích-cỡ|dạng|căn](url), ví dụ: ![img|small|square|center](https://...)')}
+        </Typography>
       </Box>
 
       <Button

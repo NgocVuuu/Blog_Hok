@@ -1,4 +1,5 @@
 const Equipment = require('../models/Equipment');
+const { logger } = require('../utils/logger');
 
 // Get all equipment
 exports.getEquipment = async (req, res) => {
@@ -22,6 +23,11 @@ exports.getEquipment = async (req, res) => {
     });
     res.json(normalized);
   } catch (err) {
+    // Log details to help diagnose intermittent issues
+    logger.error('getEquipment failed', {
+      error: { message: err.message, stack: err.stack, name: err.name },
+      request: { ip: req.ip, url: req.originalUrl, method: req.method, query: req.query }
+    });
     res.status(500).json({ message: err.message });
   }
 };
@@ -47,6 +53,10 @@ exports.getEquipmentById = async (req, res) => {
     }
     res.json(obj);
   } catch (err) {
+    logger.error('getEquipmentById failed', {
+      error: { message: err.message, stack: err.stack, name: err.name },
+      request: { ip: req.ip, url: req.originalUrl, method: req.method, params: req.params }
+    });
     res.status(500).json({ message: err.message });
   }
 };

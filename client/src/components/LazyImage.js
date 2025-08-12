@@ -14,16 +14,31 @@ const LazyImage = ({
   priority = false,
   rootMargin = '300px 0px',
   threshold = 0,
-  ...props
+  // common img attributes we may need to forward
+  referrerPolicy,
+  crossOrigin,
+  decoding,
+  sizes,
+  srcSet,
+  draggable,
+  loading: loadingProp,
+  ...containerProps
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
+
+  // Determine whether an explicit height is provided (exclude 'auto')
+  const hasExplicitHeight = (
+    (typeof height !== 'undefined' && height !== null && height !== 'auto') ||
+    (sx && typeof sx.height !== 'undefined' && sx.height !== 'auto')
+  );
 
   const { ref, inView } = useInView({
     threshold,
     rootMargin,
     triggerOnce: true,
-    initialInView: priority
+    // If no explicit height is given, render immediately to avoid zero-height observer issues
+    initialInView: priority || !hasExplicitHeight
   });
 
   const handleLoad = () => {
@@ -35,7 +50,6 @@ const LazyImage = ({
     setLoaded(true);
   };
 
-  const hasExplicitHeight = !!height || (sx && typeof sx.height !== 'undefined');
   const imageStyle = {
     ...style,
     opacity: loaded ? 1 : 0,
@@ -55,14 +69,17 @@ const LazyImage = ({
         height: height || 'auto',
         ...sx 
       }}
-      {...props}
+      {...containerProps}
     >
       {/* Skeleton loader */}
-      {!loaded && inView && (
+  {!loaded && inView && (
         <Skeleton
           variant={skeletonVariant}
           width={typeof width === 'object' ? '100%' : (width || '100%')}
-          height={typeof height === 'object' ? 200 : (height || 200)}
+          height={
+            typeof height === 'number' ? height :
+            (typeof height === 'string' ? (height === 'auto' ? 200 : height) : 200)
+          }
           sx={{
             position: loaded ? 'absolute' : 'static',
             top: 0,
@@ -83,7 +100,13 @@ const LazyImage = ({
           onLoad={handleLoad}
           onError={handleError}
           style={imageStyle}
-          loading="lazy"
+          loading={loadingProp || 'lazy'}
+          referrerPolicy={referrerPolicy}
+          crossOrigin={crossOrigin}
+          decoding={decoding}
+          sizes={sizes}
+          srcSet={srcSet}
+          draggable={draggable}
           sx={{
             width: '100%',
             height: hasExplicitHeight ? '100%' : 'auto',

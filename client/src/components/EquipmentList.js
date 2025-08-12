@@ -76,23 +76,23 @@ const EquipmentList = ({ onEdit }) => {
     }
     // Physical Life Steal first (more specific)
     if (has('hút máu vật lý') || (has('life') && has('steal') && has('physical'))) {
-      return { Icon: LocalFireDepartmentIcon, color: '#ff9800', react: false, type: 'physicalLifeSteal' };
+      return { Icon: LocalFireDepartmentIcon, color: '#ff7a00', react: false, type: 'physicalLifeSteal' };
     }
     // Generic Life Steal -> treat as Physical Life Steal with orange flame
     if (has('life steal') || has('lifesteal') || has('hút máu') || has('hồi máu')) {
-      return { Icon: LocalFireDepartmentIcon, color: '#ff9800', react: false, type: 'physicalLifeSteal' };
+      return { Icon: LocalFireDepartmentIcon, color: '#ff7a00', react: false, type: 'physicalLifeSteal' };
     }
     if (has('magic armor') || has('magic resist') || has('kháng phép')) {
       return { Icon: ShieldIcon, color: '#7b2ff2', react: false, type: 'magicArmor' };
     }
     if (has('physical armor') || (has('armor') && !has('magic')) || has('giáp vật lý')) {
-      return { Icon: ShieldIcon, color: '#ff9800', react: false, type: 'physicalArmor' };
+      return { Icon: ShieldIcon, color: '#ff7a00', react: false, type: 'physicalArmor' };
     }
     if ((has('magic attack') || (has('phép') && !has('kháng'))) && !has('resist')) {
       return { Icon: GiBroadsword, color: '#7b2ff2', react: true, type: 'magicAttack' };
     }
     if (has('physical attack') || (has('attack') && !has('magic')) || has('vật lý')) {
-      return { Icon: GiBroadsword, color: '#ff9800', react: true, type: 'physicalAttack' };
+      return { Icon: GiBroadsword, color: '#ff7a00', react: true, type: 'physicalAttack' };
     }
     if (has('critical rate') || has('tỉ lệ chí mạng') || has('ti le chi mang') || has('crit rate')) {
       return { Icon: GpsFixedIcon, color: '#C9A063', react: false, type: 'criticalRate' };
