@@ -604,6 +604,9 @@ const HeroDetail = () => {
             if (group.length === 0) return null;
             return (
               <Box key={`build-${selectedEqBuild}`} sx={{ mb:0 }}>
+                <Typography variant="subtitle2" sx={{ mb: 0.5, fontWeight: 700 }}>
+                  {t('hero.equipmentSet', { number: selectedEqBuild, defaultValue: `Bộ ${selectedEqBuild}` })}
+                </Typography>
                 <Box sx={{
                   display:'flex',
                   flexDirection:'row',

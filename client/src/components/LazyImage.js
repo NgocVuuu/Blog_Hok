@@ -27,8 +27,14 @@ const LazyImage = ({
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
-  // Determine whether an explicit height is provided (exclude 'auto')
+  // Detect absolute fill mode (e.g., sx: { position:'absolute', inset:0 })
+  const isFill = !!(sx && (sx.position === 'absolute' || sx.position === 'fixed') && (
+    typeof sx.inset !== 'undefined' || (typeof sx.top !== 'undefined' && typeof sx.bottom !== 'undefined')
+  ));
+
+  // Determine whether an explicit height is provided (exclude 'auto') or we're filling
   const hasExplicitHeight = (
+    isFill ||
     (typeof height !== 'undefined' && height !== null && height !== 'auto') ||
     (sx && typeof sx.height !== 'undefined' && sx.height !== 'auto')
   );
@@ -54,7 +60,8 @@ const LazyImage = ({
     ...style,
     opacity: loaded ? 1 : 0,
     transition: 'opacity 0.3s ease-in-out',
-    display: loaded ? 'block' : 'none',
+    // Keep mounted to avoid layout glitches; fade via opacity
+    display: 'block',
     width: '100%',
     height: hasExplicitHeight ? '100%' : 'auto',
     willChange: 'opacity'
@@ -66,7 +73,7 @@ const LazyImage = ({
       sx={{ 
         position: 'relative', 
         width: width || '100%', 
-        height: height || 'auto',
+        height: isFill ? '100%' : (height || 'auto'),
         ...sx 
       }}
       {...containerProps}
@@ -77,11 +84,13 @@ const LazyImage = ({
           variant={skeletonVariant}
           width={typeof width === 'object' ? '100%' : (width || '100%')}
           height={
-            typeof height === 'number' ? height :
-            (typeof height === 'string' ? (height === 'auto' ? 200 : height) : 200)
+            isFill ? '100%' : (
+              typeof height === 'number' ? height :
+              (typeof height === 'string' ? (height === 'auto' ? 200 : height) : 200)
+            )
           }
           sx={{
-            position: loaded ? 'absolute' : 'static',
+            position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
@@ -112,7 +121,7 @@ const LazyImage = ({
             height: hasExplicitHeight ? '100%' : 'auto',
             objectFit: sx.objectFit || 'cover',
             borderRadius: sx.borderRadius || 0,
-            display: loaded ? 'block' : 'none',
+            display: 'block',
             ...sx
           }}
         />

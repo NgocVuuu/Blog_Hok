@@ -882,6 +882,69 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
             </Select>
           </FormControl>
         </Box>
+        {/* Quick-pick gallery by filtered list */}
+        <Box mb={2}>
+          <Typography variant="subtitle2" sx={{ mb: 1 }}>Chọn nhanh theo loại</Typography>
+          {filteredEquipmentOptions.length === 0 ? (
+            <Typography variant="body2" color="text.secondary">Không có trang bị nào phù hợp</Typography>
+          ) : (
+            <Grid container spacing={1}>
+              {filteredEquipmentOptions.map(eq => {
+                const selectedInCurrentBuild = (suggestedEquipment || []).some(it => (it.build || 1) === activeBuild && (it.equipmentId === eq._id));
+                return (
+                  <Grid item key={eq._id} xs={6} sm={4} md={3} lg={2}>
+                    <Box
+                      onClick={() => {
+                        setSuggestedEquipment(list => {
+                          const exists = list.some(x => (x.build || 1) === activeBuild && x.equipmentId === eq._id);
+                          if (exists) {
+                            // remove from current build
+                            return list.filter(x => !((x.build || 1) === activeBuild && x.equipmentId === eq._id));
+                          }
+                          const nextOrder = Math.max(-1, ...list.filter(x => (x.build || 1) === activeBuild).map(x => (typeof x.order === 'number' ? x.order : 0))) + 1;
+                          return [...list, { equipmentId: eq._id, equipment: eq, note: '', order: nextOrder, build: activeBuild }];
+                        });
+                      }}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        border: '1px solid',
+                        borderColor: selectedInCurrentBuild ? 'success.main' : 'divider',
+                        borderRadius: 1,
+                        p: 1,
+                        cursor: 'pointer',
+                        opacity: 1,
+                        transition: 'background-color 0.2s ease',
+                        '&:hover': { backgroundColor: 'action.hover' }
+                      }}
+                      title={selectedInCurrentBuild ? 'Bỏ chọn khỏi build hiện tại' : 'Thêm vào build hiện tại'}
+                   >
+                      <Box sx={{ width: 36, height: 36, borderRadius: 1, overflow: 'hidden', flexShrink: 0, border: '1px solid #eee', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                        {eq.image ? (
+                          <img src={eq.image} alt={eq.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'cover' }} />
+                        ) : (
+                          <Box sx={{ width: '100%', height: '100%', bgcolor: 'grey.100' }} />
+                        )}
+                      </Box>
+                      <Box sx={{ minWidth: 0 }}>
+                        <Typography variant="body2" noWrap title={eq.name} sx={{ fontWeight: 600 }}>{eq.name}</Typography>
+                        <Typography variant="caption" color="text.secondary">{eq.category}</Typography>
+                      </Box>
+                      <Box sx={{ ml: 'auto', display:'flex', alignItems:'center', gap:1 }}>
+                        {selectedInCurrentBuild ? (
+                          <Chip label="Bỏ" color="error" size="small" />
+                        ) : (
+                          <Chip label="Thêm" color="primary" size="small" />
+                        )}
+                      </Box>
+                    </Box>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          )}
+        </Box>
         {/* Build selector */}
         <Box display="flex" gap={1} mb={1}>
           {[1,2,3].map(b => (
@@ -933,6 +996,11 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                 </Box>
               )}
               <Button color="error" size="small" onClick={() => setSuggestedEquipment(list => list.filter((_,i)=> i!==absIndex))}>Xóa</Button>
+              <Button
+                color="warning"
+                size="small"
+                onClick={() => setSuggestedEquipment(list => list.filter(x => !(x === it)))}
+              >Bỏ khỏi build</Button>
             </Box>
           );
         })}

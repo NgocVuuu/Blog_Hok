@@ -36,7 +36,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
   const { fetchWithAuth, openLogin } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
-    category: 'Attack',
+  category: 'Physical',
     price: 0,
     image: '',
     description: '',
@@ -73,12 +73,12 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
 
   // Categories for equipment
   const categories = [
-    { value: 'Attack', label: t('equipment.categories.physical', 'Vật lý') },
+  { value: 'Physical', label: t('equipment.categories.physical', 'Vật lý') },
     { value: 'Magic', label: t('equipment.categories.magic', 'Phép thuật') },
     { value: 'Defense', label: t('equipment.categories.defense', 'Phòng thủ') },
     { value: 'Movement', label: t('equipment.categories.movement', 'Di chuyển') },
     { value: 'Roaming', label: t('equipment.categories.roaming', 'Roaming') },
-    { value: 'Jungle', label: t('equipment.categories.jungle', 'Jungling') }
+  { value: 'Jungle', label: t('equipment.categories.jungle', 'Jungle') }
   ];
 
   // Quick stats options
@@ -342,7 +342,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
         // Reset form
         setFormData({
           name: '',
-          category: 'Attack',
+          category: 'Physical',
           price: 0,
           image: '',
           description: '',
@@ -431,7 +431,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
       setFormData(prev => ({
         ...prev,
         name: editingEquipment.name || '',
-        category: editingEquipment.category || 'Attack',
+  category: editingEquipment.category || 'Physical',
         price: editingEquipment.price || 0,
         image: editingEquipment.image || '',
         description: editingEquipment.description || '',
