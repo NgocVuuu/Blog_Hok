@@ -63,8 +63,8 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   const [allEquipment, setAllEquipment] = useState([]);
   // Store all suggestions in a flat array with build index
   const [suggestedEquipment, setSuggestedEquipment] = useState([]); // { equipmentId, equipment?, note, order, build }
-  // Remove text search per request
-  const [eqSearch, setEqSearch] = useState('');
+  // Remove text search per request; keep value-only state to avoid unused setter
+  const [eqSearch] = useState('');
   const [eqCategory, setEqCategory] = useState('all');
   const [activeBuild, setActiveBuild] = useState(1); // 1..3
 
