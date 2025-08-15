@@ -145,15 +145,15 @@ const Heroes = () => {
                 component={Link}
                 to={`/heroes/${hero.slug}`}
                 sx={{
-                  height: { xs: 120, sm: 180, md: 220 },
+                  height: { xs: 108, sm: 164, md: 200 },
                   display: 'flex',
                   flexDirection: 'column',
                   textDecoration: 'none',
                   borderRadius: { xs: 1, md: 2 },
                   overflow: 'hidden',
-                  minHeight: { xs: 120, sm: 180, md: 220 },
+                  minHeight: { xs: 108, sm: 164, md: 200 },
                   '&:hover': {
-                    transform: 'scale(1.03)',
+                    transform: 'scale(1.02)',
                     transition: 'transform 0.2s',
                   },
                 }}
@@ -161,32 +161,32 @@ const Heroes = () => {
                 <LazyImage
                   src={hero.image}
                   alt={hero.name}
-                  height={{ xs: '85px', sm: '90px', md: '110px' }}
+                  height={{ xs: '75px', sm: '85px', md: '100px' }}
                   sx={{
                     objectFit: 'cover',
                     borderRadius: 0,
                     width: '100%',
-                    minHeight: { xs: '85px', sm: '90px', md: '110px' }
+                    minHeight: { xs: '75px', sm: '85px', md: '100px' }
                   }}
                   priority={false}
                   rootMargin="500px 0px"
                 />
                 <CardContent sx={{
-                  p: { xs: '4px 6px', sm: 0.75, md: 1 },
+                  p: { xs: '3px 6px', sm: 0.75, md: 0.75 },
                   flexGrow: 1,
-                  minHeight: { xs: '35px', sm: 'auto', md: 'auto' },
+                  minHeight: { xs: '30px', sm: 'auto', md: 'auto' },
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  '&:last-child': { pb: { xs: '4px', sm: '6px', md: '8px' } }
+                  '&:last-child': { pb: { xs: '3px', sm: '6px', md: '6px' } }
                 }}>
                   <Typography
                     variant="subtitle1"
                     component="h2"
                     noWrap
                     sx={{
-                      fontSize: { xs: '0.65rem', sm: '0.8rem', md: '1rem' },
-                      mb: { xs: '2px', sm: 0.5, md: 1 },
+                      fontSize: { xs: '0.62rem', sm: '0.78rem', md: '0.95rem' },
+                      mb: { xs: '2px', sm: 0.5, md: 0.75 },
                       lineHeight: { xs: 1.2, sm: 1.1, md: 1.1 },
                       fontWeight: 600,
                       overflow: 'hidden',
@@ -196,40 +196,8 @@ const Heroes = () => {
                   >
                     {hero.name}
                   </Typography>
-                  <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-                    <Stack direction="row" spacing={0.25} flexWrap="wrap" gap={0.25}>
-                      {hero.roles.slice(0, 1).map((role) => (
-                        <Chip
-                          key={role}
-                          label={t(`roles.${role}`, role)}
-                          size="small"
-                          color="primary"
-                          variant="outlined"
-                          sx={{
-                            fontSize: '0.45rem',
-                            height: '14px',
-                            minWidth: 'auto',
-                            '& .MuiChip-label': { px: 0.4, py: 0 }
-                          }}
-                        />
-                      ))}
-                      {hero.lanes && hero.lanes.slice(0, 1).map((lane) => (
-                        <Chip
-                          key={lane}
-                          label={t(`lanes.${lane}`, lane)}
-                          size="small"
-                          color="secondary"
-                          variant="outlined"
-                          sx={{
-                            fontSize: '0.45rem',
-                            height: '14px',
-                            minWidth: 'auto',
-                            '& .MuiChip-label': { px: 0.4, py: 0 }
-                          }}
-                        />
-                      ))}
-                    </Stack>
-                  </Box>
+                  {/* On mobile, hide lanes/roles chips to show only the hero name below the image */}
+                  <Box sx={{ display: { xs: 'none', md: 'none' } }} />
                   <Typography
                     variant="caption"
                     color="text.secondary"

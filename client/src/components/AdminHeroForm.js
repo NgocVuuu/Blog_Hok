@@ -63,6 +63,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   const [allEquipment, setAllEquipment] = useState([]);
   // Store all suggestions in a flat array with build index
   const [suggestedEquipment, setSuggestedEquipment] = useState([]); // { equipmentId, equipment?, note, order, build }
+  // Remove text search per request
   const [eqSearch, setEqSearch] = useState('');
   const [eqCategory, setEqCategory] = useState('all');
   const [activeBuild, setActiveBuild] = useState(1); // 1..3
@@ -859,15 +860,8 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
 
       <Box mt={2} mb={2}>
   <Typography variant="h6">{t('hero.suggestedEquipment', 'Suggested Equipment')}</Typography>
-        {/* Filters first */}
+        {/* Category only (text search removed) */}
         <Box display="flex" gap={2} flexWrap="wrap" mb={1}>
-          <TextField
-            size="small"
-            label="Tìm trang bị..."
-            value={eqSearch}
-            onChange={e => setEqSearch(e.target.value)}
-            sx={{ minWidth: 220 }}
-          />
           <FormControl size="small" sx={{ minWidth: 180 }}>
             <InputLabel id="eq-cat-label">Loại</InputLabel>
             <Select
@@ -974,13 +968,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                   ))}
                 </Select>
               </FormControl>
-              <TextField
-                size="small"
-                label="Ghi chú"
-                value={it.note || ''}
-                onChange={e => setSuggestedEquipment(list => list.map((x,i)=> i===absIndex ? ({ ...x, note: e.target.value }) : x))}
-                sx={{ minWidth: 180 }}
-              />
+              {/* Note removed per request */}
               <TextField
                 size="small"
                 type="number"
@@ -996,11 +984,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                 </Box>
               )}
               <Button color="error" size="small" onClick={() => setSuggestedEquipment(list => list.filter((_,i)=> i!==absIndex))}>Xóa</Button>
-              <Button
-                color="warning"
-                size="small"
-                onClick={() => setSuggestedEquipment(list => list.filter(x => !(x === it)))}
-              >Bỏ khỏi build</Button>
+              {/* Remove-from-build button removed per request */}
             </Box>
           );
         })}

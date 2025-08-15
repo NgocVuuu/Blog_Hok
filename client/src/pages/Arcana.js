@@ -15,7 +15,7 @@ const Arcana = () => {
   const [filteredArcana, setFilteredArcana] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [colorFilter, setColorFilter] = useState('all');
-  const [tierFilter, setTierFilter] = useState('all');
+  // Tier filter removed per request
   const API_URL = process.env.REACT_APP_API_URL;
 
   // Color options
@@ -26,13 +26,7 @@ const Arcana = () => {
     { value: 'green', label: t('arcana.colors.green', 'Xanh lá') }
   ];
 
-  // Tier options
-  const tiers = [
-    { value: 'all', label: t('arcana.tiers.all', 'Tất cả cấp') },
-    { value: '1', label: t('arcana.tiers.1', 'Cấp 1') },
-    { value: '2', label: t('arcana.tiers.2', 'Cấp 2') },
-    { value: '3', label: t('arcana.tiers.3', 'Cấp 3') }
-  ];
+  // Tier options removed
 
   useEffect(() => {
     const fetchArcana = async () => {
@@ -66,10 +60,7 @@ const Arcana = () => {
       result = result.filter(item => item.color === colorFilter);
     }
 
-    // Apply tier filter
-    if (tierFilter !== 'all') {
-      result = result.filter(item => item.tier === parseInt(tierFilter));
-    }
+  // Tier filter removed
 
     // Apply search term
     if (searchTerm) {
@@ -82,7 +73,7 @@ const Arcana = () => {
     }
 
     setFilteredArcana(result);
-  }, [arcana, searchTerm, colorFilter, tierFilter]);
+  }, [arcana, searchTerm, colorFilter]);
 
   const getColorChipColor = (color) => {
     switch (color) {
@@ -148,24 +139,7 @@ const Arcana = () => {
             </FormControl>
           </Grid>
 
-          {/* Tier Filter */}
-          <Grid item xs={12} md={4}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel id="tier-filter-label">Cấp độ</InputLabel>
-              <Select
-                labelId="tier-filter-label"
-                value={tierFilter}
-                onChange={(e) => setTierFilter(e.target.value)}
-                label="Cấp độ"
-              >
-                {tiers.map((tier) => (
-                  <MenuItem key={tier.value} value={tier.value}>
-                    {tier.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          {/* Tier filter removed */}
         </Grid>
 
         {/* Arcana Grid - Grouped by Color */}
@@ -243,13 +217,12 @@ const Arcana = () => {
                             <Typography
                               variant="caption"
                               color="text.secondary"
+                              title={item.description}
                               sx={{
                                 fontSize: '0.6rem',
-                                lineHeight: 1.1,
-                                display: '-webkit-box',
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: 'vertical',
-                                overflow: 'hidden'
+                                lineHeight: 1.2,
+                                whiteSpace: 'pre-wrap',
+                                wordBreak: 'break-word'
                               }}
                             >
                               {item.description}

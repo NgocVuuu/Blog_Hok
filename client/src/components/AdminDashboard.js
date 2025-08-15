@@ -20,6 +20,7 @@ function TabPanel({ children, value, index }) {
 const AdminDashboard = () => {
   const [tab, setTab] = useState(0);
   const [editingHero, setEditingHero] = useState(null);
+  const [editingArcana, setEditingArcana] = useState(null);
   const [editingEquipment, setEditingEquipment] = useState(null);
 
   const handleEditHero = (hero) => {
@@ -29,6 +30,15 @@ const AdminDashboard = () => {
 
   const handleHeroFormSubmit = () => {
     setEditingHero(null);
+  };
+
+  const handleEditArcana = (arcana) => {
+    setEditingArcana(arcana);
+    setTab(2); // Switch to arcana tab
+  };
+
+  const handleArcanaFormSubmit = () => {
+    setEditingArcana(null);
   };
 
   const handleEditEquipment = (equipment) => {
@@ -61,8 +71,8 @@ const AdminDashboard = () => {
         <HeroList onEdit={handleEditHero} />
       </TabPanel>
       <TabPanel value={tab} index={2}>
-        <AdminArcanaForm />
-        <ArcanaList />
+        <AdminArcanaForm editingArcana={editingArcana} onFormSubmit={handleArcanaFormSubmit} />
+        <ArcanaList onEdit={handleEditArcana} />
       </TabPanel>
       <TabPanel value={tab} index={3}>
         <AdminEquipmentForm 

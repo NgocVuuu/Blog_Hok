@@ -17,7 +17,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const ArcanaList = () => {
+const ArcanaList = ({ onEdit }) => {
   const [arcana, setArcana] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -162,9 +162,12 @@ const ArcanaList = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2" sx={{ maxWidth: 200 }}>
-                        {item.description?.substring(0, 100)}
-                        {item.description?.length > 100 && '...'}
+                      <Typography
+                        variant="body2"
+                        sx={{ maxWidth: 260, whiteSpace: 'pre-wrap' }}
+                        title={item.description}
+                      >
+                        {item.description}
                       </Typography>
                     </TableCell>
                     <TableCell>
@@ -177,10 +180,7 @@ const ArcanaList = () => {
                         <Button
                           size="small"
                           startIcon={<EditIcon />}
-                          onClick={() => {
-                            // TODO: Implement edit functionality
-                            console.log('Edit arcana:', item._id);
-                          }}
+                          onClick={() => onEdit && onEdit(item)}
                         >
                           Sửa
                         </Button>

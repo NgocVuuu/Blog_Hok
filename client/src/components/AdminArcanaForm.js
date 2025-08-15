@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Box, TextField, Button, Typography, Alert, CircularProgress, 
   FormControl, InputLabel, Select, MenuItem, Grid
@@ -7,7 +7,7 @@ import UploadIcon from '@mui/icons-material/Upload';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 
-const AdminArcanaForm = () => {
+const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
   const { t } = useTranslation();
   const { fetchWithAuth, openLogin } = useAuth();
   const [formData, setFormData] = useState({
@@ -20,8 +20,7 @@ const AdminArcanaForm = () => {
   const [imagePreview, setImagePreview] = useState('');
   const [message, setMessage] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
-  const [autoReset, setAutoReset] = useState(true); // auto clear after add
-  const [addCount, setAddCount] = useState(0); // count added this session
+  // Auto-reset behavior is now default; removed toggles and counters
   const API_URL = process.env.REACT_APP_API_URL;
 
   const colors = [
@@ -87,8 +86,12 @@ const AdminArcanaForm = () => {
       delete payload.tier; // ensure not sent
       console.log('[Arcana][SUBMIT] Payload:', payload);
 
-      const res = await fetchWithAuth(`${API_URL}/api/arcana`, {
-        method: 'POST',
+      const isEditing = Boolean(editingArcana && editingArcana._id);
+      const url = isEditing ? `${API_URL}/api/arcana/${editingArcana._id}` : `${API_URL}/api/arcana`;
+      const method = isEditing ? 'PUT' : 'POST';
+
+      const res = await fetchWithAuth(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -96,18 +99,17 @@ const AdminArcanaForm = () => {
       });
 
       if (res.ok) {
-        setMessage({ type: 'success', text: 'Đã thêm arcana #' + (addCount + 1) });
-        setAddCount(c => c + 1);
-        if (autoReset) {
-          setFormData({
-            name: '',
-            color: 'red',
-            description: '',
-            recommendedFor: []
-          });
-          setImageFile(null);
-          setImagePreview('');
-        }
+        setMessage({ type: 'success', text: isEditing ? 'Cập nhật arcana thành công!' : 'Thêm arcana thành công!' });
+        // Always reset the form after adding/updating
+        setFormData({
+          name: '',
+          color: 'red',
+          description: '',
+          recommendedFor: []
+        });
+        setImageFile(null);
+        setImagePreview('');
+        if (onFormSubmit) onFormSubmit();
       } else {
         const error = await res.json().catch(()=>({}));
         console.warn('[Arcana][SUBMIT][ERROR]', error);
@@ -122,6 +124,21 @@ const AdminArcanaForm = () => {
       setLoading(false);
     }
   };
+
+  // Prefill when editingArcana changes
+  useEffect(() => {
+    if (editingArcana) {
+      setFormData({
+        name: editingArcana.name || '',
+        color: editingArcana.color || 'red',
+        description: editingArcana.description || '',
+        recommendedFor: Array.isArray(editingArcana.recommendedFor) ? editingArcana.recommendedFor : []
+      });
+      setImagePreview(editingArcana.image || '');
+      setImageFile(null);
+      setMessage({ type: '', text: '' });
+    }
+  }, [editingArcana]);
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 800, mx: 'auto', mt: 4 }}>
@@ -207,23 +224,11 @@ const AdminArcanaForm = () => {
         type="submit"
         variant="contained"
         color="primary"
-        sx={{ mt: 2, mr: 2 }}
+        sx={{ mt: 2 }}
         disabled={loading}
       >
         {loading ? <CircularProgress size={24} /> : 'Thêm Arcana'}
       </Button>
-      <Button
-        type="button"
-        variant="outlined"
-        sx={{ mt: 2, mr: 2 }}
-        onClick={() => setAutoReset(r => !r)}
-      >{autoReset ? 'Giữ lại sau khi thêm' : 'Tự reset sau khi thêm'}</Button>
-      <Button
-        type="button"
-        variant="text"
-        sx={{ mt: 2 }}
-        onClick={() => setAddCount(0)}
-      >Reset bộ đếm ({addCount})</Button>
     </Box>
   );
 };

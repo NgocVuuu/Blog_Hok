@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Button, Box, Typography } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -12,6 +13,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
 
 const EquipmentList = ({ onEdit }) => {
   const [equipment, setEquipment] = useState([]);
+  const [category, setCategory] = useState('all');
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -34,19 +36,19 @@ const EquipmentList = ({ onEdit }) => {
       return item.quickStats
         .filter(q => q && (q.value || q.description || q.type))
         .slice(0, 5)
-        .map(q => ({ label: q.label || q.type || '', value: q.value || '' }));
+  .map(q => ({ label: q.label || q.type || '', value: q.value || '', type: q.type || '' }));
     }
     if (item?.stats && typeof item.stats === 'object') {
       return Object.entries(item.stats)
         .filter(([, v]) => v !== null && v !== undefined && v !== '')
         .slice(0, 5)
-        .map(([k, v]) => ({ label: k, value: `+${v}` }));
+  .map(([k, v]) => ({ label: k, value: `+${v}`, type: k }));
     }
     if (item?.attributes && typeof item.attributes === 'object') {
       return Object.entries(item.attributes)
         .filter(([, v]) => typeof v === 'number' && v !== 0)
         .slice(0, 5)
-        .map(([k, v]) => ({ label: k, value: `+${v}` }));
+  .map(([k, v]) => ({ label: k, value: `+${v}`, type: k }));
     }
     return [];
   };
@@ -61,10 +63,49 @@ const EquipmentList = ({ onEdit }) => {
     return s.replace(/\s+/g, ' ');
   };
 
-  // Map a stat label to an icon and color
-  const getQuickStatVisual = (rawLabel) => {
+  // Map a stat type/label to an icon and color
+  const getQuickStatVisual = (type, rawLabel) => {
     const label = normalizeQuickStatLabel(rawLabel).toLowerCase();
+    const tNorm = String(type || '').trim().toLowerCase().replace(/\s+/g, '');
     const has = (s) => label.includes(s);
+    // Prefer explicit type mapping
+    switch (tNorm) {
+      case 'healthper5s':
+      case 'health/5s':
+      case 'hp/5s':
+        return { Icon: LocalFireDepartmentIcon, color: '#43a047', react: false, type: 'healthPer5s', overlayPlus: true };
+      case 'maxhealth':
+        return { Icon: LocalFireDepartmentIcon, color: '#43a047', react: false, type: 'maxHealth' };
+      case 'movementspeed':
+        return { Icon: DirectionsRunIcon, color: '#43a047', react: false, type: 'movementSpeed' };
+      case 'attackspeed':
+        return { Icon: GiBroadsword, color: '#43a047', react: true, type: 'attackSpeed' };
+      case 'cooldownreduction':
+        return { Icon: AccessTimeIcon, color: '#43a047', react: false, type: 'cooldownReduction' };
+      case 'physicallifesteal':
+      case 'lifesteal':
+        return { Icon: LocalFireDepartmentIcon, color: '#ff7a00', react: false, type: 'physicalLifeSteal' };
+      case 'magicarmor':
+      case 'magicresist':
+        return { Icon: ShieldIcon, color: '#7b2ff2', react: false, type: 'magicArmor' };
+      case 'physicalarmor':
+      case 'armor':
+        return { Icon: ShieldIcon, color: '#ff7a00', react: false, type: 'physicalArmor' };
+      case 'magicattack':
+        return { Icon: GiBroadsword, color: '#7b2ff2', react: true, type: 'magicAttack' };
+      case 'physicalattack':
+      case 'attack':
+        return { Icon: GiBroadsword, color: '#ff7a00', react: true, type: 'physicalAttack' };
+      case 'criticalrate':
+      case 'crit':
+        return { Icon: GpsFixedIcon, color: '#C9A063', react: false, type: 'criticalRate' };
+      case 'manaregen':
+      case 'mana':
+        return { Icon: LocalFireDepartmentIcon, color: '#7b2ff2', react: false, type: 'manaRegen' };
+      default:
+        break;
+    }
+    // Fallback by label heuristics
     if (has('health/5s') || has('hp/5s') || has('health per 5') || has('health regen') || has('hồi máu/5s')) {
       return { Icon: LocalFireDepartmentIcon, color: '#43a047', react: false, type: 'healthPer5s', overlayPlus: true };
     }
@@ -80,11 +121,9 @@ const EquipmentList = ({ onEdit }) => {
     if (has('cooldown') || has('giảm hồi chiêu')) {
       return { Icon: AccessTimeIcon, color: '#43a047', react: false, type: 'cooldownReduction' };
     }
-    // Physical Life Steal first (more specific)
-    if (has('hút máu vật lý') || (has('life') && has('steal') && has('physical'))) {
+    if (has('hút máu vật lý') || (label.includes('life') && label.includes('steal') && label.includes('physical'))) {
       return { Icon: LocalFireDepartmentIcon, color: '#ff7a00', react: false, type: 'physicalLifeSteal' };
     }
-    // Generic Life Steal -> treat as Physical Life Steal with orange flame
     if (has('life steal') || has('lifesteal') || has('hút máu') || has('hồi máu')) {
       return { Icon: LocalFireDepartmentIcon, color: '#ff7a00', react: false, type: 'physicalLifeSteal' };
     }
@@ -155,6 +194,23 @@ const EquipmentList = ({ onEdit }) => {
   return (
     <Box sx={{ mt: 4 }}>
       <Typography variant="h6" mb={2}>Danh sách trang bị</Typography>
+      {/* Category filter */}
+      <Box sx={{ mb: 2, display: 'flex', gap: 2 }}>
+        <FormControl size="small" sx={{ minWidth: 220 }}>
+          <InputLabel id="cat-label">Lọc theo loại</InputLabel>
+          <Select
+            labelId="cat-label"
+            label="Lọc theo loại"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <MenuItem value="all">Tất cả</MenuItem>
+            {Array.from(new Set(equipment.map(it => it.category).filter(Boolean))).map(cat => (
+              <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
       <Table>
         <TableHead>
           <TableRow>
@@ -167,7 +223,7 @@ const EquipmentList = ({ onEdit }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {equipment.map(item => (
+          {(category === 'all' ? equipment : equipment.filter(it => it.category === category)).map(item => (
             <TableRow key={item._id}>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.category}</TableCell>
@@ -175,7 +231,7 @@ const EquipmentList = ({ onEdit }) => {
               <TableCell>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {deriveQuickStats(item).map((s, i) => {
-                    const v = getQuickStatVisual(s.label);
+                    const v = getQuickStatVisual(s.type, s.label);
                     const IconComp = v.Icon;
                     return (
                       <Typography
