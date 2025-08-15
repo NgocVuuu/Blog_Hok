@@ -694,7 +694,7 @@ const Equipment = () => {
                                     sx={{
                                       fontSize: '0.75rem',
                                       lineHeight: 1.4,
-                                      color: 'text.secondary',
+                                      color: 'inherit',
                                       display: 'block'
                                     }}
                                   >
@@ -722,7 +722,7 @@ const Equipment = () => {
                                           sx={{
                                             fontSize: '0.75rem',
                                             lineHeight: 1.4,
-                                            color: 'text.secondary',
+                                            color: 'inherit',
                                             display: 'block'
                                           }}
                                         >
@@ -782,7 +782,8 @@ const Equipment = () => {
                               objectFit: 'contain',
                               bgcolor: '#f8f9fa',
                               p: { xs: 0.5, md: 1 },
-                              border: '2px solid #C9A063',
+                              // Remove inner border to avoid double border when filtered
+                              border: 'none',
                               borderRadius: 1
                             }}
                           />
@@ -833,7 +834,7 @@ const Equipment = () => {
                               sx={{
                                 fontSize: '0.75rem',
                                 lineHeight: 1.4,
-                                color: 'text.secondary',
+                                color: 'inherit',
                                 display: 'block'
                               }}
                             >
@@ -861,7 +862,7 @@ const Equipment = () => {
                                 sx={{
                                   fontSize: '0.75rem',
                                   lineHeight: 1.4,
-                                  color: 'text.secondary',
+                                  color: 'inherit',
                                   display: 'block'
                                 }}
                               >
@@ -885,23 +886,7 @@ const Equipment = () => {
                           </Box>
                         )}
 
-                        {/* Description */}
-                        {item.description && (
-                          <Box>
-                            <Typography
-                              variant="caption"
-                              sx={{
-                                fontSize: '0.7rem',
-                                lineHeight: 1.3,
-                                color: 'text.disabled',
-                                fontStyle: 'italic',
-                                display: 'block'
-                              }}
-                            >
-                              {item.description}
-                            </Typography>
-                          </Box>
-                        )}
+                        {/* Bottom description removed for filtered view to avoid showing parsed passive/active lines */}
                       </CardContent>
                     </Card>
                   </Grid>
