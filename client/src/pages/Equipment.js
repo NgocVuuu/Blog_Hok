@@ -65,7 +65,7 @@ const Equipment = () => {
     {
       value: 'Movement',
       label: t('equipment.categories.movement', 'Di chuyển'),
-      icon: '/img/lanes/movement.png',
+  icon: '/Img/lanes/movement.png',
       color: '#ff9800'
     },
     {
