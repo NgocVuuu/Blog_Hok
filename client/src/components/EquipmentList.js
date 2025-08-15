@@ -65,6 +65,12 @@ const EquipmentList = ({ onEdit }) => {
   const getQuickStatVisual = (rawLabel) => {
     const label = normalizeQuickStatLabel(rawLabel).toLowerCase();
     const has = (s) => label.includes(s);
+    if (has('health/5s') || has('hp/5s') || has('health per 5') || has('health regen') || has('hồi máu/5s')) {
+      return { Icon: LocalFireDepartmentIcon, color: '#43a047', react: false, type: 'healthPer5s', overlayPlus: true };
+    }
+    if (has('max health') || label === 'maxhealth') {
+      return { Icon: LocalFireDepartmentIcon, color: '#43a047', react: false, type: 'maxHealth' };
+    }
     if (has('movement speed') || label === 'movementspeed' || has('tốc chạy')) {
       return { Icon: DirectionsRunIcon, color: '#43a047', react: false, type: 'movementSpeed' };
     }
@@ -127,6 +133,10 @@ const EquipmentList = ({ onEdit }) => {
         return t('equipment.stats.physicalAttack', { lng: 'en', defaultValue: 'Physical Attack' });
       case 'manaRegen':
         return t('equipment.stats.manaRegen', { lng: 'en', defaultValue: 'Mana Regen' });
+      case 'maxHealth':
+        return t('equipment.stats.maxHealth', { lng: 'en', defaultValue: 'Max Health' });
+      case 'healthPer5s':
+        return t('equipment.stats.healthPer5s', { lng: 'en', defaultValue: 'Health/5s' });
       default:
         return normalizeQuickStatLabel(rawFallback || '');
     }
@@ -182,10 +192,23 @@ const EquipmentList = ({ onEdit }) => {
                           gap: 0.5
                         }}
                       >
-                        {v.react ? (
-                          <IconComp style={{ color: v.color, fontSize: 14 }} />
+                        {v.overlayPlus ? (
+                          <Box sx={{ position: 'relative', width: 16, height: 16, display: 'inline-flex' }}>
+                            {v.react ? (
+                              <IconComp style={{ color: v.color, fontSize: 16 }} />
+                            ) : (
+                              <IconComp sx={{ color: v.color, fontSize: 16 }} />
+                            )}
+                            <Box sx={{ position: 'absolute', right: -1, bottom: -1, width: 8, height: 8, bgcolor: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #ddd' }}>
+                              <Box component="span" sx={{ fontSize: 8, lineHeight: 1, color: '#43a047', fontWeight: 700 }}>+</Box>
+                            </Box>
+                          </Box>
                         ) : (
-                          <IconComp sx={{ color: v.color, fontSize: 14 }} />
+                          v.react ? (
+                            <IconComp style={{ color: v.color, fontSize: 14 }} />
+                          ) : (
+                            <IconComp sx={{ color: v.color, fontSize: 14 }} />
+                          )
                         )}
                         {s.value} {getDisplayLabel(v.type, s.label)}
                       </Typography>

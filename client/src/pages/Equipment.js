@@ -105,6 +105,14 @@ const Equipment = () => {
   const getQuickStatVisual = (rawLabel) => {
     const label = normalizeQuickStatLabel(rawLabel).toLowerCase();
     const has = (s) => label.includes(s);
+    // Health/5s (regen) – green with tiny plus overlay
+    if (has('health/5s') || has('hp/5s') || has('health per 5') || has('health regen') || has('hồi máu/5s')) {
+      return { type: 'healthPer5s', Icon: LocalFireDepartmentIcon, color: '#43a047', reactIcon: false, overlayPlus: true };
+    }
+    // Max Health (new) – green, same icon style as mana regen
+    if (has('max health') || label === 'maxhealth') {
+      return { type: 'maxHealth', Icon: LocalFireDepartmentIcon, color: '#43a047', reactIcon: false };
+    }
     // Movement Speed
     if (has('movement speed') || label === 'movementspeed' || has('tốc chạy')) {
       return { type: 'movementSpeed', Icon: DirectionsRunIcon, color: '#43a047', reactIcon: false };
@@ -181,6 +189,10 @@ const Equipment = () => {
         return t('equipment.stats.physicalAttack', { lng: 'en', defaultValue: 'Physical Attack' });
       case 'manaRegen':
         return t('equipment.stats.manaRegen', { lng: 'en', defaultValue: 'Mana Regen' });
+      case 'maxHealth':
+        return t('equipment.stats.maxHealth', { lng: 'en', defaultValue: 'Max Health' });
+      case 'healthPer5s':
+        return t('equipment.stats.healthPer5s', { lng: 'en', defaultValue: 'Health/5s' });
       default:
         return normalizeQuickStatLabel(rawFallback || '');
     }
@@ -300,6 +312,20 @@ const Equipment = () => {
             {(() => {
               const v = getQuickStatVisual(s.label);
               const IconComp = v.Icon;
+              if (v.overlayPlus) {
+                return (
+                  <Box sx={{ position: 'relative', width: 16, height: 16, display: 'inline-flex' }}>
+                    {v.reactIcon ? (
+                      <IconComp style={{ color: v.color, fontSize: 16 }} />
+                    ) : (
+                      <IconComp sx={{ color: v.color, fontSize: 16 }} />
+                    )}
+                    <Box sx={{ position: 'absolute', right: -1, bottom: -1, width: 8, height: 8, bgcolor: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #ddd' }}>
+                      <Box component="span" sx={{ fontSize: 8, lineHeight: 1, color: '#43a047', fontWeight: 700 }}>+</Box>
+                    </Box>
+                  </Box>
+                );
+              }
               return v.reactIcon ? (
                 <IconComp style={{ color: v.color, fontSize: 14 }} />
               ) : (
@@ -690,18 +716,20 @@ const Equipment = () => {
                                       {t('equipment.active', 'Kích hoạt')}{item.active.name ? `: ${item.active.name}` : ''}
                                     </Typography>
                                   )}
-                                  <Typography
-                                    variant="caption"
-                                    sx={{
-                                      fontSize: '0.75rem',
-                                      lineHeight: 1.4,
-                                      color: 'text.secondary',
-                                      display: 'block'
-                                    }}
-                                  >
-                                    <span dangerouslySetInnerHTML={asDangerousHtml(item.active.description)} />
-                                  </Typography>
-                                  {item.active.cooldown && (
+                                      {stripHtmlToText(item.active.description || '').trim() && (
+                                        <Typography
+                                          variant="caption"
+                                          sx={{
+                                            fontSize: '0.75rem',
+                                            lineHeight: 1.4,
+                                            color: 'text.secondary',
+                                            display: 'block'
+                                          }}
+                                        >
+                                          <span dangerouslySetInnerHTML={asDangerousHtml(item.active.description)} />
+                                        </Typography>
+                                      )}
+                                      {Number(item.active?.cooldown) > 0 && (
                                     <Typography
                                       variant="caption"
                                       sx={{
@@ -827,18 +855,20 @@ const Equipment = () => {
                                 {t('equipment.active', 'Kích hoạt')}{item.active.name ? `: ${item.active.name}` : ''}
                               </Typography>
                             )}
-                            <Typography
-                              variant="caption"
-                              sx={{
-                                fontSize: '0.75rem',
-                                lineHeight: 1.4,
-                                color: 'text.secondary',
-                                display: 'block'
-                              }}
-                            >
-                              <span dangerouslySetInnerHTML={asDangerousHtml(item.active.description)} />
-                            </Typography>
-                            {item.active.cooldown && (
+                            {stripHtmlToText(item.active.description || '').trim() && (
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  fontSize: '0.75rem',
+                                  lineHeight: 1.4,
+                                  color: 'text.secondary',
+                                  display: 'block'
+                                }}
+                              >
+                                <span dangerouslySetInnerHTML={asDangerousHtml(item.active.description)} />
+                              </Typography>
+                            )}
+                            {Number(item.active?.cooldown) > 0 && (
                               <Typography
                                 variant="caption"
                                 sx={{

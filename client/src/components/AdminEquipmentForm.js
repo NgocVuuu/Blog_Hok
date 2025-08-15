@@ -145,6 +145,21 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
       icon: LocalFireDepartmentIcon,
       color: '#7b2ff2'
     }
+    ,
+    // Max Health (new)
+    {
+      value: 'maxHealth',
+      label: t('equipment.stats.maxHealth', { lng: 'en', defaultValue: 'Max Health' }),
+      icon: LocalFireDepartmentIcon,
+      color: '#43a047'
+    },
+    // Health/5s (new)
+    {
+      value: 'healthPer5s',
+      label: t('equipment.stats.healthPer5s', { lng: 'en', defaultValue: 'Health/5s' }),
+      icon: LocalFireDepartmentIcon,
+      color: '#43a047'
+    }
   ];
 
   // Utilities to derive quick stats from text when backend/data lacks them
@@ -569,6 +584,25 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
                       value={stat.type}
                       onChange={e => updateQuickStat(index, 'type', e.target.value)}
                       label={t('equipment.statType', 'Loại thông số')}
+                      MenuProps={{
+                        disablePortal: false,
+                        PaperProps: {
+                          sx: {
+                            maxHeight: 'none',
+                            overflowY: 'visible'
+                          },
+                          style: {
+                            maxHeight: 'none',
+                            overflowY: 'visible'
+                          }
+                        },
+                        MenuListProps: {
+                          dense: true,
+                          sx: { py: 0 }
+                        },
+                        anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
+                        transformOrigin: { vertical: 'top', horizontal: 'left' }
+                      }}
                       renderValue={(selected) => {
                         const found = quickStatsOptions.find(o => o.value === selected);
                         return found ? found.label : (selected || t('equipment.chooseStat', 'Chọn loại'));

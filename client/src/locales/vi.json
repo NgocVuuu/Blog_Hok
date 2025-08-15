@@ -137,7 +137,10 @@
       "movementSpeed": "Tốc chạy",
       "attackSpeed": "Tốc đánh",
       "cooldownReduction": "Giảm hồi chiêu",
-      "manaRegen": "Hồi mana"
+  "manaRegen": "Hồi mana",
+  "maxHealth": "Máu tối đa"
+  ,
+  "healthPer5s": "Máu/5s"
     }
   },
   "arcana": {

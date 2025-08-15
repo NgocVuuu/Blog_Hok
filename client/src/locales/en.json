@@ -138,6 +138,10 @@
       "attackSpeed": "Attack Speed",
       "cooldownReduction": "Cooldown Reduction",
       "manaRegen": "Mana Regen"
+  ,
+  "maxHealth": "Max Health"
+  ,
+  "healthPer5s": "Health/5s"
     }
   },
   "arcana": {
