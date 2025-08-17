@@ -5,6 +5,7 @@ import ShieldIcon from '@mui/icons-material/Shield';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { GiBroadsword } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
@@ -73,7 +74,7 @@ const EquipmentList = ({ onEdit }) => {
       case 'healthper5s':
       case 'health/5s':
       case 'hp/5s':
-        return { Icon: LocalFireDepartmentIcon, color: '#43a047', react: false, type: 'healthPer5s', overlayPlus: true };
+        return { Icon: FavoriteIcon, color: '#43a047', react: false, type: 'healthPer5s', overlayPlus: true };
       case 'maxhealth':
         return { Icon: LocalFireDepartmentIcon, color: '#43a047', react: false, type: 'maxHealth' };
       case 'movementspeed':
@@ -106,8 +107,8 @@ const EquipmentList = ({ onEdit }) => {
         break;
     }
     // Fallback by label heuristics
-    if (has('health/5s') || has('hp/5s') || has('health per 5') || has('health regen') || has('hồi máu/5s')) {
-      return { Icon: LocalFireDepartmentIcon, color: '#43a047', react: false, type: 'healthPer5s', overlayPlus: true };
+  if (has('health/5s') || has('hp/5s') || has('hp5') || has('health per 5') || has('health regen') || has('regeneration') || has('hồi máu/5s')) {
+  return { Icon: FavoriteIcon, color: '#43a047', react: false, type: 'healthPer5s', overlayPlus: true };
     }
     if (has('max health') || label === 'maxhealth') {
       return { Icon: LocalFireDepartmentIcon, color: '#43a047', react: false, type: 'maxHealth' };

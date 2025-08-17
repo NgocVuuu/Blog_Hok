@@ -11,6 +11,7 @@ import ShieldIcon from '@mui/icons-material/Shield';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { GiBroadsword } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
@@ -101,17 +102,60 @@ const Equipment = () => {
     return s.replace(/\s+/g, ' ').trim();
   };
 
-  // Map a stat label to an icon and color
-  const getQuickStatVisual = (rawLabel) => {
+  // Map a stat label/type to an icon and color (prefer explicit type)
+  const getQuickStatVisual = (rawLabel, rawType) => {
     const label = normalizeQuickStatLabel(rawLabel).toLowerCase();
+    const tNorm = String(rawType || '').trim().toLowerCase().replace(/\s+/g, '');
     const has = (s) => label.includes(s);
+
+    // Prefer explicit type mapping
+    switch (tNorm) {
+      case 'healthper5s':
+      case 'health/5s':
+      case 'hp/5s':
+      case 'hp5':
+        return { type: 'healthPer5s', Icon: FavoriteIcon, color: '#43a047', reactIcon: false, overlayPlus: true };
+      case 'maxhealth':
+        return { type: 'maxHealth', Icon: FavoriteIcon, color: '#43a047', reactIcon: false };
+      case 'movementspeed':
+        return { type: 'movementSpeed', Icon: DirectionsRunIcon, color: '#43a047', reactIcon: false };
+      case 'attackspeed':
+        return { type: 'attackSpeed', Icon: GiBroadsword, color: '#43a047', reactIcon: true };
+      case 'cooldownreduction':
+        return { type: 'cooldownReduction', Icon: AccessTimeIcon, color: '#43a047', reactIcon: false };
+      case 'physicallifesteal':
+      case 'lifesteal':
+        return { type: 'physicalLifeSteal', Icon: LocalFireDepartmentIcon, color: '#ff7a00', reactIcon: false };
+      case 'magicarmor':
+      case 'magicresist':
+        return { type: 'magicArmor', Icon: ShieldIcon, color: '#7b2ff2', reactIcon: false };
+      case 'physicalarmor':
+      case 'armor':
+        return { type: 'physicalArmor', Icon: ShieldIcon, color: '#ff7a00', reactIcon: false };
+      case 'magicattack':
+        return { type: 'magicAttack', Icon: GiBroadsword, color: '#7b2ff2', reactIcon: true };
+      case 'physicalattack':
+      case 'attack':
+        return { type: 'physicalAttack', Icon: GiBroadsword, color: '#ff7a00', reactIcon: true };
+      case 'criticalrate':
+      case 'crit':
+        return { type: 'criticalRate', Icon: GpsFixedIcon, color: '#C9A063', reactIcon: false };
+      case 'manaregen':
+      case 'mana':
+        return { type: 'manaRegen', Icon: LocalFireDepartmentIcon, color: '#7b2ff2', reactIcon: false };
+      default:
+        break;
+    }
     // Health/5s (regen) – green with tiny plus overlay
-    if (has('health/5s') || has('hp/5s') || has('health per 5') || has('health regen') || has('hồi máu/5s')) {
-      return { type: 'healthPer5s', Icon: LocalFireDepartmentIcon, color: '#43a047', reactIcon: false, overlayPlus: true };
+    if (
+      has('health/5s') || has('hp/5s') || has('health per 5') || has('health regen') || has('health regeneration') ||
+      has('hồi máu/5s') || has('hoi mau/5s') || has('hoi mau') || has('regeneration') || has('regen') || has('hp5')
+    ) {
+      return { type: 'healthPer5s', Icon: FavoriteIcon, color: '#43a047', reactIcon: false, overlayPlus: true };
     }
     // Max Health (new) – green, same icon style as mana regen
     if (has('max health') || label === 'maxhealth') {
-      return { type: 'maxHealth', Icon: LocalFireDepartmentIcon, color: '#43a047', reactIcon: false };
+      return { type: 'maxHealth', Icon: FavoriteIcon, color: '#43a047', reactIcon: false };
     }
     // Movement Speed
     if (has('movement speed') || label === 'movementspeed' || has('tốc chạy')) {
@@ -205,21 +249,21 @@ const Equipment = () => {
       return item.quickStats
         .filter(q => q && (q.value || q.description || q.type))
         .slice(0, 5)
-        .map(q => ({ label: normalizeQuickStatLabel(q.label || q.type || ''), value: q.value || '', desc: q.description || '' }));
+        .map(q => ({ label: normalizeQuickStatLabel(q.label || q.type || ''), value: q.value || '', desc: q.description || '', type: q.type || '' }));
     }
     // Next: stats object
     if (item?.stats && typeof item.stats === 'object') {
       return Object.entries(item.stats)
         .filter(([, v]) => v !== null && v !== undefined && v !== '')
         .slice(0, 5)
-        .map(([k, v]) => ({ label: k, value: `+${v}` }));
+        .map(([k, v]) => ({ label: k, value: `+${v}`, type: k }));
     }
     // Fallback: attributes object from model (only non-zero)
     if (item?.attributes && typeof item.attributes === 'object') {
       return Object.entries(item.attributes)
         .filter(([, v]) => typeof v === 'number' && v !== 0)
         .slice(0, 5)
-        .map(([k, v]) => ({ label: k, value: `+${v}` }));
+        .map(([k, v]) => ({ label: k, value: `+${v}`, type: k }));
     }
     // Last resort: parse from description/passive/active text
     const text = [item?.description, item?.passive?.description, item?.active?.description]
@@ -292,7 +336,7 @@ const Equipment = () => {
     if (!qs.length) return null;
     return (
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1, mt: -0.5 }}>
-        {qs.map((s, i) => (
+  {qs.map((s, i) => (
           <Typography
             key={i}
             variant="caption"
@@ -310,7 +354,7 @@ const Equipment = () => {
             title={s.desc || ''}
           >
             {(() => {
-              const v = getQuickStatVisual(s.label);
+              const v = getQuickStatVisual(s.label, s.type);
               const IconComp = v.Icon;
               if (v.overlayPlus) {
                 return (
@@ -333,7 +377,7 @@ const Equipment = () => {
               );
             })()}
             {(() => {
-              const v = getQuickStatVisual(s.label);
+              const v = getQuickStatVisual(s.label, s.type);
               return `${s.value} ${getDisplayLabel(v.type, s.label)}`;
             })()}
           </Typography>
