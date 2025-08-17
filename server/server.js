@@ -109,10 +109,40 @@ app.get('/', (req, res) => {
   });
 });
 
+// Helper: Resolve canonical base URL for sitemap links
+// Priority: CANONICAL_BASE_URL > PUBLIC_BASE_URL > derive from request
+// - Strips trailing slashes
+// - Converts api.bloghok.online -> bloghok.online
+// - Avoids *.onrender.com in output (maps to bloghok.online)
+function getCanonicalBaseUrl(req) {
+  const fromEnv = (process.env.CANONICAL_BASE_URL || process.env.PUBLIC_BASE_URL || '').trim();
+  if (fromEnv) {
+    return fromEnv.replace(/\/+$/, '');
+  }
+
+  // Derive from request headers when env not provided
+  const rawHost = (req.headers['x-forwarded-host'] || req.headers.host || req.hostname || '').toString();
+  const host = rawHost.split(',')[0].trim();
+  if (!host) {
+    return `http://localhost:${process.env.PORT || 7000}`;
+  }
+
+  // If it's the API subdomain, drop the api. prefix for public site
+  let cleanHost = host.replace(/^api\./i, '');
+
+  // Never expose onrender.com in sitemap for the public property
+  if (/onrender\.com$/i.test(cleanHost)) {
+    return 'https://bloghok.online';
+  }
+
+  const proto = (req.headers['x-forwarded-proto'] || req.protocol || 'https').toString().split(',')[0];
+  return `${proto}://${cleanHost}`.replace(/\/+$/, '');
+}
+
 // Dynamic sitemap.xml
 app.get('/sitemap.xml', async (req, res, next) => {
   try {
-    const baseUrl = process.env.PUBLIC_BASE_URL || process.env.APP_BASE_URL || process.env.RENDER_EXTERNAL_URL || `http://localhost:${process.env.PORT || 7000}`;
+    const baseUrl = getCanonicalBaseUrl(req);
 
     // Lazy import models to avoid circular deps during startup
     const Hero = require('./models/Hero');
@@ -164,7 +194,7 @@ app.get('/sitemap.xml', async (req, res, next) => {
 // Compatibility: also serve sitemap under /api path
 app.get('/api/sitemap.xml', async (req, res, next) => {
   try {
-    const baseUrl = process.env.PUBLIC_BASE_URL || process.env.APP_BASE_URL || process.env.RENDER_EXTERNAL_URL || `http://localhost:${process.env.PORT || 7000}`;
+  const baseUrl = getCanonicalBaseUrl(req);
     const Hero = require('./models/Hero');
     const News = require('./models/News');
     const [heroes, news] = await Promise.all([
