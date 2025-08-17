@@ -109,6 +109,99 @@ app.get('/', (req, res) => {
   });
 });
 
+// Dynamic sitemap.xml
+app.get('/sitemap.xml', async (req, res, next) => {
+  try {
+    const baseUrl = process.env.PUBLIC_BASE_URL || process.env.APP_BASE_URL || process.env.RENDER_EXTERNAL_URL || `http://localhost:${process.env.PORT || 7000}`;
+
+    // Lazy import models to avoid circular deps during startup
+    const Hero = require('./models/Hero');
+    const News = require('./models/News');
+
+    // Fetch slugs and timestamps (lean for perf)
+    const [heroes, news] = await Promise.all([
+      Hero.find({}, { slug: 1, updatedAt: 1, createdAt: 1 }).lean(),
+      News.find({}, { slug: 1, publishedAt: 1, createdAt: 1 }).lean()
+    ]);
+
+    // Helpers
+    const fmt = (d) => new Date(d).toISOString();
+    const url = (loc, lastmod, changefreq = 'daily', priority = '0.7') =>
+      `  <url>\n    <loc>${loc}</loc>\n    ${lastmod ? `<lastmod>${fmt(lastmod)}</lastmod>` : ''}\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+
+    const staticUrls = [
+      url(`${baseUrl}/`, new Date(), 'daily', '1.0'),
+      url(`${baseUrl}/heroes`, new Date(), 'daily', '0.9'),
+      url(`${baseUrl}/equipment`, new Date(), 'weekly', '0.6'),
+      url(`${baseUrl}/arcana`, new Date(), 'weekly', '0.6'),
+      url(`${baseUrl}/news`, new Date(), 'daily', '0.7')
+    ];
+
+    const heroUrls = (heroes || [])
+      .filter(h => h && h.slug)
+      .map(h => url(`${baseUrl}/heroes/${h.slug}`, h.updatedAt || h.createdAt || new Date(), 'weekly', '0.8'));
+
+    const newsUrls = (news || [])
+      .filter(n => n && n.slug)
+      .map(n => url(`${baseUrl}/news/${n.slug}`, n.publishedAt || n.createdAt || new Date(), 'daily', '0.8'));
+
+    const body = [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+      ...staticUrls,
+      ...heroUrls,
+      ...newsUrls,
+      '</urlset>'
+    ].join('\n');
+
+    res.header('Content-Type', 'application/xml');
+    res.send(body);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Compatibility: also serve sitemap under /api path
+app.get('/api/sitemap.xml', async (req, res, next) => {
+  try {
+    const baseUrl = process.env.PUBLIC_BASE_URL || process.env.APP_BASE_URL || process.env.RENDER_EXTERNAL_URL || `http://localhost:${process.env.PORT || 7000}`;
+    const Hero = require('./models/Hero');
+    const News = require('./models/News');
+    const [heroes, news] = await Promise.all([
+      Hero.find({}, { slug: 1, updatedAt: 1, createdAt: 1 }).lean(),
+      News.find({}, { slug: 1, publishedAt: 1, createdAt: 1 }).lean()
+    ]);
+    const fmt = (d) => new Date(d).toISOString();
+    const url = (loc, lastmod, changefreq = 'daily', priority = '0.7') =>
+      `  <url>\n    <loc>${loc}</loc>\n    ${lastmod ? `<lastmod>${fmt(lastmod)}</lastmod>` : ''}\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+    const staticUrls = [
+      url(`${baseUrl}/`, new Date(), 'daily', '1.0'),
+      url(`${baseUrl}/heroes`, new Date(), 'daily', '0.9'),
+      url(`${baseUrl}/equipment`, new Date(), 'weekly', '0.6'),
+      url(`${baseUrl}/arcana`, new Date(), 'weekly', '0.6'),
+      url(`${baseUrl}/news`, new Date(), 'daily', '0.7')
+    ];
+    const heroUrls = (heroes || [])
+      .filter(h => h && h.slug)
+      .map(h => url(`${baseUrl}/heroes/${h.slug}`, h.updatedAt || h.createdAt || new Date(), 'weekly', '0.8'));
+    const newsUrls = (news || [])
+      .filter(n => n && n.slug)
+      .map(n => url(`${baseUrl}/news/${n.slug}`, n.publishedAt || n.createdAt || new Date(), 'daily', '0.8'));
+    const body = [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+      ...staticUrls,
+      ...heroUrls,
+      ...newsUrls,
+      '</urlset>'
+    ].join('\n');
+    res.header('Content-Type', 'application/xml');
+    res.send(body);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Error logging middleware (before error handler)
 app.use(errorLogger);
 
