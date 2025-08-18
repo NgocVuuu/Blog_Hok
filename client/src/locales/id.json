@@ -41,6 +41,15 @@
     "items": {
       "title": "Item Populer"
     }
+    ,
+    "searchPlaceholder": "Cari hero, equipment, berita... (/ untuk fokus)",
+    "surprise": "Surprise me",
+    "trending": "Hero Tren",
+    "updated": "Diperbarui",
+    "patchHighlights": "Sorotan Patch",
+    "viewFull": "Lihat lengkap",
+    "latestNews": "Berita terbaru",
+    "topCounters": "Counter teratas minggu ini"
   },
   "footer": {
     "about": {
@@ -78,6 +87,12 @@
     "sort": "Urutkan",
     "price": "Harga",
     "logout": "Keluar"
+  },
+  "time": {
+    "just_now": "baru saja",
+    "minutes_ago": "menit yang lalu",
+    "hours_ago": "jam yang lalu",
+    "days_ago": "hari yang lalu"
   },
   "heroes": {
     "title": "Daftar Hero",

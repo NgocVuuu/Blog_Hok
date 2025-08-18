@@ -18,8 +18,8 @@ const theme = createTheme({
   shape: { borderRadius: 12 },
   typography: {
     fontFamily: 'Tuffy, serif',
-    h5: { fontWeight: 700, color: '#C9A063' },
-    h6: { fontWeight: 600, color: '#C9A063' },
+  h5: { fontWeight: 700, color: '#7B6435' },
+  h6: { fontWeight: 600, color: '#7B6435' },
     body1: { fontSize: 16 },
     button: { textTransform: 'none', fontWeight: 600 },
   },
@@ -28,9 +28,10 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           background: '#FFFDF6',
-          boxShadow: '0 4px 24px #C9A06322',
+          // Softer elevation and border to avoid heavy visual separators between cards
+          boxShadow: '0 2px 10px rgba(0,0,0,0.06)',
           borderRadius: 16,
-          border: '1.5px solid #E9C46A',
+          border: '1px solid rgba(0,0,0,0.08)',
         },
       },
     },
@@ -39,11 +40,12 @@ const theme = createTheme({
         root: {
           borderRadius: 8,
           fontWeight: 600,
-          background: 'linear-gradient(90deg, #E9C46A 0%, #C9A063 100%)',
+          // Subtle background to reduce heavy accent bars
+          background: 'linear-gradient(90deg, #F1E7C9 0%, #E6D3A8 100%)',
           color: '#2D1B06',
-          boxShadow: '0 2px 8px #C9A06333',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
           '&:hover': {
-            background: 'linear-gradient(90deg, #C9A063 0%, #E9C46A 100%)',
+            background: 'linear-gradient(90deg, #E9C46A 0%, #C9A063 100%)',
             color: '#fff',
           },
         },

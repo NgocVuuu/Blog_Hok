@@ -253,7 +253,7 @@ const Meta = () => {
 
                             {/* Stats - Win Rate and Pick Rate */}
                             <Box>
-                              {hero.winRate && (
+                {hero.winRate && (
                                 <Typography
                                   variant="caption"
                                   sx={{
@@ -263,10 +263,10 @@ const Meta = () => {
                                     display: 'block'
                                   }}
                                 >
-                                  {t('win_rate', 'WR')}: {hero.winRate}%
+                  {t('win_rate', 'Tỉ lệ thắng')}: {hero.winRate}%
                                 </Typography>
                               )}
-                              {hero.pickRate && (
+                {hero.pickRate && (
                                 <Typography
                                   variant="caption"
                                   sx={{
@@ -275,7 +275,7 @@ const Meta = () => {
                                     display: 'block'
                                   }}
                                 >
-                                  {t('pick_rate', 'PR')}: {hero.pickRate}%
+                  {t('pick_rate', 'Tỉ lệ chọn')}: {hero.pickRate}%
                                 </Typography>
                               )}
                             </Box>

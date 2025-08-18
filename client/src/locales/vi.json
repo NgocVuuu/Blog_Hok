@@ -45,7 +45,15 @@
     },
     "items": {
       "title": "Trang bị hot"
-    }
+    },
+    "searchPlaceholder": "Tìm tướng, trang bị, tin tức... (/ để tìm nhanh)",
+    "surprise": "Surprise me",
+    "trending": "Tướng thịnh hành",
+    "updated": "Cập nhật",
+    "patchHighlights": "Patch nổi bật",
+    "viewFull": "Xem đầy đủ",
+    "latestNews": "Bản tin mới",
+    "topCounters": "Top counters tuần này"
   },
   "footer": {
     "about": {
@@ -57,7 +65,7 @@
     },
     "contact": {
       "title": "Liên hệ",
-  "email": "paulvu@swqpz.onmicrosoft.com"
+      "email": "paulvu@swqpz.onmicrosoft.com"
     },
     "copyright": "Bản quyền thuộc về BlogHok",
     "privacy": "Chính sách bảo mật",
@@ -84,6 +92,12 @@
     "price": "Giá",
     "logout": "Đăng xuất"
   },
+  "time": {
+    "just_now": "vừa xong",
+    "minutes_ago": "phút trước",
+    "hours_ago": "giờ trước",
+    "days_ago": "ngày trước"
+  },
   "heroes": {
     "title": "Danh sách tướng",
     "name": "Tên",
@@ -99,10 +113,10 @@
     "lore": "Tiểu sử",
     "profile": "Hồ sơ",
     "combo": "Combo",
-  "skins": "Trang phục",
-  "goodAgainst": "Đối đầu tốt",
-  "sameRole": "Tướng cùng vai trò",
-  "topWinRate": "Tướng tỉ lệ thắng cao"
+    "skins": "Trang phục",
+    "goodAgainst": "Đối đầu tốt",
+    "sameRole": "Tướng cùng vai trò",
+    "topWinRate": "Tướng tỉ lệ thắng cao"
   },
   "equipment": {
     "title": "Trang bị",
@@ -128,8 +142,8 @@
     "stats": "Chỉ số",
     "active": "Kích hoạt",
     "cooldown": "Hồi chiêu",
-  "gold": "Vàng",
-  "statLabels": {
+    "gold": "Vàng",
+    "statLabels": {
       "magicArmor": "Giáp phép",
       "physicalArmor": "Giáp vật lý",
       "magicAttack": "Tấn công phép",
@@ -139,10 +153,9 @@
       "movementSpeed": "Tốc chạy",
       "attackSpeed": "Tốc đánh",
       "cooldownReduction": "Giảm hồi chiêu",
-  "manaRegen": "Hồi mana",
-  "maxHealth": "Máu tối đa"
-  ,
-  "healthPer5s": "Máu/5s"
+      "manaRegen": "Hồi mana",
+      "maxHealth": "Máu tối đa",
+      "healthPer5s": "Máu/5s"
     }
   },
   "arcana": {
@@ -169,8 +182,8 @@
   "news": {
     "title": "Tiêu đề",
     "pageTitle": "Tin tức & Cập nhật",
-  "latestNews": "Tin tức mới nhất",
-  "latest": "Bài viết mới nhất",
+    "latestNews": "Tin tức mới nhất",
+    "latest": "Bài viết mới nhất",
     "readMore": "Đọc thêm",
     "noNews": "Không có tin tức",
     "search": "Tìm kiếm bài viết...",
@@ -257,10 +270,10 @@
   "hero": {
     "skills": "Kỹ năng",
     "skins": "Trang phục",
-  "origin": "Xuất thân",
-  "suggestedArcanaBuilds": "Arcana gợi ý",
-  "suggestedEquipment": "Trang bị gợi ý",
-  "equipmentSet": "Build {{number}}"
+    "origin": "Xuất thân",
+    "suggestedArcanaBuilds": "Arcana gợi ý",
+    "suggestedEquipment": "Trang bị gợi ý",
+    "equipmentSet": "Build {{number}}"
   },
   "legal": {
     "privacy": {

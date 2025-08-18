@@ -43,9 +43,17 @@
     "champions": {
       "title": "Featured Champions"
     },
-    "items": {
+  "items": {
       "title": "Hot Items"
-    }
+  },
+  "searchPlaceholder": "Search heroes, equipment, news... (/ to focus)",
+  "surprise": "Surprise me",
+  "trending": "Trending Heroes",
+  "updated": "Updated",
+  "patchHighlights": "Patch highlights",
+  "viewFull": "View full",
+  "latestNews": "Latest news",
+  "topCounters": "Top counters this week"
   },
   "footer": {
     "about": {
@@ -83,6 +91,12 @@
     "sort": "Sort",
     "price": "Price",
     "logout": "Logout"
+  },
+  "time": {
+    "just_now": "just now",
+    "minutes_ago": "minutes ago",
+    "hours_ago": "hours ago",
+    "days_ago": "days ago"
   },
   "heroes": {
     "title": "Hero List",

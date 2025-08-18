@@ -27,7 +27,7 @@
   "home": {
     "welcome": {
       "title": "欢迎来到 BlogHok！",
-  "subtitle": "获取最新的英雄、装备、铭文与版本资讯。"
+      "subtitle": "获取最新的英雄、装备、铭文与版本资讯。"
     },
     "featured": {
       "title": "精选文章"
@@ -40,7 +40,15 @@
     },
     "items": {
       "title": "热门装备"
-    }
+    },
+    "searchPlaceholder": "搜索英雄、装备、新闻...（/ 快速聚焦）",
+    "surprise": "Surprise me",
+    "trending": "热门英雄",
+    "updated": "已更新",
+    "patchHighlights": "版本亮点",
+    "viewFull": "查看全部",
+    "latestNews": "最新资讯",
+    "topCounters": "本周热门克制"
   },
   "footer": {
     "about": {
@@ -52,7 +60,7 @@
     },
     "contact": {
       "title": "联系我们",
-  "email": "paulvu@swqpz.onmicrosoft.com"
+      "email": "paulvu@swqpz.onmicrosoft.com"
     },
     "copyright": "版权所有",
     "privacy": "隐私政策",
@@ -67,7 +75,6 @@
     "delete": "删除",
     "cancel": "取消",
     "save": "保存",
-    "update": "更新",
     "create": "创建",
     "add": "添加",
     "upload": "上传",
@@ -78,6 +85,12 @@
     "sort": "排序",
     "price": "价格",
     "logout": "退出"
+  },
+  "time": {
+    "just_now": "刚刚",
+    "minutes_ago": "分钟前",
+    "hours_ago": "小时前",
+    "days_ago": "天前"
   },
   "heroes": {
     "title": "英雄列表",
@@ -95,9 +108,9 @@
     "profile": "资料",
     "combo": "连招",
     "skins": "皮肤",
-  "goodAgainst": "克制于",
-  "sameRole": "同角色英雄",
-  "topWinRate": "高胜率英雄"
+    "goodAgainst": "克制于",
+    "sameRole": "同角色英雄",
+    "topWinRate": "高胜率英雄"
   },
   "legal": {
     "privacy": {
@@ -125,9 +138,9 @@
   "hero": {
     "skills": "技能",
     "skins": "皮肤",
-  "origin": "背景故事",
-  "suggestedEquipment": "推荐装备",
-  "equipmentSet": "Build {{number}}"
+    "origin": "背景故事",
+    "suggestedEquipment": "推荐装备",
+    "equipmentSet": "Build {{number}}"
   },
   "items": {
     "title": "装备",
@@ -159,8 +172,8 @@
   "news": {
     "title": "标题",
     "pageTitle": "新闻与更新",
-  "latestNews": "最新消息",
-  "latest": "最新文章",
+    "latestNews": "最新消息",
+    "latest": "最新文章",
     "readMore": "阅读更多",
     "noNews": "暂无新闻",
     "search": "搜索文章...",
