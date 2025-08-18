@@ -100,7 +100,9 @@
     "profile": "Hồ sơ",
     "combo": "Combo",
   "skins": "Trang phục",
-    "goodAgainst": "Đối đầu tốt"
+  "goodAgainst": "Đối đầu tốt",
+  "sameRole": "Tướng cùng vai trò",
+  "topWinRate": "Tướng tỉ lệ thắng cao"
   },
   "equipment": {
     "title": "Trang bị",
@@ -167,7 +169,8 @@
   "news": {
     "title": "Tiêu đề",
     "pageTitle": "Tin tức & Cập nhật",
-    "latestNews": "Tin tức mới nhất",
+  "latestNews": "Tin tức mới nhất",
+  "latest": "Bài viết mới nhất",
     "readMore": "Đọc thêm",
     "noNews": "Không có tin tức",
     "search": "Tìm kiếm bài viết...",

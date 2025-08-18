@@ -83,6 +83,9 @@ const HeroDetail = () => {
   const navigate = useNavigate();
   const [selectedEqBuild, setSelectedEqBuild] = useState(1);
   const [selectedArcanaIdx, setSelectedArcanaIdx] = useState(0);
+  const [sameRoleHeroes, setSameRoleHeroes] = useState([]);
+  const [topWinHeroes, setTopWinHeroes] = useState([]);
+  const [latestNews, setLatestNews] = useState([]);
 
   useEffect(() => {
     const fetchHero = async () => {
@@ -115,6 +118,58 @@ const HeroDetail = () => {
     }
   }, [hero]);
 
+  // Sidebar data: same-role heroes and top win-rate heroes
+  useEffect(() => {
+    const abort = new AbortController();
+    if (!hero) return;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 900;
+    const role = Array.isArray(hero.roles) && hero.roles.length > 0 ? hero.roles[0] : undefined;
+    const fetchData = async () => {
+      try {
+        // Always fetch same-role heroes (used on mobile row and desktop sidebar)
+        if (role) {
+          const sameUrl = `${API_URL}/api/heroes?role=${encodeURIComponent(role)}&sort=winRate&limit=10`;
+          const sameRes = await fetch(sameUrl, { signal: abort.signal }).then(r => r.ok ? r.json() : null).catch(() => null);
+          const normalize = (json) => {
+            const raw = json && json.success ? json.data : json;
+            return Array.isArray(raw) ? raw : [];
+          };
+          const data = normalize(sameRes);
+          setSameRoleHeroes(data.filter(h => h && h.slug !== hero.slug));
+        }
+        // Only fetch top win-rate list on desktop/tablet (sidebar visible)
+        if (!isMobile) {
+          const topUrl = `${API_URL}/api/heroes?sort=winRate&limit=10`;
+          const topRes = await fetch(topUrl, { signal: abort.signal }).then(r => r.ok ? r.json() : null).catch(() => null);
+          const rawTop = topRes && topRes.success ? topRes.data : topRes;
+          const topData = Array.isArray(rawTop) ? rawTop : [];
+          setTopWinHeroes(topData.filter(h => h && h.slug !== hero.slug));
+        }
+      } catch (_) {
+        // ignore
+      }
+    };
+    fetchData();
+    return () => abort.abort();
+  }, [hero]);
+
+  // Latest news row
+  useEffect(() => {
+    const abort = new AbortController();
+    const fetchNews = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/news?sort=latest&limit=6`, { signal: abort.signal });
+        const json = await res.json();
+        const data = json && json.success ? json.data : json;
+        setLatestNews(Array.isArray(data) ? data : []);
+      } catch (_) {
+        // ignore
+      }
+    };
+    fetchNews();
+    return () => abort.abort();
+  }, []);
+
   if (loading) return <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh"><CircularProgress /></Box>;
   if (error) return <Box p={4}><Typography color="error">{error}</Typography></Box>;
   if (!hero) return null;
@@ -136,7 +191,8 @@ const HeroDetail = () => {
   };
 
   return (
-    <Box maxWidth={{ xs: "100vw", md: "70vw" }} mx="auto" sx={{ position: 'relative', px: { xs: 1, md: 0 } }}>
+    <>
+  <Box sx={{ position: 'relative', px: { xs: 2, md: 4 } }}>
       {/* Decorative Background Elements */}
       <Box sx={{
         position: 'fixed',
@@ -202,14 +258,17 @@ const HeroDetail = () => {
       {/* Hero Banner Section */}
       <Box sx={{
         position: 'relative',
-        minHeight: { xs: 250, md: 420 },
-        background: `linear-gradient(180deg, rgba(60,20,20,0.7) 0%, rgba(60,20,20,0.2) 60%, #fff 100%), url(${hero.image}) center/cover no-repeat`,
+        minHeight: { xs: 200, md: 320 },
+  background: `linear-gradient(180deg, rgba(60,20,20,0.7) 0%, rgba(60,20,20,0.2) 60%, #fff 100%), url(${hero.image}) left center/cover no-repeat`,
         borderRadius: { xs: 0, md: 6 },
         overflow: 'hidden',
-        mb: { xs: 2, md: 4 },
+        mb: { xs: 2, md: 3 },
         boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
-        pt: { xs: 4, md: 10 },
-        mt: { xs: 4, md: 10 },
+        pt: { xs: 3, md: 6 },
+        mt: { xs: 3, md: 6 },
+        width: { xs: '100%', md: '66%' },
+        mr: { xs: 0, md: 'auto' },
+        ml: 0,
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -253,13 +312,13 @@ const HeroDetail = () => {
           <Typography
             variant="h3"
             fontWeight={700}
-            sx={{ textShadow: '0 2px 12px #000', fontSize: { xs: '1.5rem', md: '3rem' } }}
+            sx={{ textShadow: '0 2px 12px #000', fontSize: { xs: '1.3rem', md: '2.2rem' } }}
           >
             {hero.name}
           </Typography>
           <Typography
             variant="h6"
-            sx={{ textShadow: '0 2px 8px #000', mb: 1, fontSize: { xs: '0.9rem', md: '1.25rem' } }}
+            sx={{ textShadow: '0 2px 8px #000', mb: 1, fontSize: { xs: '0.85rem', md: '1rem' } }}
           >
             {hero.title}
           </Typography>
@@ -296,13 +355,12 @@ const HeroDetail = () => {
         </Box>
       </Box>
       {/* Stats Section with Diamond separator */}
-      <Box display="flex" justifyContent="center" alignItems="center" gap={0} mb={{ xs: 2, md: 3 }} flexWrap="wrap" sx={{
+  <Box display="flex" justifyContent="flex-start" alignItems="center" gap={0} mb={{ xs: 2, md: 3 }} flexWrap="wrap" sx={{
         borderRadius: 12,
         background: 'none',
         py: { xs: 2, md: 4 },
         px: { xs: 1, md: 2 },
-        maxWidth: 900,
-        mx: 'auto',
+        width: '100%',
       }}>
         <Box textAlign="center" minWidth={{ xs: 70, md: 110 }}>
           <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', md: '0.875rem' } }}>Meta Tier</Typography>
@@ -324,8 +382,18 @@ const HeroDetail = () => {
           <Typography variant="h5" fontWeight={700} color="#d32f2f" sx={{ fontSize: { xs: '1rem', md: '1.5rem' } }}>{hero.banRate ? `${hero.banRate}%` : '-'}</Typography>
         </Box>
       </Box>
+  {/* Main content + Sidebar */}
+      <Box
+        display={{ xs: 'block', md: 'grid' }}
+        gridTemplateColumns={{ md: 'minmax(0, 2fr) minmax(0, 1fr)' }}
+        columnGap={{ md: 3 }}
+        alignItems="stretch"
+        sx={{ width: '100%', mb: { xs: 2, md: 4 } }}
+      >
+        {/* LEFT: Main content */}
+        <Box>
       {/* Allies & Counters */}
-      <Box maxWidth={900} mx="auto" mb={{ xs: 2, md: 3 }} sx={{
+  <Box mb={{ xs: 2, md: 3 }} sx={{
         background: 'none',
         borderRadius: { xs: 3, md: 6 },
         border: '1.5px solid rgba(201,160,99,0.35)',
@@ -537,8 +605,8 @@ const HeroDetail = () => {
 
         </Box>
       </Box>
-      {/* Skills */}
-      <Box maxWidth={900} mx="auto" mb={{ xs: 2, md: 3 }} sx={{
+  {/* Skills */}
+  <Box mb={{ xs: 2, md: 3 }} sx={{
         background: 'none',
         borderRadius: { xs: 3, md: 6 },
         border: '1.5px solid rgba(201,160,99,0.35)',
@@ -567,9 +635,9 @@ const HeroDetail = () => {
         {/* Skills Horizontal Selector */}
         <SkillTabs skills={hero.skills} />
       </Box>
-      {/* Suggested Equipment */}
+  {/* Suggested Equipment */}
       {hero.suggestedEquipment && hero.suggestedEquipment.length > 0 && (
-        <Box maxWidth={900} mx="auto" mb={{ xs: 2, md: 3 }} sx={{
+  <Box mb={{ xs: 2, md: 3 }} sx={{
           background: 'none',
           borderRadius: { xs: 3, md: 6 },
           border: '1.5px solid rgba(201,160,99,0.35)',
@@ -635,8 +703,8 @@ const HeroDetail = () => {
       )}
   {/* ...existing code... */}
   {/* Arcana Builds section below */}
-    {hero.arcanaBuilds && hero.arcanaBuilds.length > 0 && (
-        <Box maxWidth={900} mx="auto" mb={{ xs: 2, md: 3 }} sx={{
+  {hero.arcanaBuilds && hero.arcanaBuilds.length > 0 && (
+  <Box mb={{ xs: 2, md: 3 }} sx={{
           background: 'none',
           borderRadius: { xs: 3, md: 6 },
           border: '1.5px solid rgba(201,160,99,0.35)',
@@ -721,9 +789,9 @@ const HeroDetail = () => {
           })()}
         </Box>
       )}
-      {/* Combo Kill */}
+  {/* Combo Kill */}
       {hero.combo && hero.combo.length > 0 && (
-        <Box maxWidth={900} mx="auto" mb={{ xs: 2, md: 3 }} sx={{
+  <Box mb={{ xs: 2, md: 3 }} sx={{
           background: 'none',
           borderRadius: { xs: 3, md: 6 },
           border: '1.5px solid rgba(201,160,99,0.35)',
@@ -783,8 +851,8 @@ const HeroDetail = () => {
           ))}
         </Box>
       )}
-      {/* Skins Slider - SwiperJS */}
-      <Box maxWidth={900} mx="auto" mb={{ xs: 2, md: 3 }} sx={{
+  {/* Skins Slider - SwiperJS */}
+  <Box mb={{ xs: 2, md: 3 }} sx={{
         background: 'none',
         borderRadius: { xs: 3, md: 6 },
         boxShadow: '0 8px 32px 0 rgba(139, 115, 85, 0.15)',
@@ -878,8 +946,8 @@ const HeroDetail = () => {
           ))}
         </Swiper>
       </Box>
-      {/* Lore & Origin */}
-      <Box maxWidth={900} mx="auto" mb={{ xs: 2, md: 3 }} sx={{
+  {/* Lore & Origin */}
+  <Box mb={{ xs: 2, md: 3 }} sx={{
         background: `
           none
         `,
@@ -955,8 +1023,178 @@ const HeroDetail = () => {
           </Typography>
         )}
       </Box>
+        </Box>
+
+  {/* RIGHT: Sidebar (hidden on mobile) */}
+  <Box sx={{ display: { xs: 'none', md: 'block' }, mt: { xs: 2, md: '-490px' }, mb: { xs: 2, md: 2 } }}>
+          <Box sx={{
+            background: 'none',
+            borderRadius: 3,
+            border: '1.5px solid rgba(201,160,99,0.35)',
+            boxShadow: '0 8px 32px 0 rgba(201,160,99,0.08)',
+            backdropFilter: 'blur(12px)',
+            p: 2,
+            pt: { xs: 2, md: '10px' },
+            display: 'block'
+          }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+              {/* Same-role heroes */}
+              <Box>
+                <Typography variant="h6" sx={{ mb: 1, fontWeight: 700 }}>{t('heroes.sameRole', 'Tướng cùng vai trò')}</Typography>
+                {sameRoleHeroes && sameRoleHeroes.length > 0 ? sameRoleHeroes.map(h => (
+                  <Box
+                    key={h.slug}
+                    onClick={() => navigate(`/heroes/${h.slug}`)}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1.5,
+                      mb: 1,
+                      cursor: 'pointer',
+                      p: 1,
+                      pr: 1.5,
+                      border: '1px solid rgba(201,160,99,0.35)',
+                      background: 'rgba(201,160,99,0.06)',
+                      borderRadius: 3,
+                      transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                      '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 6px 16px rgba(201,160,99,0.2)' }
+                    }}
+                  >
+                    <Box sx={{ width: 52, height: 52, borderRadius: 2, overflow: 'hidden', flex: '0 0 auto' }}>
+                      <img src={h.image} alt={h.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </Box>
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{h.name}</Typography>
+                      {Array.isArray(h.roles) && h.roles.length > 0 && (
+                        <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{h.roles.join(', ')}</Typography>
+                      )}
+                    </Box>
+                  </Box>
+                )) : (
+                  <Typography variant="body2" color="text.secondary">{t('no_data','Không có dữ liệu')}</Typography>
+                )}
+              </Box>
+
+              {/* Top win-rate heroes */}
+              <Box>
+                <Typography variant="h6" sx={{ mb: 1, fontWeight: 700 }}>{t('heroes.topWinRate', 'Tướng tỉ lệ thắng cao')}</Typography>
+                {topWinHeroes && topWinHeroes.length > 0 ? (
+                  <Box sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: 'repeat(2, minmax(0, 1fr))' },
+                    gap: 1
+                  }}>
+                    {topWinHeroes.map(h => (
+                      <Box
+                        key={h.slug}
+                        onClick={() => navigate(`/heroes/${h.slug}`)}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1.5,
+                          cursor: 'pointer',
+                          p: 1,
+                          pr: 1.5,
+                          border: '1px solid rgba(201,160,99,0.35)',
+                          background: 'rgba(201,160,99,0.06)',
+                          borderRadius: 3,
+                          transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                          '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 6px 16px rgba(201,160,99,0.2)' }
+                        }}
+                      >
+                        <Box sx={{ width: 52, height: 52, borderRadius: 2, overflow: 'hidden', flex: '0 0 auto' }}>
+                          <img src={h.image} alt={h.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </Box>
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                          <Typography variant="body2" sx={{ fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{h.name}</Typography>
+                          <Typography variant="caption" color="text.secondary">{h.winRate ? `${h.winRate}% ${t('winRate','Win Rate')}` : '-'}</Typography>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                ) : (
+                  <Typography variant="body2" color="text.secondary">{t('no_data','Không có dữ liệu')}</Typography>
+                )}
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
 
     </Box>
+
+    {/* Mobile: Same-role heroes horizontal list (above news) */}
+    {sameRoleHeroes && sameRoleHeroes.length > 0 && (
+      <Box sx={{
+        width: '100%',
+        maxWidth: '100%',
+        px: { xs: 2, md: 6 },
+        mb: { xs: 2, md: 0 },
+        display: { xs: 'block', md: 'none' }
+      }}>
+        <Box sx={{
+          background: 'none',
+          borderRadius: { xs: 3, md: 6 },
+          border: '1.5px solid rgba(201,160,99,0.35)',
+          boxShadow: '0 8px 32px 0 rgba(201,160,99,0.08)',
+          backdropFilter: 'blur(12px)',
+          p: { xs: 2, md: 3 },
+        }}>
+          <Typography variant="h6" sx={{ mb: 1 }}>{t('heroes.sameRole', 'Tướng cùng vai trò')}</Typography>
+          <Box sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+            gap: 1,
+            pb: 1
+          }}>
+            {sameRoleHeroes.slice(0, 8).map(h => (
+              <Box key={h.slug} sx={{ cursor: 'pointer' }} onClick={() => navigate(`/heroes/${h.slug}`)}>
+                <Box sx={{ width: '100%', aspectRatio: '1 / 1', borderRadius: 2, overflow: 'hidden', border: '1px solid rgba(201,160,99,0.25)', mb: 0.5 }}>
+                  <img src={h.image} alt={h.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </Box>
+                <Typography variant="caption" sx={{ fontWeight: 700, lineHeight: 1.15, display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{h.name}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Box>
+    )}
+
+    {/* Latest News Row (full width) */}
+    {latestNews && latestNews.length > 0 && (
+      <Box sx={{
+        width: '100%',
+        maxWidth: '100%',
+        px: { xs: 2, md: 6 },
+        mb: { xs: 2, md: 3 },
+      }}>
+        <Box sx={{
+          background: 'none',
+          borderRadius: { xs: 3, md: 6 },
+          border: '1.5px solid rgba(201,160,99,0.35)',
+          boxShadow: '0 8px 32px 0 rgba(201,160,99,0.08)',
+          backdropFilter: 'blur(12px)',
+          p: { xs: 2, md: 3 },
+        }}>
+          <Typography variant="h5" sx={{ mb: 1.5 }}>{t('news.latest', 'Bài viết mới nhất')}</Typography>
+          <Box sx={{ display: 'flex', gap: { xs: 1, md: 1.5 }, overflowX: 'auto', pb: 1 }}>
+            {latestNews.map(n => (
+              <Box key={n.slug} sx={{ width: { xs: 160, sm: 200, md: 280 }, flex: '0 0 auto', cursor: 'pointer' }} onClick={() => navigate(`/news/${n.slug}`)}>
+                <Box sx={{ width: '100%', aspectRatio: '16/9', borderRadius: { xs: 2, md: 3 }, overflow: 'hidden', border: '1px solid rgba(201,160,99,0.25)', mb: { xs: 0.5, md: 1 } }}>
+                  <img src={n.image} alt={n.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </Box>
+                <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1.25, fontSize: { xs: '0.85rem', md: '1rem' } }}>{n.title}</Typography>
+                {n.publishedAt && (
+                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', md: '0.75rem' } }}>{new Date(n.publishedAt).toLocaleDateString()}</Typography>
+                )}
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Box>
+    )}
+
+    </>
   );
 };
 

@@ -95,7 +95,9 @@
     "profile": "Profil",
     "combo": "Combo",
   "skins": "Kulit",
-    "goodAgainst": "Unggul melawan"
+    "goodAgainst": "Unggul melawan",
+    "sameRole": "Hero dengan peran sama",
+    "topWinRate": "Hero dengan win rate tertinggi"
   },
   "items": {
     "title": "Item",
@@ -172,7 +174,9 @@
   "equipmentSet": "Build {{number}}"
   },
   "news": {
-    "title": "Berita",
+  "title": "Berita",
+  "latestNews": "Berita Terbaru",
+  "latest": "Berita Terbaru",
     "author": "Penulis",
     "publishDate": "Tanggal Terbit",
     "content": "Konten",

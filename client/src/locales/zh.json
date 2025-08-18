@@ -95,7 +95,9 @@
     "profile": "资料",
     "combo": "连招",
     "skins": "皮肤",
-    "goodAgainst": "克制于"
+  "goodAgainst": "克制于",
+  "sameRole": "同角色英雄",
+  "topWinRate": "高胜率英雄"
   },
   "legal": {
     "privacy": {
@@ -157,7 +159,8 @@
   "news": {
     "title": "标题",
     "pageTitle": "新闻与更新",
-    "latestNews": "最新消息",
+  "latestNews": "最新消息",
+  "latest": "最新文章",
     "readMore": "阅读更多",
     "noNews": "暂无新闻",
     "search": "搜索文章...",

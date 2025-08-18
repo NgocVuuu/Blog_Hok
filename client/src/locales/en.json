@@ -100,7 +100,9 @@
     "profile": "Profile",
     "combo": "Combo",
     "skins": "Skins",
-    "goodAgainst": "Good Against"
+  "goodAgainst": "Good Against",
+  "sameRole": "Same-role Heroes",
+  "topWinRate": "Top Win Rate Heroes"
   },
   "equipment": {
     "title": "Equipment",
@@ -168,7 +170,8 @@
   "news": {
     "title": "Title",
     "pageTitle": "News & Updates",
-    "latestNews": "Latest News",
+  "latestNews": "Latest News",
+  "latest": "Latest News",
     "readMore": "Read More",
     "noNews": "No news available",
     "search": "Search articles...",

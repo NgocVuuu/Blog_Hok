@@ -161,8 +161,8 @@ const validateSearch = [
     .withMessage('Page must be a positive integer'),
   query('sort')
     .optional()
-    .isIn(['latest', 'oldest', 'title', 'name'])
-    .withMessage('Invalid sort option'),
+  .isIn(['latest', 'oldest', 'title', 'name', 'winRate', 'pickRate', 'metaTier', 'relevance'])
+  .withMessage('Invalid sort option'),
   handleValidationErrors
 ];
 
