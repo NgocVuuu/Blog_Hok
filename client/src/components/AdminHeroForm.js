@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, TextField, Button, Typography, MenuItem, Select, InputLabel, FormControl, Chip, OutlinedInput, Grid, CircularProgress, Alert } from '@mui/material';
+import { Box, TextField, Button, Typography, MenuItem, Select, InputLabel, FormControl, Chip, OutlinedInput, Grid, CircularProgress, Alert, ListSubheader } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import UploadIcon from '@mui/icons-material/Upload';
+import { getAllHeroesAll } from '../services/heroService';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
 const rolesList = ['Marksman', 'Mage', 'Tank', 'Fighter', 'Assassin', 'Support'];
@@ -45,6 +46,9 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   const [imagePreview, setImagePreview] = useState('');
   const [skills, setSkills] = useState(defaultSkills);
   const [allHeroes, setAllHeroes] = useState([]);
+  // Shared filters for hero selection lists
+  const [heroRoleFilter, setHeroRoleFilter] = useState('all');
+  const [heroSearch, setHeroSearch] = useState('');
   const [allies, setAllies] = useState([]);
   const [counters, setCounters] = useState([]);
   const [goodAgainst, setGoodAgainst] = useState([]);
@@ -93,14 +97,42 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   // Use fetchedHero (full detail) to override initial partial editingHero from list
   const editingHeroData = fetchedHero || editingHero;
 
+  // Group heroes by role and apply optional role filter for selection lists
+  const roleSections = useMemo(() => {
+    const groups = {};
+    rolesList.forEach(r => { groups[r] = []; });
+    const OTHER = 'Other';
+    groups[OTHER] = [];
+    const term = (heroSearch || '').trim().toLowerCase();
+    (Array.isArray(allHeroes) ? allHeroes : []).forEach(h => {
+      if (term) {
+        const nm = (h.name || '').toLowerCase();
+        if (!nm.includes(term)) return;
+      }
+      const rls = Array.isArray(h.roles) ? h.roles : [];
+      let placed = false;
+      rls.forEach(r => {
+        if (rolesList.includes(r)) {
+          groups[r].push(h);
+          placed = true;
+        }
+      });
+      if (!placed) groups[OTHER].push(h);
+    });
+    const ordered = heroRoleFilter !== 'all'
+      ? [{ role: heroRoleFilter, list: groups[heroRoleFilter] || [] }]
+      : [...rolesList.map(r => ({ role: r, list: groups[r] })), { role: OTHER, list: groups[OTHER] }];
+    return ordered.filter(sec => Array.isArray(sec.list) && sec.list.length > 0);
+  }, [allHeroes, heroRoleFilter, heroSearch]);
+
   useEffect(() => {
     const fetchHeroes = async () => {
       try {
-  const res = await fetch(`${API_URL}/api/heroes`); // public list
-        if (!res.ok) throw new Error('Failed to fetch heroes');
-        const response = await res.json();
-        const data = response?.success ? response.data : (Array.isArray(response) ? response : []);
-        setAllHeroes(Array.isArray(data) ? data : []);
+  // Fetch all heroes (paginate client-side to bypass server limit <= 100)
+  const data = await getAllHeroesAll({ page: 1, limit: 100, sort: 'name' });
+  // Ensure array and sort by name for stable grouping
+  const list = Array.isArray(data) ? data.slice().sort((a,b) => (a.name||'').localeCompare(b.name||'')) : [];
+  setAllHeroes(list);
       } catch (err) {
         console.error('Error fetching heroes:', err);
         setMessage({ type: 'error', text: 'Không thể tải danh sách tướng' });
@@ -683,7 +715,31 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         )}
       </Box>
 
-      <Box mt={2} mb={2}>
+      {/* Shared role filter for all hero selection lists below */}
+      <Box mt={2} mb={1} display="flex" gap={2} alignItems="center" flexWrap="wrap">
+        <FormControl size="small" sx={{ minWidth: 200 }}>
+          <InputLabel>Lọc theo vai trò</InputLabel>
+          <Select
+            label="Lọc theo vai trò"
+            value={heroRoleFilter}
+            onChange={e => setHeroRoleFilter(e.target.value)}
+          >
+            <MenuItem value="all">Tất cả</MenuItem>
+            {rolesList.map(role => (
+              <MenuItem key={role} value={role}>{role}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <TextField
+          size="small"
+          label="Tìm tướng"
+          value={heroSearch}
+          onChange={e => setHeroSearch(e.target.value)}
+          sx={{ minWidth: 220 }}
+        />
+      </Box>
+
+      <Box mt={1} mb={2}>
         <Typography variant="h6">Đồng minh</Typography>
         <Select
           multiple
@@ -705,10 +761,19 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
             </Box>
           )}
         >
-          {Array.isArray(allHeroes) && allHeroes.map(hero => (
-            <MenuItem key={hero._id} value={hero._id}>
-              {hero.name}
-            </MenuItem>
+          {roleSections.map(section => (
+            <React.Fragment key={`sec-${section.role}`}>
+              <ListSubheader disableSticky>{section.role}</ListSubheader>
+              {section.list.map(hero => (
+                <MenuItem
+                  key={hero._id}
+                  value={hero._id}
+                  disabled={!!editingHeroData && editingHeroData._id === hero._id}
+                >
+                  {hero.name}
+                </MenuItem>
+              ))}
+            </React.Fragment>
           ))}
         </Select>
       </Box>
@@ -744,10 +809,19 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
             </Box>
           )}
         >
-          {Array.isArray(allHeroes) && allHeroes.map(hero => (
-            <MenuItem key={hero._id} value={hero._id}>
-              {hero.name}
-            </MenuItem>
+          {roleSections.map(section => (
+            <React.Fragment key={`sec2-${section.role}`}>
+              <ListSubheader disableSticky>{section.role}</ListSubheader>
+              {section.list.map(hero => (
+                <MenuItem
+                  key={hero._id}
+                  value={hero._id}
+                  disabled={!!editingHeroData && editingHeroData._id === hero._id}
+                >
+                  {hero.name}
+                </MenuItem>
+              ))}
+            </React.Fragment>
           ))}
         </Select>
       </Box>
@@ -783,10 +857,19 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
             </Box>
           )}
         >
-          {Array.isArray(allHeroes) && allHeroes.map(hero => (
-            <MenuItem key={hero._id} value={hero._id}>
-              {hero.name}
-            </MenuItem>
+          {roleSections.map(section => (
+            <React.Fragment key={`sec3-${section.role}`}>
+              <ListSubheader disableSticky>{section.role}</ListSubheader>
+              {section.list.map(hero => (
+                <MenuItem
+                  key={hero._id}
+                  value={hero._id}
+                  disabled={!!editingHeroData && editingHeroData._id === hero._id}
+                >
+                  {hero.name}
+                </MenuItem>
+              ))}
+            </React.Fragment>
           ))}
         </Select>
       </Box>

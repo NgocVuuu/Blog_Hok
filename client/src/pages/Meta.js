@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { getAllHeroesAll } from '../services/heroService';
 
 const Meta = () => {
   const { t } = useTranslation();
@@ -40,14 +41,11 @@ const Meta = () => {
     const fetchHeroes = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_URL}/api/heroes`);
-        if (!res.ok) throw new Error('Failed to fetch heroes');
-        const response = await res.json();
-        // Handle new API response format
-        const heroesData = response.success ? response.data : (Array.isArray(response) ? response : []);
-        // Filter only heroes with meta tier A or S
+  // Fetch all heroes by paginating to avoid server limit (<= 100 per page)
+  const heroesData = await getAllHeroesAll({ page: 1, limit: 100, sort: 'name' });
+        // Filter only heroes with meta tier S/A/B/C
         const metaHeroes = heroesData.filter(hero =>
-          hero.metaTier && ['S', 'A', 'B'].includes(hero.metaTier)
+          hero.metaTier && ['S', 'A', 'B', 'C'].includes(hero.metaTier)
         );
         setHeroes(metaHeroes);
         setFilteredHeroes(metaHeroes);

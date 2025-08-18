@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
-import { getAllHeroes } from '../services/heroService';
+import { getAllHeroesAll } from '../services/heroService';
 import LazyImage from './LazyImage';
 
 const Heroes = () => {
@@ -38,9 +38,9 @@ const Heroes = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const fetchHeroes = async () => {
+  const fetchHeroes = async () => {
       try {
-        const data = await getAllHeroes();
+    const data = await getAllHeroesAll({ page: 1, limit: 100, sort: 'name' });
         // Ensure data is always an array
         const heroesData = Array.isArray(data) ? data : [];
         setHeroes(heroesData);
@@ -92,6 +92,11 @@ const Heroes = () => {
 
   // Group by role after filtering
   const heroesByRole = useMemo(() => {
+    // If a role filter is selected, show a single group for that role only
+    if (selectedRole !== 'all') {
+      return { [selectedRole]: filteredHeroes };
+    }
+    // Otherwise group by all roles a hero belongs to
     return filteredHeroes.reduce((acc, hero) => {
       if (hero && Array.isArray(hero.roles)) {
         hero.roles.forEach(role => {
@@ -101,7 +106,7 @@ const Heroes = () => {
       }
       return acc;
     }, {});
-  }, [filteredHeroes]);
+  }, [filteredHeroes, selectedRole]);
 
   // Distinct roles for filter dropdown
   const allRoles = useMemo(() => {
@@ -217,7 +222,7 @@ const Heroes = () => {
                     gap={0.5}
                     sx={{ display: { xs: 'none', md: 'flex' } }}
                   >
-                    {hero.roles.map((role) => (
+                    {(selectedRole !== 'all' ? [selectedRole] : hero.roles).map((role) => (
                       <Chip
                         key={role}
                         label={t(`roles.${role}`, role)}
