@@ -22,7 +22,9 @@ import {
   Paper
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
 import { getAllHeroesAll } from '../services/heroService';
 import LazyImage from './LazyImage';
 
@@ -36,6 +38,8 @@ const Heroes = () => {
   const [loadingGuides, setLoadingGuides] = useState(false);
   const API_URL = process.env.REACT_APP_API_URL;
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [searchFocused, setSearchFocused] = useState(false);
 
   useEffect(() => {
   const fetchHeroes = async () => {
@@ -89,6 +93,28 @@ const Heroes = () => {
     }
     return list;
   }, [heroes, searchTerm, selectedRole]);
+
+  // Quick search suggestions (top 8)
+  const quickMatches = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return [];
+    const scored = (Array.isArray(heroes) ? heroes : [])
+      .map(h => {
+        const name = (h.name || '').toLowerCase();
+        const title = (h.title || '').toLowerCase();
+        const idxName = name.indexOf(term);
+        const idxTitle = title.indexOf(term);
+        let score = -1;
+        if (idxName !== -1) score = Math.max(score, (idxName === 0 ? 100 : 50) - idxName);
+        if (idxTitle !== -1) score = Math.max(score, 20 - idxTitle);
+        return { h, score };
+      })
+      .filter(x => x.score >= 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8)
+      .map(x => x.h);
+    return scored;
+  }, [heroes, searchTerm]);
 
   // Group by role after filtering
   const heroesByRole = useMemo(() => {
@@ -251,20 +277,62 @@ const Heroes = () => {
           </Typography>
           {/* Controls */}
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
-            <TextField
-              size="small"
-              placeholder={t('heroes.search', 'Search heroes...')}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon fontSize="small" />
-                  </InputAdornment>
-                )
-              }}
-              sx={{ width: { xs: '100%', sm: 260 } }}
-            />
+            <Box sx={{ position: 'relative', width: { xs: '100%', sm: 260 } }}>
+              <TextField
+                size="small"
+                placeholder={t('heroes.search', 'Search heroes...')}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setTimeout(() => setSearchFocused(false), 120)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && quickMatches.length > 0) {
+                    const first = quickMatches[0];
+                    navigate(`/heroes/${first.slug}`);
+                    setSearchFocused(false);
+                  }
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    searchTerm ? (
+                      <IconButton size="small" aria-label={t('common.clear', 'Clear')} onClick={() => setSearchTerm('')}>
+                        <ClearIcon fontSize="small" />
+                      </IconButton>
+                    ) : null
+                  )
+                }}
+                sx={{ width: '100%' }}
+              />
+              {searchFocused && searchTerm && quickMatches.length > 0 && (
+                <Paper elevation={6} sx={{ position: 'absolute', left: 0, right: 0, mt: 0.5, zIndex: 20, maxHeight: 320, overflowY: 'auto' }}>
+                  <List dense disablePadding>
+                    {quickMatches.map(h => (
+                      <ListItemButton
+                        key={h._id}
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => {
+                          navigate(`/heroes/${h.slug}`);
+                          setSearchFocused(false);
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
+                          <LazyImage src={h.image} alt={h.name} width={{ xs: '28px' }} height={{ xs: '28px' }} sx={{ borderRadius: '4px', objectFit: 'cover' }} />
+                          <ListItemText
+                            primary={<Typography variant="body2" noWrap>{h.name}</Typography>}
+                            secondary={h.title ? <Typography variant="caption" color="text.secondary" noWrap>{h.title}</Typography> : null}
+                          />
+                        </Box>
+                      </ListItemButton>
+                    ))}
+                  </List>
+                </Paper>
+              )}
+            </Box>
             <FormControl size="small" sx={{ minWidth: 160 }}>
               <Select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} displayEmpty>
                 <MenuItem value="all">{t('heroes.roleAll', 'All Roles')}</MenuItem>

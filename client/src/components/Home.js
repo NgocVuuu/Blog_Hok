@@ -108,9 +108,39 @@ const Home = () => {
   }, [news]);
 
   const topCounters = useMemo(() => {
-    // Heuristic: top heroes by winRate, annotate with goodAgainst list
-    const list = (heroes || []).slice().sort((a,b) => (b.winRate||0) - (a.winRate||0) || (b.pickRate||0) - (a.pickRate||0));
-    return list.slice(0, 8);
+    const list = (heroes || []).slice();
+    if (list.length === 0) return [];
+
+    // Map heroId -> pickRate for weighting
+    const pickRateById = new Map(list.map(h => [h._id, h.pickRate || 0]));
+
+    const getId = (ref) => {
+      if (!ref) return null;
+      if (typeof ref === 'string') return ref;
+      if (ref.hero && typeof ref.hero === 'string') return ref.hero;
+      if (ref.hero && ref.hero._id) return ref.hero._id;
+      if (ref._id) return ref._id;
+      return null;
+    };
+
+    const scored = list.map(h => {
+      const goods = Array.isArray(h.goodAgainst) ? h.goodAgainst : [];
+      const bads = Array.isArray(h.counters) ? h.counters : [];
+      const sumGood = goods.reduce((acc, g) => {
+        const id = getId(g);
+        return acc + (id ? (pickRateById.get(id) || 0) : 0);
+      }, 0);
+      const sumBad = bads.reduce((acc, c) => {
+        const id = getId(c);
+        return acc + (id ? (pickRateById.get(id) || 0) : 0);
+      }, 0);
+      // Score formula: favor countering popular picks; penalize being countered; small winRate bonus
+      const score = 2 * sumGood - 1.5 * sumBad + 0.5 * (h.winRate || 0);
+      return { hero: h, score };
+    });
+
+    scored.sort((a, b) => (b.score || 0) - (a.score || 0));
+    return scored.slice(0, 8).map(s => s.hero);
   }, [heroes]);
 
   const onSurprise = () => {
@@ -170,7 +200,7 @@ const Home = () => {
       </Box>
 
       {/* Quick Links */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+  <Grid container spacing={{ xs: 1, sm: 3 }} sx={{ mb: 4, px: { xs: 0.5, sm: 0 } }}>
         {[{icon:<BoltIcon size={22}/>,label:t('nav.meta','Meta'),href:'/meta'},{icon:<WhatshotIcon size={22}/>,label:t('nav.arcana','Arcana'),href:'/arcana'},{icon:<ConstructionIcon size={22}/>,label:t('nav.equipment','Equipment'),href:'/equipment'},{icon:<ArticleIcon size={22}/>,label:t('nav.news','News'),href:'/news'}].map(link => (
           <Grid item xs={3} sm={3} key={link.label}>
       <Box
@@ -182,7 +212,7 @@ const Home = () => {
                 flexDirection:'column',
                 alignItems:'center',
                 gap:1,
-                p:2,
+                p:{ xs: 1.5, sm: 2 },
         borderRadius:2,
         transition:'transform .2s ease, box-shadow .2s ease, background-color .2s ease',
         bgcolor:'background.paper',
@@ -200,11 +230,28 @@ const Home = () => {
       </Grid>
 
       {/* Trending Heroes + Surprise Me and timestamp */}
-      <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
-        <Typography variant="h5" fontWeight={700} sx={{ color:'text.primary' }}>{t('home.trending', 'Trending Heroes')}</Typography>
-        <Box sx={{ display:'flex', alignItems:'center', gap:2 }}>
-          <Typography variant="caption" color="text.secondary">{t('home.updated', 'Updated')} {timeAgoRaw(heroesUpdatedAt, t)}</Typography>
-          <Button variant="outlined" size="small" onClick={onSurprise} startIcon={<CasinoIcon/>}>{t('home.surprise','Surprise me')}</Button>
+      <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1, flexWrap:'nowrap' }}>
+        <Typography
+          variant="h5"
+          fontWeight={700}
+          noWrap
+          sx={{ color:'text.primary', minWidth:0, flex:1, fontSize:{ xs: 18, sm: 'inherit' } }}
+        >
+          {t('home.trending', 'Trending Heroes')}
+        </Typography>
+        <Box sx={{ display:'flex', alignItems:'center', gap:{ xs: 1, sm: 2 }, flexShrink:0 }}>
+          <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: 10, sm: '0.75rem' } }}>
+            {isMobile ? timeAgoRaw(heroesUpdatedAt, t) : `${t('home.updated', 'Updated')} ${timeAgoRaw(heroesUpdatedAt, t)}`}
+          </Typography>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={onSurprise}
+            startIcon={isMobile ? undefined : <CasinoIcon/>}
+            sx={{ px: { xs: 1, sm: 1.5 }, minWidth: { xs: 0, sm: 64 } }}
+          >
+            {isMobile ? t('home.surprise_short','Surprise') : t('home.surprise','Surprise me')}
+          </Button>
         </Box>
       </Box>
       {loadingHeroes ? (
@@ -214,19 +261,29 @@ const Home = () => {
           ))}
         </Grid>
       ) : (
-        <Swiper modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={2} breakpoints={{ 600:{slidesPerView:3}, 900:{slidesPerView:5}, 1200:{slidesPerView:6} }} pagination={{ clickable: true }} autoplay={{ delay: 3000, disableOnInteraction: false }} style={{ marginBottom: 24 }}>
+  <Swiper modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={2} breakpoints={{ 600:{slidesPerView:3}, 900:{slidesPerView:5}, 1200:{slidesPerView:6} }} pagination={isMobile ? false : { clickable: true }} autoplay={{ delay: 3000, disableOnInteraction: false }} style={{ marginBottom: 24 }}>
           {trendingHeroes.map(h => (
             <SwiperSlide key={h._id}>
               <Card component={Link} to={`/heroes/${getHeroSlug(h)}`} sx={{ textDecoration:'none', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 6px rgba(0,0,0,0.05)' }}>
                 {h.image ? <CardMedia component="img" height="120" image={h.image} alt={h.name} /> : <Skeleton variant="rectangular" height={120} />}
                 <CardContent sx={{ p:1 }}>
                   <Typography variant="body2" fontWeight={700} noWrap>{h.name}</Typography>
-                  <Box sx={{ display:'flex', flexWrap:'wrap', gap:0.5 }}>
+      <Box sx={{ display:'flex', alignItems:'center', gap:0.5, flexWrap:'nowrap', overflow:'hidden' }}>
                     {h.winRate!=null && (
-                      <Chip size="small" label={`${t('win_rate','Win Rate')} ${h.winRate}%`} color={h.winRate>=50?'success':'default'} sx={{ '& .MuiChip-label': { px: 0.5, fontSize: 11 } }} />
+                      <Chip
+                        size="small"
+                        label={`${h.winRate}% ${t('win_rate','Win Rate')}`}
+                        color={h.winRate>=50?'success':'default'}
+        sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
+                      />
                     )}
                     {h.pickRate!=null && (
-                      <Chip size="small" label={`${t('pick_rate','Pick Rate')} ${h.pickRate}%`} sx={{ '& .MuiChip-label': { px: 0.5, fontSize: 11 } }} />
+                      <Chip
+                        size="small"
+                        label={`${h.pickRate}% ${t('pick_rate','Pick Rate')}`}
+                        color="info"
+        sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
+                      />
                     )}
                   </Box>
                 </CardContent>
@@ -237,9 +294,11 @@ const Home = () => {
       )}
 
       {/* Patch highlights */}
-      <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
-        <Typography variant="h5" fontWeight={700} sx={{ color:'text.primary' }}>{t('home.patchHighlights','Patch highlights')}</Typography>
-  <Typography variant="caption" color="text.secondary">{t('home.updated','Updated')} {timeAgoRaw(newsUpdatedAt, t)}</Typography>
+      <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1, flexWrap:'nowrap' }}>
+        <Typography variant="h5" fontWeight={700} noWrap sx={{ color:'text.primary', minWidth:0, flex:1, fontSize:{ xs: 18, sm: 'inherit' } }}>{t('home.patchHighlights','Patch highlights')}</Typography>
+        <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: 10, sm: '0.75rem' } }}>
+          {isMobile ? timeAgoRaw(newsUpdatedAt, t) : `${t('home.updated','Updated')} ${timeAgoRaw(newsUpdatedAt, t)}`}
+        </Typography>
       </Box>
       {loadingNews ? (
         <Skeleton variant="rectangular" height={160} sx={{ mb: 3 }} />
@@ -268,7 +327,7 @@ const Home = () => {
 
       {/* Magazine grid of latest news */}
       <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
-        <Typography variant="h5" fontWeight={800}>{t('home.latestNews','Latest news')}</Typography>
+        <Typography variant="h5" fontWeight={800} noWrap sx={{ minWidth:0, fontSize:{ xs: 18, sm: 'inherit' } }}>{t('home.latestNews','Latest news')}</Typography>
       </Box>
       {loadingNews ? (
         <Grid container spacing={2} sx={{ mb: 4 }}>
@@ -278,10 +337,10 @@ const Home = () => {
         </Grid>
       ) : (
         isMobile ? (
-          <Swiper modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={2.1} pagination={{ clickable: true }} autoplay={{ delay: 3500, disableOnInteraction: false }} style={{ marginBottom: 24 }}>
+          <Swiper modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={2.1} pagination={false} autoplay={{ delay: 3500, disableOnInteraction: false }} style={{ marginBottom: 24 }}>
             {latestNews.map(item => (
               <SwiperSlide key={item._id}>
-                <Card component={Link} to="/news" sx={{ position:'relative', textDecoration:'none', border:'1px solid', borderColor:'divider', boxShadow:1 }}>
+                <Card component={Link} to={item.slug ? `/news/${item.slug}` : (item._id ? `/news/${item._id}` : '/news')} sx={{ position:'relative', textDecoration:'none', border:'1px solid', borderColor:'divider', boxShadow:1 }}>
                   <Box sx={{ height: 3, bgcolor: 'primary.main', opacity: 0.3 }} />
                   {item.thumbnail || item.image ? (<CardMedia component="img" height={140} image={item.thumbnail || item.image} alt={item.title} />) : (<Skeleton variant="rectangular" height={140} />)}
                   <CardContent>
@@ -295,7 +354,7 @@ const Home = () => {
           <Grid container spacing={2} sx={{ mb: 4 }}>
             {latestNews.map(item => (
               <Grid item xs={12} sm={6} md={3} key={item._id}>
-                <Card component={Link} to="/news" sx={{ position:'relative', textDecoration:'none', border:'1px solid', borderColor:'divider', boxShadow:1 }}>
+                <Card component={Link} to={item.slug ? `/news/${item.slug}` : (item._id ? `/news/${item._id}` : '/news')} sx={{ position:'relative', textDecoration:'none', border:'1px solid', borderColor:'divider', boxShadow:1 }}>
                   <Box sx={{ height: 3, bgcolor: 'primary.main', opacity: 0.3 }} />
                   {item.thumbnail || item.image ? (<CardMedia component="img" height={140} image={item.thumbnail || item.image} alt={item.title} />) : (<Skeleton variant="rectangular" height={140} />)}
                   <CardContent>
@@ -310,7 +369,7 @@ const Home = () => {
 
       {/* Top counters this week */}
       <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
-        <Typography variant="h5" fontWeight={800}>{t('home.topCounters','Top counters this week')}</Typography>
+        <Typography variant="h5" fontWeight={800} noWrap sx={{ minWidth:0, fontSize:{ xs: 18, sm: 'inherit' } }}>{t('home.topCounters','Top counters this week')}</Typography>
       </Box>
       {loadingHeroes ? (
         <Grid container spacing={2} sx={{ mb: 4 }}>
@@ -320,14 +379,28 @@ const Home = () => {
         </Grid>
       ) : (
         isMobile ? (
-          <Swiper modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={2.2} pagination={{ clickable: true }} autoplay={{ delay: 3500, disableOnInteraction: false }} style={{ marginBottom: 24 }}>
-            {topCounters.map(h => (
-              <SwiperSlide key={h._id}>
+          <Box sx={{ '& .top-counters-swiper .swiper-pagination-bullets': { bottom: -14 } }}>
+            <Swiper className="top-counters-swiper" modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={2.2} pagination={false} autoplay={{ delay: 3500, disableOnInteraction: false }} style={{ marginBottom: 40 }}>
+              {topCounters.map(h => (
+                <SwiperSlide key={h._id}>
                 <Card sx={{ border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 6px rgba(0,0,0,0.05)' }}>
                   {h.image ? (<CardMedia component="img" height={120} image={h.image} alt={h.name} />) : (<Skeleton variant="rectangular" height={120} />)}
                   <CardContent sx={{ p:1 }}>
                     <Typography variant="body2" fontWeight={700} noWrap>{h.name}</Typography>
-                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>{t('win_rate','Win Rate')} {h.winRate ?? '-'}% • {t('pick_rate','Pick Rate')} {h.pickRate ?? '-' }%</Typography>
+          <Box sx={{ display:'flex', alignItems:'center', gap:0.5, flexWrap:'nowrap', overflow:'hidden' }}>
+                      <Chip
+                        size="small"
+                        label={`${h.winRate ?? '-' }% ${t('win_rate','Win Rate')}`}
+                        color={(h.winRate||0) >= 50 ? 'success' : 'default'}
+            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
+                      />
+                      <Chip
+                        size="small"
+                        label={`${h.pickRate ?? '-' }% ${t('pick_rate','Pick Rate')}`}
+                        color="info"
+            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
+                      />
+                    </Box>
                     {Array.isArray(h.goodAgainst) && h.goodAgainst.length > 0 && (
                       <Box sx={{ mt: 0.5, display:'flex', flexWrap:'wrap', gap:0.5 }}>
                         {(h.goodAgainst.slice(0,3)).map(g => {
@@ -339,9 +412,10 @@ const Home = () => {
                     )}
                   </CardContent>
                 </Card>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Box>
         ) : (
           <Grid container spacing={2} sx={{ mb: 6 }}>
             {topCounters.map(h => (
@@ -350,7 +424,20 @@ const Home = () => {
                   {h.image ? (<CardMedia component="img" height={120} image={h.image} alt={h.name} />) : (<Skeleton variant="rectangular" height={120} />)}
                   <CardContent sx={{ p:1 }}>
                     <Typography variant="body2" fontWeight={700} noWrap>{h.name}</Typography>
-                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>{t('win_rate','Win Rate')} {h.winRate ?? '-'}% • {t('pick_rate','Pick Rate')} {h.pickRate ?? '-' }%</Typography>
+          <Box sx={{ display:'flex', alignItems:'center', gap:0.5, flexWrap:'nowrap', overflow:'hidden' }}>
+                      <Chip
+                        size="small"
+                        label={`${h.winRate ?? '-' }% ${t('win_rate','Win Rate')}`}
+                        color={(h.winRate||0) >= 50 ? 'success' : 'default'}
+            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
+                      />
+                      <Chip
+                        size="small"
+                        label={`${h.pickRate ?? '-' }% ${t('pick_rate','Pick Rate')}`}
+                        color="info"
+            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
+                      />
+                    </Box>
                     {Array.isArray(h.goodAgainst) && h.goodAgainst.length > 0 && (
                       <Box sx={{ mt: 0.5, display:'flex', flexWrap:'wrap', gap:0.5 }}>
                         {(h.goodAgainst.slice(0,3)).map(g => {

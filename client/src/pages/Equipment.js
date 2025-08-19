@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import {
   Container, Grid, Typography, Box, Card, CardContent,
   TextField, FormControl, InputLabel, Select, MenuItem,
   CircularProgress
 } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ShieldIcon from '@mui/icons-material/Shield';
@@ -17,6 +19,7 @@ import { GiBroadsword } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
 import LazyImage from '../components/LazyImage';
 import { asDangerousHtml } from '../utils/sanitizeHtml';
+import { List, ListItemButton, ListItemText, Paper, InputAdornment } from '@mui/material';
 
 // Import lane icons (from public/img/lanes via absolute paths for movement)
 import roamIcon from '../assets/images/lanes/Roam.png';
@@ -34,6 +37,7 @@ const Equipment = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('name');
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
+  const [searchFocused, setSearchFocused] = useState(false);
 
 
 
@@ -440,6 +444,28 @@ const Equipment = () => {
     setFilteredEquipment(result);
   }, [equipment, searchTerm, categoryFilter, sortBy]);
 
+  // Quick search suggestions (top 8)
+  const quickMatches = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return [];
+    const scored = (Array.isArray(equipment) ? equipment : [])
+      .map(it => {
+        const name = (it.name || '').toLowerCase();
+        const desc = (it.description || '').toLowerCase();
+        const idxName = name.indexOf(term);
+        const idxDesc = desc.indexOf(term);
+        let score = -1;
+        if (idxName !== -1) score = Math.max(score, (idxName === 0 ? 100 : 50) - idxName);
+        if (idxDesc !== -1) score = Math.max(score, 10 - idxDesc);
+        return { it, score };
+      })
+      .filter(x => x.score >= 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8)
+      .map(x => x.it);
+    return scored;
+  }, [equipment, searchTerm]);
+
   const formatPrice = (price) => {
     return price ? price.toLocaleString() : '0';
   };
@@ -475,11 +501,11 @@ const Equipment = () => {
         {/* Category Summary */}
         {categoryFilter === 'all' && !searchTerm && (
           <Box sx={{ mb: 4 }}>
-            <Grid container spacing={2}>
+    <Grid container spacing={2}>
               {categories.slice(1).map((category) => {
                 const count = groupedEquipment[category.value]?.length || 0;
                 return (
-                  <Grid item xs={6} sm={4} md={2.4} key={category.value}>
+      <Grid item xs={4} sm={4} md={4} key={category.value}>
                     <Card
                       sx={{
                         textAlign: 'center',
@@ -530,16 +556,80 @@ const Equipment = () => {
         <Grid container spacing={2} sx={{ mb: 4, mt: 2 }}>
           {/* Search Field */}
           <Grid item xs={12} md={4}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder={t('equipment.search', 'Tìm kiếm trang bị...')}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />,
-              }}
-            />
+            <Box sx={{ position: 'relative' }}>
+              <TextField
+                fullWidth
+                size="small"
+                variant="outlined"
+                placeholder={t('equipment.search', 'Tìm kiếm trang bị...')}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setTimeout(() => setSearchFocused(false), 120)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && quickMatches.length > 0) {
+                    const first = quickMatches[0];
+                    // Navigate to equipment details if exists; otherwise just scroll to card
+                    const anchorId = `equipment-${first._id}`;
+                    const el = document.getElementById(anchorId);
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    setSearchFocused(false);
+                  }
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon sx={{ mr: 0.5, color: 'text.secondary' }} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    searchTerm ? (
+                      <IconButton size="small" aria-label={t('common.clear', 'Clear')} onClick={() => setSearchTerm('')}>
+                        <ClearIcon fontSize="small" />
+                      </IconButton>
+                    ) : null
+                  )
+                }}
+              />
+              {searchFocused && searchTerm && quickMatches.length > 0 && (
+                <Paper elevation={6} sx={{ position: 'absolute', left: 0, right: 0, mt: 0.5, zIndex: 20, maxHeight: 320, overflowY: 'auto' }}>
+                  <List dense disablePadding>
+                    {quickMatches.map(it => (
+                      <ListItemButton
+                        key={it._id}
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => {
+                          const anchorId = `equipment-${it._id}`;
+                          const el = document.getElementById(anchorId);
+                          if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          }
+                          setSearchFocused(false);
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
+                          {it.image ? (
+                            <LazyImage src={it.image} alt={it.name} width={{ xs: '28px' }} height={{ xs: '28px' }} sx={{ borderRadius: '4px', objectFit: 'cover' }} />
+                          ) : null}
+                          <ListItemText
+                            primary={<Typography variant="body2" noWrap>{it.name}</Typography>}
+                            secondary={
+                              it.category ? (
+                                <Typography variant="caption" color="text.secondary" noWrap>
+                                  {t(`equipment.categories.${String(it.category).toLowerCase()}`, it.category)}
+                                </Typography>
+                              ) : null
+                            }
+                          />
+                        </Box>
+                      </ListItemButton>
+                    ))}
+                  </List>
+                </Paper>
+              )}
+            </Box>
           </Grid>
 
           {/* Category Filter */}
@@ -668,6 +758,7 @@ const Equipment = () => {
                       {categoryItems.map((item) => (
                         <Grid item xs={6} sm={6} md={4} lg={3} key={item._id}>
                           <Card
+                            id={`equipment-${item._id}`}
                             sx={{
                               height: '100%',
                               display: 'flex',
@@ -807,6 +898,7 @@ const Equipment = () => {
                 return (
                   <Grid item xs={6} sm={6} md={4} lg={3} key={item._id}>
                     <Card
+                      id={`equipment-${item._id}`}
                       sx={{
                         height: '100%',
                         display: 'flex',

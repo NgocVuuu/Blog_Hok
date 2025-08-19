@@ -1,23 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Container, Grid, Typography, Box,
   TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   Paper, InputAdornment, FormControl, InputLabel, Select, MenuItem, Pagination,
-  CircularProgress, Chip
+  CircularProgress, Chip, IconButton
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import SortIcon from '@mui/icons-material/Sort';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const News = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [sortBy, setSortBy] = useState('latest');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [page, setPage] = useState(1);
@@ -57,6 +61,12 @@ const News = () => {
     fetchPosts();
   }, [API_URL]);
 
+  // Debounce search for snappier typing
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(searchTerm), isMobile ? 150 : 250);
+    return () => clearTimeout(id);
+  }, [searchTerm, isMobile]);
+
   // Apply filters and search whenever these dependencies change
   useEffect(() => {
     let result = [...posts];
@@ -67,8 +77,8 @@ const News = () => {
     }
 
     // Apply search term
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
+    if (debouncedSearch) {
+      const term = debouncedSearch.toLowerCase();
       result = result.filter(
         post => 
           post.title.toLowerCase().includes(term) || 
@@ -88,7 +98,19 @@ const News = () => {
 
     setFilteredPosts(result);
     setPage(1); // Reset to first page when filters change
-  }, [posts, searchTerm, sortBy, categoryFilter]);
+  }, [posts, debouncedSearch, sortBy, categoryFilter]);
+
+  // Quick suggestions based on current typing (not debounced) for dropdown
+  const quickMatches = useMemo(() => {
+    const term = (searchTerm || '').trim().toLowerCase();
+    if (!term) return [];
+    const list = posts.filter(p =>
+      (p.title && p.title.toLowerCase().includes(term)) ||
+      (p.summary && p.summary.toLowerCase().includes(term))
+    );
+    list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    return list.slice(0, 6);
+  }, [searchTerm, posts]);
 
   // Get current posts for pagination
   const indexOfLastPost = page * postsPerPage;
@@ -126,32 +148,66 @@ const News = () => {
         </Typography>
         
         {/* Search and Filter Controls */}
-        <Grid container spacing={2} sx={{ mb: 4, mt: 2 }}>
+        <Grid container spacing={{ xs: 1.5, md: 2 }} sx={{ mb: 3, mt: 2 }}>
           {/* Search Field */}
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={5} sx={{ position: 'relative' }}>
             <TextField
               fullWidth
+              size="small"
               variant="outlined"
               placeholder={t('news.search', 'Tìm kiếm bài viết...')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && filteredPosts.length > 0) {
+                  const first = filteredPosts[0];
+                  navigate(`/news/${first.slug || first._id}`);
+                }
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
                     <SearchIcon />
                   </InputAdornment>
                 ),
+                endAdornment: (
+                  searchTerm ? (
+                    <InputAdornment position="end">
+                      <IconButton aria-label={t('common.clear','Xóa')} size="small" onClick={() => setSearchTerm('')} edge="end">
+                        <ClearIcon fontSize="small" />
+                      </IconButton>
+                    </InputAdornment>
+                  ) : null
+                )
               }}
+              sx={{ '& .MuiOutlinedInput-input': { py: 1 } }}
             />
+
+            {searchTerm && quickMatches.length > 0 && (
+              <Box sx={{ position:'absolute', left:0, right:0, zIndex:5, mt:0.5, bgcolor:'background.paper', border:'1px solid', borderColor:'divider', borderRadius:1, boxShadow:3, maxHeight: 300, overflowY:'auto' }}>
+                {quickMatches.map(p => (
+                  <Box
+                    key={p._id}
+                    onMouseDown={(e) => { e.preventDefault(); navigate(`/news/${p.slug || p._id}`); }}
+                    sx={{ display:'flex', alignItems:'center', gap:1, p:1, cursor:'pointer', textDecoration:'none', color:'inherit', '&:hover':{ bgcolor:'action.hover' } }}
+                  >
+                    {p.thumbnail || p.image ? (
+                      <Box component="img" src={p.thumbnail || p.image} alt={p.title} sx={{ width:36, height:36, objectFit:'cover', borderRadius:1, border:'1px solid', borderColor:'divider' }} />
+                    ) : (
+                      <Box sx={{ width:36, height:36, bgcolor:'grey.200', borderRadius:1 }} />
+                    )}
+                    <Typography variant="body2" noWrap sx={{ flex:1, minWidth:0 }}>{p.title}</Typography>
+                    <Typography variant="caption" color="text.secondary">{new Date(p.createdAt).toLocaleDateString()}</Typography>
+                  </Box>
+                ))}
+              </Box>
+            )}
           </Grid>
 
           {/* Category Filter */}
-          <Grid item xs={12} md={4}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel id="category-filter-label">
-                <FilterListIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-                {t('news.filter', 'Phân loại')}
-              </InputLabel>
+          <Grid item xs={6} md={4}>
+            <FormControl fullWidth variant="outlined" size="small">
+              <InputLabel id="category-filter-label">{t('news.filter', 'Phân loại')}</InputLabel>
               <Select
                 labelId="category-filter-label"
                 value={categoryFilter}
@@ -168,12 +224,9 @@ const News = () => {
           </Grid>
 
           {/* Sort Options */}
-          <Grid item xs={12} md={3}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel id="sort-by-label">
-                <SortIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-                {t('news.sort', 'Sắp xếp')}
-              </InputLabel>
+          <Grid item xs={6} md={3}>
+            <FormControl fullWidth variant="outlined" size="small">
+              <InputLabel id="sort-by-label">{t('news.sort', 'Sắp xếp')}</InputLabel>
               <Select
                 labelId="sort-by-label"
                 value={sortBy}
