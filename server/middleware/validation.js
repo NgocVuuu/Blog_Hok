@@ -1,5 +1,17 @@
 const { body, param, query, validationResult } = require('express-validator');
 const mongoSanitize = require('express-mongo-sanitize');
+// Normalize strings into URL-safe slugs
+function slugify(input) {
+  if (!input) return '';
+  return String(input)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-{2,}/g, '-');
+}
 
 // Middleware để xử lý validation errors
 const handleValidationErrors = (req, res, next) => {
@@ -175,6 +187,7 @@ const validateId = [
 
 const validateSlug = [
   param('slug')
+    .customSanitizer((v) => slugify(v))
     .trim()
     .isLength({ min: 1, max: 200 })
     .withMessage('Invalid slug format')

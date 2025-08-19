@@ -1,5 +1,18 @@
 const mongoose = require('mongoose');
 
+// Create a URL-safe slug from a name
+function slugify(input) {
+  if (!input) return '';
+  return String(input)
+    .normalize('NFD') // split accented characters
+    .replace(/[\u0300-\u036f]/g, '') // remove diacritics
+    .toLowerCase()
+    .replace(/&/g, ' and ') // replace ampersand with word
+    .replace(/[^a-z0-9]+/g, '-') // replace non-alphanumeric with hyphen
+    .replace(/^-+|-+$/g, '') // trim leading/trailing hyphens
+    .replace(/-{2,}/g, '-'); // collapse multiple hyphens
+}
+
 const heroSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -181,7 +194,7 @@ heroSchema.pre('validate', function(next) {
 
   // Ensure slug exists before required validation kicks in (since slug field is unique)
   if (this.name) {
-    const generated = this.name.toLowerCase().trim().replace(/\s+/g, '-');
+  const generated = slugify(this.name);
     if (!this.slug || this.isModified('name')) {
       this.slug = generated;
     }
@@ -194,7 +207,7 @@ heroSchema.pre('save', function(next) {
   console.log('Pre-save hook triggered for hero:', this._id);
   console.log('Hero name:', this.name);
   
-  this.slug = this.name.toLowerCase().replace(/\s+/g, '-');
+  this.slug = slugify(this.name);
   this.updatedAt = Date.now();
 
   // Recompute arcanaBuilds totals if items present

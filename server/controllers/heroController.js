@@ -278,7 +278,8 @@ exports.deleteHero = async (req, res, next) => {
 
 exports.getHeroBySlug = async (req, res, next) => {
   try {
-    const hero = await Hero.findOne({ slug: req.params.slug })
+    const requested = req.params.slug; // already sanitized by validation middleware
+    const populateAll = (q) => q
       .populate({
         path: 'allies.hero',
         select: 'name slug image roles',
@@ -290,7 +291,7 @@ exports.getHeroBySlug = async (req, res, next) => {
       .populate({
         path: 'goodAgainst.hero',
         select: 'name slug image roles',
-  })
+      })
       .populate({
         path: 'suggestedArcana.arcana',
         select: 'name image color tier',
@@ -303,6 +304,22 @@ exports.getHeroBySlug = async (req, res, next) => {
         path: 'arcanaBuilds.items.arcana',
         select: 'name image color tier attributes'
       });
+
+    // Primary lookup using sanitized slug
+    let hero = await populateAll(Hero.findOne({ slug: requested }));
+
+    // Fallbacks for legacy slugs that used special characters like '&'
+    if (!hero) {
+      const variants = [];
+      if (requested.includes('-and-')) variants.push(requested.replace(/-and-/g, '-&-'));
+      // Add more legacy patterns here if needed
+      for (const v of variants) {
+        // eslint-disable-next-line no-await-in-loop
+        hero = await populateAll(Hero.findOne({ slug: v }));
+        if (hero) break;
+      }
+    }
+
     if (!hero) return res.status(404).json({ message: 'Không tìm thấy tướng' });
 
     // Map lại allies và counters cho FE dễ dùng
@@ -397,7 +414,7 @@ exports.getHeroBySlug = async (req, res, next) => {
       });
     }
 
-    res.json(heroObj);
+  res.json(heroObj);
   } catch (err) {
     next(err);
   }

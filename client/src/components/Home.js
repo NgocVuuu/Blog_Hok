@@ -112,7 +112,10 @@ const Home = () => {
     if (list.length === 0) return [];
 
     // Map heroId -> pickRate for weighting
-    const pickRateById = new Map(list.map(h => [h._id, h.pickRate || 0]));
+  const pickRateById = new Map(list.map(h => [h._id, h.pickRate || 0]));
+  const metaTierById = new Map(list.map(h => [h._id, h.metaTier]));
+
+  const tierScore = (tier) => ({ 'S+': 5, 'S': 4, 'A': 3, 'B': 2, 'C': 1 }[tier] ?? 3);
 
     const getId = (ref) => {
       if (!ref) return null;
@@ -128,14 +131,26 @@ const Home = () => {
       const bads = Array.isArray(h.counters) ? h.counters : [];
       const sumGood = goods.reduce((acc, g) => {
         const id = getId(g);
-        return acc + (id ? (pickRateById.get(id) || 0) : 0);
+        if (!id) return acc;
+        const pr = pickRateById.get(id) || 0;
+        const oppTier = tierScore(metaTierById.get(id));
+        const factor = 1 + 0.2 * (oppTier - 3); // boost if opponent is high tier
+        return acc + pr * factor;
       }, 0);
       const sumBad = bads.reduce((acc, c) => {
         const id = getId(c);
-        return acc + (id ? (pickRateById.get(id) || 0) : 0);
+        if (!id) return acc;
+        const pr = pickRateById.get(id) || 0;
+        const oppTier = tierScore(metaTierById.get(id));
+        const factor = 1 + 0.2 * (oppTier - 3); // penalize more if counter is high tier
+        return acc + pr * factor;
       }, 0);
-      // Score formula: favor countering popular picks; penalize being countered; small winRate bonus
-      const score = 2 * sumGood - 1.5 * sumBad + 0.5 * (h.winRate || 0);
+      // Base score: counter popular high-tier picks, penalize being countered by high-tier; small winRate bonus
+      let base = 2 * sumGood - 1.5 * sumBad + 0.5 * (h.winRate || 0);
+      // Apply hero's own tier as a multiplier (S+ > C)
+      const selfTier = tierScore(h.metaTier);
+      const selfFactor = 1 + 0.1 * (selfTier - 3); // range ~0.8..1.2
+      const score = base * selfFactor;
       return { hero: h, score };
     });
 

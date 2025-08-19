@@ -30,6 +30,19 @@ import fighterIcon from '../assets/images/roles/Fighter.png';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
 
+// Client-side slugify to mirror server logic
+function slugify(input) {
+  if (!input) return '';
+  return String(input)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-{2,}/g, '-');
+}
+
 const SkillTabs = ({ skills }) => {
   const [selected, setSelected] = useState(0);
   if (!skills || skills.length === 0) return null;
@@ -105,6 +118,15 @@ const HeroDetail = () => {
     };
     fetchHero();
   }, [slug, t]);
+
+  // After loading hero, redirect to canonical slug if needed
+  useEffect(() => {
+    if (!hero || !hero.name) return;
+    const canonical = slugify(hero.name);
+    if (canonical && canonical !== slug) {
+      navigate(`/heroes/${canonical}`, { replace: true });
+    }
+  }, [hero, slug, navigate]);
 
   // Ensure selected build indices are valid after hero loads
   useEffect(() => {
