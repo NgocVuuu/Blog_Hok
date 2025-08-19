@@ -6,6 +6,9 @@ const authMiddleware = require('../middleware/authMiddleware');
 // Lấy meta hiện tại
 router.get('/', metaController.getAllMeta);
 
+// Special trending heroes (public)
+router.get('/special-trending', metaController.getSpecialTrending);
+
 // Thêm meta (admin)
 router.post('/', authMiddleware, metaController.createMeta);
 

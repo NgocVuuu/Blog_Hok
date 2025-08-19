@@ -9,6 +9,7 @@ import 'swiper/css/pagination';
 import Banner from './Banner';
 import { getAllHeroesAll } from '../services/heroService';
 import { getNews } from '../services/newsService';
+import { getSpecialTrending } from '../services/metaService';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +32,9 @@ const Home = () => {
   const [news, setNews] = useState([]);
   const [loadingHeroes, setLoadingHeroes] = useState(true);
   const [loadingNews, setLoadingNews] = useState(true);
-  const [heroesUpdatedAt, setHeroesUpdatedAt] = useState(null);
+  const [specialTrending, setSpecialTrending] = useState([]);
+  const [loadingSpecial, setLoadingSpecial] = useState(true);
+  // removed heroesUpdatedAt (no longer shown after removing Trending Heroes)
   const [newsUpdatedAt, setNewsUpdatedAt] = useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -58,8 +61,8 @@ const Home = () => {
     (async () => {
       try {
         setLoadingHeroes(true);
-        const list = await getAllHeroesAll({ page: 1, limit: 100, sort: 'name' });
-        if (!cancelled) { setHeroes(list || []); setHeroesUpdatedAt(new Date()); }
+  const list = await getAllHeroesAll({ page: 1, limit: 100, sort: 'name' });
+  if (!cancelled) { setHeroes(list || []); }
       } finally { if (!cancelled) setLoadingHeroes(false); }
     })();
     (async () => {
@@ -69,6 +72,14 @@ const Home = () => {
         const items = Array.isArray(res) ? res : (res?.data || []);
         if (!cancelled) { setNews(items); setNewsUpdatedAt(new Date()); }
       } finally { if (!cancelled) setLoadingNews(false); }
+    })();
+    (async () => {
+      try {
+        setLoadingSpecial(true);
+        const res = await getSpecialTrending();
+        const list = res && res.success ? (res.data || []) : [];
+        if (!cancelled) setSpecialTrending(list);
+      } finally { if (!cancelled) setLoadingSpecial(false); }
     })();
     return () => { cancelled = true; };
   }, []);
@@ -86,12 +97,7 @@ const Home = () => {
     return [...heroMatches, ...newsMatches].slice(0, 10);
   }, [query, heroes, news]);
 
-  const trendingHeroes = useMemo(() => {
-    const list = (heroes || []).slice();
-    // Sort by winRate desc then pickRate desc
-    list.sort((a, b) => (b.winRate||0) - (a.winRate||0) || (b.pickRate||0) - (a.pickRate||0));
-    return list.slice(0, 12);
-  }, [heroes]);
+  // Removed Trending Heroes in favor of Special Trending
 
   const patchHighlight = useMemo(() => {
     // Prefer news with title including Patch/Meta, else latest
@@ -217,7 +223,7 @@ const Home = () => {
       {/* Quick Links */}
   <Grid container spacing={{ xs: 1, sm: 3 }} sx={{ mb: 4, px: { xs: 0.5, sm: 0 } }}>
         {[{icon:<BoltIcon size={22}/>,label:t('nav.meta','Meta'),href:'/meta'},{icon:<WhatshotIcon size={22}/>,label:t('nav.arcana','Arcana'),href:'/arcana'},{icon:<ConstructionIcon size={22}/>,label:t('nav.equipment','Equipment'),href:'/equipment'},{icon:<ArticleIcon size={22}/>,label:t('nav.news','News'),href:'/news'}].map(link => (
-          <Grid item xs={3} sm={3} key={link.label}>
+          <Grid item xs={3} sm={3} key={`${link.label}-${link.href}`}>
       <Box
               component={Link}
               to={link.href}
@@ -244,68 +250,137 @@ const Home = () => {
         ))}
       </Grid>
 
-      {/* Trending Heroes + Surprise Me and timestamp */}
-      <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1, flexWrap:'nowrap' }}>
-        <Typography
-          variant="h5"
-          fontWeight={700}
-          noWrap
-          sx={{ color:'text.primary', minWidth:0, flex:1, fontSize:{ xs: 18, sm: 'inherit' } }}
-        >
-          {t('home.trending', 'Trending Heroes')}
+      {/* Special Trending (moved to top and enlarged) */}
+      <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
+        <Typography variant="h5" fontWeight={800} noWrap sx={{ minWidth:0, fontSize:{ xs: 18, sm: 'inherit' } }}>
+          {t('home.specialTrending', 'Special Trending')}
         </Typography>
-        <Box sx={{ display:'flex', alignItems:'center', gap:{ xs: 1, sm: 2 }, flexShrink:0 }}>
-          <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: 10, sm: '0.75rem' } }}>
-            {isMobile ? timeAgoRaw(heroesUpdatedAt, t) : `${t('home.updated', 'Updated')} ${timeAgoRaw(heroesUpdatedAt, t)}`}
-          </Typography>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={onSurprise}
-            startIcon={isMobile ? undefined : <CasinoIcon/>}
-            sx={{ px: { xs: 1, sm: 1.5 }, minWidth: { xs: 0, sm: 64 } }}
-          >
-            {isMobile ? t('home.surprise_short','Surprise') : t('home.surprise','Surprise me')}
-          </Button>
-        </Box>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={onSurprise}
+          startIcon={isMobile ? undefined : <CasinoIcon/>}
+          sx={{ px: { xs: 1, sm: 1.5 }, minWidth: { xs: 0, sm: 64 } }}
+        >
+          {isMobile ? t('home.surprise_short','Surprise') : t('home.surprise','Surprise me')}
+        </Button>
       </Box>
-      {loadingHeroes ? (
+      {loadingSpecial ? (
         <Grid container spacing={2} sx={{ mb: 4 }}>
-          {Array.from({ length: 6 }).map((_,i)=>(
-            <Grid item xs={6} sm={4} md={2} key={i}><Skeleton variant="rectangular" height={140} /></Grid>
+          {Array.from({ length: 3 }).map((_,i)=> (
+            <Grid item xs={12} sm={6} md={4} key={i}><Skeleton variant="rectangular" height={220} /></Grid>
           ))}
         </Grid>
       ) : (
-  <Swiper modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={2} breakpoints={{ 600:{slidesPerView:3}, 900:{slidesPerView:5}, 1200:{slidesPerView:6} }} pagination={isMobile ? false : { clickable: true }} autoplay={{ delay: 3000, disableOnInteraction: false }} style={{ marginBottom: 24 }}>
-          {trendingHeroes.map(h => (
-            <SwiperSlide key={h._id}>
-              <Card component={Link} to={`/heroes/${getHeroSlug(h)}`} sx={{ textDecoration:'none', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 6px rgba(0,0,0,0.05)' }}>
-                {h.image ? <CardMedia component="img" height="120" image={h.image} alt={h.name} /> : <Skeleton variant="rectangular" height={120} />}
-                <CardContent sx={{ p:1 }}>
-                  <Typography variant="body2" fontWeight={700} noWrap>{h.name}</Typography>
-      <Box sx={{ display:'flex', alignItems:'center', gap:0.5, flexWrap:'nowrap', overflow:'hidden' }}>
-                    {h.winRate!=null && (
-                      <Chip
-                        size="small"
-                        label={`${h.winRate}% ${t('win_rate','Win Rate')}`}
-                        color={h.winRate>=50?'success':'default'}
-        sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
-                      />
-                    )}
-                    {h.pickRate!=null && (
-                      <Chip
-                        size="small"
-                        label={`${h.pickRate}% ${t('pick_rate','Pick Rate')}`}
-                        color="info"
-        sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
-                      />
-                    )}
+        <Swiper modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={1.05} breakpoints={{ 600:{slidesPerView:1.5}, 900:{slidesPerView:2.2}, 1200:{slidesPerView:3} }} pagination={{ clickable: true }} autoplay={{ delay: 4000, disableOnInteraction: false }} style={{ marginBottom: 24 }}>
+          {specialTrending.map(item => (
+            <SwiperSlide key={item.slug || item.id || item.name}>
+              <Card component={Link} to={`/heroes/${getHeroSlug(item)}`} sx={{ textDecoration:'none', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 8px rgba(0,0,0,0.06)', height:'100%' }}>
+                {item.image ? (<CardMedia component="img" height={160} image={item.image} alt={item.name} />) : (<Skeleton variant="rectangular" height={160} />)}
+                <CardContent sx={{ p:1.5 }}>
+                  <Typography variant="subtitle1" fontWeight={800} noWrap>{item.name}</Typography>
+                  <Box sx={{ mt: 0.5, display:'flex', alignItems:'center', gap:1, flexWrap:'wrap' }}>
+                    <Chip size="small" label={item.categoryEn || item.categoryVi || item.category || 'Special'} color="warning" />
+                    <Chip size="small" label={`Tier ${item.metaTier || '-'}`} />
+                    {item.winRate != null && (<Chip size="small" label={`WR ${item.winRate}%`} color={(item.winRate||0) >= 50 ? 'success' : 'default'} />)}
+                    {item.pickRate != null && (<Chip size="small" label={`PR ${item.pickRate}%`} color="info" />)}
                   </Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                    {item.reasonEn || item.reasonVi || item.reason}
+                  </Typography>
                 </CardContent>
               </Card>
             </SwiperSlide>
           ))}
         </Swiper>
+      )}
+
+      {/* Top counters this week (moved up under Special Trending) */}
+      <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
+        <Typography variant="h5" fontWeight={800} noWrap sx={{ minWidth:0, fontSize:{ xs: 18, sm: 'inherit' } }}>{t('home.topCounters','Top counters this week')}</Typography>
+      </Box>
+      {loadingHeroes ? (
+        <Grid container spacing={2} sx={{ mb: 4 }}>
+          {Array.from({ length: 8 }).map((_,i)=>(
+            <Grid item xs={6} sm={3} md={3} lg={1.5} key={i}><Skeleton variant="rectangular" height={140} /></Grid>
+          ))}
+        </Grid>
+      ) : (
+        isMobile ? (
+          <Box sx={{ '& .top-counters-swiper .swiper-pagination-bullets': { bottom: -14 } }}>
+            <Swiper className="top-counters-swiper" modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={2.2} pagination={false} autoplay={{ delay: 3500, disableOnInteraction: false }} style={{ marginBottom: 24 }}>
+              {topCounters.map(h => (
+                <SwiperSlide key={h._id || h.slug || h.name}>
+                <Card component={Link} to={`/heroes/${getHeroSlug(h)}`} sx={{ textDecoration:'none', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 6px rgba(0,0,0,0.05)' }}>
+                  {h.image ? (<CardMedia component="img" height={120} image={h.image} alt={h.name} />) : (<Skeleton variant="rectangular" height={120} />)}
+                  <CardContent sx={{ p:1 }}>
+                    <Typography variant="body2" fontWeight={700} noWrap>{h.name}</Typography>
+          <Box sx={{ display:'flex', alignItems:'center', gap:0.5, flexWrap:'nowrap', overflow:'hidden' }}>
+                      <Chip
+                        size="small"
+                        label={`${h.winRate ?? '-' }% ${t('win_rate','Win Rate')}`}
+                        color={(h.winRate||0) >= 50 ? 'success' : 'default'}
+            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
+                      />
+                      <Chip
+                        size="small"
+                        label={`${h.pickRate ?? '-' }% ${t('pick_rate','Pick Rate')}`}
+                        color="info"
+            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
+                      />
+                    </Box>
+                    {Array.isArray(h.goodAgainst) && h.goodAgainst.length > 0 && (
+                      <Box sx={{ mt: 0.5, display:'flex', flexWrap:'wrap', gap:0.5 }}>
+                        {(h.goodAgainst.slice(0,3)).map((g, gi) => {
+                          const id = typeof g === 'string' ? g : (g.hero?._id || g.hero || g._id);
+                          const hero = heroes.find(x => x._id === id);
+                          return hero ? (<Chip key={id || `${h._id}-ga-${gi}`} size="small" label={hero.name} />) : null;
+                        })}
+                      </Box>
+                    )}
+                  </CardContent>
+                </Card>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Box>
+        ) : (
+          <Grid container spacing={2} sx={{ mb: 4 }}>
+            {topCounters.map(h => (
+              <Grid item xs={6} sm={3} md={3} lg={1.5} key={h._id || h.slug || h.name}>
+                <Card component={Link} to={`/heroes/${getHeroSlug(h)}`} sx={{ textDecoration:'none', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 6px rgba(0,0,0,0.05)' }}>
+                  {h.image ? (<CardMedia component="img" height={120} image={h.image} alt={h.name} />) : (<Skeleton variant="rectangular" height={120} />)}
+                  <CardContent sx={{ p:1 }}>
+                    <Typography variant="body2" fontWeight={700} noWrap>{h.name}</Typography>
+          <Box sx={{ display:'flex', alignItems:'center', gap:0.5, flexWrap:'nowrap', overflow:'hidden' }}>
+                      <Chip
+                        size="small"
+                        label={`${h.winRate ?? '-' }% ${t('win_rate','Win Rate')}`}
+                        color={(h.winRate||0) >= 50 ? 'success' : 'default'}
+            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
+                      />
+                      <Chip
+                        size="small"
+                        label={`${h.pickRate ?? '-' }% ${t('pick_rate','Pick Rate')}`}
+                        color="info"
+            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
+                      />
+                    </Box>
+                    {Array.isArray(h.goodAgainst) && h.goodAgainst.length > 0 && (
+                      <Box sx={{ mt: 0.5, display:'flex', flexWrap:'wrap', gap:0.5 }}>
+                        {(h.goodAgainst.slice(0,3)).map((g, gi) => {
+                          const id = typeof g === 'string' ? g : (g.hero?._id || g.hero || g._id);
+                          const hero = heroes.find(x => x._id === id);
+                          return hero ? (<Chip key={id || `${h._id}-ga-${gi}`} size="small" label={hero.name} />) : null;
+                        })}
+                      </Box>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )
       )}
 
       {/* Patch highlights */}
@@ -353,8 +428,8 @@ const Home = () => {
       ) : (
         isMobile ? (
           <Swiper modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={2.1} pagination={false} autoplay={{ delay: 3500, disableOnInteraction: false }} style={{ marginBottom: 24 }}>
-            {latestNews.map(item => (
-              <SwiperSlide key={item._id}>
+            {latestNews.map((item, i) => (
+              <SwiperSlide key={item.slug || item._id || i}>
                 <Card component={Link} to={item.slug ? `/news/${item.slug}` : (item._id ? `/news/${item._id}` : '/news')} sx={{ position:'relative', textDecoration:'none', border:'1px solid', borderColor:'divider', boxShadow:1 }}>
                   <Box sx={{ height: 3, bgcolor: 'primary.main', opacity: 0.3 }} />
                   {item.thumbnail || item.image ? (<CardMedia component="img" height={140} image={item.thumbnail || item.image} alt={item.title} />) : (<Skeleton variant="rectangular" height={140} />)}
@@ -367,8 +442,8 @@ const Home = () => {
           </Swiper>
         ) : (
           <Grid container spacing={2} sx={{ mb: 4 }}>
-            {latestNews.map(item => (
-              <Grid item xs={12} sm={6} md={3} key={item._id}>
+            {latestNews.map((item, i) => (
+              <Grid item xs={12} sm={6} md={3} key={item.slug || item._id || i}>
                 <Card component={Link} to={item.slug ? `/news/${item.slug}` : (item._id ? `/news/${item._id}` : '/news')} sx={{ position:'relative', textDecoration:'none', border:'1px solid', borderColor:'divider', boxShadow:1 }}>
                   <Box sx={{ height: 3, bgcolor: 'primary.main', opacity: 0.3 }} />
                   {item.thumbnail || item.image ? (<CardMedia component="img" height={140} image={item.thumbnail || item.image} alt={item.title} />) : (<Skeleton variant="rectangular" height={140} />)}
@@ -382,93 +457,7 @@ const Home = () => {
         )
       )}
 
-      {/* Top counters this week */}
-      <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
-        <Typography variant="h5" fontWeight={800} noWrap sx={{ minWidth:0, fontSize:{ xs: 18, sm: 'inherit' } }}>{t('home.topCounters','Top counters this week')}</Typography>
-      </Box>
-      {loadingHeroes ? (
-        <Grid container spacing={2} sx={{ mb: 4 }}>
-          {Array.from({ length: 8 }).map((_,i)=>(
-            <Grid item xs={6} sm={3} md={3} lg={1.5} key={i}><Skeleton variant="rectangular" height={140} /></Grid>
-          ))}
-        </Grid>
-      ) : (
-        isMobile ? (
-          <Box sx={{ '& .top-counters-swiper .swiper-pagination-bullets': { bottom: -14 } }}>
-            <Swiper className="top-counters-swiper" modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={2.2} pagination={false} autoplay={{ delay: 3500, disableOnInteraction: false }} style={{ marginBottom: 40 }}>
-              {topCounters.map(h => (
-                <SwiperSlide key={h._id}>
-                <Card sx={{ border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 6px rgba(0,0,0,0.05)' }}>
-                  {h.image ? (<CardMedia component="img" height={120} image={h.image} alt={h.name} />) : (<Skeleton variant="rectangular" height={120} />)}
-                  <CardContent sx={{ p:1 }}>
-                    <Typography variant="body2" fontWeight={700} noWrap>{h.name}</Typography>
-          <Box sx={{ display:'flex', alignItems:'center', gap:0.5, flexWrap:'nowrap', overflow:'hidden' }}>
-                      <Chip
-                        size="small"
-                        label={`${h.winRate ?? '-' }% ${t('win_rate','Win Rate')}`}
-                        color={(h.winRate||0) >= 50 ? 'success' : 'default'}
-            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
-                      />
-                      <Chip
-                        size="small"
-                        label={`${h.pickRate ?? '-' }% ${t('pick_rate','Pick Rate')}`}
-                        color="info"
-            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
-                      />
-                    </Box>
-                    {Array.isArray(h.goodAgainst) && h.goodAgainst.length > 0 && (
-                      <Box sx={{ mt: 0.5, display:'flex', flexWrap:'wrap', gap:0.5 }}>
-                        {(h.goodAgainst.slice(0,3)).map(g => {
-                          const id = typeof g === 'string' ? g : (g.hero?._id || g.hero || g._id);
-                          const hero = heroes.find(x => x._id === id);
-                          return hero ? (<Chip key={id} size="small" label={hero.name} />) : null;
-                        })}
-                      </Box>
-                    )}
-                  </CardContent>
-                </Card>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </Box>
-        ) : (
-          <Grid container spacing={2} sx={{ mb: 6 }}>
-            {topCounters.map(h => (
-              <Grid item xs={6} sm={3} md={3} lg={1.5} key={h._id}>
-                <Card sx={{ border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 6px rgba(0,0,0,0.05)' }}>
-                  {h.image ? (<CardMedia component="img" height={120} image={h.image} alt={h.name} />) : (<Skeleton variant="rectangular" height={120} />)}
-                  <CardContent sx={{ p:1 }}>
-                    <Typography variant="body2" fontWeight={700} noWrap>{h.name}</Typography>
-          <Box sx={{ display:'flex', alignItems:'center', gap:0.5, flexWrap:'nowrap', overflow:'hidden' }}>
-                      <Chip
-                        size="small"
-                        label={`${h.winRate ?? '-' }% ${t('win_rate','Win Rate')}`}
-                        color={(h.winRate||0) >= 50 ? 'success' : 'default'}
-            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
-                      />
-                      <Chip
-                        size="small"
-                        label={`${h.pickRate ?? '-' }% ${t('pick_rate','Pick Rate')}`}
-                        color="info"
-            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
-                      />
-                    </Box>
-                    {Array.isArray(h.goodAgainst) && h.goodAgainst.length > 0 && (
-                      <Box sx={{ mt: 0.5, display:'flex', flexWrap:'wrap', gap:0.5 }}>
-                        {(h.goodAgainst.slice(0,3)).map(g => {
-                          const id = typeof g === 'string' ? g : (g.hero?._id || g.hero || g._id);
-                          const hero = heroes.find(x => x._id === id);
-                          return hero ? (<Chip key={id} size="small" label={hero.name} />) : null;
-                        })}
-                      </Box>
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        )
-      )}
+      
     </Container>
   );
 };
