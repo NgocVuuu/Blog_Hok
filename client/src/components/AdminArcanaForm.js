@@ -61,7 +61,25 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
         openLogin();
         return;
       }
-      throw new Error('Upload ảnh thất bại');
+      const primaryErr = await res.json().catch(() => ({}));
+      if (
+        res.status === 503 ||
+        /Cloudinary/i.test(primaryErr?.error || primaryErr?.message || '') ||
+        primaryErr?.code === 'CLOUDINARY_ERROR'
+      ) {
+        const res2 = await fetchWithAuth(`${API_URL}/api/upload/local`, {
+          method: 'POST',
+          headers: {},
+          body: formDataUpload,
+        });
+        if (!res2.ok) {
+          const err2 = await res2.json().catch(() => ({}));
+          throw new Error(err2.error || err2.message || `Upload ảnh thất bại (HTTP ${res2.status})`);
+        }
+        const data2 = await res2.json();
+        return data2.imageUrl;
+      }
+      throw new Error(primaryErr.error || primaryErr.message || `Upload ảnh thất bại (HTTP ${res.status})`);
     }
     const data = await res.json();
     return data.imageUrl;

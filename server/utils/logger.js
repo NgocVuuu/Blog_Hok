@@ -52,7 +52,8 @@ const logger = winston.createLogger({
       level: 'error',
       maxsize: 5242880, // 5MB
       maxFiles: 5,
-      format: fileFormat
+      format: fileFormat,
+      handleRejections: true // log promise rejections instead of crashing
     }),
     
     // Combined log file
@@ -60,13 +61,23 @@ const logger = winston.createLogger({
       filename: path.join(logsDir, 'combined.log'),
       maxsize: 5242880, // 5MB
       maxFiles: 5,
-      format: fileFormat
+      format: fileFormat,
+      handleRejections: true
+    }),
+    // Rejections log file
+    new winston.transports.File({
+      filename: path.join(logsDir, 'rejections.log'),
+      maxsize: 5242880,
+      maxFiles: 3,
+      format: fileFormat,
+      handleRejections: true
     }),
     
     // Console output (only in development)
     ...(process.env.NODE_ENV !== 'production' ? [
       new winston.transports.Console({
-        format: consoleFormat
+        format: consoleFormat,
+        handleRejections: true
       })
     ] : [])
   ],
@@ -80,14 +91,8 @@ const logger = winston.createLogger({
     })
   ],
   
-  // Handle unhandled promise rejections
-  rejectionHandlers: [
-    new winston.transports.File({
-      filename: path.join(logsDir, 'rejections.log'),
-      maxsize: 5242880,
-      maxFiles: 3
-    })
-  ]
+  // Do not automatically exit on handled errors
+  exitOnError: false
 });
 
 // Add production-specific transports
@@ -99,6 +104,9 @@ if (process.env.NODE_ENV === 'production') {
   //   path: '/logs'
   // }));
 }
+
+// Extra safety: never exit on handled errors/rejections
+logger.exitOnError = false;
 
 // Request logging middleware
 const requestLogger = (req, res, next) => {

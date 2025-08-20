@@ -102,15 +102,17 @@ const validateUploadedFile = async (req, res, next) => {
       });
     }
     
-    // Check if file is actually an image by reading file header
-    const fileBuffer = fs.readFileSync(filePath, { start: 0, end: 10 });
-    const fileSignature = fileBuffer.toString('hex').toUpperCase();
+  // Check if file is actually an image by reading file header (magic bytes)
+  // Read the first 12 bytes which is enough for PNG/JPG/GIF/WEBP checks
+  const fileBuffer = fs.readFileSync(filePath);
+  const header = fileBuffer.slice(0, 12);
+  const fileSignature = header.toString('hex').toUpperCase();
     
     const imageSignatures = {
-      'FFD8FF': 'jpg',
-      '89504E47': 'png',
-      '47494638': 'gif',
-      '52494646': 'webp'
+      'FFD8FF': 'jpg',      // JPEG starts with FFD8FF
+      '89504E47': 'png',    // PNG starts with 89504E47
+      '47494638': 'gif',    // GIF starts with 47494638
+      '52494646': 'riff'    // WEBP is RIFF container starting with 52494646
     };
     
     let isValidImage = false;
@@ -120,12 +122,19 @@ const validateUploadedFile = async (req, res, next) => {
       isValidImage = true;
     }
     if (!isValidImage) {
-    for (const [signature, type] of Object.entries(imageSignatures)) {
-      if (fileSignature.startsWith(signature)) {
-        isValidImage = true;
-        break;
+      for (const signature of Object.keys(imageSignatures)) {
+        if (fileSignature.startsWith(signature)) {
+          // Additional WEBP check: bytes 8-11 should be WEBP (57454250)
+          if (signature === '52494646') {
+            const riffType = fileBuffer.slice(8, 12).toString('hex').toUpperCase();
+            if (riffType !== '57454250') {
+              break;
+            }
+          }
+          isValidImage = true;
+          break;
+        }
       }
-    }
     }
     
     if (!isValidImage) {

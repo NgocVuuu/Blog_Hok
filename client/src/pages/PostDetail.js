@@ -128,11 +128,13 @@ const PostDetail = () => {
               <LazyImage
                 src={post.image}
                 alt={post.title}
-                height="400px"
                 sx={{
                   width: '100%',
                   borderRadius: '2px',
-                  objectFit: 'cover'
+                  // On mobile, show the whole image (no crop); on larger screens, keep the 400px cover crop
+                  height: { xs: 'auto', sm: 400 },
+                  maxHeight: { xs: '70vh', sm: 400 },
+                  objectFit: { xs: 'contain', sm: 'cover' }
                 }}
                 referrerPolicy="no-referrer"
               />
@@ -176,12 +178,37 @@ const PostDetail = () => {
                   </Typography>
                 ),
                 img: ({ src, alt }) => {
-                  if (alt === 'video') {
+                  // Video support: ![video](url) or ![video|size|align](url)
+                  if (alt && typeof alt === 'string' && (alt === 'video' || alt.startsWith('video|'))) {
+                    let size = 'medium';
+                    let align = 'center';
+                    if (alt.includes('|')) {
+                      const parts = alt.split('|');
+                      size = parts[1] || 'medium';
+                      align = parts[2] || 'center';
+                    }
+                    let width = 720;
+                    let height = 406; // 16:9
+                    if (size === 'small') { width = 480; height = 270; }
+                    if (size === 'large') { width = 960; height = 540; }
+                    const isMobile = typeof window !== 'undefined' && window.innerWidth < 600;
+                    const alignmentStyle = align === 'center'
+                      ? { marginLeft: 'auto', marginRight: 'auto', display: 'block' }
+                      : align === 'right'
+                        ? { marginLeft: 'auto', marginRight: 0, display: 'block' }
+                        : { display: 'block' };
                     return (
                       <video
                         src={src}
                         controls
-                        style={{ width: '100%', maxHeight: 480, borderRadius: 2, margin: '8px 0' }}
+                        style={{
+                          width: isMobile ? '100%' : `${width}px`,
+                          height: isMobile ? 'auto' : `${height}px`,
+                          borderRadius: 2,
+                          margin: '8px 0',
+                          maxWidth: '100%',
+                          ...alignmentStyle
+                        }}
                       />
                     );
                   }

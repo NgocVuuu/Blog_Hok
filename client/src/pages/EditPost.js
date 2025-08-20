@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Box, TextField, Button, Typography, Alert, CircularProgress, 
@@ -22,11 +22,17 @@ const EditPost = () => {
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [videoUploading, setVideoUploading] = useState(false);
+  // Inline image controls
   const [inlineImgSize, setInlineImgSize] = useState('medium');
   const [inlineImgShape, setInlineImgShape] = useState('rectangle');
   const [inlineImgUrl, setInlineImgUrl] = useState('');
   const [inlineImgAlign, setInlineImgAlign] = useState('left');
+  // Inline video controls
+  const [inlineVideoSize, setInlineVideoSize] = useState('medium');
+  const [inlineVideoAlign, setInlineVideoAlign] = useState('center');
+  const [inlineVideoUrl, setInlineVideoUrl] = useState('');
   const API_URL = process.env.REACT_APP_API_URL;
+  const contentRef = useRef(null);
 
   // Categories for dropdown
   const categories = [
@@ -100,42 +106,67 @@ const EditPost = () => {
     return data.videoUrl;
   };
 
-  const onVideoFileChange = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      setVideoUploading(true);
-      const url = await handleVideoUpload(file);
-      setContent(prev => `${prev}${prev ? '\n\n' : ''}![video](${url})`);
-    } catch (err) {
-      setMessage({ type: 'error', text: err.message || 'Upload video thất bại' });
-    } finally {
-      setVideoUploading(false);
-      e.target.value = '';
-    }
-  };
-
   const handleUpload = async (file) => {
     const formData = new FormData();
     formData.append('image', file);
     const token = localStorage.getItem('token');
-    const res = await fetch(`${API_URL}/api/upload`, {
+    // Try Cloudinary route first
+    let res = await fetch(`${API_URL}/api/upload`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
     if (!res.ok) {
-      throw new Error('Upload ảnh thất bại');
+      // Attempt local fallback if Cloudinary unavailable or rejected
+      const primaryErr = await res.json().catch(() => ({}));
+      if (
+        res.status === 503 ||
+        /Cloudinary/i.test(primaryErr?.error || primaryErr?.message || '') ||
+        primaryErr?.code === 'CLOUDINARY_ERROR'
+      ) {
+        const res2 = await fetch(`${API_URL}/api/upload/local`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
+        if (!res2.ok) {
+          const err2 = await res2.json().catch(() => ({}));
+          throw new Error(err2.error || err2.message || `Upload ảnh thất bại (HTTP ${res2.status})`);
+        }
+        const data2 = await res2.json();
+        return data2.imageUrl;
+      }
+      throw new Error(primaryErr.error || primaryErr.message || `Upload ảnh thất bại (HTTP ${res.status})`);
     }
     const data = await res.json();
     return data.imageUrl;
   };
 
+  // Insert arbitrary text into content at current caret or selection
+  const insertAtCursor = (insertText) => {
+    const el = contentRef.current;
+    if (!el) {
+      setContent((prev) => `${prev}${insertText}`);
+      return;
+    }
+    const start = el.selectionStart ?? content.length;
+    const end = el.selectionEnd ?? content.length;
+    const before = content.slice(0, start);
+    const after = content.slice(end);
+    const next = `${before}${insertText}${after}`;
+    setContent(next);
+    const newPos = start + insertText.length;
+    setTimeout(() => {
+      try {
+        el.focus();
+        el.setSelectionRange(newPos, newPos);
+      } catch {}
+    }, 0);
+  };
+
   const appendInlineImageToContent = (url) => {
     const meta = `img|${inlineImgSize}|${inlineImgShape}|${inlineImgAlign}`;
-    setContent(prev => `${prev}${prev ? '\n\n' : ''}![${meta}](${url})`);
+    insertAtCursor(`![${meta}](${url})`);
   };
 
   const onInlineImageFileChange = async (e) => {
@@ -262,48 +293,43 @@ const EditPost = () => {
           </Select>
         </FormControl>
 
-        <TextField
-          label={t('news.content', 'Nội dung')}
-          value={content}
-          onChange={e => setContent(e.target.value)}
-          fullWidth
-          required
-          multiline
-          rows={8}
-          margin="normal"
-          helperText={t('admin.markdownHelp', 'Hỗ trợ Markdown: **bold**, *italic*, [link](url), ![image](url), ![video](https://...mp4). Khi chèn ảnh bằng nút bên dưới, có thể chọn kích thước (nhỏ/vừa/lớn) và dạng (vuông/chữ nhật).')}
-        />
-
+        {/* Cover image upload moved above content */}
         <Box mt={2} mb={2}>
+          <Typography variant="subtitle1" fontWeight={600} mb={1}>{t('admin.coverImage', 'Ảnh bìa bài viết')}</Typography>
           <Button
             variant="contained"
             component="label"
             startIcon={<UploadIcon />}
           >
-            {imageFile ? t('admin.changeImage', 'Thay đổi ảnh') : t('admin.uploadNewImage', 'Upload ảnh mới')}
-            <input type="file" hidden accept="image/*,.avif" onChange={handleImageChange} />
+            {imageFile ? t('admin.changeImage', 'Thay đổi ảnh bìa') : t('admin.uploadNewImage', 'Upload ảnh bìa')}
+            <input type="file" hidden accept="image/jpeg,image/png,image/webp,image/avif,image/svg+xml" onChange={handleImageChange} />
           </Button>
-          <Button
-            sx={{ ml: 2 }}
-            variant="outlined"
-            component="label"
-            disabled={videoUploading}
-            startIcon={<UploadIcon />}
-          >
-            {videoUploading ? t('admin.uploadingVideo', 'Đang upload video...') : t('admin.uploadVideo', 'Upload video')}
-            <input type="file" hidden accept="video/*" onChange={onVideoFileChange} />
-          </Button>
-          {imageFile && <Typography ml={2}>{imageFile.name}</Typography>}
+          {imageFile && <Typography ml={2} component="span">{imageFile.name}</Typography>}
           {imagePreview && (
             <Box mt={1}>
               <img
                 src={imagePreview}
                 alt={t('news.title', 'bài viết')}
-                style={{ maxHeight: 200, maxWidth: '100%', objectFit: 'contain' }}
+                style={{ maxHeight: 220, maxWidth: '100%', objectFit: 'contain', borderRadius: 8 }}
               />
             </Box>
           )}
         </Box>
+
+        <TextField
+          label={t('news.content', 'Nội dung')}
+          value={content}
+          onChange={e => setContent(e.target.value)}
+          inputRef={contentRef}
+          fullWidth
+          required
+          multiline
+          rows={24}
+          margin="normal"
+          helperText={t('admin.markdownHelp', 'Hỗ trợ Markdown: **bold**, *italic*, [link](url), ![image](url), ![video](https://...mp4). Khi chèn ảnh bằng nút bên dưới, có thể chọn kích thước (nhỏ/vừa/lớn) và dạng (vuông/chữ nhật).')}
+        />
+
+        
 
         {/* Inline image insert controls */}
         <Box mt={3} p={2} sx={{ border: '1px dashed #ddd', borderRadius: 2 }}>
@@ -334,7 +360,7 @@ const EditPost = () => {
             </FormControl>
             <Button variant="outlined" component="label" startIcon={<UploadIcon />}>
               {t('admin.uploadAndInsert', 'Upload & chèn ảnh')}
-              <input type="file" hidden accept="image/*,.avif" onChange={onInlineImageFileChange} />
+              <input type="file" hidden accept="image/jpeg,image/png,image/webp,image/avif,image/svg+xml" onChange={onInlineImageFileChange} />
             </Button>
           </Box>
           <Box display="flex" gap={1.5} mt={2} alignItems="center">
@@ -343,6 +369,61 @@ const EditPost = () => {
           </Box>
           <Typography variant="caption" color="text.secondary" display="block" mt={1}>
             {t('admin.inlineImageHint', 'Mẹo: Cú pháp sẽ là ![img|kích-cỡ|dạng|căn](url), ví dụ: ![img|small|square|center](https://...)')}
+          </Typography>
+        </Box>
+
+        {/* Inline video insert controls */}
+        <Box mt={3} p={2} sx={{ border: '1px dashed #ddd', borderRadius: 2 }}>
+          <Typography variant="subtitle1" fontWeight={600} mb={1}>{t('admin.insertInlineVideo', 'Chèn video vào nội dung')}</Typography>
+          <Box display="flex" gap={2} flexWrap="wrap">
+            <FormControl size="small" sx={{ minWidth: 160 }}>
+              <InputLabel id="inline-video-size">{t('admin.videoSize', 'Kích cỡ video')}</InputLabel>
+              <Select labelId="inline-video-size" value={inlineVideoSize} label={t('admin.videoSize', 'Kích cỡ video')} onChange={(e) => setInlineVideoSize(e.target.value)}>
+                <MenuItem value="small">{t('admin.size.small', 'Nhỏ')}</MenuItem>
+                <MenuItem value="medium">{t('admin.size.medium', 'Vừa')}</MenuItem>
+                <MenuItem value="large">{t('admin.size.large', 'Lớn')}</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl size="small" sx={{ minWidth: 180 }}>
+              <InputLabel id="inline-video-align">{t('admin.videoAlign', 'Căn video')}</InputLabel>
+              <Select labelId="inline-video-align" value={inlineVideoAlign} label={t('admin.videoAlign', 'Căn video')} onChange={(e) => setInlineVideoAlign(e.target.value)}>
+                <MenuItem value="left">{t('admin.align.left', 'Căn trái')}</MenuItem>
+                <MenuItem value="center">{t('admin.align.center', 'Căn giữa')}</MenuItem>
+                <MenuItem value="right">{t('admin.align.right', 'Căn phải')}</MenuItem>
+              </Select>
+            </FormControl>
+            <Button variant="outlined" component="label" startIcon={<UploadIcon />} disabled={videoUploading}>
+              {videoUploading ? t('admin.uploadingVideo', 'Đang upload video...') : t('admin.uploadAndInsertVideo', 'Upload & chèn video')}
+              <input type="file" hidden accept="video/*" onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                try {
+                  setVideoUploading(true);
+                  const url = await handleVideoUpload(file);
+                  const meta = `video|${inlineVideoSize}|${inlineVideoAlign}`;
+                  insertAtCursor(`![${meta}](${url})`);
+                  setMessage({ type: 'success', text: t('admin.inlineVideoInserted', 'Đã chèn video vào nội dung') });
+                } catch (err) {
+                  setMessage({ type: 'error', text: err.message || t('common.error', 'Có lỗi xảy ra') });
+                } finally {
+                  setVideoUploading(false);
+                  e.target.value = '';
+                }
+              }} />
+            </Button>
+          </Box>
+          <Box display="flex" gap={1.5} mt={2} alignItems="center">
+            <TextField size="small" fullWidth label={t('admin.orPasteVideoUrl', 'Hoặc dán URL video')} value={inlineVideoUrl} onChange={(e) => setInlineVideoUrl(e.target.value)} />
+            <Button variant="contained" onClick={() => {
+              if (!inlineVideoUrl) return;
+              const meta = `video|${inlineVideoSize}|${inlineVideoAlign}`;
+              setContent(prev => `${prev}${prev ? '\n\n' : ''}![${meta}](${inlineVideoUrl.trim()})`);
+              setInlineVideoUrl('');
+              setMessage({ type: 'success', text: t('admin.inlineVideoInserted', 'Đã chèn video vào nội dung') });
+            }}>{t('common.insert', 'Chèn')}</Button>
+          </Box>
+          <Typography variant="caption" color="text.secondary" display="block" mt={1}>
+            {t('admin.inlineVideoHint', 'Mẹo: Cú pháp sẽ là ![video|kích-cỡ|căn](url), ví dụ: ![video|medium|center](https://...)')}
           </Typography>
         </Box>
 
