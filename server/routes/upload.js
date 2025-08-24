@@ -130,8 +130,9 @@ const handleUploadError = (error, req, res, next) => {
 // Secure upload route (admin only)
 router.post('/',
   adminOpsGuard,
-  uploadLimiter,
+  // Authenticate first so limiter can key per-user and grant admin headroom
   enhancedAuth,
+  uploadLimiter,
   (req, res, next) => {
     if (!cloudinaryEnabled) {
       return res.status(503).json({ success: false, error: 'Cloudinary unavailable. Use /api/upload/local.' });
@@ -191,8 +192,9 @@ router.post('/',
 router.post(
   '/local',
   adminOpsGuard,
-  uploadLimiter,
+  // Authenticate first so limiter can key per-user and grant admin headroom
   enhancedAuth,
+  uploadLimiter,
   ...localUpload.uploadSingle('image'),
   (req, res) => {
     try {

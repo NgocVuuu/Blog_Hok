@@ -26,9 +26,11 @@ const securityHeaders = helmet({
 });
 
 // Rate limiting configurations
-const createRateLimit = (windowMs, max, message, skipSuccessfulRequests = false) => {
+// Supports extra options such as skip/keyGenerator and dynamic max per request.
+const createRateLimit = (windowMs, max, message, skipSuccessfulRequests = false, extraOptions = {}) => {
   return rateLimit({
     windowMs,
+    // Allow dynamic max based on request context (e.g., role-based limits)
     max,
     message: {
       success: false,
@@ -37,13 +39,26 @@ const createRateLimit = (windowMs, max, message, skipSuccessfulRequests = false)
     standardHeaders: true,
     legacyHeaders: false,
     skipSuccessfulRequests,
+    // Prefer per-user key when authenticated; fallback to IP
+    keyGenerator: (req /*, res*/) => {
+      try {
+        if (req.user && (req.user.id || req.user._id)) {
+          return `user:${req.user.id || req.user._id}`;
+        }
+      } catch {}
+      // Use x-forwarded-for aware IP if available
+      const ip = (req.ip || req.connection?.remoteAddress || 'unknown');
+      return `ip:${ip}`;
+    },
     handler: (req, res) => {
       res.status(429).json({
         success: false,
         error: message,
         retryAfter: Math.round(windowMs / 1000)
       });
-    }
+    },
+    // Merge in any additional options (e.g., skip)
+    ...extraOptions,
   });
 };
 
@@ -57,12 +72,34 @@ const authLimiter = createRateLimit(
 const apiLimiter = createRateLimit(
   parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
   parseInt(process.env.RATE_LIMIT_MAX) || 100, // 100 requests
-  'Too many API requests, please try again later'
+  'Too many API requests, please try again later',
+  false,
+  {
+    // Do not apply the generic API limiter to upload endpoints (they have their own limiter)
+    skip: (req) => {
+      try {
+        const p = (req.path || '').toString();
+        // When mounted on '/api', req.path begins with '/...'
+        return p.startsWith('/upload');
+      } catch {
+        return false;
+      }
+    }
+  }
 );
 
+// Upload limiter: per-user when authenticated, with higher admin ceiling
 const uploadLimiter = createRateLimit(
   parseInt(process.env.UPLOAD_RATE_LIMIT_WINDOW_MS) || 60 * 60 * 1000, // 1 hour
-  parseInt(process.env.UPLOAD_RATE_LIMIT_MAX) || 10, // 10 uploads
+  // Dynamic max: give admins more headroom for content work
+  (req, res) => {
+    const base = parseInt(process.env.UPLOAD_RATE_LIMIT_MAX) || 10;
+    const adminMax = parseInt(process.env.ADMIN_UPLOAD_RATE_LIMIT_MAX) || 60;
+    try {
+      if (req.user && req.user.role === 'admin') return adminMax;
+    } catch {}
+    return base;
+  },
   'Too many file uploads, please try again later'
 );
 

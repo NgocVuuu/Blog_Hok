@@ -110,36 +110,30 @@ const EditPost = () => {
     const formData = new FormData();
     formData.append('image', file);
     const token = localStorage.getItem('token');
-    // Try Cloudinary route first
-    let res = await fetch(`${API_URL}/api/upload`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
-    });
-    if (!res.ok) {
-      // Attempt local fallback if Cloudinary unavailable or rejected
-      const primaryErr = await res.json().catch(() => ({}));
-      if (
-        res.status === 503 ||
-        /Cloudinary/i.test(primaryErr?.error || primaryErr?.message || '') ||
-        primaryErr?.code === 'CLOUDINARY_ERROR'
-      ) {
-        const res2 = await fetch(`${API_URL}/api/upload/local`, {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        });
-        if (!res2.ok) {
-          const err2 = await res2.json().catch(() => ({}));
-          throw new Error(err2.error || err2.message || `Upload ảnh thất bại (HTTP ${res2.status})`);
-        }
-        const data2 = await res2.json();
-        return data2.imageUrl;
+    const wait = (ms) => new Promise(r => setTimeout(r, ms));
+    let attempt = 0; let lastErr;
+    while (attempt < 3) {
+      let res = await fetch(`${API_URL}/api/upload`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+      if (res.ok) { const data = await res.json(); return data.imageUrl; }
+      const body = await res.json().catch(()=>({}));
+      if (res.status === 429) {
+        const retryAfterSec = Number(body?.retryAfter) || Number(res.headers.get('retry-after')) || 0;
+        const backoff = retryAfterSec > 0 ? retryAfterSec * 1000 : (1000 * Math.pow(2, attempt));
+        attempt += 1; if (attempt >= 3) { lastErr = body; break; }
+        await wait(backoff); continue;
       }
-      throw new Error(primaryErr.error || primaryErr.message || `Upload ảnh thất bại (HTTP ${res.status})`);
+      if (res.status === 503 || /Cloudinary/i.test(body?.error || body?.message || '') || body?.code === 'CLOUDINARY_ERROR') {
+        const res2 = await fetch(`${API_URL}/api/upload/local`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: formData });
+        if (!res2.ok) { const err2 = await res2.json().catch(() => ({})); throw new Error(err2.error || err2.message || `Upload ảnh thất bại (HTTP ${res2.status})`); }
+        const data2 = await res2.json(); return data2.imageUrl;
+      }
+      lastErr = body; break;
     }
-    const data = await res.json();
-    return data.imageUrl;
+    throw new Error(lastErr?.error || lastErr?.message || `Upload ảnh thất bại`);
   };
 
   // Insert arbitrary text into content at current caret or selection

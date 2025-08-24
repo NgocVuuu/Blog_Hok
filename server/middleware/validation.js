@@ -53,7 +53,8 @@ const validateHero = [
     .isArray({ min: 1 })
     .withMessage('Hero must have at least one lane'),
   body('lanes.*')
-    .isIn(['Farm Lane', 'Mid Lane', 'Roam', 'Jungle', 'Abyssal Lane'])
+  .customSanitizer((v) => (v === 'Abyssal Lane' ? 'Clash Lane' : v))
+  .isIn(['Farm Lane', 'Mid Lane', 'Roam', 'Jungle', 'Clash Lane'])
     .withMessage('Invalid lane'),
   body('metaTier')
     .isIn(['S+', 'S', 'A', 'B', 'C'])

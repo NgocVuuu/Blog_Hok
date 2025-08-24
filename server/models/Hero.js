@@ -69,6 +69,20 @@ const heroSchema = new mongoose.Schema({
       trim: true
     }
   }],
+  // Optional: multiple skill variants/builds (client may send this in addition to 'skills').
+  // Not required by validators; stored as-is for future use.
+  skillBuilds: [
+    {
+      name: { type: String, default: '' },
+      skills: [
+        {
+          name: { type: String, trim: true },
+          icon: { type: String, default: '' },
+          description: { type: String, trim: true }
+        }
+      ]
+    }
+  ],
   allies: [
     {
       hero: {
@@ -117,6 +131,18 @@ const heroSchema = new mongoose.Schema({
     {
       skills: [{ type: Number }], // index của skill trong mảng skills
       description: { type: String, default: '' },
+    }
+  ],
+  // Optional: combos per skill build (1..3)
+  comboBuilds: [
+    {
+      name: { type: String, default: '' },
+      steps: [
+        {
+          skills: [{ type: Number }],
+          description: { type: String, default: '' }
+        }
+      ]
     }
   ],
   skins: [
@@ -191,6 +217,27 @@ heroSchema.pre('validate', function(next) {
     icon: s.icon || '',
     description: s.description ? s.description.trim() : ''
   })).slice(0,5); // still cap at 5 silently
+
+  // Normalize optional skillBuilds (do not enforce presence)
+  if (!Array.isArray(this.skillBuilds)) this.skillBuilds = [];
+  this.skillBuilds = this.skillBuilds.slice(0,3).map(b => ({
+    name: (b && b.name ? String(b.name) : '').trim(),
+    skills: Array.isArray(b && b.skills) ? b.skills.slice(0,5).map(s => ({
+      name: s && s.name ? String(s.name).trim() : '',
+      icon: s && s.icon ? String(s.icon) : '',
+      description: s && s.description ? String(s.description).trim() : ''
+    })).filter(x => x.name || x.description) : []
+  })).filter(bb => bb.skills.length > 0);
+
+  // Normalize optional comboBuilds
+  if (!Array.isArray(this.comboBuilds)) this.comboBuilds = [];
+  this.comboBuilds = this.comboBuilds.slice(0,3).map((b,i) => ({
+    name: (b && b.name ? String(b.name) : '').trim() || `Bộ ${i+1}`,
+    steps: Array.isArray(b && b.steps) ? b.steps.map(st => ({
+      skills: Array.isArray(st && st.skills) ? st.skills.map(n => Number(n)).filter(n => Number.isInteger(n) && n >= 0 && n <= 5) : [],
+      description: st && st.description ? String(st.description).trim() : ''
+    })) : []
+  })).filter(bb => Array.isArray(bb.steps) && bb.steps.length > 0);
 
   // Ensure slug exists before required validation kicks in (since slug field is unique)
   if (this.name) {

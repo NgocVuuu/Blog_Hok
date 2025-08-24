@@ -95,6 +95,7 @@ const HeroDetail = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedEqBuild, setSelectedEqBuild] = useState(1);
+  const [selectedSkillBuildIdx, setSelectedSkillBuildIdx] = useState(0);
   const [selectedArcanaIdx, setSelectedArcanaIdx] = useState(0);
   const [sameRoleHeroes, setSameRoleHeroes] = useState([]);
   const [topWinHeroes, setTopWinHeroes] = useState([]);
@@ -138,7 +139,24 @@ const HeroDetail = () => {
     if (Array.isArray(hero.arcanaBuilds) && hero.arcanaBuilds.length > 0) {
       setSelectedArcanaIdx(prev => (prev >= 0 && prev < hero.arcanaBuilds.length) ? prev : 0);
     }
+    if (Array.isArray(hero.skillBuilds) && hero.skillBuilds.length > 0) {
+      setSelectedSkillBuildIdx(prev => (prev >= 0 && prev < hero.skillBuilds.length) ? prev : 0);
+    } else {
+      setSelectedSkillBuildIdx(0);
+    }
   }, [hero]);
+
+  // Keep equipment/arcana selection aligned with skill build selection when possible
+  useEffect(() => {
+    if (!hero) return;
+    const idx = selectedSkillBuildIdx;
+    const desiredEq = idx + 1;
+    const eqAvailable = (hero.suggestedEquipment||[]).some(e => (e.build||1) === desiredEq);
+    if (eqAvailable) setSelectedEqBuild(desiredEq);
+    if (Array.isArray(hero.arcanaBuilds) && hero.arcanaBuilds[idx]) {
+      setSelectedArcanaIdx(idx);
+    }
+  }, [selectedSkillBuildIdx, hero]);
 
   // Sidebar data: same-role heroes and top win-rate heroes
   useEffect(() => {
@@ -204,12 +222,14 @@ const HeroDetail = () => {
     Assassin: <img src={assassinIcon} alt="Assassin" style={{ width: 16, height: 16, marginRight: 4 }} />,
     Fighter: <img src={fighterIcon} alt="Fighter" style={{ width: 16, height: 16, marginRight: 4 }} />,
   };
+  // Map legacy 'Abyssal Lane' to new 'Clash Lane' naming for display
   const laneIcons = {
     'Farm Lane': <img src={farmLaneIcon} alt="Farm Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
     'Jungle': <img src={jungleIcon} alt="Jungle" style={{ width: 16, height: 16, marginRight: 4 }} />,
     'Mid Lane': <img src={midLaneIcon} alt="Mid Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    'Roam': <img src={roamIcon} alt="Abyssal Dragon Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
-    'Abyssal Lane': <img src={abyssalLaneIcon} alt="Dark Slayer Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Roam': <img src={roamIcon} alt="Roam" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Clash Lane': <img src={abyssalLaneIcon} alt="Clash Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
+    'Abyssal Lane': <img src={abyssalLaneIcon} alt="Clash Lane" style={{ width: 16, height: 16, marginRight: 4 }} />,
   };
 
   return (
@@ -278,7 +298,7 @@ const HeroDetail = () => {
       </Box>
 
       {/* Hero Banner Section */}
-      <Box sx={{
+  <Box sx={{
         position: 'relative',
         minHeight: { xs: 200, md: 320 },
   background: `linear-gradient(180deg, rgba(60,20,20,0.7) 0%, rgba(60,20,20,0.2) 60%, #fff 100%), url(${hero.image}) left center/cover no-repeat`,
@@ -327,7 +347,7 @@ const HeroDetail = () => {
         <Box sx={{
           position: 'absolute',
           left: { xs: 12, md: 48 },
-          bottom: { xs: 16, md: 48 },
+          bottom: { xs: 8, md: 24 },
           zIndex: 2,
           color: '#fff',
         }}>
@@ -359,7 +379,9 @@ const HeroDetail = () => {
                 }}
               />
             ))}
-            {hero.lanes && hero.lanes.map((lane) => (
+            {hero.lanes && hero.lanes.map((laneRaw) => {
+              const lane = laneRaw === 'Abyssal Lane' ? 'Clash Lane' : laneRaw;
+              return (
               <Chip
                 key={lane}
                 icon={laneIcons[lane] || null}
@@ -372,7 +394,8 @@ const HeroDetail = () => {
                   height: { xs: 20, md: 32 }
                 }}
               />
-            ))}
+              );
+            })}
           </Box>
         </Box>
       </Box>
@@ -627,7 +650,7 @@ const HeroDetail = () => {
 
         </Box>
       </Box>
-  {/* Skills */}
+  {/* Skills (support multiple builds) */}
   <Box mb={{ xs: 2, md: 3 }} sx={{
         background: 'none',
         borderRadius: { xs: 3, md: 6 },
@@ -653,11 +676,41 @@ const HeroDetail = () => {
           zIndex: 0
         }
       }}>
-        <Typography variant="h5" sx={{ mt: { xs: 1, md: 2 }, mb: 1, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>{t('hero.skills', 'Skills')}</Typography>
-        {/* Skills Horizontal Selector */}
-        <SkillTabs skills={hero.skills} />
+        {(() => {
+          const builds = (Array.isArray(hero.skillBuilds) && hero.skillBuilds.length > 0)
+            ? hero.skillBuilds
+            : [{ name: 'Bộ 1', skills: hero.skills || [] }];
+          const current = builds[Math.max(0, Math.min(builds.length - 1, selectedSkillBuildIdx))] || builds[0];
+          return (
+            <>
+              <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:1 }}>
+                <Typography variant="h5" sx={{ mt: { xs: 1, md: 2 }, mb: 1, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
+                  {t('hero.skills', 'Kỹ năng')}{builds.length>1 && current?.name ? ` - ${current.name}` : ''}
+                </Typography>
+                {builds.length > 1 && (
+                  <ToggleButtonGroup
+                    size="small"
+                    color="primary"
+                    exclusive
+                    value={selectedSkillBuildIdx}
+                    onChange={(e, v) => (v !== null) && setSelectedSkillBuildIdx(v)}
+                    sx={{ mb: 1, flexWrap: 'wrap' }}
+                  >
+                    {builds.map((b, idx) => (
+                      <ToggleButton key={idx} value={idx} sx={{ px: 1.5 }}>
+                        {b.name || `${t('build','Build')} ${idx+1}`}
+                      </ToggleButton>
+                    ))}
+                  </ToggleButtonGroup>
+                )}
+              </Box>
+              {/* Skills Horizontal Selector */}
+              <SkillTabs skills={current?.skills || []} />
+            </>
+          );
+        })()}
       </Box>
-  {/* Suggested Equipment */}
+  {/* Suggested Equipment (align labels with skill build names) */}
       {hero.suggestedEquipment && hero.suggestedEquipment.length > 0 && (
   <Box mb={{ xs: 2, md: 3 }} sx={{
           background: 'none',
@@ -667,8 +720,15 @@ const HeroDetail = () => {
           backdropFilter: 'blur(12px)',
           p: { xs: 2, md: 3 },
         }}>
-          <Typography variant="h5" sx={{ mb: 1.5 }}>{t('hero.suggestedEquipment', 'Trang bị gợi ý')}</Typography>
-          {/* Build toggle */}
+          {(() => {
+            const buildLabel = t('hero.equipmentSet', { number: selectedEqBuild, defaultValue: `Bộ ${selectedEqBuild}` });
+            return (
+              <Typography variant="h5" sx={{ mb: 1.5 }}>
+                {t('hero.suggestedEquipment', 'Trang bị gợi ý')} - {buildLabel}
+              </Typography>
+            );
+          })()}
+          {/* Build toggle: show only available builds */}
           {(() => {
             const availableEqBuilds = [1,2,3].filter(b => (hero.suggestedEquipment||[]).some(e => (e.build||1) === b));
             if (availableEqBuilds.length <= 1) return null;
@@ -682,7 +742,9 @@ const HeroDetail = () => {
                 sx={{ mb: 1, flexWrap: 'wrap' }}
               >
                 {availableEqBuilds.map(b => (
-                  <ToggleButton key={b} value={b} sx={{ px: 1.5 }}>{t('hero.equipmentSet', { number: b, defaultValue: `Bộ ${b}` })}</ToggleButton>
+                  <ToggleButton key={b} value={b} sx={{ px: 1.5 }}>
+                    {b}
+                  </ToggleButton>
                 ))}
               </ToggleButtonGroup>
             );
@@ -694,9 +756,7 @@ const HeroDetail = () => {
             if (group.length === 0) return null;
             return (
               <Box key={`build-${selectedEqBuild}`} sx={{ mb:0 }}>
-                <Typography variant="subtitle2" sx={{ mb: 0.5, fontWeight: 700 }}>
-                  {t('hero.equipmentSet', { number: selectedEqBuild, defaultValue: `Bộ ${selectedEqBuild}` })}
-                </Typography>
+                {/* Removed skill-build name subtitle as it's not related to equipment */}
                 <Box sx={{
                   display:'flex',
                   flexDirection:'row',
@@ -724,7 +784,7 @@ const HeroDetail = () => {
         </Box>
       )}
   {/* ...existing code... */}
-  {/* Arcana Builds section below */}
+  {/* Arcana Builds section below (match skills style) */}
   {hero.arcanaBuilds && hero.arcanaBuilds.length > 0 && (
   <Box mb={{ xs: 2, md: 3 }} sx={{
           background: 'none',
@@ -734,7 +794,14 @@ const HeroDetail = () => {
           backdropFilter: 'blur(12px)',
           p: { xs: 2, md: 3 },
         }}>
-  <Typography variant="h5" sx={{ mb: 1.5 }}>{t('hero.suggestedArcanaBuilds', 'Arcana gợi ý')}</Typography>
+          {(() => {
+            const current = hero.arcanaBuilds[Math.max(0, Math.min(hero.arcanaBuilds.length - 1, selectedArcanaIdx))];
+            return (
+              <Typography variant="h5" sx={{ mb: 1.5 }}>
+                {t('hero.suggestedArcanaBuilds', 'Arcana gợi ý')}{hero.arcanaBuilds.length>1 && current?.name ? ` - ${current.name}` : ''}
+              </Typography>
+            );
+          })()}
           {/* Arcana build toggle */}
           {hero.arcanaBuilds.length > 1 && (
             <Box sx={{ mb: 1, overflowX: 'auto' }}>
@@ -811,8 +878,14 @@ const HeroDetail = () => {
           })()}
         </Box>
       )}
-  {/* Combo Kill */}
-      {hero.combo && hero.combo.length > 0 && (
+  {/* Combo Kill (prefer per-build if available) */}
+      {(() => {
+        const hasBuilds = Array.isArray(hero.comboBuilds) && hero.comboBuilds.length > 0;
+        const steps = hasBuilds
+          ? ((hero.comboBuilds[Math.max(0, Math.min((hero.comboBuilds.length - 1), selectedSkillBuildIdx))] || {}).steps || [])
+          : (hero.combo || []);
+        if (!steps || steps.length === 0) return null;
+        return (
   <Box mb={{ xs: 2, md: 3 }} sx={{
           background: 'none',
           borderRadius: { xs: 3, md: 6 },
@@ -821,8 +894,25 @@ const HeroDetail = () => {
           backdropFilter: 'blur(12px)',
           p: { xs: 2, md: 3 },
         }}>
-          <Typography variant="h5" sx={{ mb: 2 }}>{t('heroes.combo', 'Combo Kill')}</Typography>
-          {hero.combo.map((step, idx) => (
+          <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:1, mb:1 }}>
+            <Typography variant="h5" sx={{ mb: 0 }}>{t('heroes.combo', 'Combo Kill')}</Typography>
+            {hasBuilds && (hero.comboBuilds.length > 1) && (
+              <ToggleButtonGroup
+                size="small"
+                color="primary"
+                exclusive
+                value={selectedSkillBuildIdx}
+                onChange={(e, v) => (v !== null) && setSelectedSkillBuildIdx(v)}
+              >
+                {hero.comboBuilds.map((b, idx) => (
+                  <ToggleButton key={idx} value={idx} sx={{ px: 1.5 }}>
+                    {b.name || `${t('build','Build')} ${idx+1}`}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
+            )}
+          </Box>
+          {steps.map((step, idx) => (
             <Box key={idx} display="flex" flexDirection={{ xs: 'column', sm: 'row' }} alignItems={{ xs: 'flex-start', sm: 'center' }} gap={2} mb={2}>
               <Typography variant="subtitle2" sx={{ minWidth: 72 }}>
                 Combo {idx + 1}
@@ -831,7 +921,11 @@ const HeroDetail = () => {
                 {step.skills && step.skills.length > 0 ? step.skills.map((skillIdx, sidx) => {
                   const BASIC_ATTACK_INDEX = 5; // must match form constant
                   const isBasic = skillIdx === BASIC_ATTACK_INDEX;
-                  const skill = !isBasic ? hero.skills[skillIdx] : null;
+                  // Prefer current skill build skills for icons
+                  const currentSkills = (Array.isArray(hero.skillBuilds) && hero.skillBuilds.length > 0)
+                    ? (hero.skillBuilds[Math.max(0, Math.min((hero.skillBuilds.length - 1), selectedSkillBuildIdx))]?.skills || [])
+                    : (hero.skills || []);
+                  const skill = !isBasic ? currentSkills[skillIdx] : null;
                   const skillOrderLabels = ['Nội tại', 'Chiêu 1', 'Chiêu 2', 'Chiêu 3', 'Chiêu 4'];
                   const orderLabel = isBasic ? 'Đánh thường' : (skillOrderLabels[skillIdx] || `Skill ${skillIdx+1}`);
                   return (
@@ -872,7 +966,8 @@ const HeroDetail = () => {
             </Box>
           ))}
         </Box>
-      )}
+        );
+      })()}
   {/* Skins Slider - SwiperJS */}
   <Box mb={{ xs: 2, md: 3 }} sx={{
         background: 'none',

@@ -58,30 +58,60 @@ const Home = () => {
 
   useEffect(() => {
     let cancelled = false;
+    // Setup AbortControllers so requests are actually cancelled on cleanup
+    const heroesAbort = new AbortController();
+    const newsAbort = new AbortController();
+    const specialAbort = new AbortController();
+
+    const isCanceled = (err) => {
+      return err?.name === 'CanceledError' || err?.code === 'ERR_CANCELED' || /aborted|canceled/i.test(err?.message || '');
+    };
+
     (async () => {
       try {
         setLoadingHeroes(true);
-  const list = await getAllHeroesAll({ page: 1, limit: 100, sort: 'name' });
-  if (!cancelled) { setHeroes(list || []); }
+        const list = await getAllHeroesAll({ page: 1, limit: 100, sort: 'name' }, { signal: heroesAbort.signal });
+        if (!cancelled) { setHeroes(list || []); }
+      } catch (err) {
+        if (!cancelled && !isCanceled(err)) {
+          // Log non-cancel errors for visibility
+          // eslint-disable-next-line no-console
+          console.error('Failed to load heroes on Home:', err);
+        }
       } finally { if (!cancelled) setLoadingHeroes(false); }
     })();
     (async () => {
       try {
         setLoadingNews(true);
-        const res = await getNews();
+        const res = await getNews({ signal: newsAbort.signal });
         const items = Array.isArray(res) ? res : (res?.data || []);
         if (!cancelled) { setNews(items); setNewsUpdatedAt(new Date()); }
+      } catch (err) {
+        if (!cancelled && !isCanceled(err)) {
+          // eslint-disable-next-line no-console
+          console.error('Failed to load news on Home:', err);
+        }
       } finally { if (!cancelled) setLoadingNews(false); }
     })();
     (async () => {
       try {
         setLoadingSpecial(true);
-        const res = await getSpecialTrending();
+        const res = await getSpecialTrending({ signal: specialAbort.signal });
         const list = res && res.success ? (res.data || []) : [];
         if (!cancelled) setSpecialTrending(list);
+      } catch (err) {
+        if (!cancelled && !isCanceled(err)) {
+          // eslint-disable-next-line no-console
+          console.error('Failed to load special trending on Home:', err);
+        }
       } finally { if (!cancelled) setLoadingSpecial(false); }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      heroesAbort.abort();
+      newsAbort.abort();
+      specialAbort.abort();
+    };
   }, []);
 
   // Command palette suggestions: heroes and news
