@@ -48,14 +48,14 @@ const SkillTabs = ({ skills }) => {
   if (!skills || skills.length === 0) return null;
   return (
     <>
-      <Box display="flex" gap={{ xs: 2, md: 4 }} mb={2} justifyContent={{ xs: 'center', md: 'flex-start' }}>
+  <Box display="flex" gap={{ xs: 0.75, md: 4 }} mb={2} justifyContent={{ xs: 'center', md: 'flex-start' }}>
         {skills.map((skill, idx) => (
           <Box key={idx} onClick={() => setSelected(idx)} sx={{
             cursor: 'pointer',
             border: selected === idx ? { xs: '2px solid #C9A063', md: '4px solid #C9A063' } : { xs: '2px solid transparent', md: '4px solid transparent' },
             borderRadius: '50%',
             transition: 'border 0.2s',
-            p: { xs: 0.5, md: 1 },
+    p: { xs: 0.25, md: 1 },
             bgcolor: 'none',
             boxShadow: selected === idx ? '0 0 0 4px #fff6, 0 2px 8px #C9A06344' : 'none',
             display: 'flex',
@@ -66,8 +66,8 @@ const SkillTabs = ({ skills }) => {
               src={skill.icon}
               alt={skill.name}
               style={{
-                width: window.innerWidth < 600 ? 48 : 72,
-                height: window.innerWidth < 600 ? 48 : 72,
+        width: window.innerWidth < 600 ? 40 : 72,
+        height: window.innerWidth < 600 ? 40 : 72,
                 borderRadius: '50%'
               }}
             />
@@ -75,13 +75,13 @@ const SkillTabs = ({ skills }) => {
         ))}
       </Box>
       <Box sx={{
-        minHeight: { xs: 60, md: 80 },
+    minHeight: { xs: 56, md: 80 },
         transition: 'opacity 0.4s, transform 0.4s',
         opacity: 1,
         transform: 'translateY(0)',
       }}>
-        <Typography fontWeight={600} fontSize={{ xs: 18, md: 24 }} sx={{ mt: { xs: 1, md: 2 } }}>{skills[selected].name}</Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.8rem', md: '0.875rem' } }}>{skills[selected].description}</Typography>
+    <Typography fontWeight={600} fontSize={{ xs: 16, md: 24 }} sx={{ mt: { xs: 0.5, md: 2 } }}>{skills[selected].name}</Typography>
+    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.78rem', md: '0.875rem' } }}>{skills[selected].description}</Typography>
       </Box>
     </>
   );
@@ -694,7 +694,14 @@ const HeroDetail = () => {
                     exclusive
                     value={selectedSkillBuildIdx}
                     onChange={(e, v) => (v !== null) && setSelectedSkillBuildIdx(v)}
-                    sx={{ mb: 1, flexWrap: 'wrap' }}
+                    sx={{ mb: 1, flexWrap: 'wrap',
+                      '& .MuiToggleButton-root': {
+                        fontSize: { xs: '0.7rem', md: '0.875rem' },
+                        px: { xs: 0.75, md: 1.5 },
+                        py: { xs: 0.25, md: 0.5 },
+                        minHeight: { xs: 28, md: 32 }
+                      }
+                    }}
                   >
                     {builds.map((b, idx) => (
                       <ToggleButton key={idx} value={idx} sx={{ px: 1.5 }}>
@@ -723,7 +730,7 @@ const HeroDetail = () => {
           {(() => {
             const buildLabel = t('hero.equipmentSet', { number: selectedEqBuild, defaultValue: `Bộ ${selectedEqBuild}` });
             return (
-              <Typography variant="h5" sx={{ mb: 1.5 }}>
+              <Typography variant="h5" sx={{ mb: 1.5, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
                 {t('hero.suggestedEquipment', 'Trang bị gợi ý')} - {buildLabel}
               </Typography>
             );
@@ -739,7 +746,14 @@ const HeroDetail = () => {
                 exclusive
                 value={selectedEqBuild}
                 onChange={(e, v) => v && setSelectedEqBuild(v)}
-                sx={{ mb: 1, flexWrap: 'wrap' }}
+                sx={{ mb: 1, flexWrap: 'wrap',
+                  '& .MuiToggleButton-root': {
+                    fontSize: { xs: '0.7rem', md: '0.875rem' },
+                    px: { xs: 0.75, md: 1.5 },
+                    py: { xs: 0.25, md: 0.5 },
+                    minHeight: { xs: 28, md: 32 }
+                  }
+                }}
               >
                 {availableEqBuilds.map(b => (
                   <ToggleButton key={b} value={b} sx={{ px: 1.5 }}>
@@ -760,14 +774,14 @@ const HeroDetail = () => {
                 <Box sx={{
                   display:'flex',
                   flexDirection:'row',
-                  gap:{ xs: 1, md: 1.5 },
+                  gap:{ xs: 0.75, md: 1.5 },
                   flexWrap:{ xs: 'nowrap', md: 'wrap' },
                   alignItems:'stretch',
                   overflowX:{ xs: 'auto', md: 'visible' },
                   pb: { xs: 0.5, md: 0 }
                 }}>
                   {group.map((eq, idx) => (
-                    <Box key={eq._id || idx} sx={{ width:{ xs: 56, md: 90 }, textAlign:'center', flex: '0 0 auto' }}>
+                    <Box key={eq._id || idx} sx={{ width:{ xs: 52, md: 90 }, textAlign:'center', flex: '0 0 auto' }}>
                       <Box sx={{ width:'100%', aspectRatio:'1/1', borderRadius: 2, overflow:'hidden', border:'1px solid rgba(201,160,99,0.25)', mb:0.5 }}>
                         <img src={eq.image} alt={eq.name} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
                       </Box>
@@ -894,8 +908,16 @@ const HeroDetail = () => {
           backdropFilter: 'blur(12px)',
           p: { xs: 2, md: 3 },
         }}>
-          <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:1, mb:1 }}>
-            <Typography variant="h5" sx={{ mb: 0 }}>{t('heroes.combo', 'Combo Kill')}</Typography>
+          <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:1, mb:1, flexWrap:'wrap' }}>
+            <Typography variant="h5" sx={{ mb: 0, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
+              {t('heroes.combo', 'Combo Kill')}
+              {/* Show current combo build name on mobile for clarity */}
+              {hasBuilds && (hero.comboBuilds[selectedSkillBuildIdx]?.name) && (
+                <Typography component="span" variant="subtitle2" sx={{ ml: 0.5, display: { xs: 'inline', md: 'none' }, color: 'text.secondary' }}>
+                  - {hero.comboBuilds[selectedSkillBuildIdx].name}
+                </Typography>
+              )}
+            </Typography>
             {hasBuilds && (hero.comboBuilds.length > 1) && (
               <ToggleButtonGroup
                 size="small"
@@ -903,6 +925,14 @@ const HeroDetail = () => {
                 exclusive
                 value={selectedSkillBuildIdx}
                 onChange={(e, v) => (v !== null) && setSelectedSkillBuildIdx(v)}
+                sx={{
+                  '& .MuiToggleButton-root': {
+                    fontSize: { xs: '0.7rem', md: '0.875rem' },
+                    px: { xs: 0.75, md: 1.5 },
+                    py: { xs: 0.25, md: 0.5 },
+                    minHeight: { xs: 28, md: 32 }
+                  }
+                }}
               >
                 {hero.comboBuilds.map((b, idx) => (
                   <ToggleButton key={idx} value={idx} sx={{ px: 1.5 }}>
@@ -913,8 +943,8 @@ const HeroDetail = () => {
             )}
           </Box>
           {steps.map((step, idx) => (
-            <Box key={idx} display="flex" flexDirection={{ xs: 'column', sm: 'row' }} alignItems={{ xs: 'flex-start', sm: 'center' }} gap={2} mb={2}>
-              <Typography variant="subtitle2" sx={{ minWidth: 72 }}>
+            <Box key={idx} display="flex" flexDirection={{ xs: 'column', sm: 'row' }} alignItems={{ xs: 'flex-start', sm: 'center' }} gap={{ xs: 1, sm: 2 }} mb={2}>
+              <Typography variant="subtitle2" sx={{ minWidth: { xs: 56, sm: 72 }, fontSize: { xs: '0.9rem', sm: '1rem' } }}>
                 Combo {idx + 1}
               </Typography>
               <Box display="flex" alignItems="center" flexWrap="wrap">
@@ -930,9 +960,9 @@ const HeroDetail = () => {
                   const orderLabel = isBasic ? 'Đánh thường' : (skillOrderLabels[skillIdx] || `Skill ${skillIdx+1}`);
                   return (
                     <React.Fragment key={sidx}>
-                      <Box sx={{ textAlign: 'center', mr: 0.5 }}>
+                      <Box sx={{ textAlign: 'center', mr: { xs: 0.3, sm: 0.5 } }}>
                         {isBasic ? (
-                          <Box title={orderLabel} sx={{ width: 40, height: 40, borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(201,160,99,0.12)', fontSize: 22 }}>
+                          <Box title={orderLabel} sx={{ width: { xs: 34, sm: 40 }, height: { xs: 34, sm: 40 }, borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(201,160,99,0.12)', fontSize: { xs: 18, sm: 22 } }}>
                             🗡️
                           </Box>
                         ) : skill ? (
@@ -940,17 +970,17 @@ const HeroDetail = () => {
                             src={skill.icon}
                             alt={skill.name}
                             title={skill.name || orderLabel}
-                            style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'cover', background: 'none' }}
+                            style={{ width: (typeof window !== 'undefined' && window.innerWidth < 600) ? 34 : 40, height: (typeof window !== 'undefined' && window.innerWidth < 600) ? 34 : 40, borderRadius: 8, objectFit: 'cover', background: 'none' }}
                           />
                         ) : (
-                          <Box sx={{ width: 40, height: 40, borderRadius: 2, background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>?</Box>
+                          <Box sx={{ width: { xs: 34, sm: 40 }, height: { xs: 34, sm: 40 }, borderRadius: 2, background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>?</Box>
                         )}
                         <Typography variant="caption" sx={{ display: 'block', mt: 0.3, fontSize: 10, lineHeight: 1.1 }}>
                           {isBasic ? 'BA' : (skillIdx === 0 ? 'P' : skillIdx)}
                         </Typography>
                       </Box>
                       {sidx < step.skills.length - 1 && (
-                        <Typography component="span" sx={{ mx: 0.5, fontWeight: 600 }}>+</Typography>
+                        <Typography component="span" sx={{ mx: { xs: 0.3, sm: 0.5 }, fontWeight: 600 }}>+</Typography>
                       )}
                     </React.Fragment>
                   );
