@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Typography, CircularProgress, Chip, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +29,12 @@ import fighterIcon from '../assets/images/roles/Fighter.png';
 
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
+
+// Simple in-memory caches to avoid duplicate requests during rapid navigations
+const heroCache = new Map(); // key: slug, value: hero object
+const listCache = new Map(); // key: url, value: array/list
+const inFlightHero = new Map(); // key: slug, value: Promise resolving to hero
+const inFlightList = new Map(); // key: url, value: Promise resolving to list
 
 // Client-side slugify to mirror server logic
 function slugify(input) {
@@ -91,7 +97,7 @@ const HeroDetail = () => {
   const { slug } = useParams();
   const [hero, setHero] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); // store error code/key when possible
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedEqBuild, setSelectedEqBuild] = useState(1);
@@ -100,31 +106,89 @@ const HeroDetail = () => {
   const [sameRoleHeroes, setSameRoleHeroes] = useState([]);
   const [topWinHeroes, setTopWinHeroes] = useState([]);
   const [latestNews, setLatestNews] = useState([]);
+  const lastNavigatedCanonical = useRef(null);
 
   useEffect(() => {
+    // Clear previous hero to avoid canonical redirect using stale data
+    setHero(null);
+    setError(null);
+    setLoading(true);
+    const thisSlug = slug;
     const fetchHero = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/heroes/slug/${slug}`);
-        if (!res.ok) throw new Error(t('hero.not_found'));
-        const response = await res.json();
-        // Handle new API response format
-        const heroData = response.success ? response.data : response;
-        setHero(heroData);
+        // Use cache first to avoid duplicate requests
+        if (heroCache.has(slug)) {
+          const cachedHero = heroCache.get(slug);
+          // Ensure slug hasn't changed while resolving
+          if (thisSlug === slug) {
+            setHero(cachedHero);
+            setLoading(false);
+          }
+          return;
+        }
+        // If a fetch is already in flight, await it instead of issuing a new one
+        if (inFlightHero.has(slug)) {
+          const heroData = await inFlightHero.get(slug).catch(() => null);
+          if (thisSlug === slug) {
+            if (heroData) {
+              setHero(heroData);
+            } else {
+              setError('hero.not_found');
+            }
+            setLoading(false);
+          }
+          return;
+        }
+        const controller = new AbortController();
+        const promise = (async () => {
+          const res = await fetch(`${API_URL}/api/heroes/slug/${slug}` , { signal: controller.signal });
+          if (!res.ok) throw new Error('hero.not_found');
+          const response = await res.json();
+          const heroData = response.success ? response.data : response;
+          heroCache.set(slug, heroData);
+          return heroData;
+        })();
+        inFlightHero.set(slug, promise);
+        try {
+          const heroData = await promise;
+          if (thisSlug === slug) {
+            setHero(heroData);
+          }
+        } catch (e) {
+          if (thisSlug === slug) setError('hero.not_found');
+        } finally {
+          inFlightHero.delete(slug);
+          if (thisSlug === slug) setLoading(false);
+        }
       } catch (err) {
         console.error('Error fetching hero:', err);
-        setError(err.message);
+  // Set a stable error key; avoid referencing 'error' to keep deps clean
+        if (thisSlug === slug) setError('hero.not_found');
       } finally {
-        setLoading(false);
+        if (thisSlug === slug) setLoading(false);
       }
     };
     fetchHero();
-  }, [slug, t]);
+    return () => {
+      // Best-effort: cancel any in-flight fetch for this slug if we created one
+      // Note: We used AbortController locally in the promise; here we rely on in-flight dedupe to prevent extra requests.
+    };
+  }, [slug]);
 
   // After loading hero, redirect to canonical slug if needed
   useEffect(() => {
-    if (!hero || !hero.name) return;
-    const canonical = slugify(hero.name);
-    if (canonical && canonical !== slug) {
+    if (!hero) return;
+    // Prefer server-provided slug to avoid mismatches; fallback to slugified name
+    const canonical = (hero.slug && String(hero.slug)) || (hero.name ? slugify(hero.name) : null);
+    if (!canonical) return;
+    // If the current URL already matches, clear the last navigated ref
+    if (canonical === slug) {
+      lastNavigatedCanonical.current = canonical;
+      return;
+    }
+    // Only navigate to a new canonical once per resolved hero to prevent bouncing
+    if (lastNavigatedCanonical.current !== canonical) {
+      lastNavigatedCanonical.current = canonical;
       navigate(`/heroes/${canonical}`, { replace: true });
     }
   }, [hero, slug, navigate]);
@@ -159,31 +223,70 @@ const HeroDetail = () => {
   }, [selectedSkillBuildIdx, hero]);
 
   // Sidebar data: same-role heroes and top win-rate heroes
+  // Derive primary role and slug once per render to keep effect deps simple
+  const primaryRole = (Array.isArray(hero?.roles) && hero.roles.length > 0) ? hero.roles[0] : undefined;
+  const currentSlug = hero?.slug;
+
   useEffect(() => {
     const abort = new AbortController();
-    if (!hero) return;
+    if (!currentSlug) return;
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 900;
-    const role = Array.isArray(hero.roles) && hero.roles.length > 0 ? hero.roles[0] : undefined;
+    const role = primaryRole;
     const fetchData = async () => {
       try {
         // Always fetch same-role heroes (used on mobile row and desktop sidebar)
         if (role) {
           const sameUrl = `${API_URL}/api/heroes?role=${encodeURIComponent(role)}&sort=winRate&limit=10`;
-          const sameRes = await fetch(sameUrl, { signal: abort.signal }).then(r => r.ok ? r.json() : null).catch(() => null);
-          const normalize = (json) => {
-            const raw = json && json.success ? json.data : json;
-            return Array.isArray(raw) ? raw : [];
-          };
-          const data = normalize(sameRes);
-          setSameRoleHeroes(data.filter(h => h && h.slug !== hero.slug));
+          const cached = listCache.get(sameUrl);
+          if (cached) {
+            setSameRoleHeroes(cached.filter((h) => h && h.slug !== currentSlug));
+          }
+          if (!cached) {
+            let arr;
+            if (inFlightList.has(sameUrl)) {
+              arr = await inFlightList.get(sameUrl).catch(() => null);
+            } else {
+              const p = (async () => {
+                const res = await fetch(sameUrl, { signal: abort.signal });
+                if (!res.ok) return [];
+                const json = await res.json();
+                const raw = json && json.success ? json.data : json;
+                return Array.isArray(raw) ? raw : [];
+              })();
+              inFlightList.set(sameUrl, p);
+              arr = await p.catch(() => []);
+              inFlightList.delete(sameUrl);
+            }
+            listCache.set(sameUrl, arr || []);
+            setSameRoleHeroes((arr || []).filter((h) => h && h.slug !== currentSlug));
+          }
         }
         // Only fetch top win-rate list on desktop/tablet (sidebar visible)
         if (!isMobile) {
           const topUrl = `${API_URL}/api/heroes?sort=winRate&limit=10`;
-          const topRes = await fetch(topUrl, { signal: abort.signal }).then(r => r.ok ? r.json() : null).catch(() => null);
-          const rawTop = topRes && topRes.success ? topRes.data : topRes;
-          const topData = Array.isArray(rawTop) ? rawTop : [];
-          setTopWinHeroes(topData.filter(h => h && h.slug !== hero.slug));
+          const cachedTop = listCache.get(topUrl);
+          if (cachedTop) {
+            setTopWinHeroes(cachedTop.filter((h) => h && h.slug !== currentSlug));
+          }
+          if (!cachedTop) {
+            let topArr;
+            if (inFlightList.has(topUrl)) {
+              topArr = await inFlightList.get(topUrl).catch(() => null);
+            } else {
+              const pTop = (async () => {
+                const resTop = await fetch(topUrl, { signal: abort.signal });
+                if (!resTop.ok) return [];
+                const jsonTop = await resTop.json();
+                const rawTop = jsonTop && jsonTop.success ? jsonTop.data : jsonTop;
+                return Array.isArray(rawTop) ? rawTop : [];
+              })();
+              inFlightList.set(topUrl, pTop);
+              topArr = await pTop.catch(() => []);
+              inFlightList.delete(topUrl);
+            }
+            listCache.set(topUrl, topArr || []);
+            setTopWinHeroes((topArr || []).filter((h) => h && h.slug !== currentSlug));
+          }
         }
       } catch (_) {
         // ignore
@@ -191,17 +294,26 @@ const HeroDetail = () => {
     };
     fetchData();
     return () => abort.abort();
-  }, [hero]);
+  }, [currentSlug, primaryRole]);
 
   // Latest news row
   useEffect(() => {
     const abort = new AbortController();
+    const url = `${API_URL}/api/news?sort=latest&limit=6`;
     const fetchNews = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/news?sort=latest&limit=6`, { signal: abort.signal });
+        const cached = listCache.get(url);
+        if (cached) {
+          setLatestNews(Array.isArray(cached) ? cached : []);
+          return;
+        }
+        const res = await fetch(url, { signal: abort.signal });
+        if (!res.ok) return;
         const json = await res.json();
         const data = json && json.success ? json.data : json;
-        setLatestNews(Array.isArray(data) ? data : []);
+        const arr = Array.isArray(data) ? data : [];
+        listCache.set(url, arr);
+        setLatestNews(arr);
       } catch (_) {
         // ignore
       }
@@ -211,7 +323,7 @@ const HeroDetail = () => {
   }, []);
 
   if (loading) return <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh"><CircularProgress /></Box>;
-  if (error) return <Box p={4}><Typography color="error">{error}</Typography></Box>;
+  if (error) return <Box p={4}><Typography color="error">{t(error)}</Typography></Box>;
   if (!hero) return null;
 
   const roleIcons = {
