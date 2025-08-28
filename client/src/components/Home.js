@@ -504,10 +504,10 @@ const Home = () => {
                   component="img"
                   image={patchHighlight.thumbnail || patchHighlight.image}
                   alt={patchHighlight.title}
-                  sx={{ height: { xs: 180, md: 200 }, width: '100%', objectFit: 'cover' }}
+                  sx={{ height: { xs: 180, md: 240 }, width: '100%', objectFit: 'cover' }}
                 />
               ) : (
-                <Skeleton variant="rectangular" height={200} />
+                <Skeleton variant="rectangular" sx={{ height: { xs: 180, md: 240 } }} />
               )}
               <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <Typography variant="h6" fontWeight={800}>{patchHighlight.title}</Typography>
