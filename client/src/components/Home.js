@@ -143,6 +143,79 @@ const Home = () => {
     return items.slice(0, 8);
   }, [news]);
 
+  // --- Hero Meta List (under Patch highlights) ---
+  const [laneFilter, setLaneFilter] = useState('All');
+  const [sortBy, setSortBy] = useState('winRate'); // 'tier' | 'winRate' | 'pickRate' | 'banRate' | 'name'
+  const [sortDir, setSortDir] = useState('desc'); // 'asc' | 'desc'
+
+  const laneMap = useMemo(() => ({
+    All: [],
+    Clash: ['Clash Lane', 'Abyssal Lane'],
+    Mid: ['Mid Lane'],
+    Farm: ['Farm Lane'],
+    Roaming: ['Roam'],
+    Jungling: ['Jungle']
+  }), []);
+
+  const tierRank = (t) => ({ 'S+': 5, S: 4, A: 3, B: 2, C: 1 }[t] ?? 0);
+  const pct = (v) => (typeof v === 'number' ? `${v.toFixed(2)}%` : '-');
+
+  const filteredSortedHeroes = useMemo(() => {
+    const lanesWanted = laneMap[laneFilter] || [];
+    let list = Array.isArray(heroes) ? heroes.slice() : [];
+    if (lanesWanted.length > 0) {
+      list = list.filter(h => (h.lanes || []).some(l => lanesWanted.includes(l)));
+    }
+    list.sort((a, b) => {
+      let av, bv;
+      switch (sortBy) {
+        case 'tier':
+          av = tierRank(a.metaTier); bv = tierRank(b.metaTier);
+          break;
+        case 'pickRate':
+          av = a.pickRate || 0; bv = b.pickRate || 0;
+          break;
+        case 'banRate':
+          av = a.banRate || 0; bv = b.banRate || 0;
+          break;
+        case 'name':
+          av = (a.name || '').localeCompare ? a.name : String(a.name || '');
+          bv = (b.name || '').localeCompare ? b.name : String(b.name || '');
+          return sortDir === 'asc' ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+        case 'winRate':
+        default:
+          av = a.winRate || 0; bv = b.winRate || 0;
+          break;
+      }
+      const diff = (av || 0) - (bv || 0);
+      return sortDir === 'asc' ? diff : -diff;
+    });
+    return list;
+  }, [heroes, laneFilter, laneMap, sortBy, sortDir]);
+
+  const SortHeader = ({ label, field }) => {
+    const active = sortBy === field;
+    const dir = active ? sortDir : undefined;
+    return (
+      <Box
+        component="button"
+        onClick={() => {
+          if (sortBy === field) setSortDir(dir === 'asc' ? 'desc' : 'asc');
+          else { setSortBy(field); setSortDir(field === 'name' ? 'asc' : 'desc'); }
+        }}
+        sx={{
+          all: 'unset', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 0.5,
+          color: active ? 'text.primary' : 'text.secondary', fontWeight: active ? 700 : 600, fontSize: 12
+        }}
+      >
+        {label}
+        <Typography component="span" sx={{ fontSize: 12, opacity: active ? 1 : 0.35 }}>
+          {active ? (dir === 'asc' ? '▲' : '▼') : '◄'}
+        </Typography>
+      </Box>
+    );
+  };
+
   const topCounters = useMemo(() => {
     const list = (heroes || []).slice();
     if (list.length === 0) return [];
@@ -420,30 +493,157 @@ const Home = () => {
           {isMobile ? timeAgoRaw(newsUpdatedAt, t) : `${t('home.updated','Updated')} ${timeAgoRaw(newsUpdatedAt, t)}`}
         </Typography>
       </Box>
-      {loadingNews ? (
-        <Skeleton variant="rectangular" height={160} sx={{ mb: 3 }} />
-      ) : patchHighlight ? (
-  <Card sx={{ mb: 3, border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 8px rgba(0,0,0,0.06)' }}>
-          <Grid container>
-            <Grid item xs={12} sm={4}>
+  <Grid container columnSpacing={{ xs: 2, md: 7, lg: 8 }} rowSpacing={{ xs: 2, md: 3 }} sx={{ mb: 3 }} alignItems="stretch">
+        <Grid item xs={12} md={6}>
+          {loadingNews ? (
+            <Skeleton variant="rectangular" height={400} />
+          ) : patchHighlight ? (
+            <Card sx={{ height: { xs: 'auto', md: 400 }, display: 'flex', flexDirection: 'column', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 8px rgba(0,0,0,0.06)' }}>
               {patchHighlight.thumbnail || patchHighlight.image ? (
-                <CardMedia component="img" height="100%" image={patchHighlight.thumbnail || patchHighlight.image} alt={patchHighlight.title} sx={{ height: { xs: 160, sm: '100%' }, objectFit: 'cover' }} />
-              ) : (<Skeleton variant="rectangular" height={160} />)}
-            </Grid>
-            <Grid item xs={12} sm={8}>
-              <CardContent>
+                <CardMedia
+                  component="img"
+                  image={patchHighlight.thumbnail || patchHighlight.image}
+                  alt={patchHighlight.title}
+                  sx={{ height: { xs: 180, md: 200 }, width: '100%', objectFit: 'cover' }}
+                />
+              ) : (
+                <Skeleton variant="rectangular" height={200} />
+              )}
+              <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <Typography variant="h6" fontWeight={800}>{patchHighlight.title}</Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                <Typography variant="body2" color="text.secondary" sx={{ display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical', overflow: 'hidden', mt: 0.5 }}>
                   {patchHighlight.excerpt || patchHighlight.description || ''}
                 </Typography>
-                <Box sx={{ mt: 1 }}>
+                <Box sx={{ mt: 'auto' }}>
                   <Button component={Link} to="/news" size="small">{t('home.viewFull','View full')}</Button>
                 </Box>
               </CardContent>
-            </Grid>
-          </Grid>
-        </Card>
-      ) : null}
+            </Card>
+          ) : (
+            <Skeleton variant="rectangular" height={400} />
+          )}
+        </Grid>
+        <Grid item xs={12} md={6}>
+          {/* Hero Meta panel (fixed height on desktop) */}
+          <Box
+            sx={{
+              height: { xs: 600, md: 400 },
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: 1.5,
+              boxShadow: 1,
+              overflow: 'hidden',
+              bgcolor: 'background.paper',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            {/* Filter header */}
+            <Box sx={{ p: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 1 }}>
+                {Object.keys(laneMap).map(key => (
+                  <Chip
+                    key={key}
+                    size="small"
+                    label={key}
+                    color={laneFilter === key ? 'warning' : 'default'}
+                    onClick={() => setLaneFilter(key)}
+                    sx={{ width: '100%', justifyContent: 'center', fontWeight: 600 }}
+                  />
+                ))}
+              </Box>
+            </Box>
+            {/* Header row */}
+            <Box sx={{
+              px: 1,
+              py: 0.5,
+              borderBottom: '1px solid',
+              borderColor: 'divider',
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr 36px 56px 56px 56px', md: '1.25fr 52px 72px 72px 72px' },
+              alignItems: 'center',
+              gap: { xs: 0.75, md: 1 }
+            }}>
+              <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', fontSize: 11 }}>{t('nav.heroes','Heroes')}</Typography>
+              <SortHeader label={t('heroes.metaTier','Tier')} field="tier" />
+              <SortHeader label={t('heroes.winRate','Win')} field="winRate" />
+              <SortHeader label={t('heroes.pickRate','Pick')} field="pickRate" />
+              <SortHeader label={t('heroes.banRate','Ban')} field="banRate" />
+            </Box>
+            {/* List (fills remaining height) */}
+            <Box sx={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden' }}>
+              {loadingHeroes ? (
+                Array.from({ length: 8 }).map((_,i)=>(
+                  <Box key={i} sx={{
+                    px: 1,
+                    py: 1,
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr 36px 56px 56px 56px', md: '1.25fr 52px 72px 72px 72px' },
+                    alignItems: 'center',
+                    gap: { xs: 0.75, md: 1 },
+                    borderBottom: '1px solid',
+                    borderColor: 'divider'
+                  }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Skeleton variant="rectangular" width={{ xs: 42, md: 48 }} height={{ xs: 42, md: 48 }} sx={{ borderRadius: 1 }} />
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Skeleton variant="text" width={160} />
+                        <Skeleton variant="text" width={100} />
+                      </Box>
+                    </Box>
+                    <Skeleton variant="text" width={24} />
+                    <Skeleton variant="text" width={48} />
+                    <Skeleton variant="text" width={48} />
+                    <Skeleton variant="text" width={48} />
+                  </Box>
+                ))
+              ) : (
+                filteredSortedHeroes.map(h => (
+                  <Box key={h._id || h.slug || h.name} sx={{
+                    px: 1,
+                    py: 0.75,
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr 36px 56px 56px 56px', md: '1.25fr 52px 72px 72px 72px' },
+                    alignItems: 'center',
+                    gap: { xs: 0.75, md: 1 },
+                    borderBottom: '1px solid',
+                    borderColor: 'divider',
+                    '&:hover': { bgcolor: 'action.hover' }
+                  }}>
+                    {/* Name cell */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
+                      {h.image ? (
+                        <Box sx={{ width: { xs: 42, md: 48 }, height: { xs: 42, md: 48 }, borderRadius: 1, overflow: 'hidden', border: '1px solid #eee', flex: '0 0 auto', bgcolor: 'grey.50' }}>
+                          <img src={h.image} alt={h.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                        </Box>
+                      ) : (
+                        <Box sx={{ width: { xs: 42, md: 48 }, height: { xs: 42, md: 48 }, borderRadius: 1, bgcolor: 'grey.200' }} />
+                      )}
+                      <Box sx={{ minWidth: 0 }}>
+                        <Typography variant="body2" fontWeight={700} title={h.name} sx={{ whiteSpace: 'normal', lineHeight: 1.2 }}>{h.name}</Typography>
+                        {Array.isArray(h.lanes) && h.lanes.length > 0 && (
+                          <Typography variant="caption" color="text.secondary" sx={{ display:'block', whiteSpace: 'normal', wordBreak: 'break-word', lineHeight: 1.2 }}>
+                            {(h.lanes[0] === 'Abyssal Lane') ? 'Clash Lane' : h.lanes[0]}
+                          </Typography>
+                        )}
+                      </Box>
+                    </Box>
+                    {/* Tier */}
+                    <Typography variant="subtitle2" fontWeight={800} color="warning.main" sx={{ textAlign: 'center' }}>{h.metaTier || '-'}</Typography>
+                    {/* Win */}
+                    <Typography variant="body2" fontWeight={400} sx={{ color: (h.winRate||0) >= 50 ? 'success.main' : 'text.primary', textAlign: 'right' }}>{pct(h.winRate)}</Typography>
+                    {/* Pick */}
+                    <Typography variant="body2" fontWeight={400} sx={{ color: 'info.main', textAlign: 'right' }}>{pct(h.pickRate)}</Typography>
+                    {/* Ban */}
+                    <Typography variant="body2" fontWeight={400} sx={{ color: 'error.main', textAlign: 'right' }}>{pct(h.banRate)}</Typography>
+                  </Box>
+                ))
+              )}
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+
 
       {/* Magazine grid of latest news */}
       <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
