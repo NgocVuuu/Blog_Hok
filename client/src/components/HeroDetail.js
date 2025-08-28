@@ -230,7 +230,6 @@ const HeroDetail = () => {
   useEffect(() => {
     const abort = new AbortController();
     if (!currentSlug) return;
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 900;
     const role = primaryRole;
     const fetchData = async () => {
       try {
@@ -261,32 +260,30 @@ const HeroDetail = () => {
             setSameRoleHeroes((arr || []).filter((h) => h && h.slug !== currentSlug));
           }
         }
-        // Only fetch top win-rate list on desktop/tablet (sidebar visible)
-        if (!isMobile) {
-          const topUrl = `${API_URL}/api/heroes?sort=winRate&limit=10`;
-          const cachedTop = listCache.get(topUrl);
-          if (cachedTop) {
-            setTopWinHeroes(cachedTop.filter((h) => h && h.slug !== currentSlug));
+        // Fetch top win-rate list for both desktop (sidebar) and mobile (horizontal row)
+        const topUrl = `${API_URL}/api/heroes?sort=winRate&limit=10`;
+        const cachedTop = listCache.get(topUrl);
+        if (cachedTop) {
+          setTopWinHeroes(cachedTop.filter((h) => h && h.slug !== currentSlug));
+        }
+        if (!cachedTop) {
+          let topArr;
+          if (inFlightList.has(topUrl)) {
+            topArr = await inFlightList.get(topUrl).catch(() => null);
+          } else {
+            const pTop = (async () => {
+              const resTop = await fetch(topUrl, { signal: abort.signal });
+              if (!resTop.ok) return [];
+              const jsonTop = await resTop.json();
+              const rawTop = jsonTop && jsonTop.success ? jsonTop.data : jsonTop;
+              return Array.isArray(rawTop) ? rawTop : [];
+            })();
+            inFlightList.set(topUrl, pTop);
+            topArr = await pTop.catch(() => []);
+            inFlightList.delete(topUrl);
           }
-          if (!cachedTop) {
-            let topArr;
-            if (inFlightList.has(topUrl)) {
-              topArr = await inFlightList.get(topUrl).catch(() => null);
-            } else {
-              const pTop = (async () => {
-                const resTop = await fetch(topUrl, { signal: abort.signal });
-                if (!resTop.ok) return [];
-                const jsonTop = await resTop.json();
-                const rawTop = jsonTop && jsonTop.success ? jsonTop.data : jsonTop;
-                return Array.isArray(rawTop) ? rawTop : [];
-              })();
-              inFlightList.set(topUrl, pTop);
-              topArr = await pTop.catch(() => []);
-              inFlightList.delete(topUrl);
-            }
-            listCache.set(topUrl, topArr || []);
-            setTopWinHeroes((topArr || []).filter((h) => h && h.slug !== currentSlug));
-          }
+          listCache.set(topUrl, topArr || []);
+          setTopWinHeroes((topArr || []).filter((h) => h && h.slug !== currentSlug));
         }
       } catch (_) {
         // ignore
@@ -1382,7 +1379,7 @@ const HeroDetail = () => {
 
     </Box>
 
-    {/* Mobile: Same-role heroes horizontal list (above news) */}
+    {/* Mobile: Same-role heroes horizontal row */}
     {sameRoleHeroes && sameRoleHeroes.length > 0 && (
       <Box sx={{
         width: '100%',
@@ -1400,18 +1397,48 @@ const HeroDetail = () => {
           p: { xs: 2, md: 3 },
         }}>
           <Typography variant="h6" sx={{ mb: 1 }}>{t('heroes.sameRole', 'Tướng cùng vai trò')}</Typography>
-          <Box sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-            gap: 1,
-            pb: 1
-          }}>
-            {sameRoleHeroes.slice(0, 8).map(h => (
-              <Box key={h.slug} sx={{ cursor: 'pointer' }} onClick={() => navigate(`/heroes/${h.slug}`)}>
+          <Box sx={{ display: 'flex', gap: 1, overflowX: 'auto', pb: 1 }}>
+            {sameRoleHeroes.slice(0, 14).map(h => (
+              <Box key={h.slug} sx={{ width: 92, flex: '0 0 auto', cursor: 'pointer' }} onClick={() => navigate(`/heroes/${h.slug}`)}>
                 <Box sx={{ width: '100%', aspectRatio: '1 / 1', borderRadius: 2, overflow: 'hidden', border: '1px solid rgba(201,160,99,0.25)', mb: 0.5 }}>
                   <img src={h.image} alt={h.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </Box>
                 <Typography variant="caption" sx={{ fontWeight: 700, lineHeight: 1.15, display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{h.name}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Box>
+    )}
+
+    {/* Mobile: Top Win Rate Heroes horizontal row (below same-role) */}
+    {topWinHeroes && topWinHeroes.length > 0 && (
+      <Box sx={{
+        width: '100%',
+        maxWidth: '100%',
+        px: { xs: 2, md: 6 },
+        mb: { xs: 2, md: 0 },
+        display: { xs: 'block', md: 'none' }
+      }}>
+        <Box sx={{
+          background: 'none',
+          borderRadius: { xs: 3, md: 6 },
+          border: '1.5px solid rgba(201,160,99,0.35)',
+          boxShadow: '0 8px 32px 0 rgba(201,160,99,0.08)',
+          backdropFilter: 'blur(12px)',
+          p: { xs: 2, md: 3 },
+        }}>
+          <Typography variant="h6" sx={{ mb: 1 }}>{t('heroes.topWinRate', 'Tướng tỉ lệ thắng cao')}</Typography>
+          <Box sx={{ display: 'flex', gap: 1, overflowX: 'auto', pb: 1 }}>
+            {topWinHeroes.slice(0, 14).map(h => (
+              <Box key={h.slug} sx={{ width: 92, flex: '0 0 auto', cursor: 'pointer' }} onClick={() => navigate(`/heroes/${h.slug}`)}>
+                <Box sx={{ width: '100%', aspectRatio: '1 / 1', borderRadius: 2, overflow: 'hidden', border: '1px solid rgba(201,160,99,0.25)', mb: 0.5 }}>
+                  <img src={h.image} alt={h.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </Box>
+                <Typography variant="caption" sx={{ fontWeight: 700, lineHeight: 1.15, display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{h.name}</Typography>
+                {h.winRate && (
+                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>{h.winRate}%</Typography>
+                )}
               </Box>
             ))}
           </Box>
