@@ -504,10 +504,10 @@ const Home = () => {
                   component="img"
                   image={patchHighlight.thumbnail || patchHighlight.image}
                   alt={patchHighlight.title}
-                  sx={{ height: { xs: 180, md: 240 }, width: '100%', objectFit: 'cover' }}
+                  sx={{ height: { xs: 180, md: 300 }, width: '100%', objectFit: 'cover' }}
                 />
               ) : (
-                <Skeleton variant="rectangular" sx={{ height: { xs: 180, md: 240 } }} />
+                <Skeleton variant="rectangular" sx={{ height: { xs: 180, md: 300 } }} />
               )}
               <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <Typography variant="h6" fontWeight={800}>{patchHighlight.title}</Typography>
@@ -585,7 +585,7 @@ const Home = () => {
                     borderColor: 'divider'
                   }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Skeleton variant="rectangular" width={{ xs: 42, md: 48 }} height={{ xs: 42, md: 48 }} sx={{ borderRadius: 1 }} />
+                      <Skeleton variant="rectangular" sx={{ borderRadius: 1, width: { xs: 42, md: 48 }, height: { xs: 42, md: 48 } }} />
                       <Box sx={{ flex: 1, minWidth: 0 }}>
                         <Skeleton variant="text" width={160} />
                         <Skeleton variant="text" width={100} />
