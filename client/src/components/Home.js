@@ -527,7 +527,7 @@ const Home = () => {
           {/* Hero Meta panel (fixed height on desktop) */}
           <Box
             sx={{
-              height: { xs: 600, md: 400 },
+              height: { xs: 500, md: 400 },
               border: '1px solid',
               borderColor: 'divider',
               borderRadius: 1.5,
