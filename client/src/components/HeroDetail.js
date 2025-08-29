@@ -108,6 +108,16 @@ const HeroDetail = () => {
   const [latestNews, setLatestNews] = useState([]);
   const lastNavigatedCanonical = useRef(null);
 
+  // Scroll to top when switching to another hero
+  useEffect(() => {
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (_) {
+      // fallback
+      window.scrollTo(0, 0);
+    }
+  }, [slug]);
+
   useEffect(() => {
     // Clear previous hero to avoid canonical redirect using stale data
     setHero(null);
