@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Hero = require('../models/Hero');
-const { fetchHeroStatsFromRankList } = require('./hokCampProvider');
-const { fetchHeroStatsViaBrowser } = require('./hokCampBrowserProvider');
+const { fetchHeroStatsFromStatic } = require('./hokStaticProvider');
 const fs = require('fs');
 const path = require('path');
 
@@ -28,20 +27,17 @@ function loadNameMap() {
   return {};
 }
 
-async function syncHoKMeta({ url, headers, dryRun = false, logger = console } = {}) {
+async function syncHoKMeta({ dryRun = false, logger = console } = {}) {
   const nameMap = loadNameMap();
   let stats;
   try {
-    stats = await fetchHeroStatsFromRankList({ url, headers });
+    // Only use static JSON source (env: HOK_RANKLIST_INLINE_JSON or HOK_RANKLIST_JSON_FILE)
+    const staticStats = await fetchHeroStatsFromStatic({});
+    if (staticStats && staticStats.length) stats = staticStats;
   } catch (err) {
-    // If API call fails (e.g., 404 due to region/params), try browser fallback if allowed
-    const allowBrowser = String(process.env.HOK_USE_BROWSER_FALLBACK || 'true').toLowerCase() !== 'false';
-    if (allowBrowser) {
-      stats = await fetchHeroStatsViaBrowser({});
-    } else {
-      throw err;
-    }
+    throw err;
   }
+  if (!stats || !stats.length) throw new Error('Không tìm thấy dữ liệu JSON tĩnh. Hãy cấu hình HOK_RANKLIST_JSON_FILE hoặc HOK_RANKLIST_INLINE_JSON.');
   if (!Array.isArray(stats) || stats.length === 0) {
     return { updated: 0, matched: 0, missing: stats.length || 0, unmatched: [] };
   }
