@@ -31,7 +31,8 @@
     "slick-carousel": "^1.8.1",
     "swiper": "^11.2.8",
     "validator": "^13.15.15",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yaml": "^2.8.1"
   },
   "scripts": {
     "start": "react-scripts start",
