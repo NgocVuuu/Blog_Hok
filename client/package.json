@@ -40,7 +40,7 @@
     "build:dev": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-  "postbuild": "node ./scripts/inline-css.js"
+    "postbuild": "node ./scripts/inline-css.cjs"
   },
   "eslintConfig": {
     "extends": [
