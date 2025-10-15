@@ -9,7 +9,7 @@ const theme = createTheme({
     },
     primary: { main: '#C9A063' }, // vàng đất/kim
     secondary: { main: '#4BA3A6' }, // xanh ngọc
-    text: { primary: '#2D1B06', secondary: '#6B4F1D' }, // nâu đậm, vàng đất
+  text: { primary: '#2D1B06', secondary: '#222' }, // nâu đậm, màu đậm hơn cho secondary
     success: { main: '#4BA3A6' },
     error: { main: '#B85C38' },
     warning: { main: '#E9C46A' },
@@ -18,8 +18,9 @@ const theme = createTheme({
   shape: { borderRadius: 12 },
   typography: {
     fontFamily: 'Tuffy, serif',
-  h5: { fontWeight: 700, color: '#7B6435' },
-  h6: { fontWeight: 600, color: '#7B6435' },
+  h5: { fontWeight: 700, color: '#2D1B06' },
+  h6: { fontWeight: 600, color: '#2D1B06' },
+  body2: { color: '#2D1B06' },
     body1: { fontSize: 16 },
     button: { textTransform: 'none', fontWeight: 600 },
   },
