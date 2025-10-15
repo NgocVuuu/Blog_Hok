@@ -76,27 +76,51 @@ const Banner = () => {
           paddingBottom: { xs: 6, md: 8 },
         }}
       >
-        <Typography
-          variant="h3"
-          fontWeight={700}
+        <Box
           sx={{
-            textShadow: '0 2px 16px rgba(0,0,0,0.8)',
-            fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' },
-            mb: 1
+            background: 'rgba(255,255,255,0.55)',
+            borderRadius: 2,
+            px: 2,
+            py: 1,
+            display: 'inline-block',
+            backdropFilter: 'blur(4px)',
+            mb: 1,
+            mt: { xs: 6, md: 10 },
           }}
         >
-          {t('home.welcome.title')}
-        </Typography>
-        <Typography
-          variant="h6"
+          <Typography
+            variant="h3"
+            fontWeight={700}
+            sx={{
+              textShadow: '0 2px 16px rgba(0,0,0,0.8)',
+              fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' }
+            }}
+          >
+            {t('home.welcome.title')}
+          </Typography>
+        </Box>
+        <Box
           sx={{
-            textShadow: '0 2px 8px rgba(0,0,0,0.6)',
-            fontSize: { xs: '1rem', sm: '1.2rem', md: '1.25rem' },
-            opacity: 0.95
+            background: 'rgba(255,255,255,0.55)',
+            borderRadius: 2,
+            px: 2,
+            py: 1,
+            display: 'inline-block',
+            backdropFilter: 'blur(4px)',
+            mt: 2,
           }}
         >
-          {t('home.welcome.subtitle')}
-        </Typography>
+          <Typography
+            variant="h6"
+            sx={{
+              textShadow: '0 2px 8px rgba(0,0,0,0.6)',
+              fontSize: { xs: '1rem', sm: '1.2rem', md: '1.25rem' },
+              opacity: 0.95
+            }}
+          >
+            {t('home.welcome.subtitle')}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

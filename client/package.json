@@ -39,7 +39,8 @@
     "build": "react-scripts build",
     "build:dev": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postbuild": "npx critters ./build/index.html"
   },
   "eslintConfig": {
     "extends": [
@@ -70,6 +71,7 @@
     "@eslint/object-schema": "^2.1.6",
     "@jridgewell/sourcemap-codec": "^1.5.5",
     "@rollup/plugin-terser": "^0.4.4",
+    "critters": "^0.0.23",
     "eslint": "^8.57.1",
     "eslint-config-react-app": "^7.0.1",
     "svgo": "^4.0.0",

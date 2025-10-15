@@ -529,13 +529,14 @@ const Home = () => {
             sx={{
               height: { xs: 500, md: 400 },
               border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: 1.5,
-              boxShadow: 1,
+              borderColor: 'primary.main',
+              borderRadius: 2,
+              boxShadow: 3,
               overflow: 'hidden',
-              bgcolor: 'background.paper',
+              bgcolor: 'grey.50',
               display: 'flex',
-              flexDirection: 'column'
+              flexDirection: 'column',
+              color: 'text.primary'
             }}
           >
             {/* Filter header */}
@@ -622,7 +623,7 @@ const Home = () => {
                       <Box sx={{ minWidth: 0 }}>
                         <Typography variant="body2" fontWeight={700} title={h.name} sx={{ whiteSpace: 'normal', lineHeight: 1.2 }}>{h.name}</Typography>
                         {Array.isArray(h.lanes) && h.lanes.length > 0 && (
-                          <Typography variant="caption" color="text.secondary" sx={{ display:'block', whiteSpace: 'normal', wordBreak: 'break-word', lineHeight: 1.2 }}>
+                          <Typography variant="caption" color="primary.main" sx={{ display:'block', whiteSpace: 'normal', wordBreak: 'break-word', lineHeight: 1.2 }}>
                             {(h.lanes[0] === 'Abyssal Lane') ? 'Clash Lane' : h.lanes[0]}
                           </Typography>
                         )}
@@ -631,11 +632,11 @@ const Home = () => {
                     {/* Tier */}
                     <Typography variant="subtitle2" fontWeight={800} color="warning.main" sx={{ textAlign: 'center' }}>{h.metaTier || '-'}</Typography>
                     {/* Win */}
-                    <Typography variant="body2" fontWeight={400} sx={{ color: (h.winRate||0) >= 50 ? 'success.main' : 'text.primary', textAlign: 'right' }}>{pct(h.winRate)}</Typography>
+                    <Typography variant="body2" fontWeight={700} sx={{ color: (h.winRate||0) >= 50 ? 'success.dark' : 'primary.dark', textAlign: 'right' }}>{pct(h.winRate)}</Typography>
                     {/* Pick */}
-                    <Typography variant="body2" fontWeight={400} sx={{ color: 'info.main', textAlign: 'right' }}>{pct(h.pickRate)}</Typography>
+                    <Typography variant="body2" fontWeight={700} sx={{ color: 'info.dark', textAlign: 'right' }}>{pct(h.pickRate)}</Typography>
                     {/* Ban */}
-                    <Typography variant="body2" fontWeight={400} sx={{ color: 'error.main', textAlign: 'right' }}>{pct(h.banRate)}</Typography>
+                    <Typography variant="body2" fontWeight={700} sx={{ color: 'error.dark', textAlign: 'right' }}>{pct(h.banRate)}</Typography>
                   </Box>
                 ))
               )}
