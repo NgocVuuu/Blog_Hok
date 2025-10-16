@@ -26,17 +26,22 @@ const Banner = () => {
         priority
         rootMargin="600px 0px"
         threshold={0}
+        width={2000}
+        height={420}
         sx={{
           position: 'absolute',
           inset: 0,
           objectFit: 'cover',
+          width: '100%',
+          height: '100%',
           zIndex: 0,
         }}
       />
 
-      {/* Gradient overlays */}
+      {/* Gradient overlays: chỉ hiện trên desktop */}
       <Box
         sx={{
+          display: { xs: 'none', md: 'block' },
           position: 'absolute',
           inset: 0,
           background: `
@@ -46,14 +51,14 @@ const Banner = () => {
           zIndex: 1,
         }}
       />
-      {/* Overlay làm mờ viền ngoài */}
+      {/* Overlay blur viền ngoài: chỉ hiện trên desktop */}
       <Box
         sx={{
+          display: { xs: 'none', md: 'block' },
           position: 'absolute',
           inset: 0,
           pointerEvents: 'none',
           zIndex: 2,
-          // Hiệu ứng blur viền ngoài bằng mask-image
           WebkitMaskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,1) 100%)`,
           maskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,1) 100%)`,
           backdropFilter: 'blur(16px)',
@@ -83,7 +88,8 @@ const Banner = () => {
             px: 2,
             py: 1,
             display: 'inline-block',
-            backdropFilter: 'blur(4px)',
+            backdropFilter: { xs: 'none', sm: 'blur(4px)' },
+            boxShadow: { xs: 'none', sm: '0 2px 16px 0 rgba(0,0,0,0.08)' },
             mb: 1,
             mt: { xs: 6, md: 10 },
           }}
@@ -106,7 +112,8 @@ const Banner = () => {
             px: 2,
             py: 1,
             display: 'inline-block',
-            backdropFilter: 'blur(4px)',
+            backdropFilter: { xs: 'none', sm: 'blur(4px)' },
+            boxShadow: { xs: 'none', sm: '0 2px 16px 0 rgba(0,0,0,0.08)' },
             mt: 2,
           }}
         >
