@@ -155,9 +155,16 @@ app.get('/sitemap.xml', async (req, res, next) => {
     ]);
 
     // Helpers
+    const escapeXml = (str) =>
+      String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
     const fmt = (d) => new Date(d).toISOString();
     const url = (loc, lastmod, changefreq = 'daily', priority = '0.7') =>
-      `  <url>\n    <loc>${loc}</loc>\n    ${lastmod ? `<lastmod>${fmt(lastmod)}</lastmod>` : ''}\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+      `  <url>\n    <loc>${escapeXml(loc)}</loc>\n    ${lastmod ? `<lastmod>${escapeXml(fmt(lastmod))}</lastmod>` : ''}\n    <changefreq>${escapeXml(changefreq)}</changefreq>\n    <priority>${escapeXml(priority)}</priority>\n  </url>`;
 
     const staticUrls = [
       url(`${baseUrl}/`, new Date(), 'daily', '1.0'),
@@ -201,9 +208,16 @@ app.get('/api/sitemap.xml', async (req, res, next) => {
       Hero.find({}, { slug: 1, updatedAt: 1, createdAt: 1 }).lean(),
       News.find({}, { slug: 1, publishedAt: 1, createdAt: 1 }).lean()
     ]);
+    const escapeXml = (str) =>
+      String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
     const fmt = (d) => new Date(d).toISOString();
     const url = (loc, lastmod, changefreq = 'daily', priority = '0.7') =>
-      `  <url>\n    <loc>${loc}</loc>\n    ${lastmod ? `<lastmod>${fmt(lastmod)}</lastmod>` : ''}\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+      `  <url>\n    <loc>${escapeXml(loc)}</loc>\n    ${lastmod ? `<lastmod>${escapeXml(fmt(lastmod))}</lastmod>` : ''}\n    <changefreq>${escapeXml(changefreq)}</changefreq>\n    <priority>${escapeXml(priority)}</priority>\n  </url>`;
     const staticUrls = [
       url(`${baseUrl}/`, new Date(), 'daily', '1.0'),
       url(`${baseUrl}/heroes`, new Date(), 'daily', '0.9'),

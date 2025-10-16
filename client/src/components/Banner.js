@@ -111,11 +111,18 @@ const Banner = () => {
           }}
         >
           <Typography
-            variant="h6"
+            component="p"
+            fontWeight={600}
+            color="text.secondary"
             sx={{
-              textShadow: '0 2px 8px rgba(0,0,0,0.6)',
-              fontSize: { xs: '1rem', sm: '1.2rem', md: '1.25rem' },
-              opacity: 0.95
+              mb: 0,
+              fontSize: { xs: 14, sm: 18 },
+              lineHeight: 1.5,
+              maxWidth: { xs: '100%', sm: 700, md: 900 },
+              mx: 'auto',
+              textAlign: 'center',
+              whiteSpace: 'normal',
+              overflowWrap: 'break-word',
             }}
           >
             {t('home.welcome.subtitle')}

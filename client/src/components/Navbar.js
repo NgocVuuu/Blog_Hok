@@ -213,6 +213,7 @@ const Navbar = () => {
           onClick={() => setDrawerOpen(true)}
           className="mobile-only"
           sx={{ ml: 1 }}
+          aria-label="Open navigation menu"
         >
           <MenuIcon fontSize="large" sx={{ color: 'white' }} />
         </IconButton>
