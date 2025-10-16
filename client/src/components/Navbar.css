@@ -17,6 +17,8 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+  min-height: 48px;
+  min-width: 480px;
 }
 
 .nav-links .MuiButton-root {
@@ -25,6 +27,8 @@
   font-size: 1rem;
   transition: all 0.3s ease;
   position: relative;
+  min-width: 80px;
+  min-width: 80px;
 }
 
 .language-selector {
@@ -32,6 +36,8 @@
 }
 
 .language-selector .MuiIconButton-root {
+  min-width: 48px;
+  min-height: 48px;
   transition: transform 0.3s ease;
 }
 

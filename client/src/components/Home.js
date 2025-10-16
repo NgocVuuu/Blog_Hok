@@ -623,7 +623,7 @@ const Home = () => {
                       <Box sx={{ minWidth: 0 }}>
                         <Typography variant="body2" fontWeight={700} title={h.name} sx={{ whiteSpace: 'normal', lineHeight: 1.2 }}>{h.name}</Typography>
                         {Array.isArray(h.lanes) && h.lanes.length > 0 && (
-                          <Typography variant="caption" color="primary.main" sx={{ display:'block', whiteSpace: 'normal', wordBreak: 'break-word', lineHeight: 1.2, mt: 0.25 }}>
+                          <Typography variant="caption" color="primary.main" fontWeight={700} sx={{ display:'block', whiteSpace: 'normal', wordBreak: 'break-word', lineHeight: 1.2, mt: 0.25 }}>
                             {(h.lanes[0] === 'Abyssal Lane') ? 'Clash Lane' : h.lanes[0]}
                           </Typography>
                         )}
@@ -632,9 +632,9 @@ const Home = () => {
                     {/* Tier */}
                     <Typography variant="subtitle2" fontWeight={800} sx={{ textAlign: 'center', color: '#FFD600' }}>{h.metaTier || '-'}</Typography>
                     {/* Win */}
-                    <Typography variant="body2" fontWeight={700} sx={{ color: (h.winRate||0) >= 50 ? '#43a047' : '#d32f2f', textAlign: 'right' }}>{pct(h.winRate)}</Typography>
+                    <Typography variant="body2" fontWeight={700} sx={{ color: (h.winRate||0) >= 50 ? '#43a047' : '#d32f2f', textAlign: 'right', boxShadow: 'none' }}>{pct(h.winRate)}</Typography>
                     {/* Pick */}
-                    <Typography variant="body2" fontWeight={700} sx={{ color: '#1976d2', textAlign: 'right' }}>{pct(h.pickRate)}</Typography>
+                    <Typography variant="body2" fontWeight={700} sx={{ color: '#1976d2', textAlign: 'right', boxShadow: 'none' }}>{pct(h.pickRate)}</Typography>
                     {/* Ban */}
                     <Typography variant="body2" fontWeight={700} sx={{ color: '#d32f2f', textAlign: 'right' }}>{pct(h.banRate)}</Typography>
                   </Box>

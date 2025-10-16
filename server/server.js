@@ -93,6 +93,27 @@ try {
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Serve static assets from client/build with long cache lifetime
+app.use(
+  express.static(path.join(__dirname, '../client/build'), {
+    maxAge: '30d', // Cache static assets for 30 days
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.html')) {
+        // Do not cache HTML files
+        res.setHeader('Cache-Control', 'no-cache');
+      }
+    }
+  })
+);
+
+// Serve static assets from client/public with long cache lifetime
+app.use(
+  '/public',
+  express.static(path.join(__dirname, '../client/public'), {
+    maxAge: '30d'
+  })
+);
+
 // Root route handler
 app.get('/', (req, res) => {
   res.json({
