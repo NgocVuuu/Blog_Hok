@@ -43,6 +43,11 @@ body {
   font-display: swap;
 }
 
+/* Ensure root elements fill the viewport so App's flex layout can pin footer to bottom */
+html, body, #root {
+  height: 100%;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

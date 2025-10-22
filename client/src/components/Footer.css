@@ -77,7 +77,8 @@
 
 .footer-bottom {
   margin-top: 1.2rem;
-  padding-top: 0.7rem;
+  /* reduce top padding so the legal links appear closer to the divider */
+  padding-top: 0.4rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -85,12 +86,14 @@
   display: flex;
   justify-content: center;
   gap: 1.2rem;
-  margin-top: 0.5rem;
+  /* smaller gap above links for better vertical balance */
+  margin-top: 0.25rem;
 }
 
 @media (max-width: 600px) {
   .footer {
-    padding: 0.7rem 0 0.3rem;
+    padding: 0.45rem 0 0.2rem;
+    min-height: 80px; /* shorten footer on mobile */
   }
 
   .footer-title {
@@ -102,5 +105,11 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+  }
+  /* remove thin border on mobile */
+  .footer-bottom {
+    border-top: none !important;
+    margin-top: 0.4rem;
+    padding-top: 0.3rem;
   }
 } 
