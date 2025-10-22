@@ -3,9 +3,10 @@ import { Container, Box, Typography, TextField, InputAdornment, IconButton, Card
 import { MdSearch as SearchIcon, MdCasino as CasinoIcon, MdWhatshot as WhatshotIcon, MdBolt as BoltIcon, MdArticle as ArticleIcon, MdConstruction as ConstructionIcon } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination } from 'swiper/modules';
+import { Autoplay, Pagination, EffectCoverflow } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import 'swiper/css/effect-coverflow';
 import Banner from './Banner';
 import { getAllHeroesAll } from '../services/heroService';
 import { getNews } from '../services/newsService';
@@ -375,18 +376,40 @@ const Home = () => {
           ))}
         </Grid>
       ) : (
-        <Swiper modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={1.05} breakpoints={{ 600:{slidesPerView:1.5}, 900:{slidesPerView:2.2}, 1200:{slidesPerView:3} }} pagination={{ clickable: true }} autoplay={{ delay: 4000, disableOnInteraction: false }} style={{ marginBottom: 24 }}>
+        <>
+        <Swiper
+          modules={[Autoplay, Pagination]}
+          spaceBetween={8}
+          slidesPerView={1.55}
+          breakpoints={{ 600:{slidesPerView:2.2}, 900:{slidesPerView:3.3}, 1200:{slidesPerView:4.4} }}
+          pagination={{ clickable: true, el: '.special-trending-pagination' }}
+          autoplay={{ delay: 4000, disableOnInteraction: false }}
+          style={{ marginBottom: 18 }}
+        >
           {specialTrending.map(item => (
             <SwiperSlide key={item.slug || item.id || item.name}>
               <Card component={Link} to={`/heroes/${getHeroSlug(item)}`} sx={{ textDecoration:'none', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 8px rgba(0,0,0,0.06)', height:'100%' }}>
-                {item.image ? (<CardMedia component="img" height={160} image={item.image} alt={item.name} />) : (<Skeleton variant="rectangular" height={160} />)}
-                <CardContent sx={{ p:1.5 }}>
-                  <Typography variant="subtitle1" fontWeight={800} noWrap>{item.name}</Typography>
-                  <Box sx={{ mt: 0.5, display:'flex', alignItems:'center', gap:1, flexWrap:'wrap' }}>
-                    <Chip size="small" label={item.categoryEn || item.categoryVi || item.category || 'Special'} color="warning" />
-                    <Chip size="small" label={`Tier ${item.metaTier || '-'}`} />
-                    {item.winRate != null && (<Chip size="small" label={`WR ${item.winRate}%`} color={(item.winRate||0) >= 50 ? 'success' : 'default'} />)}
-                    {item.pickRate != null && (<Chip size="small" label={`PR ${item.pickRate}%`} color="info" />)}
+                {item.image ? (<CardMedia component="img" height={110} image={item.image} alt={item.name} />) : (<Skeleton variant="rectangular" height={110} />)}
+                <CardContent sx={{ p:0.9 }}>
+                  <Typography variant="subtitle1" fontWeight={800} noWrap sx={{ fontSize: '0.95rem' }}>{item.name}</Typography>
+                  <Box sx={{ mt: 0.5, display:'flex', alignItems:'center', gap:0.4, flexWrap:'wrap' }}>
+                    <Chip
+                      size="small"
+                      label={item.categoryEn || item.categoryVi || item.category || 'Special'}
+                      color="warning"
+                      sx={{ fontSize: 10, px: 0.25, py: 0.25, minHeight: 20, '& .MuiChip-label': { px: 0.5, maxWidth: 80, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }}
+                    />
+                    <Chip
+                      size="small"
+                      label={`Tier ${item.metaTier || '-'}`}
+                      sx={{ fontSize: 10, px: 0.25, py: 0.25, minHeight: 20, '& .MuiChip-label': { px: 0.5, maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }}
+                    />
+                    {item.winRate != null && (
+                      <Chip size="small" label={`WR ${item.winRate}%`} color={(item.winRate||0) >= 50 ? 'success' : 'default'} sx={{ fontSize: 10, px: 0.25, py: 0.25, minHeight: 20, '& .MuiChip-label': { px: 0.5, maxWidth: 64, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }} />
+                    )}
+                    {item.pickRate != null && (
+                      <Chip size="small" label={`PR ${item.pickRate}%`} color="info" sx={{ fontSize: 10, px: 0.25, py: 0.25, minHeight: 20, '& .MuiChip-label': { px: 0.5, maxWidth: 64, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }} />
+                    )}
                   </Box>
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
                     {item.reasonEn || item.reasonVi || item.reason}
@@ -396,6 +419,8 @@ const Home = () => {
             </SwiperSlide>
           ))}
         </Swiper>
+        <Box className="special-trending-pagination" sx={{ mt: 1, display: 'flex', justifyContent: 'center', '& .swiper-pagination-bullet': { background: '#c9a063' } }} />
+        </>
       )}
 
       {/* Top counters this week (moved up under Special Trending) */}
@@ -405,85 +430,57 @@ const Home = () => {
       {loadingHeroes ? (
         <Grid container spacing={2} sx={{ mb: 4 }}>
           {Array.from({ length: 8 }).map((_,i)=>(
-            <Grid item xs={6} sm={3} md={3} lg={1.5} key={i}><Skeleton variant="rectangular" height={140} /></Grid>
+            <Grid item xs={12} sm={6} md={4} key={i}><Skeleton variant="rectangular" height={220} /></Grid>
           ))}
         </Grid>
       ) : (
-        isMobile ? (
-          <Box sx={{ '& .top-counters-swiper .swiper-pagination-bullets': { bottom: -14 } }}>
-            <Swiper className="top-counters-swiper" modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={2.2} pagination={false} autoplay={{ delay: 3500, disableOnInteraction: false }} style={{ marginBottom: 24 }}>
-              {topCounters.map(h => (
-                <SwiperSlide key={h._id || h.slug || h.name}>
-                <Card component={Link} to={`/heroes/${getHeroSlug(h)}`} sx={{ textDecoration:'none', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 6px rgba(0,0,0,0.05)' }}>
-                  {h.image ? (<CardMedia component="img" height={120} image={h.image} alt={h.name} />) : (<Skeleton variant="rectangular" height={120} />)}
-                  <CardContent sx={{ p:1 }}>
-                    <Typography variant="body2" fontWeight={700} noWrap>{h.name}</Typography>
-          <Box sx={{ display:'flex', alignItems:'center', gap:0.5, flexWrap:'nowrap', overflow:'hidden' }}>
-                      <Chip
-                        size="small"
-                        label={`${h.winRate ?? '-' }% ${t('win_rate','Win Rate')}`}
-                        color={(h.winRate||0) >= 50 ? 'success' : 'default'}
-            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
-                      />
-                      <Chip
-                        size="small"
-                        label={`${h.pickRate ?? '-' }% ${t('pick_rate','Pick Rate')}`}
-                        color="info"
-            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
-                      />
-                    </Box>
-                    {Array.isArray(h.goodAgainst) && h.goodAgainst.length > 0 && (
-                      <Box sx={{ mt: 0.5, display:'flex', flexWrap:'wrap', gap:0.5 }}>
-                        {(h.goodAgainst.slice(0,3)).map((g, gi) => {
-                          const id = typeof g === 'string' ? g : (g.hero?._id || g.hero || g._id);
-                          const hero = heroes.find(x => x._id === id);
-                          return hero ? (<Chip key={id || `${h._id}-ga-${gi}`} size="small" label={hero.name} />) : null;
-                        })}
-                      </Box>
-                    )}
-                  </CardContent>
-                </Card>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </Box>
-        ) : (
-          <Grid container spacing={2} sx={{ mb: 4 }}>
-            {topCounters.map(h => (
-              <Grid item xs={6} sm={3} md={3} lg={1.5} key={h._id || h.slug || h.name}>
-                <Card component={Link} to={`/heroes/${getHeroSlug(h)}`} sx={{ textDecoration:'none', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 6px rgba(0,0,0,0.05)' }}>
-                  {h.image ? (<CardMedia component="img" height={120} image={h.image} alt={h.name} />) : (<Skeleton variant="rectangular" height={120} />)}
-                  <CardContent sx={{ p:1 }}>
-                    <Typography variant="body2" fontWeight={700} noWrap>{h.name}</Typography>
-          <Box sx={{ display:'flex', alignItems:'center', gap:0.5, flexWrap:'nowrap', overflow:'hidden' }}>
-                      <Chip
-                        size="small"
-                        label={`${h.winRate ?? '-' }% ${t('win_rate','Win Rate')}`}
-                        color={(h.winRate||0) >= 50 ? 'success' : 'default'}
-            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
-                      />
-                      <Chip
-                        size="small"
-                        label={`${h.pickRate ?? '-' }% ${t('pick_rate','Pick Rate')}`}
-                        color="info"
-            sx={{ flex:1, minWidth:0, '& .MuiChip-label': { px: 0.5, fontSize: 10, maxWidth:'100%', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } }}
-                      />
-                    </Box>
-                    {Array.isArray(h.goodAgainst) && h.goodAgainst.length > 0 && (
-                      <Box sx={{ mt: 0.5, display:'flex', flexWrap:'wrap', gap:0.5 }}>
-                        {(h.goodAgainst.slice(0,3)).map((g, gi) => {
-                          const id = typeof g === 'string' ? g : (g.hero?._id || g.hero || g._id);
-                          const hero = heroes.find(x => x._id === id);
-                          return hero ? (<Chip key={id || `${h._id}-ga-${gi}`} size="small" label={hero.name} />) : null;
-                        })}
-                      </Box>
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        )
+        <Box sx={{ pb: 2 /* keep some padding under the carousel */ }}>
+        <Swiper
+          modules={[Autoplay, Pagination]}
+          spaceBetween={8}
+          slidesPerView={'auto'}
+          pagination={{ clickable: true, el: '.top-counters-pagination' }}
+          autoplay={{ delay: 3500, disableOnInteraction: false }}
+          style={{ marginBottom: 18 }}
+        >
+          {topCounters.map(h => (
+            <SwiperSlide key={h._id || h.slug || h.name} style={{ width: 'auto' }}>
+              <Card
+                component={Link}
+                to={`/heroes/${getHeroSlug(h)}`}
+                sx={{
+                  textDecoration: 'none',
+                  border: '1px solid rgba(0,0,0,0.06)',
+                  boxShadow: '0 1px 8px rgba(0,0,0,0.06)',
+                  display: 'inline-block',
+                  width: 'auto',
+                  textAlign: 'left',
+                  px: 0.75,
+                  py: 0.5,
+                  borderRadius: 2,
+                  bgcolor: 'background.paper'
+                }}
+              >
+                {h.image ? (
+                  <CardMedia component="img" image={h.image} alt={h.name} sx={{ width: 160, maxWidth: 160, height: 96, objectFit: 'cover', borderRadius: 1, mx: 'auto' }} />
+                ) : (
+                  <Skeleton variant="rectangular" height={96} sx={{ width: 160 }} />
+                )}
+                <CardContent sx={{ p: 0.5, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                  <Typography variant="subtitle2" fontWeight={800} sx={{ fontSize: '0.9rem', mb: 0.25 }}>{h.name}</Typography>
+                  <Box sx={{ display:'flex', alignItems:'center', gap:0.35, flexWrap:'nowrap' }}>
+                    <Chip size="small" label={`Tier ${h.metaTier || '-'}`} sx={{ fontSize: 10, px: 0.25, py: 0.15, minHeight: 20, '& .MuiChip-label': { px: 0.4 } }} />
+                    {h.winRate != null && (<Chip size="small" label={`${(h.winRate||0).toFixed(2)}%`} color={(h.winRate||0) >= 50 ? 'success' : 'default'} sx={{ fontSize: 10, px: 0.25, py: 0.15, minHeight: 20, '& .MuiChip-label': { px: 0.4 } }} />)}
+                    {h.pickRate != null && (<Chip size="small" label={`${(h.pickRate||0).toFixed(2)}%`} color="info" sx={{ fontSize: 10, px: 0.25, py: 0.15, minHeight: 20, '& .MuiChip-label': { px: 0.4 } }} />)}
+                  </Box>
+                </CardContent>
+              </Card>
+            </SwiperSlide>
+          ))}
+  </Swiper>
+  {/* external pagination container placed below the swiper so bullets sit under the cards */}
+  <Box className="top-counters-pagination" sx={{ mt: 1, display: 'flex', justifyContent: 'center', '& .swiper-pagination-bullet': { background: '#c9a063' } }} />
+  </Box>
       )}
 
       {/* Patch highlights */}
@@ -666,16 +663,51 @@ const Home = () => {
         </Grid>
       ) : (
         isMobile ? (
-          <Swiper modules={[Autoplay, Pagination]} spaceBetween={12} slidesPerView={2.1} pagination={false} autoplay={{ delay: 3500, disableOnInteraction: false }} style={{ marginBottom: 24 }}>
+          <Swiper
+            modules={[Autoplay, Pagination, EffectCoverflow]}
+            effect={"coverflow"}
+            grabCursor={true}
+            centeredSlides={true}
+            spaceBetween={12}
+            slidesPerView={1.6}
+            coverflowEffect={{ rotate: 0, stretch: 0, depth: 80, modifier: 1.8, slideShadows: false }}
+            pagination={false}
+            autoplay={{ delay: 3500, disableOnInteraction: false }}
+            style={{ marginBottom: 24, paddingBottom: 20 }}
+          >
             {latestNews.map((item, i) => (
               <SwiperSlide key={item.slug || item._id || i}>
-                <Card component={Link} to={item.slug ? `/news/${item.slug}` : (item._id ? `/news/${item._id}` : '/news')} sx={{ position:'relative', textDecoration:'none', border:'1px solid', borderColor:'divider', boxShadow:1 }}>
-                  <Box sx={{ height: 3, bgcolor: 'primary.main', opacity: 0.3 }} />
-                  {item.thumbnail || item.image ? (<CardMedia component="img" height={140} image={item.thumbnail || item.image} alt={item.title} />) : (<Skeleton variant="rectangular" height={140} />)}
-                  <CardContent>
-                    <Typography variant="subtitle2" fontWeight={700} sx={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.title}</Typography>
-                  </CardContent>
-                </Card>
+                {({ isActive, isPrev, isNext }) => {
+                  const visible = isActive || isPrev || isNext;
+                  return (
+                    <Card
+                      component={Link}
+                      to={item.slug ? `/news/${item.slug}` : (item._id ? `/news/${item._id}` : '/news')}
+                      sx={{
+                        position: 'relative',
+                        textDecoration: 'none',
+                        border: 'none',
+                        boxShadow: 'none',
+                        bgcolor: 'transparent',
+                        opacity: visible ? 1 : 0.55,
+                        transition: 'opacity 0.25s ease',
+                        pointerEvents: visible ? 'auto' : 'none'
+                      }}
+                    >
+                      {item.thumbnail || item.image ? (
+                        <CardMedia component="img" height={110} image={item.thumbnail || item.image} alt={item.title} sx={{ objectFit: 'cover' }} />
+                      ) : (
+                        <Skeleton variant="rectangular" height={110} />
+                      )}
+                      <CardContent sx={{ py: 1 }}>
+                        <Typography variant="subtitle2" fontWeight={800} sx={{ whiteSpace: 'normal', lineHeight: 1.25 }}>{item.title}</Typography>
+                        {item.createdAt && (
+                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>{new Date(item.createdAt).toLocaleDateString()}</Typography>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                }}
               </SwiperSlide>
             ))}
           </Swiper>
@@ -683,8 +715,7 @@ const Home = () => {
           <Grid container spacing={2} sx={{ mb: 4 }}>
             {latestNews.map((item, i) => (
               <Grid item xs={12} sm={6} md={3} key={item.slug || item._id || i}>
-                <Card component={Link} to={item.slug ? `/news/${item.slug}` : (item._id ? `/news/${item._id}` : '/news')} sx={{ position:'relative', textDecoration:'none', border:'1px solid', borderColor:'divider', boxShadow:1 }}>
-                  <Box sx={{ height: 3, bgcolor: 'primary.main', opacity: 0.3 }} />
+                <Card component={Link} to={item.slug ? `/news/${item.slug}` : (item._id ? `/news/${item._id}` : '/news')} sx={{ position:'relative', textDecoration:'none', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }}>
                   {item.thumbnail || item.image ? (<CardMedia component="img" height={140} image={item.thumbnail || item.image} alt={item.title} />) : (<Skeleton variant="rectangular" height={140} />)}
                   <CardContent>
                     <Typography variant="subtitle2" fontWeight={700} sx={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.title}</Typography>

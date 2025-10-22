@@ -1489,18 +1489,45 @@ const HeroDetail = () => {
           p: { xs: 2, md: 3 },
         }}>
           <Typography variant="h5" sx={{ mb: 1.5 }}>{t('news.latest', 'Bài viết mới nhất')}</Typography>
-          <Box sx={{ display: 'flex', gap: { xs: 1, md: 1.5 }, overflowX: 'auto', pb: 1 }}>
-            {latestNews.map(n => (
-              <Box key={n.slug} sx={{ width: { xs: 160, sm: 200, md: 280 }, flex: '0 0 auto', cursor: 'pointer' }} onClick={() => navigate(`/news/${n.slug}`)}>
-                <Box sx={{ width: '100%', aspectRatio: '16/9', borderRadius: { xs: 2, md: 3 }, overflow: 'hidden', border: '1px solid rgba(201,160,99,0.25)', mb: { xs: 0.5, md: 1 } }}>
-                  <img src={n.image} alt={n.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          {/* Mobile: horizontal scroll list */}
+          <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+            <Box sx={{ display: 'flex', gap: { xs: 1, md: 1.5 }, overflowX: 'auto', pb: 1 }}>
+              {latestNews.map(n => (
+                <Box key={n.slug} sx={{ width: { xs: 160, sm: 200, md: 280 }, flex: '0 0 auto', cursor: 'pointer' }} onClick={() => navigate(`/news/${n.slug}`)}>
+                  <Box sx={{ width: '100%', aspectRatio: '16/9', borderRadius: { xs: 2, md: 3 }, overflow: 'hidden', border: '1px solid rgba(201,160,99,0.25)', mb: { xs: 0.5, md: 1 } }}>
+                    <img src={n.image} alt={n.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </Box>
+                  <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1.25, fontSize: { xs: '0.85rem', md: '1rem' } }}>{n.title}</Typography>
+                  {n.publishedAt && (
+                    <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', md: '0.75rem' } }}>{new Date(n.publishedAt).toLocaleDateString()}</Typography>
+                  )}
                 </Box>
-                <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1.25, fontSize: { xs: '0.85rem', md: '1rem' } }}>{n.title}</Typography>
-                {n.publishedAt && (
-                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', md: '0.75rem' } }}>{new Date(n.publishedAt).toLocaleDateString()}</Typography>
-                )}
-              </Box>
-            ))}
+              ))}
+            </Box>
+          </Box>
+          {/* Desktop: use Swiper with external pagination so bullets appear below the cards */}
+          <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+            <Swiper
+              modules={[Pagination]}
+              spaceBetween={20}
+              slidesPerView={3}
+              breakpoints={{ 900: { slidesPerView: 3 }, 1200: { slidesPerView: 5 } }}
+              pagination={{ clickable: true, el: '.hero-latest-pagination' }}
+              style={{ paddingBottom: 8 }}
+            >
+              {latestNews.map((n, idx) => (
+                <SwiperSlide key={n.slug || idx}>
+                  <Box sx={{ width: 250, cursor: 'pointer' }} onClick={() => navigate(`/news/${n.slug}`)}>
+                    <Box sx={{ width: '100%', aspectRatio: '16/9', borderRadius: 3, overflow: 'hidden', border: '1px solid rgba(201,160,99,0.25)', mb: 1 }}>
+                      <img src={n.image} alt={n.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </Box>
+                    <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1.25, fontSize: '1rem' }}>{n.title}</Typography>
+                    {n.publishedAt && (<Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>{new Date(n.publishedAt).toLocaleDateString()}</Typography>)}
+                  </Box>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <Box className="hero-latest-pagination" sx={{ mt: 1, display: 'flex', justifyContent: 'center', '& .swiper-pagination-bullet': { background: '#c9a063', width: 10, height: 10, borderRadius: '50%', opacity: 1 } }} />
           </Box>
         </Box>
       </Box>
