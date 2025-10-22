@@ -244,13 +244,14 @@ const News = () => {
         {/* Table View of Posts */}
         {filteredPosts.length > 0 ? (
           <TableContainer component={Paper} sx={{ mb: 4, boxShadow: 3 }}>
-            <Table sx={{ minWidth: 650 }}>
+            <Table sx={{ width: '100%', tableLayout: isMobile ? 'fixed' : 'auto' }}>
               <TableHead sx={{ bgcolor: '#f5f5f5' }}>
-                <TableRow>
-                  <TableCell width="50%">{t('news.title', 'Tiêu đề')}</TableCell>
-                  <TableCell>{t('news.category', 'Phân loại')}</TableCell>
-                  <TableCell>{t('news.author', 'Tác giả')}</TableCell>
-                  <TableCell>{t('news.publishDate', 'Ngày đăng')}</TableCell>
+                <TableRow sx={isMobile ? { display: 'flex', alignItems: 'center', gap: 1, px: 1 } : undefined}>
+                  <TableCell sx={isMobile ? { flex: '0 0 56px', p: '6px 4px' } : { width: '48px', p: '6px 1px' }}></TableCell>
+                  <TableCell sx={isMobile ? { flex: '1 1 auto', p: '6px 8px', whiteSpace: 'normal' } : { minWidth: 80, p: isMobile ? '6px 2px' : undefined }}>{t('news.title', 'Tiêu đề')}</TableCell>
+                  <TableCell align="center" sx={isMobile ? { flex: '0 0 88px', p: '6px 4px', whiteSpace: 'normal' } : { minWidth: 60, p: isMobile ? '6px 2px' : undefined }}>{t('news.category', 'Phân loại')}</TableCell>
+                  {!isMobile && <TableCell sx={{ width: '13vw', maxWidth: '13vw', p: 1 }}>{t('news.author', 'Tác giả')}</TableCell>}
+                  {!isMobile && <TableCell sx={{ width: '13vw', maxWidth: '13vw', p: 1 }}>Published on</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -258,58 +259,95 @@ const News = () => {
                   <TableRow
                     key={post._id}
                     hover
-                    sx={{
-                      cursor: 'pointer',
-                      '&:hover': { bgcolor: '#f9f9f9' }
-                    }}
+                    sx={isMobile ? { display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', '&:hover': { bgcolor: '#f9f9f9' }, px: 1 } : { cursor: 'pointer', '&:hover': { bgcolor: '#f9f9f9' } }}
                     onClick={() => navigate(`/news/${post.slug || post._id}`)}
                   >
-                    <TableCell>
-                      <Box display="flex" alignItems="center">
-                        {post.image && (
-                          <Box
-                            component="img"
-                            src={post.image}
-                            alt={post.title}
-                            sx={{
-                              width: 60,
-                              height: 60,
-                              objectFit: 'cover',
-                              borderRadius: 1,
-                              mr: 2
-                            }}
-                          />
-                        )}
+                    <TableCell sx={isMobile ? { flex: '0 0 56px', p: '6px 4px', verticalAlign: 'middle', textAlign: 'center' } : { p: 2, verticalAlign: 'middle', width: '48px', maxWidth: '3.5vw', textAlign: 'center' }}>
+                      {post.image && (
+                        <Box
+                          component="img"
+                          src={post.image}
+                          alt={post.title}
+                          sx={{
+                            width: isMobile ? 36 : 44,
+                            height: isMobile ? 36 : 44,
+                            objectFit: 'cover',
+                            borderRadius: 1,
+                            display: 'inline-block',
+                            verticalAlign: 'middle',
+                            background: '#eee',
+                            ml: isMobile ? 0.5 : 0
+                          }}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell sx={isMobile ? { flex: '1 1 auto', p: '6px 8px', verticalAlign: 'top' } : { p: 2, verticalAlign: 'middle' }}>
+                      <Box sx={{ width: '100%', minWidth: 0 }}>
                         <Typography
-                          variant="subtitle1"
+                          variant={isMobile ? 'subtitle2' : 'subtitle1'}
                           color="text.primary"
                           fontWeight={500}
+                          sx={{
+                            fontSize: isMobile ? 13 : undefined,
+                            lineHeight: 1.25,
+                            maxWidth: isMobile ? '54vw' : '100%',
+                            wordBreak: 'break-word',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            whiteSpace: 'normal',
+                            minHeight: 27 // Đảm bảo chiều cao bằng ảnh
+                          }}
                         >
                           {post.title}
                         </Typography>
+                        {isMobile && (
+                          <Box display="flex" alignItems="center" gap={1} mt={0.5} sx={{ width: '100%' }}>
+                            <Typography variant="caption" color="#C9A063" sx={{ fontSize: 11 }} noWrap>
+                              {post.author || 'BlogHok'}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary" sx={{ fontSize: 11 }} noWrap>
+                              {formatDate(post.createdAt)}
+                            </Typography>
+                          </Box>
+                        )}
                       </Box>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={isMobile ? { flex: '0 0 88px', p: '6px 4px', verticalAlign: 'middle', textAlign: 'right' } : { width: isMobile ? '28vw' : undefined, maxWidth: isMobile ? '28vw' : undefined, verticalAlign: 'middle', textAlign: 'center', p: isMobile ? '6px 2px' : undefined }}>
                       {post.category && (
                         <Chip
                           label={t(`news.categories.${post.category}`, post.category)}
                           size="small"
                           sx={{
-                            bgcolor: '#C9A063',
-                            color: 'white',
-                            fontWeight: 500
-                          }}
+                              bgcolor: '#C9A063',
+                              color: 'white',
+                              fontWeight: 500,
+                              minWidth: 48,
+                              maxWidth: '100%',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              px: 0.5,
+                              boxSizing: 'border-box'
+                            }}
                         />
                       )}
                     </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="#C9A063">
-                        {post.author || 'BlogHok'}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      {formatDate(post.createdAt)}
-                    </TableCell>
+                    {!isMobile && (
+                      <TableCell sx={{ verticalAlign: 'middle', p: 1 }}>
+                        <Typography variant="body2" color="#C9A063" noWrap>
+                          {post.author || 'BlogHok'}
+                        </Typography>
+                      </TableCell>
+                    )}
+                    {!isMobile && (
+                      <TableCell sx={{ verticalAlign: 'middle', p: 1 }}>
+                        <Typography variant="body2" color="text.secondary" noWrap>
+                          {formatDate(post.createdAt)}
+                        </Typography>
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>

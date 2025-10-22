@@ -216,28 +216,41 @@ const PostDetail = () => {
                   // size: small|medium|large, shape: square|rectangle, align: left|center|right
                   let width = 180;
                   let height = 180;
-      let borderRadius = 2;
+                  let borderRadius = 2;
                   let objectFit = 'cover';
                   let align = 'left';
+                  let shape = 'rectangle';
                   if (alt && typeof alt === 'string' && alt.startsWith('img|')) {
                     const parts = alt.split('|');
                     const size = parts[1] || 'medium';
-                    const shape = parts[2] || 'rectangle';
+                    shape = parts[2] || 'rectangle';
                     align = parts[3] || 'left';
+                    // Desktop: giảm 20% kích thước các cỡ
                     if (size === 'small') {
-                      width = 160; height = shape === 'square' ? 160 : 120;
+                      width = 128; height = shape === 'square' ? 128 : 96;
                     } else if (size === 'large') {
-                      width = 640; height = shape === 'square' ? 640 : 360;
+                      width = 512; height = shape === 'square' ? 512 : 288;
                     } else { // medium default
-                      width = 360; height = shape === 'square' ? 360 : 200;
+                      width = 288; height = shape === 'square' ? 288 : 160;
                     }
+                    // Rectangle: tăng 20% so với giá trị đã giảm
                     if (shape === 'rectangle') {
+                      width = Math.round(width * 1.2);
+                      height = Math.round(height * 1.2);
                       borderRadius = 2; objectFit = 'cover';
                     } else if (shape === 'square') {
                       borderRadius = 2; objectFit = 'cover';
                     }
                   }
                   const isMobile = typeof window !== 'undefined' && window.innerWidth < 600;
+                  // Trên mobile, nếu là rectangle, giữ aspect ratio, không để height auto
+                  let mobileHeight = 'auto';
+                  if (isMobile && shape === 'rectangle') {
+                    // Tính height dựa trên width 100% và aspect ratio gốc
+                    // aspectRatio = width / height
+                    const aspectRatio = width / height;
+                    mobileHeight = `calc(100vw / ${aspectRatio})`;
+                  }
                   const alignmentStyle = align === 'center'
                     ? { marginLeft: 'auto', marginRight: 'auto', display: 'block' }
                     : align === 'right'
@@ -248,7 +261,7 @@ const PostDetail = () => {
                       src={src}
                       alt={alt}
                       width={isMobile ? '100%' : `${width}px`}
-                      height={isMobile ? 'auto' : `${height}px`}
+                      height={isMobile ? (shape === 'rectangle' ? mobileHeight : 'auto') : `${height}px`}
                       sx={{
                         objectFit,
                         borderRadius,
