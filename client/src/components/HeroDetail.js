@@ -1018,6 +1018,10 @@ const HeroDetail = () => {
           ? ((hero.comboBuilds[Math.max(0, Math.min((hero.comboBuilds.length - 1), selectedSkillBuildIdx))] || {}).steps || [])
           : (hero.combo || []);
         if (!steps || steps.length === 0) return null;
+        // Only show the combo build name on mobile if it's a custom/non-default name
+        const comboName = hasBuilds ? (hero.comboBuilds[selectedSkillBuildIdx]?.name || '') : '';
+        const isDefaultComboName = /^Bộ\s*\d+$/i.test(comboName.trim());
+        const showComboNameOnMobile = hasBuilds && comboName && !isDefaultComboName;
         return (
   <Box mb={{ xs: 2, md: 3 }} sx={{
           background: 'none',
@@ -1031,9 +1035,9 @@ const HeroDetail = () => {
             <Typography variant="h5" sx={{ mb: 0, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
               {t('heroes.combo', 'Combo Kill')}
               {/* Show current combo build name on mobile for clarity */}
-              {hasBuilds && (hero.comboBuilds[selectedSkillBuildIdx]?.name) && (
+              {showComboNameOnMobile && (
                 <Typography component="span" variant="subtitle2" sx={{ ml: 0.5, display: { xs: 'inline', md: 'none' }, color: 'text.secondary' }}>
-                  - {hero.comboBuilds[selectedSkillBuildIdx].name}
+                  - {comboName}
                 </Typography>
               )}
             </Typography>
