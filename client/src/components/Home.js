@@ -600,17 +600,25 @@ const Home = () => {
                 ))
               ) : (
                 filteredSortedHeroes.map(h => (
-                  <Box key={h._id || h.slug || h.name} sx={{
-                    px: 1,
-                    py: 0.75,
-                    display: 'grid',
-                    gridTemplateColumns: { xs: '1fr 36px 56px 56px 56px', md: '1.25fr 52px 72px 72px 72px' },
-                    alignItems: 'center',
-                    gap: { xs: 0.75, md: 1 },
-                    borderBottom: '1px solid',
-                    borderColor: 'divider',
-                    '&:hover': { bgcolor: 'action.hover' }
-                  }}>
+                  <Box
+                    key={h._id || h.slug || h.name}
+                    component={Link}
+                    to={`/heroes/${getHeroSlug(h)}`}
+                    sx={{
+                      px: 1,
+                      py: 0.75,
+                      display: 'grid',
+                      gridTemplateColumns: { xs: '1fr 36px 56px 56px 56px', md: '1.25fr 52px 72px 72px 72px' },
+                      alignItems: 'center',
+                      gap: { xs: 0.75, md: 1 },
+                      borderBottom: '1px solid',
+                      borderColor: 'divider',
+                      '&:hover': { bgcolor: 'action.hover' },
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      cursor: 'pointer'
+                    }}
+                  >
                     {/* Name cell */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
                       {h.image ? (

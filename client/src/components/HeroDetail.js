@@ -463,7 +463,7 @@ const HeroDetail = () => {
           animation: 'float 6s ease-in-out infinite reverse'
         }
       }}>
-        <Box sx={{
+          <Box sx={{
           position: 'absolute',
           left: { xs: 12, md: 48 },
           bottom: { xs: 8, md: 24 },
@@ -473,13 +473,25 @@ const HeroDetail = () => {
           <Typography
             variant="h3"
             fontWeight={700}
-            sx={{ textShadow: '0 2px 12px #000', fontSize: { xs: '1.3rem', md: '2.2rem' } }}
+            sx={{
+              color: '#c9a063',
+              WebkitTextStroke: '0.8px rgba(20,12,6,0.95)',
+              // darker multi-layer text-shadow to create stronger outline
+              textShadow: `-1px -1px 0 rgba(20,12,6,0.98), 1px -1px 0 rgba(20,12,6,0.98), -1px 1px 0 rgba(20,12,6,0.98), 1px 1px 0 rgba(20,12,6,0.98), 0 4px 18px rgba(0,0,0,0.6)`,
+              fontSize: { xs: '1.3rem', md: '2.2rem' }
+            }}
           >
             {hero.name}
           </Typography>
           <Typography
             variant="h6"
-            sx={{ textShadow: '0 2px 8px #000', mb: 1, fontSize: { xs: '0.85rem', md: '1rem' } }}
+            sx={{
+              color: '#c9a063',
+              WebkitTextStroke: '0.5px rgba(20,12,6,0.95)',
+              textShadow: `-0.8px -0.8px 0 rgba(20,12,6,0.98), 0.8px -0.8px 0 rgba(20,12,6,0.98), -0.8px 0.8px 0 rgba(20,12,6,0.98), 0.8px 0.8px 0 rgba(20,12,6,0.98), 0 3px 12px rgba(0,0,0,0.55)`,
+              mb: 1,
+              fontSize: { xs: '0.85rem', md: '1rem' }
+            }}
           >
             {hero.title}
           </Typography>

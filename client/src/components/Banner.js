@@ -38,30 +38,31 @@ const Banner = () => {
         }}
       />
 
-      {/* Gradient overlays: chỉ hiện trên desktop */}
+      {/* Gradient overlays + blur: show on mobile and desktop; milder on mobile for perf */}
       <Box
         sx={{
-          display: { xs: 'none', md: 'block' },
+          display: 'block',
           position: 'absolute',
           inset: 0,
-          background: `
-            linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 20%, rgba(255,255,255,0) 80%, rgba(255,255,255,0.95) 100%),
-            linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.9) 100%)
-          `,
+          background: {
+            xs: `linear-gradient(90deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0) 18%, rgba(255,255,255,0) 82%, rgba(255,255,255,0.92) 100%), linear-gradient(180deg, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.88) 100%)`,
+            md: `linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 20%, rgba(255,255,255,0) 80%, rgba(255,255,255,0.95) 100%), linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.9) 100%)`
+          },
           zIndex: 1,
         }}
       />
-      {/* Overlay blur viền ngoài: chỉ hiện trên desktop */}
+      {/* Overlay blur viền ngoài */}
       <Box
         sx={{
-          display: { xs: 'none', md: 'block' },
+          display: 'block',
           position: 'absolute',
           inset: 0,
           pointerEvents: 'none',
           zIndex: 2,
           WebkitMaskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,1) 100%)`,
           maskImage: `radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,1) 100%)`,
-          backdropFilter: 'blur(16px)',
+          backdropFilter: { xs: 'blur(8px)', md: 'blur(16px)' },
+          opacity: { xs: 0.85, md: 1 }
         }}
       />
       {/* Nội dung chữ */}

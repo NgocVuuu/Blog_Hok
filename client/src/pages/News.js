@@ -25,6 +25,8 @@ const News = () => {
   const [sortBy, setSortBy] = useState('latest');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [page, setPage] = useState(1);
+  // track pressed card id to show touch feedback on mobile (hover isn't reliable on touch)
+  const [pressedId, setPressedId] = useState(null);
 
   const postsPerPage = 10;
   const API_URL = process.env.REACT_APP_API_URL;
@@ -241,118 +243,119 @@ const News = () => {
           </Grid>
         </Grid>
 
-        {/* Table View of Posts */}
+        {/* Posts: desktop uses table, mobile uses stacked cards for clarity and accessibility */}
         {filteredPosts.length > 0 ? (
-          <TableContainer component={Paper} sx={{ mb: 4, boxShadow: 3 }}>
-            <Table sx={{ width: '100%', tableLayout: isMobile ? 'fixed' : 'auto' }}>
-              <TableHead sx={{ bgcolor: '#f5f5f5' }}>
-                <TableRow sx={isMobile ? { display: 'flex', alignItems: 'center', gap: 1, px: 1 } : undefined}>
-                  <TableCell sx={isMobile ? { flex: '0 0 56px', p: '6px 4px' } : { width: '48px', p: '6px 1px' }}></TableCell>
-                  <TableCell sx={isMobile ? { flex: '1 1 auto', p: '6px 8px', whiteSpace: 'normal' } : { minWidth: 80, p: isMobile ? '6px 2px' : undefined }}>{t('news.title', 'Tiêu đề')}</TableCell>
-                  <TableCell align="center" sx={isMobile ? { flex: '0 0 88px', p: '6px 4px', whiteSpace: 'normal' } : { minWidth: 60, p: isMobile ? '6px 2px' : undefined }}>{t('news.category', 'Phân loại')}</TableCell>
-                  {!isMobile && <TableCell sx={{ width: '13vw', maxWidth: '13vw', p: 1 }}>{t('news.author', 'Tác giả')}</TableCell>}
-                  {!isMobile && <TableCell sx={{ width: '13vw', maxWidth: '13vw', p: 1 }}>Published on</TableCell>}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {currentPosts.map((post) => (
-                  <TableRow
-                    key={post._id}
-                    hover
-                    sx={isMobile ? { display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', '&:hover': { bgcolor: '#f9f9f9' }, px: 1 } : { cursor: 'pointer', '&:hover': { bgcolor: '#f9f9f9' } }}
-                    onClick={() => navigate(`/news/${post.slug || post._id}`)}
-                  >
-                    <TableCell sx={isMobile ? { flex: '0 0 56px', p: '6px 4px', verticalAlign: 'middle', textAlign: 'center' } : { p: 2, verticalAlign: 'middle', width: '48px', maxWidth: '3.5vw', textAlign: 'center' }}>
-                      {post.image && (
-                        <Box
-                          component="img"
-                          src={post.image}
-                          alt={post.title}
-                          sx={{
-                            width: isMobile ? 36 : 44,
-                            height: isMobile ? 36 : 44,
-                            objectFit: 'cover',
-                            borderRadius: 1,
-                            display: 'inline-block',
-                            verticalAlign: 'middle',
-                            background: '#eee',
-                            ml: isMobile ? 0.5 : 0
-                          }}
-                        />
-                      )}
-                    </TableCell>
-                    <TableCell sx={isMobile ? { flex: '1 1 auto', p: '6px 8px', verticalAlign: 'top' } : { p: 2, verticalAlign: 'middle' }}>
-                      <Box sx={{ width: '100%', minWidth: 0 }}>
-                        <Typography
-                          variant={isMobile ? 'subtitle2' : 'subtitle1'}
-                          color="text.primary"
-                          fontWeight={500}
-                          sx={{
-                            fontSize: isMobile ? 13 : undefined,
-                            lineHeight: 1.25,
-                            maxWidth: isMobile ? '54vw' : '100%',
-                            wordBreak: 'break-word',
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            whiteSpace: 'normal',
-                            minHeight: 27 // Đảm bảo chiều cao bằng ảnh
-                          }}
-                        >
-                          {post.title}
-                        </Typography>
-                        {isMobile && (
-                          <Box display="flex" alignItems="center" gap={1} mt={0.5} sx={{ width: '100%' }}>
-                            <Typography variant="caption" color="#C9A063" sx={{ fontSize: 11 }} noWrap>
-                              {post.author || 'BlogHok'}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary" sx={{ fontSize: 11 }} noWrap>
-                              {formatDate(post.createdAt)}
-                            </Typography>
-                          </Box>
-                        )}
-                      </Box>
-                    </TableCell>
-                    <TableCell sx={isMobile ? { flex: '0 0 88px', p: '6px 4px', verticalAlign: 'middle', textAlign: 'right' } : { width: isMobile ? '28vw' : undefined, maxWidth: isMobile ? '28vw' : undefined, verticalAlign: 'middle', textAlign: 'center', p: isMobile ? '6px 2px' : undefined }}>
-                      {post.category && (
-                        <Chip
-                          label={t(`news.categories.${post.category}`, post.category)}
-                          size="small"
-                          sx={{
-                              bgcolor: '#C9A063',
-                              color: 'white',
-                              fontWeight: 500,
-                              minWidth: 48,
-                              maxWidth: '100%',
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              px: 0.5,
-                              boxSizing: 'border-box'
-                            }}
-                        />
-                      )}
-                    </TableCell>
-                    {!isMobile && (
-                      <TableCell sx={{ verticalAlign: 'middle', p: 1 }}>
-                        <Typography variant="body2" color="#C9A063" noWrap>
-                          {post.author || 'BlogHok'}
-                        </Typography>
-                      </TableCell>
+          isMobile ? (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 4 }}>
+              {currentPosts.map((post) => (
+                <Box
+                  key={post._id}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => navigate(`/news/${post.slug || post._id}`)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/news/${post.slug || post._id}`); }}
+                  onPointerDown={() => setPressedId(post._id)}
+                  onPointerUp={() => setPressedId(null)}
+                  onPointerCancel={() => setPressedId(null)}
+                  onPointerLeave={() => setPressedId(null)}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    p: 1.5,
+                    bgcolor: 'background.paper',
+                    borderRadius: 1,
+                    boxShadow: 1,
+                    cursor: 'pointer',
+                    // Improve touch and hover feedback
+                    transition: 'transform 180ms cubic-bezier(.2,.9,.2,1), box-shadow 180ms cubic-bezier(.2,.9,.2,1), background-color 120ms ease',
+                    WebkitTapHighlightColor: 'transparent',
+                    touchAction: 'manipulation',
+                    '&:hover': {
+                      transform: 'translateY(-6px) scale(1.01)',
+                      boxShadow: 8,
+                      bgcolor: 'action.hover'
+                    },
+                    '&:active': { transform: 'translateY(-2px) scale(0.998)', boxShadow: 3 },
+                    '&:focus-visible': {
+                      outline: '3px solid rgba(201,160,99,0.22)',
+                      outlineOffset: '2px'
+                    },
+                    // On small touch devices, prefer smaller transform to avoid jank
+                    '@media (pointer:coarse)': {
+                      '&:hover': { transform: 'translateY(-3px)', boxShadow: 6 }
+                    },
+                    // pressed state via prop so touch taps show immediate feedback
+                    ...(pressedId === post._id ? {
+                      transform: 'translateY(-2px) scale(0.998)',
+                      boxShadow: 3,
+                      bgcolor: 'action.selected'
+                    } : {})
+                  }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
+                    {post.image ? (
+                      <Box component="img" src={post.image} alt={post.title} sx={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 1, flex: '0 0 auto' }} />
+                    ) : (
+                      <Box sx={{ width: 48, height: 48, borderRadius: 1, bgcolor: 'grey.200', flex: '0 0 auto' }} />
                     )}
-                    {!isMobile && (
-                      <TableCell sx={{ verticalAlign: 'middle', p: 1 }}>
-                        <Typography variant="body2" color="text.secondary" noWrap>
-                          {formatDate(post.createdAt)}
-                        </Typography>
-                      </TableCell>
+                    <Box sx={{ minWidth: 0 }}>
+                      <Typography variant="subtitle2" fontWeight={500} color="text.primary" sx={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', whiteSpace: 'normal' }}>
+                        {post.title}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+                        <Box component="span" sx={{ color: '#C9A063', mr: 0.5 }}>{post.author || 'BlogHok'}</Box>
+                        <Box component="span">• {formatDate(post.createdAt)}</Box>
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ ml: 1, flex: '0 0 auto' }}>
+                    {post.category && (
+                      <Chip label={t(`news.categories.${post.category}`, post.category)} size="small" sx={{ bgcolor: '#C9A063', color: 'white', fontWeight: 500 }} />
                     )}
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          ) : (
+            <TableContainer component={Paper} sx={{ mb: 4, boxShadow: 3 }}>
+              {/* Use fixed table layout and percentage widths so header and body columns align */}
+              <Table sx={{ width: '100%', tableLayout: 'fixed' }}>
+                <TableHead sx={{ bgcolor: '#f5f5f5' }}>
+                  <TableRow>
+                    <TableCell sx={{ width: '6%', p: '6px 1px' }}></TableCell>
+                    <TableCell sx={{ width: '56%' }}>{t('news.title', 'Tiêu đề')}</TableCell>
+                    <TableCell align="center" sx={{ width: '18%' }}>{t('news.category', 'Phân loại')}</TableCell>
+                    <TableCell sx={{ width: '10%', p: 1, textAlign: 'left' }}>{t('news.author', 'Tác giả')}</TableCell>
+                    <TableCell sx={{ width: '10%', p: 1, textAlign: 'left' }}>Published on</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {currentPosts.map((post) => (
+                    <TableRow key={post._id} hover sx={{ cursor: 'pointer', '&:hover': { bgcolor: '#f9f9f9' } }} onClick={() => navigate(`/news/${post.slug || post._id}`)}>
+                      <TableCell sx={{ p: 2, verticalAlign: 'middle', width: '6%', textAlign: 'center' }}>
+                        {post.image && (
+                          <Box component="img" src={post.image} alt={post.title} sx={{ width: 44, height: 44, objectFit: 'cover', borderRadius: 1 }} />
+                        )}
+                      </TableCell>
+                      <TableCell sx={{ p: 2, verticalAlign: 'middle', maxWidth: '56%' }}>
+                        <Typography variant="subtitle1" fontWeight={500}>{post.title}</Typography>
+                      </TableCell>
+                      <TableCell sx={{ verticalAlign: 'middle', textAlign: 'center', p: 1, maxWidth: '18%' }}>
+                        {post.category && <Chip label={t(`news.categories.${post.category}`, post.category)} size="small" sx={{ bgcolor: '#C9A063', color: 'white', fontWeight: 500 }} />}
+                      </TableCell>
+                      <TableCell sx={{ verticalAlign: 'middle', p: 1, maxWidth: '10%' }}>
+                        <Typography variant="body2" color="#C9A063" noWrap>{post.author || 'BlogHok'}</Typography>
+                      </TableCell>
+                      <TableCell sx={{ verticalAlign: 'middle', p: 1, maxWidth: '10%' }}>
+                        <Typography variant="body2" color="text.secondary" noWrap>{formatDate(post.createdAt)}</Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )
         ) : (
           <Box py={4} textAlign="center">
             <Typography variant="h6" color="text.secondary">
