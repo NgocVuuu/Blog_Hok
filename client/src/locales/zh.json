@@ -45,10 +45,10 @@
     "surprise": "Surprise me",
     "trending": "热门英雄",
     "updated": "已更新",
-    "patchHighlights": "版本亮点",
+  "patchHighlights": "最新发布",
     "viewFull": "查看全部",
     "latestNews": "最新资讯",
-    "topCounters": "本周热门克制"
+  "topCounters": "热门版本英雄"
   },
   "footer": {
     "about": {

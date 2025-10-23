@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, Button, Box, Menu, MenuItem, IconButton, Drawer, List, ListItem, ListItemText, Divider } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +25,7 @@ const Navbar = () => {
   const [logoRotated, setLogoRotated] = useState(false);
   const [mobileLangAnchor, setMobileLangAnchor] = useState(null);
   const [mobileLangRotated, setMobileLangRotated] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const user = JSON.parse(localStorage.getItem('user'));
 
   const handleMenu = (event) => {
@@ -54,34 +55,112 @@ const Navbar = () => {
     handleMobileLangClose();
   };
 
+  // shrink navbar on scroll
+  // Effect 1: listen to scroll and update scrolled state
+  useEffect(() => {
+    const onScroll = (ev) => {
+      try {
+        let y = 0;
+        if (ev && ev.target && typeof ev.target.scrollTop === 'number') {
+          y = ev.target.scrollTop;
+        } else if (typeof window.scrollY === 'number') {
+          y = window.scrollY;
+        } else if (document && document.scrollingElement) {
+          y = document.scrollingElement.scrollTop || 0;
+        }
+        setScrolled(y > 24);
+      } catch (e) {
+        setScrolled(false);
+      }
+    };
+
+    // Collect potential scroll containers: window, document.scrollingElement, main, and any element with overflow auto/scroll
+    const listeners = [];
+    const addListener = (el) => {
+      try {
+        el.addEventListener('scroll', onScroll, { passive: true });
+        listeners.push(el);
+      } catch (e) {}
+    };
+
+    // window
+    addListener(window);
+    // document.scrollingElement
+    if (document && document.scrollingElement) addListener(document.scrollingElement);
+    // main element
+    const mainEl = document.querySelector('main');
+    if (mainEl) addListener(mainEl);
+
+    // Find other scrollable elements (only a few) by checking computed style and scrollHeight
+    try {
+      const candidates = Array.from(document.querySelectorAll('body *'));
+      for (let el of candidates) {
+        const style = window.getComputedStyle(el);
+        if ((style.overflowY === 'auto' || style.overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 4) {
+          addListener(el);
+        }
+        // stop after collecting a reasonable number
+        if (listeners.length > 6) break;
+      }
+    } catch (e) {}
+
+    // initial check
+    onScroll();
+
+    return () => {
+      // remove listeners
+      for (let el of listeners) {
+        try { el.removeEventListener('scroll', onScroll); } catch (e) {}
+      }
+    };
+  }, []);
+
+  // Effect 2: when scrolled changes, update document body padding-top so content isn't hidden under fixed AppBar
+  useEffect(() => {
+    const setBodyPadding = () => {
+      try {
+        const height = scrolled ? 56 : 72;
+        document.body.style.paddingTop = `${height}px`;
+      } catch (e) {}
+    };
+    setBodyPadding();
+    window.addEventListener('resize', setBodyPadding);
+    return () => {
+      window.removeEventListener('resize', setBodyPadding);
+      try { document.body.style.paddingTop = null; } catch (e) {}
+    };
+  }, [scrolled]);
+
   // Responsive: Ẩn nav-links khi mobile, hiện Drawer
   return (
-    <AppBar position="static" sx={{
+  <AppBar className={`navbar ${scrolled ? 'navbar-shrink' : ''}`} position="fixed" sx={{
       background: 'rgba(24,24,24,0.7)',
       backdropFilter: 'blur(8px)',
       boxShadow: '0 4px 24px rgba(201,160,99,0.08)',
       borderBottom: '1.5px solid rgba(233,196,106,0.18)',
       zIndex: 1300,
+      transition: 'height 0.25s ease, background 0.25s ease, backdrop-filter 0.25s ease',
+      top: 0,
+      left: 0,
+      right: 0,
+      width: '100%',
       '@media (max-width: 960px)': {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        width: '100%',
+        // mobile keeps same fixed treatment but sizes differ via Toolbar sx
         margin: 0,
-        padding: 0,
-        zIndex: 1300
+        padding: 0
       }
     }}>
       <Toolbar sx={{
+        minHeight: scrolled ? '56px' : '72px',
+        transition: 'min-height 0.22s ease, padding 0.22s ease',
         '@media (max-width: 960px)': {
-          minHeight: '56px !important',
-          maxHeight: '56px !important',
+          minHeight: scrolled ? '48px !important' : '56px !important',
+          maxHeight: scrolled ? '48px !important' : '56px !important',
           padding: '0 12px !important',
           margin: 0
         }
       }}>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} className="logo">
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontSize: scrolled ? '1rem' : '1.5rem', transition: 'font-size 0.22s ease' }} className="logo">
           BlogHok
         </Typography>
         {/* Nav links - ẩn trên mobile */}
@@ -106,7 +185,7 @@ const Navbar = () => {
                       to={link.to}
                       sx={{
                         fontWeight: 400,
-                        fontSize: 16,
+                        fontSize: scrolled ? 14 : 16,
                         background: 'none !important',
                         boxShadow: 'none !important',
                         px: 2,

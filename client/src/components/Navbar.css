@@ -8,9 +8,11 @@
   font-weight: bold;
   font-size: 1.5rem;
   background: linear-gradient(45deg, #C9A063, #ffa500);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: font-size 0.22s ease, transform 0.22s ease;
 }
 
 .nav-links {
@@ -29,6 +31,35 @@
   position: relative;
   min-width: 80px;
   min-width: 80px;
+}
+
+/* Reduced sizes when page is scrolled - handled inline via sx but keep CSS fallback */
+.navbar-shrink .logo {
+  font-size: 1rem !important;
+}
+.navbar-shrink .nav-links .MuiButton-root {
+  font-size: 0.875rem !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+/* Force toolbar height reduction on desktop when navbar-shrink is present */
+.navbar-shrink .MuiToolbar-root {
+  min-height: 56px !important;
+  max-height: 56px !important;
+  transition: min-height 0.22s ease !important;
+}
+
+/* Ensure nav links shrink visually on desktop */
+@media (min-width: 961px) {
+  .navbar .nav-links .MuiButton-root {
+    font-size: 1rem;
+  }
+  .navbar-shrink .nav-links .MuiButton-root {
+    font-size: 0.9rem !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
 }
 
 .language-selector {

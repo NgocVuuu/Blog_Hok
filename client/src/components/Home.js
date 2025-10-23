@@ -354,8 +354,8 @@ const Home = () => {
         ))}
       </Grid>
 
-      {/* Special Trending (moved to top and enlarged) */}
-      <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
+  {/* Special Trending (moved to top and enlarged) */}
+  <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:0.25 }}>
         <Typography variant="h5" fontWeight={800} noWrap sx={{ minWidth:0, fontSize:{ xs: 18, sm: 'inherit' } }}>
           {t('home.specialTrending', 'Special Trending')}
         </Typography>
@@ -380,38 +380,64 @@ const Home = () => {
         <Swiper
           modules={[Autoplay, Pagination]}
           spaceBetween={8}
-          slidesPerView={1.55}
-          breakpoints={{ 600:{slidesPerView:2.2}, 900:{slidesPerView:3.3}, 1200:{slidesPerView:4.4} }}
+          slidesPerView={1.43}
+          breakpoints={{ 600:{slidesPerView:2}, 900:{slidesPerView:3}, 1200:{slidesPerView:4} }}
           pagination={{ clickable: true, el: '.special-trending-pagination' }}
           autoplay={{ delay: 4000, disableOnInteraction: false }}
-          style={{ marginBottom: 18 }}
+          style={{ marginBottom: 25 }}
         >
           {specialTrending.map(item => (
-            <SwiperSlide key={item.slug || item.id || item.name}>
-              <Card component={Link} to={`/heroes/${getHeroSlug(item)}`} sx={{ textDecoration:'none', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 8px rgba(0,0,0,0.06)', height:'100%' }}>
-                {item.image ? (<CardMedia component="img" height={110} image={item.image} alt={item.name} />) : (<Skeleton variant="rectangular" height={110} />)}
-                <CardContent sx={{ p:0.9 }}>
+            <SwiperSlide key={item.slug || item.id || item.name} style={{ alignSelf: 'start', height: 220, overflow: 'visible', paddingBottom: 8 }}>
+              <Card
+                component={Link}
+                to={`/heroes/${getHeroSlug(item)}`}
+                aria-label={`Open ${item.name} details`}
+                sx={{ mt: 0.5, textDecoration:'none', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 8px rgba(0,0,0,0.06)', height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 2, overflow: 'hidden' }}
+              >
+                {item.image ? (
+                  <CardMedia
+                    component="img"
+                    height={110}
+                    image={item.image}
+                    alt={item.name}
+                    loading="lazy"
+                    sx={{ flex: '0 0 auto', objectFit: 'cover', objectPosition: 'center' }}
+                  />
+                ) : (
+                  <Skeleton variant="rectangular" height={110} />
+                )}
+                <CardContent sx={{ p:0.9, flex: '1 1 auto', minHeight: 56 }}>
                   <Typography variant="subtitle1" fontWeight={800} noWrap sx={{ fontSize: '0.95rem' }}>{item.name}</Typography>
-                  <Box sx={{ mt: 0.5, display:'flex', alignItems:'center', gap:0.4, flexWrap:'wrap' }}>
+                  <Box sx={{ mt: 0.5, display:'flex', alignItems:'center', gap: { xs: 0.5, sm: 0.4 }, flexWrap:'nowrap', overflowX: 'auto', WebkitOverflowScrolling: 'touch', pr: 0.5 }}>
                     <Chip
                       size="small"
                       label={item.categoryEn || item.categoryVi || item.category || 'Special'}
                       color="warning"
-                      sx={{ fontSize: 10, px: 0.25, py: 0.25, minHeight: 20, '& .MuiChip-label': { px: 0.5, maxWidth: 80, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }}
+                      sx={{ flex: '0 1 auto', fontSize: { xs: 9, sm: 10 }, px: { xs: 0.5, sm: 0.25 }, py: 0.25, minHeight: 20, '& .MuiChip-label': { fontSize: { xs: 9, sm: 10 }, px: 0.5, maxWidth: 80, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }}
                     />
                     <Chip
                       size="small"
                       label={`Tier ${item.metaTier || '-'}`}
-                      sx={{ fontSize: 10, px: 0.25, py: 0.25, minHeight: 20, '& .MuiChip-label': { px: 0.5, maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }}
+                      sx={{ flex: '0 1 auto', fontSize: { xs: 9, sm: 10 }, px: { xs: 0.5, sm: 0.25 }, py: 0.25, minHeight: 20, '& .MuiChip-label': { fontSize: { xs: 9, sm: 10 }, px: 0.5, maxWidth: 64, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }}
                     />
                     {item.winRate != null && (
-                      <Chip size="small" label={`WR ${item.winRate}%`} color={(item.winRate||0) >= 50 ? 'success' : 'default'} sx={{ fontSize: 10, px: 0.25, py: 0.25, minHeight: 20, '& .MuiChip-label': { px: 0.5, maxWidth: 64, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }} />
+                      <Chip size="small" label={`WR ${item.winRate}%`} color={(item.winRate||0) >= 50 ? 'success' : 'default'} sx={{ flex: '0 1 auto', fontSize: { xs: 9, sm: 10 }, px: { xs: 0.5, sm: 0.25 }, py: 0.25, minHeight: 20, '& .MuiChip-label': { fontSize: { xs: 9, sm: 10 }, px: 0.5, maxWidth: 64, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }} />
                     )}
                     {item.pickRate != null && (
-                      <Chip size="small" label={`PR ${item.pickRate}%`} color="info" sx={{ fontSize: 10, px: 0.25, py: 0.25, minHeight: 20, '& .MuiChip-label': { px: 0.5, maxWidth: 64, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }} />
+                      <Chip size="small" label={`PR ${item.pickRate}%`} color="info" sx={{ flex: '0 1 auto', fontSize: { xs: 9, sm: 10 }, px: { xs: 0.5, sm: 0.25 }, py: 0.25, minHeight: 20, '& .MuiChip-label': { fontSize: { xs: 9, sm: 10 }, px: 0.5, maxWidth: 64, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }} />
                     )}
                   </Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{
+                      mt: 0.5,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden'
+                    }}
+                  >
                     {item.reasonEn || item.reasonVi || item.reason}
                   </Typography>
                 </CardContent>
@@ -419,7 +445,7 @@ const Home = () => {
             </SwiperSlide>
           ))}
         </Swiper>
-        <Box className="special-trending-pagination" sx={{ mt: 1, display: 'flex', justifyContent: 'center', '& .swiper-pagination-bullet': { background: '#c9a063' } }} />
+      <Box className="special-trending-pagination" sx={{ mt: 1, mb: 3, display: 'flex', justifyContent: 'center', '& .swiper-pagination-bullet': { background: '#c9a063' } }} />
         </>
       )}
 
@@ -453,25 +479,26 @@ const Home = () => {
                   border: '1px solid rgba(0,0,0,0.06)',
                   boxShadow: '0 1px 8px rgba(0,0,0,0.06)',
                   display: 'inline-block',
-                  width: 'auto',
+                  width: { xs: 160, sm: 'auto' },
                   textAlign: 'left',
-                  px: 0.75,
-                  py: 0.5,
+                  px: 0,
+                  py: 0,
                   borderRadius: 2,
-                  bgcolor: 'background.paper'
+                  bgcolor: 'background.paper',
+                  overflow: 'hidden'
                 }}
               >
                 {h.image ? (
-                  <CardMedia component="img" image={h.image} alt={h.name} sx={{ width: 160, maxWidth: 160, height: 96, objectFit: 'cover', borderRadius: 1, mx: 'auto' }} />
+                  <CardMedia component="img" image={h.image} alt={h.name} sx={{ width: '100%', maxWidth: { xs: '100%', sm: 160 }, height: { xs: 96, sm: 96 }, objectFit: 'cover', borderRadius: '8px 8px 0 0', display: 'block' }} />
                 ) : (
-                  <Skeleton variant="rectangular" height={96} sx={{ width: 160 }} />
+                  <Skeleton variant="rectangular" height={96} sx={{ width: '100%', maxWidth: { xs: '100%', sm: 160 } }} />
                 )}
                 <CardContent sx={{ p: 0.5, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                   <Typography variant="subtitle2" fontWeight={800} sx={{ fontSize: '0.9rem', mb: 0.25 }}>{h.name}</Typography>
                   <Box sx={{ display:'flex', alignItems:'center', gap:0.35, flexWrap:'nowrap' }}>
                     <Chip size="small" label={`Tier ${h.metaTier || '-'}`} sx={{ fontSize: 10, px: 0.25, py: 0.15, minHeight: 20, '& .MuiChip-label': { px: 0.4 } }} />
-                    {h.winRate != null && (<Chip size="small" label={`${(h.winRate||0).toFixed(2)}%`} color={(h.winRate||0) >= 50 ? 'success' : 'default'} sx={{ fontSize: 10, px: 0.25, py: 0.15, minHeight: 20, '& .MuiChip-label': { px: 0.4 } }} />)}
-                    {h.pickRate != null && (<Chip size="small" label={`${(h.pickRate||0).toFixed(2)}%`} color="info" sx={{ fontSize: 10, px: 0.25, py: 0.15, minHeight: 20, '& .MuiChip-label': { px: 0.4 } }} />)}
+                    {h.winRate != null && (<Chip size="small" label={`WR ${(h.winRate||0).toFixed(2)}%`} color={(h.winRate||0) >= 50 ? 'success' : 'default'} sx={{ fontSize: 10, px: 0.25, py: 0.15, minHeight: 20, '& .MuiChip-label': { px: 0.4 } }} />)}
+                    {h.pickRate != null && (<Chip size="small" label={`PR ${(h.pickRate||0).toFixed(2)}%`} color="info" sx={{ fontSize: 10, px: 0.25, py: 0.15, minHeight: 20, '& .MuiChip-label': { px: 0.4 } }} />)}
                   </Box>
                 </CardContent>
               </Card>
@@ -680,33 +707,49 @@ const Home = () => {
                 {({ isActive, isPrev, isNext }) => {
                   const visible = isActive || isPrev || isNext;
                   return (
-                    <Card
-                      component={Link}
-                      to={item.slug ? `/news/${item.slug}` : (item._id ? `/news/${item._id}` : '/news')}
-                      sx={{
-                        position: 'relative',
-                        textDecoration: 'none',
-                        border: 'none',
-                        boxShadow: 'none',
-                        bgcolor: 'transparent',
-                        opacity: visible ? 1 : 0.55,
-                        transition: 'opacity 0.25s ease',
-                        pointerEvents: visible ? 'auto' : 'none'
-                      }}
-                    >
-                      {item.thumbnail || item.image ? (
-                        <CardMedia component="img" height={110} image={item.thumbnail || item.image} alt={item.title} sx={{ objectFit: 'cover' }} />
-                      ) : (
-                        <Skeleton variant="rectangular" height={110} />
-                      )}
-                      <CardContent sx={{ py: 1 }}>
-                        <Typography variant="subtitle2" fontWeight={800} sx={{ whiteSpace: 'normal', lineHeight: 1.25 }}>{item.title}</Typography>
-                        {item.createdAt && (
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>{new Date(item.createdAt).toLocaleDateString()}</Typography>
+                      <Card
+                        component={Link}
+                        to={item.slug ? `/news/${item.slug}` : (item._id ? `/news/${item._id}` : '/news')}
+                        sx={{
+                          position: 'relative',
+                          textDecoration: 'none',
+                          border: 'none',
+                          bgcolor: 'transparent',
+                          // Emphasize active slide
+                          opacity: isActive ? 1 : (isPrev || isNext ? 0.9 : 0.6),
+                          transform: isActive ? 'scale(1.04)' : (isPrev || isNext ? 'scale(1.00)' : 'scale(0.97)'),
+                          boxShadow: isActive ? '0 10px 30px rgba(0,0,0,0.12)' : (isPrev || isNext ? '0 6px 18px rgba(0,0,0,0.06)' : '0 4px 10px rgba(0,0,0,0.04)'),
+                          transition: 'transform 0.28s ease, box-shadow 0.28s ease, opacity 0.28s ease, filter 0.28s ease',
+                          pointerEvents: visible ? 'auto' : 'none',
+                          zIndex: isActive ? 6 : (isPrev || isNext ? 4 : 1),
+                          borderRadius: 1
+                        }}
+                      >
+                        {item.thumbnail || item.image ? (
+                          <CardMedia
+                            component="img"
+                            height={110}
+                            image={item.thumbnail || item.image}
+                            alt={item.title}
+                            sx={{
+                              objectFit: 'cover',
+                              width: '100%',
+                              display: 'block',
+                              filter: isActive ? 'none' : 'grayscale(20%) brightness(0.9)',
+                              transition: 'filter 0.28s ease, transform 0.28s ease'
+                            }}
+                          />
+                        ) : (
+                          <Skeleton variant="rectangular" height={110} />
                         )}
-                      </CardContent>
-                    </Card>
-                  );
+                        <CardContent sx={{ py: 1 }}>
+                          <Typography variant="subtitle2" fontWeight={800} sx={{ whiteSpace: 'normal', lineHeight: 1.25 }}>{item.title}</Typography>
+                          {item.createdAt && (
+                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>{new Date(item.createdAt).toLocaleDateString()}</Typography>
+                          )}
+                        </CardContent>
+                      </Card>
+                    );
                 }}
               </SwiperSlide>
             ))}
