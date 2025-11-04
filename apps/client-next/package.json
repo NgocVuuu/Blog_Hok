@@ -6,6 +6,7 @@
     "dev": "next dev --webpack -p 3002",
     "sync:assets": "node ./scripts/syncAssets.js",
     "build": "next build --webpack",
+  "postbuild": "node ./scripts/cleanCache.js",
     "analyze": "set ANALYZE=true && next build --webpack",
     "validate:seo": "node ./scripts/validate-seo.js",
     "start": "next start",
