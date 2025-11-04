@@ -111,3 +111,6 @@ server/seeders/seed.js
 
 # Local testing helpers that may contain secrets
 server/test-env.js
+
+# Ignore admin build artifacts (committed by mistake)
+apps/admin/build/
