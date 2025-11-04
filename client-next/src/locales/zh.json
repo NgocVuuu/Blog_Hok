@@ -1,0 +1,27 @@
+{
+  "counter": "被克制于",
+  "combo_kill": "连招击杀",
+  "skill": "技能",
+  "meta_tier": "版本等级",
+  "win_rate": "胜率",
+  "pick_rate": "选择率",
+  "ban_rate": "禁用率",
+  "back_to_list": "← 返回列表",
+  "ally": "盟友",
+  "allies": "盟友",
+  "skin": "皮肤",
+  "lore": "背景故事",
+  "role": "角色",
+  "lane": "路线",
+  "skills": "技能",
+  "description": "描述",
+  "no_data": "暂无数据",
+  "nav": {
+    "home": "首页",
+    "heroes": "英雄",
+    "items": "装备",
+    "arcana": "奥义",
+    "meta": "版本",
+    "news": "新闻"
+  }
+}

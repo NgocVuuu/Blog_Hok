@@ -1,0 +1,27 @@
+{
+  "counter": "Dilawan oleh",
+  "combo_kill": "Combo Kill",
+  "skill": "Skill",
+  "meta_tier": "Meta Tier",
+  "win_rate": "Tingkat Kemenangan",
+  "pick_rate": "Tingkat Pilihan",
+  "ban_rate": "Tingkat Larangan",
+  "back_to_list": "← Kembali ke daftar",
+  "ally": "Sekutu",
+  "allies": "Sekutu",
+  "skin": "Skin",
+  "lore": "Asal-usul",
+  "role": "Peran",
+  "lane": "Jalur",
+  "skills": "Skill",
+  "description": "Deskripsi",
+  "no_data": "Tidak ada data",
+  "nav": {
+    "home": "Beranda",
+    "champions": "Champion",
+    "items": "Item",
+    "arcana": "Arcana",
+    "meta": "Meta",
+    "news": "Berita"
+  }
+}
