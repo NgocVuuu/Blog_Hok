@@ -3,6 +3,10 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import HeroDetailClient from '@/components/HeroDetailClient';
 
+// Run this route on the Edge Runtime so Cloudflare Pages / Next-on-Pages can
+// deploy it as an Edge function. See Next.js docs for more info.
+export const runtime = 'edge';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000';
 
 type Props = { params: Promise<{ slug: string }> };

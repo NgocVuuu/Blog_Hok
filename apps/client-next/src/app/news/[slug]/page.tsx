@@ -4,6 +4,10 @@ import { Metadata } from 'next';
 import { Typography } from '@mui/material';
 import NewsDetailClient from '@/components/NewsDetailClient';
 
+// Run this route on the Edge Runtime so Cloudflare Pages / Next-on-Pages can
+// deploy it as an Edge function. See Next.js docs for more info.
+export const runtime = 'edge';
+
 type Props = { params: Promise<{ slug: string }> };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000';
