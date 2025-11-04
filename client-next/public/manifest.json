@@ -1,0 +1,15 @@
+{
+  "short_name": "Honor of Kings",
+  "name": "Honor of Kings Blog",
+  "icons": [
+    {
+      "src": "banner_circle.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#8B4513",
+  "background_color": "#FFF8DC"
+}

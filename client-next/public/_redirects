@@ -1,0 +1,8 @@
+# Serve static assets directly
+/static/*    /static/:splat   200
+/sw.js       /sw.js           200
+/manifest.json  /manifest.json 200
+/robots.txt  /robots.txt      200
+
+# SPA fallback
+/*          /index.html       200

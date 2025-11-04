@@ -1,0 +1,254 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+@import 'swiper/css';
+@import 'swiper/css/pagination';
+@import 'swiper/css/effect-coverflow';
+@import "tailwindcss";
+
+/* Tuffy font declarations for fallback */
+@font-face {
+  font-family: 'Tuffy';
+  src: url('/fonts/Tuffy-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tuffy';
+  src: url('/fonts/Tuffy-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tuffy';
+  src: url('/fonts/Tuffy-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tuffy';
+  src: url('/fonts/Tuffy-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Ensure root elements fill the viewport so App's flex layout can pin footer to bottom */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+/* CSS variable for navbar height - prevents forced reflows */
+:root {
+  --navbar-height: 72px;
+}
+
+body {
+  background: #F8F5EC;
+  color: #2D1B06;
+  font-family: 'Tuffy', 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-weight: 400;
+  padding-top: var(--navbar-height);
+  transition: padding-top 0.25s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-display: swap;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Mobile optimizations */
+@media (max-width: 600px) {
+  /* Ensure images load properly on mobile */
+  img, .MuiBox-root img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Better font rendering on mobile */
+  body, * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* --- Ported from CRA styles: Navbar + Footer --- */
+.navbar {
+  background: rgba(24,24,24,0.7) !important;
+  backdrop-filter: blur(8px) !important;
+  box-shadow: 0 4px 24px rgba(201,160,99,0.08) !important;
+  border-bottom: 1.5px solid rgba(233,196,106,0.18) !important;
+}
+.logo {
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+  background: linear-gradient(45deg, #C9A063, #ffa500);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: font-size 0.22s ease, transform 0.22s ease;
+}
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  min-height: 48px;
+  min-width: 480px;
+}
+.nav-links .MuiButton-root {
+  font-weight: 500;
+  text-transform: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  min-width: 80px;
+}
+.navbar-shrink .logo {
+  font-size: 1rem !important;
+}
+.navbar-shrink .nav-links .MuiButton-root {
+  font-size: 0.875rem !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+.logo-rotate {
+  animation: logo-spin 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+@keyframes logo-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.language-selector { margin-left: 1rem; }
+.language-selector .MuiIconButton-root { min-width: 48px; min-height: 48px; transition: transform 0.3s ease; }
+.language-selector .MuiIconButton-root:hover { transform: scale(1.1); }
+.MuiMenu-paper { background: rgba(30,30,40,0.85) !important; color:#fff !important; box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37) !important; backdrop-filter: blur(8px) !important; border-radius: 18px !important; border: 1.5px solid #C9A063 !important; min-width: 180px !important; animation: menu-fade-in 0.35s cubic-bezier(0.4,0,0.2,1); overflow: hidden !important; }
+@keyframes menu-fade-in { 0% { opacity: 0; transform: translateY(-10px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+.MuiMenuItem-root { font-weight: 600; letter-spacing: 1px; color: #fff !important; border-radius: 10px !important; margin: 4px 8px !important; transition: background 0.25s, color 0.25s, box-shadow 0.25s; position: relative; overflow: hidden; }
+.MuiMenuItem-root:hover, .MuiMenuItem-root:focus { background: linear-gradient(90deg, #ffd70033 0%, #a259ff33 100%) !important; color: #C9A063 !important; box-shadow: 0 2px 8px #ffd70044; }
+.mobile-only { display: none !important; }
+@media (max-width: 960px) {
+  .nav-links.desktop-only, .language-selector.desktop-only, .desktop-only { display: none !important; }
+  .mobile-only { display: inline-flex !important; }
+  .logo { font-size: 1.1rem; }
+  .navbar { display:flex !important; position: fixed !important; top:0; left:0; right:0; z-index:1300 !important; width:100%; min-width:0; padding:0; margin:0; }
+  body { padding-top: 56px !important; margin: 0 !important; }
+}
+
+.footer { min-height: 140px; background: linear-gradient(90deg, #1a1a1a 0%, #2d2d2d 100%); color: white; padding: 1.2rem 0 0.6rem; margin-top: 2rem; }
+.footer-title { color: #fff !important; font-weight: bold; margin-bottom: 0.7rem !important; position: relative; padding-bottom: 0.2rem; font-size: 1.05rem; }
+.footer-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 28px; height: 2px; background: linear-gradient(90deg, #ffd700, #ffa500); border-radius: 2px; }
+.footer-description { line-height: 1.4; color: #fff !important; font-size: 0.95rem; }
+.footer-links { display: flex; flex-direction: column; gap: 0.4rem; }
+.footer-link { text-decoration: none; transition: all 0.3s ease; color: #fff !important; font-size: 0.95rem; }
+.footer-link:hover { color: #ffd700 !important; transform: translateX(3px); }
+.social-links { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+.social-icon { transition: all 0.3s ease; color: rgba(255,255,255,0.8) !important; font-size: 1.1rem !important; padding: 4px; }
+.social-icon:hover { color: #ffd700 !important; transform: translateY(-2px); }
+.footer-contact { color: #fff !important; font-size: 0.95rem; }
+.footer-bottom { margin-top: 1.2rem; padding-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.1); }
+.footer-legal { display:flex; justify-content:center; gap:1.2rem; margin-top:0.25rem; }
+@media (max-width:600px) { .footer { padding:0.45rem 0 0.2rem; min-height:80px; } .footer-title { margin-top: 1rem; font-size:0.98rem; } .footer-legal { flex-direction: column; align-items: center; gap:0.5rem; } .footer-bottom { border-top: none !important; margin-top: 0.4rem; padding-top: 0.3rem; } }
+
+/* --- Swiper Custom Styles --- */
+.swiper-button-next, .swiper-button-prev {
+  color: #C9A063 !important;
+  background: none !important;
+  border-radius: 50%;
+  font-size: 2.6rem !important;
+  width: 48px;
+  height: 48px;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: none !important;
+}
+.swiper-button-prev {
+  left: -13px !important;
+}
+.swiper-button-next {
+  right: -13px !important;
+}
+.swiper-button-next:after, .swiper-button-prev:after {
+  font-size: 2.6rem !important;
+  color: #C9A063 !important;
+}
+
+/* Swiper pagination custom */
+.swiper-pagination-bullet {
+  background: #cfc6b0 !important;
+  opacity: 1 !important;
+}
+.swiper-pagination-bullet-active {
+  background: #C9A063 !important;
+}
+
+/* GPU acceleration for Swiper - prevent forced reflows */
+.swiper,
+.swiper-wrapper,
+.swiper-slide {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Disable resize observer in production for performance */
+.swiper-container {
+  contain: layout style paint;
+}
+
+/* Performance optimizations for MUI components */
+.MuiCard-root,
+.MuiPaper-root {
+  contain: layout style;
+  will-change: transform;
+}
+
+.MuiCardMedia-root,
+.MuiCardMedia-img {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Optimize skeleton loading */
+.MuiSkeleton-root {
+  contain: strict;
+  will-change: opacity;
+}
+
+/* Smooth scrolling is now handled via data-scroll-behavior="smooth" on <html> tag */
+/* This prevents Next.js warnings during route transitions */
+
+/* Hide scrollbars but keep functionality */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Optimize scroll snap for mobile */
+@supports (scroll-snap-type: x mandatory) {
+  .scroll-snap-x {
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 20px;
+  }
+  
+  .scroll-snap-center {
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+}
+
