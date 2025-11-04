@@ -16,3 +16,9 @@ workers_dev = true
 # Uncomment and set zone_id/route if you want to publish to a specific route
 # zone_id = "YOUR_ZONE_ID"
 # route = "example.com/*"
+
+# When using Cloudflare Pages, Pages expects a `pages_build_output_dir` property
+# that points to the output directory created by the Next adapter. Setting this
+# makes the file valid for Pages integrations. Adjust if your adapter writes to
+# a different directory.
+pages_build_output_dir = ".vercel/output"
