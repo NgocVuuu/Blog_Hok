@@ -211,6 +211,9 @@ const corsOptions = {
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:3001',
+      // Allow the Next dev app on 3002 used by the migration workspace
+      'http://localhost:3002',
+      'http://127.0.0.1:3002',
       'http://127.0.0.1:3000',
       'https://bloghok-frontend.onrender.com',
   'https://blog-hok-fe.pages.dev',
