@@ -94,7 +94,7 @@ export default function HeroMetaPanel({ heroes = [], loading = false }:{heroes:a
           <Box sx={{ p:2 }}>Loading heroes...</Box>
         ) : (
           filteredSortedHeroes.map((h:any) => (
-            <Box key={h._id || h.slug} component={Link} href={`/heroes/${getHeroSlug(h)}`} sx={{ display:'grid', gridTemplateColumns: { xs: '1fr 36px 56px 56px 56px', md: '1.25fr 52px 72px 72px 72px' }, gap:{ xs: 0.75, md: 1 }, alignItems:'center', px:1, py:0.75, borderBottom:'1px solid', borderColor:'divider', textDecoration:'none', color:'inherit', '&:hover': { bgcolor: 'action.hover' }, cursor: 'pointer' }}>
+            <Box key={h._id || h.slug} component={Link} href={`/heroes/${getHeroSlug(h)}`} prefetch={false} sx={{ display:'grid', gridTemplateColumns: { xs: '1fr 36px 56px 56px 56px', md: '1.25fr 52px 72px 72px 72px' }, gap:{ xs: 0.75, md: 1 }, alignItems:'center', px:1, py:0.75, borderBottom:'1px solid', borderColor:'divider', textDecoration:'none', color:'inherit', '&:hover': { bgcolor: 'action.hover' }, cursor: 'pointer' }}>
               <Box sx={{ display:'flex', alignItems:'center', gap:1, minWidth: 0 }}>
                 {h.image ? (
                   // Use a positioned img that absolutely fills the wrapper to
