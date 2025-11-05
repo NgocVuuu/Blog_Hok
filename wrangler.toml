@@ -1,6 +1,0 @@
-[pages]
-# Point Pages at the Next adapter output folder for the client-next project.
-# When Cloudflare Pages builds the project (root set to /apps/client-next), the
-# adapter will write .vercel/output under that folder. This root-level file
-# ensures Pages will validate the Pages build output directory correctly.
-pages_build_output_dir = "apps/client-next/.vercel/output"
