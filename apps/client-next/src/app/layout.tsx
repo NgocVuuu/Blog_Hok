@@ -87,6 +87,13 @@ export default function RootLayout({
         <Script id="emotion-ssr" strategy="beforeInteractive">
           {`(function(){try{var ssrStyles=document.querySelectorAll('style[data-emotion]:not([data-s])');Array.prototype.forEach.call(ssrStyles,function(node){var attr=node.getAttribute('data-emotion')||'';if(attr.indexOf(' ')===-1) return;document.head.appendChild(node);node.setAttribute('data-s','');});}catch(e){} })();`}
         </Script>
+        {/* Google AdSense - loads after interactive so it doesn't block rendering. Replace client id if needed. */}
+        <Script
+          id="adsense"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4441724622178884"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <>
             <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
