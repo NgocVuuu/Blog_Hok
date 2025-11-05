@@ -33,6 +33,20 @@ const nextConfig: NextConfig = {
   
   // Faster dev server
   reactStrictMode: true,
+  // Add a small identifying header so deployed Pages responses show which app produced them
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-App-Project',
+            value: 'client-next',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default withBundleAnalyzer(nextConfig);
