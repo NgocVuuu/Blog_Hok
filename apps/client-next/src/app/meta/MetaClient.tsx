@@ -39,6 +39,7 @@ const HeroCard = memo(function HeroCard({ hero, tier, index, tierIndex }: {
   
   return (
     <Link
+      prefetch={false}
       href={`/heroes/${hero.slug || hero.name.toLowerCase().replace(/\s+/g, '-')}`}
       style={{ textDecoration: 'none' }}
     >

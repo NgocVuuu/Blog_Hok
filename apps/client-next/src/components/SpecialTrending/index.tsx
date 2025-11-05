@@ -34,6 +34,7 @@ const SpecialTrending = memo(function SpecialTrending({ items = [] }: { items: a
           <SwiperSlide key={item.slug || item.id || item.name}>
             <Card 
               component={Link} 
+              prefetch={false}
               href={`/heroes/${getHeroSlug(item)}`}
               aria-label={`Open ${item.name} details`}
               sx={{ 

@@ -22,7 +22,7 @@ export default function PatchHighlights({ item, loading }:{item:any, loading?:bo
           {item.excerpt || item.description || ''}
         </Typography>
         <Box sx={{ mt: 'auto' }}>
-          <Button component={Link} href="/news" size="small">{t('home.viewFull','View full')}</Button>
+          <Button component={Link} prefetch={false} href="/news" size="small">{t('home.viewFull','View full')}</Button>
         </Box>
       </CardContent>
     </Card>

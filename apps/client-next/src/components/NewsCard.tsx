@@ -10,6 +10,7 @@ const NewsCard = memo(function NewsCard({ item }: NewsCardProps) {
   return (
     <Card
       component={Link}
+      prefetch={false}
       href={item.slug ? `/news/${item.slug}` : (item._id ? `/news/${item._id}` : '/news')}
       sx={{
         textDecoration: 'none',

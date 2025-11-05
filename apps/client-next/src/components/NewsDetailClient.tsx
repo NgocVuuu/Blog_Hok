@@ -220,7 +220,7 @@ export default function NewsDetailClient({
           {/* Navigation between posts */}
           <Box display="flex" justifyContent="space-between" gap={2} mt={4} mb={4}>
             {prevPost ? (
-              <Link href={`/news/${prevPost.slug || prevPost._id}`} style={{ textDecoration: 'none', maxWidth: '48%', width: '100%' }}>
+              <Link prefetch={false} href={`/news/${prevPost.slug || prevPost._id}`} style={{ textDecoration: 'none', maxWidth: '48%', width: '100%' }}>
                 <Button
                   startIcon={<ArrowBackIcon fontSize="small" />}
                   variant="outlined"
@@ -261,7 +261,7 @@ export default function NewsDetailClient({
             ) : <Box sx={{ width: '48%' }} />}
 
             {nextPost ? (
-              <Link href={`/news/${nextPost.slug || nextPost._id}`} style={{ textDecoration: 'none', maxWidth: '48%', width: '100%' }}>
+              <Link prefetch={false} href={`/news/${nextPost.slug || nextPost._id}`} style={{ textDecoration: 'none', maxWidth: '48%', width: '100%' }}>
                 <Button
                   endIcon={<ArrowForwardIcon fontSize="small" />}
                   variant="outlined"
@@ -313,7 +313,7 @@ export default function NewsDetailClient({
               </Typography>
               <Stack spacing={2}>
                 {sameCategoryPosts.map((relatedPost) => (
-                  <Link key={relatedPost._id} href={`/news/${relatedPost.slug || relatedPost._id}`} style={{ textDecoration: 'none' }}>
+                  <Link prefetch={false} key={relatedPost._id} href={`/news/${relatedPost.slug || relatedPost._id}`} style={{ textDecoration: 'none' }}>
                     <Card
                       sx={{
                         display: 'grid',
@@ -369,7 +369,7 @@ export default function NewsDetailClient({
               </Typography>
               <Stack spacing={2}>
                 {featuredPosts.map((featuredPost) => (
-                  <Link key={featuredPost._id} href={`/news/${featuredPost.slug || featuredPost._id}`} style={{ textDecoration: 'none' }}>
+                  <Link prefetch={false} key={featuredPost._id} href={`/news/${featuredPost.slug || featuredPost._id}`} style={{ textDecoration: 'none' }}>
                     <Card
                       sx={{
                         display: 'flex',
@@ -440,7 +440,7 @@ export default function NewsDetailClient({
               </Typography>
               <Stack spacing={2}>
                 {relatedPosts.map((relatedPost) => (
-                  <Link key={relatedPost._id} href={`/news/${relatedPost.slug || relatedPost._id}`} style={{ textDecoration: 'none' }}>
+                  <Link prefetch={false} key={relatedPost._id} href={`/news/${relatedPost.slug || relatedPost._id}`} style={{ textDecoration: 'none' }}>
                     <Card
                       sx={{
                         display: 'grid',

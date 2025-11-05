@@ -88,8 +88,8 @@ const TopCounters = memo(function TopCounters({ heroes = [], loading = false }:{
         style={{ marginBottom: 18 }}
       >
         {top.map(h => (
-          <SwiperSlide key={h._id || h.slug || h.name} style={{ width: 'auto' }}>
-            <Card component={Link} href={`/heroes/${getHeroSlug(h)}`} sx={{ textDecoration:'none', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 8px rgba(0,0,0,0.06)', display:'inline-block', width:{ xs: 160, sm: 'auto' }, textAlign:'left', px:0, py:0, borderRadius:2, bgcolor:'background.paper', overflow:'hidden' }}>
+            <SwiperSlide key={h._id || h.slug || h.name} style={{ width: 'auto' }}>
+            <Card component={Link} prefetch={false} href={`/heroes/${getHeroSlug(h)}`} sx={{ textDecoration:'none', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 1px 8px rgba(0,0,0,0.06)', display:'inline-block', width:{ xs: 160, sm: 'auto' }, textAlign:'left', px:0, py:0, borderRadius:2, bgcolor:'background.paper', overflow:'hidden' }}>
               {h.image ? (
                 <CardMedia component="img" image={h.image} alt={h.name} sx={{ width: '100%', maxWidth:{ xs: '100%', sm: 160 }, height:{ xs: 96, sm: 96 }, objectFit: 'cover', borderRadius:'8px 8px 0 0', display:'block' }} />
               ) : (

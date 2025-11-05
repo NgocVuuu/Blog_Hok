@@ -56,7 +56,7 @@ export default function HomeSearch({ heroes = [], news = [] }:{heroes:any[];news
       {open && suggestions.length>0 && (
         <Box sx={{ position:'absolute', zIndex:10, left:0, right:0, bgcolor:'background.paper', border:'1px solid', borderColor:'divider', borderRadius:1, mt:1, maxHeight:360, overflowY:'auto', boxShadow:3 }}>
           {suggestions.map(s=> (
-            <Box key={`${s.type}-${s.id}`} component={Link} href={s.href} onClick={()=>{ setQuery(''); setOpen(false); }} sx={{ display:'flex', gap:1, alignItems:'center', p:1, textDecoration:'none', color:'inherit' }}>
+            <Box key={`${s.type}-${s.id}`} component={Link} prefetch={false} href={s.href} onClick={()=>{ setQuery(''); setOpen(false); }} sx={{ display:'flex', gap:1, alignItems:'center', p:1, textDecoration:'none', color:'inherit' }}>
               {s.image ? <img src={s.image} alt={s.title} style={{ width:40,height:40,objectFit:'cover',borderRadius:6,border:'1px solid #eee' }} /> : <Box sx={{ width:40,height:40,bgcolor:'grey.200',borderRadius:1 }} />}
               <Chip size='small' label={s.type} sx={{ textTransform:'capitalize' }} />
               <Typography noWrap sx={{ fontWeight:600 }}>{s.title}</Typography>

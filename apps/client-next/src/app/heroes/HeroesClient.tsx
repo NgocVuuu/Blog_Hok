@@ -216,6 +216,7 @@ export default function HeroesPage() {
               <Box key={hero._id} sx={{ minWidth: 0, width: '100%' }}>
               <Card
                 component={Link}
+                prefetch={false}
                 href={`/heroes/${hero.slug}`}
                 sx={{
                   width: '100%',
@@ -448,11 +449,12 @@ export default function HeroesPage() {
               <List dense disablePadding>
                 {guides.map(post => (
                   <ListItemButton
-                    key={post._id}
-                    component={Link}
-                    href={`/news/${post.slug || post._id}`}
-                    sx={{ borderRadius: 1, mb: 0.5 }}
-                  >
+                      key={post._id}
+                      component={Link}
+                      prefetch={false}
+                      href={`/news/${post.slug || post._id}`}
+                      sx={{ borderRadius: 1, mb: 0.5 }}
+                    >
                     <ListItemText
                       primary={
                         <Typography variant="subtitle2" noWrap sx={{ fontWeight: 500 }}>

@@ -307,7 +307,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                     </Typography>
                     <Box display="flex" gap={{ xs: 1, md: 2 }} flexWrap="wrap">
                       {hero.allies.map((ally: any) => (
-                        <Link key={ally._id || ally.id} href={`/heroes/${ally.slug}`} style={{ textDecoration: 'none' }}>
+                        <Link prefetch={false} key={ally._id || ally.id} href={`/heroes/${ally.slug}`} style={{ textDecoration: 'none' }}>
                           <Box sx={{ cursor: 'pointer', textAlign: 'center' }}>
                             <Box sx={{ 
                               width: { xs: 50, md: 70 }, 
@@ -349,7 +349,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                     </Typography>
                     <Box display="flex" gap={{ xs: 1, md: 2 }} flexWrap="wrap">
                       {hero.counters.map((counter: any) => (
-                        <Link key={counter._id || counter.id} href={`/heroes/${counter.slug}`} style={{ textDecoration: 'none' }}>
+                        <Link prefetch={false} key={counter._id || counter.id} href={`/heroes/${counter.slug}`} style={{ textDecoration: 'none' }}>
                           <Box sx={{ cursor: 'pointer', textAlign: 'center' }}>
                             <Box sx={{ 
                               width: { xs: 50, md: 70 }, 
@@ -391,7 +391,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                     </Typography>
                     <Box display="flex" gap={{ xs: 1, md: 2 }} flexWrap="wrap">
                       {hero.goodAgainst.map((ga: any) => (
-                        <Link key={ga._id || ga.id} href={`/heroes/${ga.slug}`} style={{ textDecoration: 'none' }}>
+                        <Link prefetch={false} key={ga._id || ga.id} href={`/heroes/${ga.slug}`} style={{ textDecoration: 'none' }}>
                           <Box sx={{ cursor: 'pointer', textAlign: 'center' }}>
                             <Box sx={{ 
                               width: { xs: 50, md: 70 }, 
@@ -924,6 +924,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                         {sameRoleHeroes.slice(0, 14).map((h: any) => (
                           <SwiperSlide key={h.slug}>
                             <Link
+                              prefetch={false}
                               href={`/heroes/${h.slug}`}
                               style={{ textDecoration: 'none' }}
                             >
@@ -985,6 +986,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                     <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                       {sameRoleHeroes.slice(0, 14).map((h: any) => (
                         <Link
+                          prefetch={false}
                           key={h.slug}
                           href={`/heroes/${h.slug}`}
                           style={{ textDecoration: 'none' }}
@@ -1047,6 +1049,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                         {topWinHeroes.slice(0, 14).map((h: any) => (
                           <SwiperSlide key={h.slug}>
                             <Link
+                              prefetch={false}
                               href={`/heroes/${h.slug}`}
                               style={{ textDecoration: 'none' }}
                             >
@@ -1121,6 +1124,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                     }}>
                       {topWinHeroes.slice(0, 14).map((h: any) => (
                         <Link
+                          prefetch={false}
                           key={h.slug}
                           href={`/heroes/${h.slug}`}
                           style={{ textDecoration: 'none' }}
@@ -1191,7 +1195,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
             >
               {latestNews.map((news: any) => (
                 <SwiperSlide key={news._id || news.slug}>
-                  <Link href={`/news/${news.slug || news._id}`} style={{ textDecoration: 'none' }}>
+                  <Link prefetch={false} href={`/news/${news.slug || news._id}`} style={{ textDecoration: 'none' }}>
                     <Box sx={{ 
                       cursor: 'pointer', 
                       transition: 'transform 0.2s', 

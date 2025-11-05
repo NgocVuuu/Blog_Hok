@@ -20,6 +20,7 @@ export default function QuickLinks(){
         <Box 
           key={l.href} 
           component={Link} 
+          prefetch={false}
           href={l.href} 
           sx={{ 
             textDecoration:'none', 
