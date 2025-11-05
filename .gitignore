@@ -121,6 +121,7 @@ apps/admin/public/index.html
 apps/client-next/.next/
 apps/client-next/.open-next/
 **/.open-next/
+.open-next
 
 # Ignore admin build artifacts
 apps/admin/build/

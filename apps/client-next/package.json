@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack -p 3002",
+    "dev": "next dev -p 3002",
     "sync:assets": "node ./scripts/syncAssets.js",
-    "build": "next build --webpack",
-    "build:cloudflare": "next build --webpack && node ./scripts/cleanCache.js",
+    "build": "next build",
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "build:cloudflare": "npm run pages:build",
     "postbuild": "node ./scripts/cleanCache.js",
-    "analyze": "set ANALYZE=true && next build --webpack",
+    "analyze": "set ANALYZE=true && next build",
     "validate:seo": "node ./scripts/validate-seo.js",
     "start": "next start",
     "lint": "eslint"
@@ -38,6 +39,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "@cloudflare/next-on-pages": "latest",
+    "wrangler": "latest"
   }
 }
