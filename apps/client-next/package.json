@@ -6,7 +6,7 @@
     "dev": "next dev --webpack -p 3002",
     "sync:assets": "node ./scripts/syncAssets.js",
     "build": "next build --webpack",
-    "build:cloudflare": "next build --webpack && node ./scripts/cleanCache.js && npx @cloudflare/next-on-pages",
+    "build:cloudflare": "next build --webpack && node ./scripts/cleanCache.js",
     "postbuild": "node ./scripts/cleanCache.js",
     "analyze": "set ANALYZE=true && next build --webpack",
     "validate:seo": "node ./scripts/validate-seo.js",
@@ -30,7 +30,6 @@
     "swiper": "^12.0.3"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
     "@next/bundle-analyzer": "^16.0.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
