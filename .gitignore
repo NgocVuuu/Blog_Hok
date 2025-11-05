@@ -116,3 +116,11 @@ server/test-env.js
 apps/admin/build/
 # Ignore admin public index (static HTML that should not be tracked)
 apps/admin/public/index.html
+
+# Ignore client-next build artifacts and OpenNext cache
+apps/client-next/.next/
+apps/client-next/.open-next/
+**/.open-next/
+
+# Ignore admin build artifacts
+apps/admin/build/
