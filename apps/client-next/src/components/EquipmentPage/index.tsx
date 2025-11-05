@@ -245,10 +245,31 @@ const EquipmentPage = () => {
     { value: 'Jungle', label: t('equipment.categories.jungle', 'Jungle'), color: '#795548' }
   ], [t]);
 
+  // Helpers: safe wrappers around requestIdleCallback/cancelIdleCallback
+  // Some mobile browsers or environments may not support requestIdleCallback,
+  // calling it directly can throw a ReferenceError and crash the page. Use
+  // these safe wrappers to fall back to setTimeout.
+  const runIdle = (cb: () => void, options?: { timeout?: number }) => {
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      // @ts-ignore - some TS libs may not include requestIdleCallback
+      return (window as any).requestIdleCallback(cb, options);
+    }
+    // fallback to global timer
+    return (globalThis as any).setTimeout(cb, options?.timeout ?? 0);
+  };
+
+  const cancelIdle = (handle: any) => {
+    if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+      // @ts-ignore
+      return (window as any).cancelIdleCallback(handle);
+    }
+    return (globalThis as any).clearTimeout(handle);
+  };
+
   // Debounce search term for better performance
   useEffect(() => {
     const timer = setTimeout(() => {
-      requestIdleCallback(() => {
+      runIdle(() => {
         setDebouncedSearchTerm(searchTerm);
         setBatchSize(12); // Reset batch size on search change
       });
@@ -274,13 +295,11 @@ const EquipmentPage = () => {
     setVisibleCategories(['Physical', 'Magic']);
     
     // Load rest when browser is idle
-    const timer = requestIdleCallback(() => {
+    const handle = runIdle(() => {
       setVisibleCategories(['Physical', 'Magic', 'Defense', 'Movement', 'Roaming', 'Jungle']);
     }, { timeout: 200 });
 
-    return () => {
-      if (typeof timer === 'number') cancelIdleCallback(timer);
-    };
+    return () => cancelIdle(handle);
   }, [equipment.length, categoryFilter, debouncedSearchTerm]);
 
   useEffect(() => {
@@ -300,7 +319,7 @@ const EquipmentPage = () => {
         const data = res.data?.success ? res.data.data : (Array.isArray(res.data) ? res.data : []);
         
         // Use requestIdleCallback to defer state update
-        requestIdleCallback(() => {
+        runIdle(() => {
           if (!mounted || abortController.signal.aborted) return;
           setEquipment(Array.isArray(data) ? data : []);
           setLoading(false);
@@ -309,7 +328,7 @@ const EquipmentPage = () => {
         if (!mounted || abortController.signal.aborted) return;
         if (err.name === 'AbortError' || err.name === 'CanceledError') return;
         console.error('Failed to fetch equipment:', err);
-        requestIdleCallback(() => {
+        runIdle(() => {
           if (!mounted) return;
           setEquipment([]);
           setLoading(false);

@@ -97,8 +97,28 @@ export default function HeroMetaPanel({ heroes = [], loading = false }:{heroes:a
             <Box key={h._id || h.slug} component={Link} href={`/heroes/${getHeroSlug(h)}`} sx={{ display:'grid', gridTemplateColumns: { xs: '1fr 36px 56px 56px 56px', md: '1.25fr 52px 72px 72px 72px' }, gap:{ xs: 0.75, md: 1 }, alignItems:'center', px:1, py:0.75, borderBottom:'1px solid', borderColor:'divider', textDecoration:'none', color:'inherit', '&:hover': { bgcolor: 'action.hover' }, cursor: 'pointer' }}>
               <Box sx={{ display:'flex', alignItems:'center', gap:1, minWidth: 0 }}>
                 {h.image ? (
-                  <Box sx={{ width:{ xs: 42, md: 48 }, height:{ xs: 42, md: 48 }, borderRadius:1, overflow:'hidden', border: '1px solid #eee', flex: '0 0 auto', bgcolor: 'grey.50' }}>
-                    <img src={h.image} alt={h.name} style={{ width:'100%', height:'100%', objectFit:'cover', display: 'block' }} loading="lazy"/>
+                  // Use a positioned img that absolutely fills the wrapper to
+                  // guarantee it covers the box on all viewports (esp. mobile)
+                  <Box sx={{ width:{ xs: 42, md: 48 }, height:{ xs: 42, md: 48 }, borderRadius:1, overflow:'hidden', border: '1px solid #eee', flex: '0 0 auto', bgcolor: 'grey.50', position: 'relative', pt: { xs: '30px', md: 0 } }}>
+                    <Box
+                      component="img"
+                      src={h.image}
+                      alt={h.name}
+                      loading="lazy"
+                      sx={{
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        top: { xs: '10px', md: 0 },
+                        width: '100% !important',
+                        height: { xs: 'calc(100% - 10px) !important', md: '100% !important' },
+                        objectFit: 'cover',
+                        display: 'block',
+                        transform: { xs: 'scale(1.9)', md: 'scale(1)' },
+                        transformOrigin: 'center',
+                        transition: 'transform 180ms ease'
+                      }}
+                    />
                   </Box>
                 ) : (
                   <Box sx={{ width:{ xs: 42, md: 48 }, height:{ xs: 42, md: 48 }, borderRadius:1, bgcolor:'grey.200' }} />

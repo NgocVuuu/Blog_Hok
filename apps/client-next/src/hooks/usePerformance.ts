@@ -13,30 +13,39 @@ export function useIdleEffect(effect: () => void | (() => void), deps: any[]) {
       return cleanupRef.current;
     }
 
-    // Use requestIdleCallback if available
-    if ('requestIdleCallback' in window) {
-      const handle = requestIdleCallback(
-        () => {
-          cleanupRef.current = effect();
-        },
-        { timeout: 2000 }
-      );
+    // Helpers: safe wrappers around requestIdleCallback / cancelIdleCallback
+    // Some browsers (or embedded webviews) don't implement these APIs and
+    // calling them directly can throw a ReferenceError. Use fallbacks that
+    // map to setTimeout/clearTimeout so the effect still runs.
+    const runIdle = (cb: () => void, options?: { timeout?: number }) => {
+      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        // @ts-ignore - some TS libs may not include requestIdleCallback
+        return (window as any).requestIdleCallback(cb, options);
+      }
+      // fallback to a normal timer
+      return globalThis.setTimeout(cb, options?.timeout ?? 0);
+    };
 
-      return () => {
-        cancelIdleCallback(handle);
-        if (cleanupRef.current) cleanupRef.current();
-      };
-    } else {
-      // Fallback to setTimeout
-      const timer = setTimeout(() => {
-        cleanupRef.current = effect();
-      }, 100);
+    const cancelIdle = (handle: any) => {
+      if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+        // @ts-ignore
+        return (window as any).cancelIdleCallback(handle);
+      }
+      return globalThis.clearTimeout(handle);
+    };
 
-      return () => {
-        clearTimeout(timer);
+    // Schedule the effect on an idle callback where possible
+    const handle = runIdle(() => {
+      cleanupRef.current = effect();
+    }, { timeout: 2000 });
+
+    return () => {
+      try {
+        cancelIdle(handle);
+      } finally {
         if (cleanupRef.current) cleanupRef.current();
-      };
-    }
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 }
@@ -48,24 +57,25 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   callback: T,
   delay: number
 ): T {
-  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  // Use platform-friendly timer types (browsers return number from setTimeout)
+  const timeoutRef = useRef<number | undefined>(undefined);
   const rafRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (timeoutRef.current) globalThis.clearTimeout(timeoutRef.current);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
   return ((...args: any[]) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (timeoutRef.current) globalThis.clearTimeout(timeoutRef.current);
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
 
-    timeoutRef.current = setTimeout(() => {
+    timeoutRef.current = globalThis.setTimeout(() => {
       rafRef.current = requestAnimationFrame(() => {
         callback(...args);
       });
-    }, delay);
+    }, delay) as unknown as number;
   }) as T;
 }
