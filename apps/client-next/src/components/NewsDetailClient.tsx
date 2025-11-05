@@ -317,27 +317,36 @@ export default function NewsDetailClient({
                     <Card
                       sx={{
                         display: 'grid',
-                        gridTemplateColumns: '60px 1fr',
+                        gridTemplateColumns: { xs: '96px 1fr', sm: '80px 1fr' },
                         '&:hover': { boxShadow: 2 },
-                        alignItems: 'stretch',
-                        height: 60,
+                        alignItems: 'center',
+                        height: { xs: 96, sm: 80 },
                         overflow: 'hidden'
                       }}
                     >
-                      <Box sx={{ width: 60, height: 60, flexShrink: 0, overflow: 'hidden' }}>
+                      <Box sx={{ width: { xs: 96, sm: 80 }, height: { xs: 96, sm: 80 }, flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'stretch', lineHeight: 0 }}>
                         {relatedPost.image ? (
                           <LazyImage
                             src={relatedPost.image}
                             alt={relatedPost.title}
                             width="100%"
                             height="100%"
-                            sx={{ objectFit: 'cover', display: 'block' }}
+                            sx={{
+                              objectFit: 'cover',
+                              display: 'block',
+                              transform: { xs: 'none', sm: 'scale(1)' },
+                              transformOrigin: 'center',
+                              transition: 'transform 180ms',
+                              width: '100%',
+                              height: '100%',
+                              '& img': { margin: 0, padding: 0, objectPosition: 'center', width: '100%', height: '100%', display: 'block' }
+                            }}
                           />
                         ) : (
                           <Box sx={{ width: '100%', height: '100%', backgroundColor: '#f5f5f5' }} />
                         )}
                       </Box>
-                      <CardContent sx={{ flex: 1, p: '6px 10px', '&:last-child': { pb: '6px' }, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 60, overflow: 'hidden' }}>
+                      <CardContent sx={{ flex: 1, p: '8px 10px', '&:last-child': { pb: '8px' }, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: { xs: 96, sm: 80 }, overflow: 'hidden' }}>
                         <Typography variant="body2" fontWeight={600} color="text.primary" sx={{ lineHeight: 1.2, mb: 0.25, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {relatedPost.title}
                         </Typography>
@@ -365,41 +374,50 @@ export default function NewsDetailClient({
                       sx={{
                         display: 'flex',
                         '&:hover': { boxShadow: 2 },
-                        height: 80,
+                        height: { xs: 96, sm: 80 },
                         alignItems: 'center'
                       }}
                     >
-                      {featuredPost.image ? (
-                        <LazyImage
-                          src={featuredPost.image}
-                          alt={featuredPost.title}
-                          width="80px"
-                          height="80px"
-                          sx={{
-                            objectFit: 'cover',
-                            borderRadius: '2px 0 0 2px',
-                            flexShrink: 0
-                          }}
-                        />
-                      ) : (
-                        <Box
-                          sx={{
-                            width: 80,
-                            height: 80,
-                            backgroundColor: '#f5f5f5',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderRadius: '2px 0 0 2px',
-                            flexShrink: 0
-                          }}
-                        >
-                          <Typography variant="caption" color="text.secondary">
-                            No Image
-                          </Typography>
-                        </Box>
-                      )}
-                      <CardContent sx={{ flex: 1, p: 1.25 }}>
+                      <Box sx={{ width: { xs: 96, sm: 80 }, height: { xs: 96, sm: 80 }, flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'stretch', justifyContent: 'center', lineHeight: 0 }}>
+                        {featuredPost.image ? (
+                          <LazyImage
+                            src={featuredPost.image}
+                            alt={featuredPost.title}
+                            width="100%"
+                            height="100%"
+                            sx={{
+                              objectFit: 'cover',
+                              borderRadius: '2px 0 0 2px',
+                              flexShrink: 0,
+                              width: '100%',
+                              height: '100%',
+                              display: 'block',
+                              transform: { xs: 'none', sm: 'scale(1)' },
+                              transformOrigin: 'center',
+                              transition: 'transform 180ms',
+                              '& img': { margin: 0, padding: 0, objectPosition: 'center', width: '100%', height: '100%', display: 'block' }
+                            }}
+                          />
+                        ) : (
+                          <Box
+                            sx={{
+                              width: { xs: 96, sm: 80 },
+                              height: { xs: 96, sm: 80 },
+                              backgroundColor: '#f5f5f5',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              borderRadius: '2px 0 0 2px',
+                              flexShrink: 0
+                            }}
+                          >
+                            <Typography variant="caption" color="text.secondary">
+                              No Image
+                            </Typography>
+                          </Box>
+                        )}
+                      </Box>
+                      <CardContent sx={{ flex: 1, p: 1.25, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: { xs: 96, sm: 80 }, '&:last-child': { pb: '8px' }, overflow: 'hidden' }}>
                         <Typography variant="body2" fontWeight={600} color="text.primary" sx={{ lineHeight: 1.2, mb: 0.25, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {featuredPost.title}
                         </Typography>
@@ -426,26 +444,37 @@ export default function NewsDetailClient({
                     <Card
                       sx={{
                         display: 'grid',
-                        gridTemplateColumns: '80px 1fr',
+                        gridTemplateColumns: { xs: '96px 1fr', sm: '80px 1fr' },
                         '&:hover': { boxShadow: 2 },
-                        height: 80,
+                        height: { xs: 96, sm: 80 },
                         overflow: 'hidden'
                       }}
                     >
-                      {relatedPost.image && (
-                        <LazyImage
-                          src={relatedPost.image}
-                          alt={relatedPost.title}
-                          width="80px"
-                          height="80px"
-                          sx={{
-                            objectFit: 'cover',
-                            borderRadius: '2px 0 0 2px',
-                            flexShrink: 0
-                          }}
-                        />
-                      )}
-                      <CardContent sx={{ flex: 1, p: '8px 10px', '&:last-child': { pb: '8px' }, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 80, overflow: 'hidden' }}>
+                      <Box sx={{ width: { xs: 96, sm: 80 }, height: { xs: 96, sm: 80 }, flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'stretch', justifyContent: 'center', lineHeight: 0 }}>
+                        {relatedPost.image ? (
+                          <LazyImage
+                            src={relatedPost.image}
+                            alt={relatedPost.title}
+                            width="100%"
+                            height="100%"
+                            sx={{
+                              objectFit: 'cover',
+                              borderRadius: '2px 0 0 2px',
+                              flexShrink: 0,
+                              width: '100%',
+                              height: '100%',
+                              transform: { xs: 'none', sm: 'scale(1)' },
+                              transformOrigin: 'center',
+                              transition: 'transform 180ms',
+                              display: 'block',
+                              '& img': { margin: 0, padding: 0, objectPosition: 'center', width: '100%', height: '100%', display: 'block' }
+                            }}
+                          />
+                        ) : (
+                          <Box sx={{ width: '100%', height: '100%', backgroundColor: '#f5f5f5' }} />
+                        )}
+                      </Box>
+                      <CardContent sx={{ flex: 1, p: '8px 10px', '&:last-child': { pb: '8px' }, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: { xs: 96, sm: 80 }, overflow: 'hidden' }}>
                         <Typography variant="body2" fontWeight={600} color="text.primary" sx={{ lineHeight: 1.2, mb: 0.25, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {relatedPost.title}
                         </Typography>

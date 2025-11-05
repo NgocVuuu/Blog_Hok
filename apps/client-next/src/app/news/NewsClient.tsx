@@ -127,12 +127,12 @@ const DesktopPostRow = memo(function DesktopPostRow({ post, onClick, formatDate,
   return (
     <TableRow 
       hover 
-      sx={{ cursor: 'pointer', contentVisibility: 'auto', containIntrinsicSize: '0 60px' }} 
+      sx={{ cursor: 'pointer', contentVisibility: 'auto', containIntrinsicSize: '0 64px' }} 
       onClick={onClick}
     >
-      <TableCell sx={{ p: 1 }}>
+      <TableCell sx={{ p: 1, width: '64px' }}>
           {post.image && (
-            <Box component="img" src={post.image} alt={post.title} loading="lazy" sx={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 1 }} />
+            <Box component="img" src={post.image} alt={post.title} loading="lazy" sx={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 1, transform: { md: 'scale(0.9)' }, transition: 'transform 160ms' }} />
           )}
       </TableCell>
       <TableCell>
@@ -476,7 +476,7 @@ export default function NewsPage() {
             <Table>
               <TableHead sx={{ bgcolor: 'grey.100' }}>
                 <TableRow>
-                  <TableCell sx={{ width: '52px' }}></TableCell>
+                  <TableCell sx={{ width: '64px' }}></TableCell>
                     <TableCell>{t('news.title', 'Tiêu đề')}</TableCell>
                   <TableCell align="center" sx={{ width: '140px' }}>{t('news.category', 'Phân loại')}</TableCell>
                   <TableCell sx={{ width: '120px' }}>{t('news.author', 'Tác giả')}</TableCell>

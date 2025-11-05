@@ -98,17 +98,8 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
 
   // Debug logs (development only)
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('📊 HeroDetailClient Props:', {
-        heroName: hero?.name,
-        sameRoleHeroesCount: sameRoleHeroes?.length,
-        topWinHeroesCount: topWinHeroes?.length,
-        latestNewsCount: latestNews?.length,
-        sameRoleHeroes,
-        topWinHeroes,
-        latestNews
-      });
-    }
+    // Removed verbose dev console logs to keep client console clean.
+    // If you need structured telemetry, consider sending to a dev-only logger service.
   }, [hero, sameRoleHeroes, topWinHeroes, latestNews]);
 
   // Detect mobile with optimized resize handler
@@ -764,7 +755,12 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
               overflow: 'visible',
               border: '1px solid rgba(139, 115, 85, 0.2)',
               mx: { xs: 0, md: -3 },
-              width: { xs: '100%', md: 'calc(100% + 48px)' },
+                width: { xs: '100%', md: 'calc(100% + 48px)' },
+                // Adjust swiper pagination position on mobile to avoid overlap
+                '& .swiper-pagination': {
+                  bottom: isMobile ? 12 : 32,
+                  zIndex: 5
+                }
             }}>
               <Typography variant="h5" sx={{ mt: { xs: 1, md: 2 }, mb: 2, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
                 {String(t('hero.skins', 'Skins'))}
@@ -784,7 +780,8 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                 }}
                 navigation={!isMobile}
                 pagination={{ clickable: true }}
-                style={{ width: '100%', paddingBottom: isMobile ? 20 : 40 }}
+                // Increase bottom padding on mobile so pagination dots sit lower
+                style={{ width: '100%', paddingBottom: isMobile ? 56 : 40 }}
               >
                 {hero.skins.map((skin: any, idx: number) => (
                   <SwiperSlide key={idx} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

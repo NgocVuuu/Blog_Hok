@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Script from 'next/script';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import I18nProvider from '@/components/I18nProvider';
@@ -80,6 +81,12 @@ export default function RootLayout({
         suppressHydrationWarning={process.env.NODE_ENV === 'development'}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* Move Emotion SSR style tags into <head> before hydration to avoid DOM re-ordering
+            which causes React hydration mismatch/errors in dev. This runs before React
+            hydrates (strategy="beforeInteractive"). */}
+        <Script id="emotion-ssr" strategy="beforeInteractive">
+          {`(function(){try{var ssrStyles=document.querySelectorAll('style[data-emotion]:not([data-s])');Array.prototype.forEach.call(ssrStyles,function(node){var attr=node.getAttribute('data-emotion')||'';if(attr.indexOf(' ')===-1) return;document.head.appendChild(node);node.setAttribute('data-s','');});}catch(e){} })();`}
+        </Script>
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <>
             <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
@@ -88,7 +95,7 @@ export default function RootLayout({
         )}
         <ClientProviders>
           <Navbar />
-          <main>{children}</main>
+          <main tabIndex={-1}>{children}</main>
           <Footer />
         </ClientProviders>
       </body>

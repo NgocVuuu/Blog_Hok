@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect, useMemo, useTransition, memo } from 'react';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   Container, Typography, Box, Card, CardContent,
   FormControl, InputLabel, Select, MenuItem,
@@ -29,6 +31,11 @@ const HeroCard = memo(function HeroCard({ hero, tier, index, tierIndex }: {
   tierIndex: number;
 }) {
   const tierColor = getTierColorValue(tier);
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+  // Reduce image scale on desktop to avoid oversized portraits
+  const imageScale = isDesktop ? 1.15 : 1.5;
+  const imageTop = isDesktop ? '8px' : '13px';
   
   return (
     <Link
@@ -68,8 +75,8 @@ const HeroCard = memo(function HeroCard({ hero, tier, index, tierIndex }: {
               style={{ 
                 objectFit: 'cover', 
                 objectPosition: 'center 20%',
-                transform: 'scale(1.5)',
-                top: '13px'
+                transform: `scale(${imageScale})`,
+                top: imageTop
               }}
               sizes="(max-width: 600px) 33vw, (max-width: 960px) 25vw, (max-width: 1280px) 16vw, 12vw"
               loading={tierIndex === 0 && index < 8 ? 'eager' : 'lazy'}

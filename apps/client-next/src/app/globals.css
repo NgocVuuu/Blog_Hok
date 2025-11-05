@@ -252,3 +252,13 @@ code {
   }
 }
 
+/* When the app programmatically focuses <main> after navigation we don't want
+   to show the browser default focus ring as a persistent page border. Use
+   :focus:not(:focus-visible) to keep outlines for keyboard users but remove
+   the visible ring for script-initiated focus (mouse/instant focus). */
+main:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+

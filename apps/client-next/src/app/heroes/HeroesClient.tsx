@@ -236,8 +236,8 @@ export default function HeroesPage() {
                   <Box sx={{ 
                     position: 'relative', 
                     width: '100%', 
-                    height: { xs: '70px', sm: '80px', md: '100px' },
-                    minHeight: { xs: '70px', sm: '80px', md: '100px' },
+                    height: { xs: '67px', sm: '80px', md: '100px' },
+                    minHeight: { xs: '67px', sm: '80px', md: '100px' },
                     flexShrink: 0,
                     overflow: 'hidden',
                     bgcolor: 'grey.200'

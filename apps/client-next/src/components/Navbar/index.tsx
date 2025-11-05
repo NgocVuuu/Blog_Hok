@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { AppBar, Toolbar, Typography, Button, Box, Menu, MenuItem, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText, Divider } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -20,6 +21,8 @@ const navLinks = [
 export default function Navbar(){
   const { t, i18n } = useTranslation();
   const pathname = usePathname() || '/';
+  const router = useRouter();
+  const [isPendingNav, startTransition] = useTransition();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [logoRotated, setLogoRotated] = useState(false);
@@ -293,7 +296,18 @@ export default function Navbar(){
                 <ListItemButton
                   component={Link as any}
                   href={link.to}
-                  onClick={() => { setDrawerOpen(false); setMobileLangAnchor(null); }}
+                  onClick={(e) => {
+                    // Use startTransition for navigation (non-blocking) and defer drawer closing
+                    // to the next animation frame to avoid layout thrashing during route change.
+                    e.preventDefault();
+                    startTransition(() => {
+                      router.push(link.to);
+                    });
+                    requestAnimationFrame(() => {
+                      setDrawerOpen(false);
+                      setMobileLangAnchor(null);
+                    });
+                  }}
                   sx={{
                     '&:hover': {
                       backgroundColor: 'rgba(201, 160, 99, 0.1)',

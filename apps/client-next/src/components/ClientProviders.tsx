@@ -6,6 +6,8 @@ import theme from '../theme';
 import I18nProvider from './I18nProvider';
 import { CacheProvider } from '@emotion/react';
 import createEmotionCache from '../createEmotionCache';
+import ScrollToTopHandler from './ScrollToTopHandler';
+import ScrollTopButton from './ScrollTopButton';
 
 // Create a client-side cache instance
 const clientSideEmotionCache = createEmotionCache();
@@ -15,7 +17,11 @@ export default function ClientProviders({ children }: { children: React.ReactNod
     <CacheProvider value={clientSideEmotionCache}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <I18nProvider>{children}</I18nProvider>
+        <I18nProvider>
+          {children}
+          <ScrollToTopHandler />
+          <ScrollTopButton />
+        </I18nProvider>
       </ThemeProvider>
     </CacheProvider>
   );
