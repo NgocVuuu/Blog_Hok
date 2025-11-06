@@ -12,6 +12,9 @@ export default function AdSlot({ slot, className, style }: Props) {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // Only push if there are uninitialized ad slots in the DOM
+    const hasUnfilledIns = !!document.querySelector('ins.adsbygoogle:not([data-adsbygoogle-status])');
+    if (!hasUnfilledIns) return;
     try {
       // @ts-ignore
       (window.adsbygoogle = window.adsbygoogle || []).push({});

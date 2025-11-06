@@ -7,10 +7,13 @@ export default function AdsenseLoader() {
     if (typeof window === 'undefined') return;
     // avoid injecting if adsbygoogle script already present
     const existing = document.querySelector('script[src*="adsbygoogle"]');
+    const hasUnfilledIns = () => !!document.querySelector('ins.adsbygoogle:not([data-adsbygoogle-status])');
     try {
-      // If script already exists, ensure the queue is kicked so Auto Ads or slots render
-      // @ts-ignore
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      // If script already exists, ensure the queue is kicked only when there are uninitialized slots
+      if (hasUnfilledIns()) {
+        // @ts-ignore
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      }
     } catch (_) {}
     if (existing) return;
 
@@ -21,8 +24,11 @@ export default function AdsenseLoader() {
     s.addEventListener('load', () => {
       try {
         // Trigger Auto Ads (if enabled in your AdSense account) and render manual slots
-        // @ts-ignore
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        const hasUnfilledInsOnLoad = !!document.querySelector('ins.adsbygoogle:not([data-adsbygoogle-status])');
+        if (hasUnfilledInsOnLoad) {
+          // @ts-ignore
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        }
       } catch (_) {}
     });
     s.addEventListener('error', () => {
