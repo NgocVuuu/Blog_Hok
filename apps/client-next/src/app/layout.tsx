@@ -72,6 +72,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
+      <head>
+        <meta name="google-adsense-account" content="ca-pub-4441724622178884" />
+      </head>
       {/*
         suppressHydrationWarning in development reduces noisy hydration warnings
         caused by browser extensions injecting attributes (eg. cz-shortcut-listen).
