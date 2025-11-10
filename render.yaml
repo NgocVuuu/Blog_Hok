@@ -4,8 +4,9 @@ services:
     name: bloghok-api
     env: node
     plan: free
-    buildCommand: cd server && npm install
-    startCommand: cd server && npm start
+    # repo uses apps/server, make sure build/start commands use that path
+    buildCommand: cd apps/server && npm install
+    startCommand: cd apps/server && npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -18,9 +19,9 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-  value: https://blog-hok-fe.pages.dev
+        value: https://blog-hok-fe.pages.dev
       - key: FRONTEND_URL
-  value: https://blog-hok-fe.pages.dev
+        value: https://blog-hok-fe.pages.dev
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
       - key: CLOUDINARY_API_KEY
