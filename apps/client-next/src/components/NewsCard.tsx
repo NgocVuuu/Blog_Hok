@@ -28,17 +28,22 @@ const NewsCard = memo(function NewsCard({ item }: NewsCardProps) {
         }
       }}
     >
-      {/* Fixed aspect ratio container for images
-          On mobile we use a fixed height so all cards visible in the horizontal scroller have equal image heights.
-          On sm+ screens we keep a 16:9 responsive ratio. */}
-      <Box sx={{ 
+      {/* Responsive aspect-ratio container for images: square on mobile, 16:9 on larger screens */}
+      <Box sx={{
         position: 'relative',
         width: '100%',
-        // mobile: fixed height in px ensures consistent heights in the horizontal scroller
-        height: { xs: 180, sm: 'auto' },
-        // desktop/tablet: preserve 16:9 responsive ratio
-        paddingTop: { xs: 0, sm: '56.25%' },
-        bgcolor: 'grey.200'
+        // Use modern aspect-ratio where supported; provide a conservative minHeight fallback for older browsers
+  // Mobile: 3.8:2 (~1.9:1). Desktop: 16:9
+  aspectRatio: { xs: '1.9 / 1', sm: '16 / 9' },
+  minHeight: { xs: 120, sm: 'auto' },
+        bgcolor: 'grey.200',
+        overflow: 'hidden',
+        // Fallback for browsers without aspect-ratio support: use padding-top technique
+        '@supports not (aspect-ratio: 1 / 1)': {
+          // padding-top is height/width * 100% -> (2 / 3.8) * 100% ≈ 52.63%
+          paddingTop: { xs: '52.63%', sm: '56.25%' },
+          minHeight: 'auto'
+        }
       }}>
         {item.thumbnail || item.image ? (
           <CardMedia
@@ -48,11 +53,11 @@ const NewsCard = memo(function NewsCard({ item }: NewsCardProps) {
             loading="lazy"
             sx={{
               position: 'absolute',
-              top: 0,
-              left: 0,
+              inset: 0,
               width: '100%',
               height: '100%',
-              objectFit: 'cover'
+              objectFit: 'cover',
+              display: 'block'
             }}
           />
         ) : null}
