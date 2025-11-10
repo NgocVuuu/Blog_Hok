@@ -28,11 +28,16 @@ const NewsCard = memo(function NewsCard({ item }: NewsCardProps) {
         }
       }}
     >
-      {/* Fixed aspect ratio container for images */}
+      {/* Fixed aspect ratio container for images
+          On mobile we use a fixed height so all cards visible in the horizontal scroller have equal image heights.
+          On sm+ screens we keep a 16:9 responsive ratio. */}
       <Box sx={{ 
         position: 'relative',
         width: '100%',
-        paddingTop: '56.25%', // 16:9 aspect ratio
+        // mobile: fixed height in px ensures consistent heights in the horizontal scroller
+        height: { xs: 180, sm: 'auto' },
+        // desktop/tablet: preserve 16:9 responsive ratio
+        paddingTop: { xs: 0, sm: '56.25%' },
         bgcolor: 'grey.200'
       }}>
         {item.thumbnail || item.image ? (
