@@ -24,7 +24,8 @@ const SpecialTrending = memo(function SpecialTrending({ items = [] }: { items: a
         breakpoints={{
           600: { slidesPerView: 2 },
           900: { slidesPerView: 3 },
-          1200: { slidesPerView: 4 }
+          // On large screens (>=1200px) show slightly more than 4 slides: 4.2
+          1200: { slidesPerView: 4.6 }
         }}
         pagination={{ clickable: true, el: '.special-trending-pagination' }}
         autoplay={{ delay: 3500, disableOnInteraction: false }}

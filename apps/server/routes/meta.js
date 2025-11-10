@@ -10,6 +10,9 @@ router.get('/', metaController.getAllMeta);
 // Special trending heroes (public)
 router.get('/special-trending', metaController.getSpecialTrending);
 
+// Public site info by key (e.g. heroes_meta_updated)
+router.get('/site-info/:key', metaController.getSiteInfoByKey);
+
 // Thêm meta (admin)
 router.post('/', authMiddleware, metaController.createMeta);
 

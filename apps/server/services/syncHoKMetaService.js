@@ -92,6 +92,19 @@ async function syncHoKMeta({ dryRun = false, logger = console } = {}) {
     if (res && res.modifiedCount > 0) updated += 1;
   }
 
+  // After successful sync, upsert a SiteInfo record so client can read last server update
+  try {
+    const SiteInfo = require('../models/SiteInfo');
+    await SiteInfo.findOneAndUpdate(
+      { key: 'heroes_meta_updated' },
+      { $set: { title: 'HoK meta sync', value: { matched, updated }, updatedAt: new Date() } },
+      { upsert: true, new: true }
+    );
+  } catch (err) {
+    // don't fail the whole sync if upsert meta fails; just log
+    try { console.warn('[syncHoKMeta] failed to upsert SiteInfo:', err && err.message); } catch (_) {}
+  }
+
   return { matched, updated, missing: stats.length - matched, unmatched };
 }
 

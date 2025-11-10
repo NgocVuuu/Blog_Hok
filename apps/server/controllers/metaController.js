@@ -11,6 +11,19 @@ exports.getAllMeta = async (req, res, next) => {
   }
 };
 
+exports.getSiteInfoByKey = async (req, res, next) => {
+  try {
+    const SiteInfo = require('../models/SiteInfo');
+    const key = req.params.key;
+    if (!key) return res.status(400).json({ success: false, message: 'Missing key' });
+    const doc = await SiteInfo.findOne({ key }).lean();
+    if (!doc) return res.json({ success: true, data: null });
+    res.json({ success: true, data: doc });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.createMeta = async (req, res, next) => {
   try {
     const meta = new Meta(req.body);

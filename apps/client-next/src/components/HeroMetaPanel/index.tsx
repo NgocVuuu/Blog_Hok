@@ -7,7 +7,7 @@ function getHeroSlug(hero:any){
   return hero?.slug || (hero?.name ? hero.name.toLowerCase().replace(/\s+/g,'-') : '');
 }
 
-export default function HeroMetaPanel({ heroes = [], loading = false }:{heroes:any[];loading?:boolean}){
+export default function HeroMetaPanel({ heroes = [], loading = false, lastUpdated = null }:{heroes:any[];loading?:boolean; lastUpdated?: Date | null}){
   const [laneFilter,setLaneFilter] = useState('All');
   const [sortBy,setSortBy] = useState('winRate');
   const [sortDir,setSortDir] = useState<'asc'|'desc'>('desc');
@@ -81,6 +81,13 @@ export default function HeroMetaPanel({ heroes = [], loading = false }:{heroes:a
             <Chip key={key} size="small" label={key} color={laneFilter === key ? 'warning' : 'default'} onClick={()=>setLaneFilter(key)} sx={{ width: '100%', justifyContent:'center', fontWeight:600 }} />
           ))}
         </Box>
+        {lastUpdated && (
+          <Box sx={{ mt: 0.5 }}>
+            <Typography variant="caption" color="text.secondary" sx={{ fontSize: 11 }}>
+              {`Updated ${new Date(lastUpdated).toLocaleDateString()}`}
+            </Typography>
+          </Box>
+        )}
       </Box>
       <Box sx={{ px:1, py:0.5, borderBottom:'1px solid', borderColor:'divider', display:'grid', gridTemplateColumns: { xs: '1fr 36px 56px 56px 56px', md: '1.25fr 52px 72px 72px 72px' }, alignItems:'center', gap:{ xs: 0.75, md: 1 } }}>
         <Typography variant="caption" sx={{ fontWeight:700, color:'text.secondary', fontSize:11 }}>Heroes</Typography>

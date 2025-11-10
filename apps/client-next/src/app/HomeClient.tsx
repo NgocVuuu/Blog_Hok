@@ -58,6 +58,7 @@ export default function HomePage(){
   
   // Separate state for better performance
   const [heroes, setHeroes] = useState<any[]>([]);
+  const [heroesUpdatedAt, setHeroesUpdatedAt] = useState<Date | null>(null);
   const [news, setNews] = useState<any[]>([]);
   const [special, setSpecial] = useState<any[]>([]);
   const [newsUpdatedAt, setNewsUpdatedAt] = useState<Date | null>(null);
@@ -84,6 +85,23 @@ export default function HomePage(){
           setHeroes(Array.isArray(hData) ? hData : []);
           setLoadingHeroes(false);
         });
+
+        // Fetch server-side heroes meta updated timestamp (if available)
+        try {
+          const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000';
+          const resp = await axios.get(`${API_URL}/api/meta/site-info/heroes_meta_updated`, { signal: abortController.signal });
+          if (resp?.data?.success && resp.data.data && resp.data.data.updatedAt) {
+            const d = new Date(resp.data.data.updatedAt);
+            if (!abortController.signal.aborted && mounted) {
+              setHeroesUpdatedAt(d);
+            }
+          } else {
+            // fallback to client time if server didn't return
+            if (!abortController.signal.aborted && mounted) setHeroesUpdatedAt(new Date());
+          }
+        } catch (err) {
+          if (!abortController.signal.aborted && mounted) setHeroesUpdatedAt(new Date());
+        }
       } catch (err: any) {
         if (!mounted || abortController.signal.aborted) return;
         if (err.name === 'AbortError' || err.name === 'CanceledError') return;
@@ -212,7 +230,8 @@ export default function HomePage(){
 
       <Box component="section" sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 0.25 }}>
-          <Typography variant="h5" noWrap sx={{ fontWeight: 800, fontSize: { xs: 18, sm: 'inherit' }, minWidth: 0 }}>
+          {/* Use semantic heading level h2 for section title while keeping visual h5 styling */}
+          <Typography component="h2" variant="h5" noWrap sx={{ fontWeight: 800, fontSize: { xs: 18, sm: 'inherit' }, minWidth: 0 }}>
             {t('home.specialTrending', 'Special Trending')}
           </Typography>
         </Box>
@@ -237,12 +256,7 @@ export default function HomePage(){
           <Typography variant="h5" noWrap sx={{ fontWeight: 700, color: 'text.primary', minWidth: 0, flex: 1, fontSize: { xs: 18, sm: 'inherit' } }}>
             {t('home.patchHighlights','Patch highlights')}
           </Typography>
-          <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: 10, sm: '0.75rem' } }}>
-            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-              {t('home.updated','Updated')}{' '}
-            </Box>
-            {timeAgoRaw(newsUpdatedAt, t)}
-          </Typography>
+          {/* Removed the 'Updated just now' caption for Latest Published as requested */}
         </Box>
         {loadingNews ? (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 2, md: 7 }, mb: 3 }}>
@@ -259,7 +273,7 @@ export default function HomePage(){
               alignItems: 'stretch' 
             }}>
               <PatchHighlights item={featuredNewsItem} loading={loadingNews} />
-              <HeroMetaPanel heroes={heroes} loading={loadingHeroes} />
+              <HeroMetaPanel heroes={heroes} loading={loadingHeroes} lastUpdated={heroesUpdatedAt} />
             </Box>
           )
         )}
