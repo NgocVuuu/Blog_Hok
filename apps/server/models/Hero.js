@@ -41,16 +41,16 @@ const heroSchema = new mongoose.Schema({
     enum: ['S+', 'S', 'A', 'B', 'C'],
   },
   winRate: {
-  type: Number,
-  required: false,
+    type: Number,
+    required: false,
   },
   pickRate: {
-  type: Number,
-  required: false,
+    type: Number,
+    required: false,
   },
   banRate: {
-  type: Number,
-  required: false,
+    type: Number,
+    required: false,
     get: v => Number(v.toFixed(2)) // Làm tròn đến 2 chữ số thập phân
   },
   skills: [{
@@ -108,8 +108,8 @@ const heroSchema = new mongoose.Schema({
     }
   ],
   slug: {
-  type: String,
-  unique: true,
+    type: String,
+    unique: true,
   },
   createdAt: {
     type: Date,
@@ -164,8 +164,8 @@ const heroSchema = new mongoose.Schema({
     {
       equipment: { type: mongoose.Schema.Types.ObjectId, ref: 'Equipment' },
       note: { type: String, default: '' },
-  order: { type: Number, default: 0 },
-  build: { type: Number, default: 1 } // 1..3
+      order: { type: Number, default: 0 },
+      build: { type: Number, default: 1 } // 1..3
     }
   ],
   // Full arcana page builds with counts & precomputed totals
@@ -201,7 +201,7 @@ const heroSchema = new mongoose.Schema({
 });
 
 // Relaxed skill validation: just keep skills with either name or description; require at least one
-heroSchema.pre('validate', function(next) {
+heroSchema.pre('validate', function (next) {
   if (!Array.isArray(this.skills)) {
     this.skills = [];
   }
@@ -216,13 +216,13 @@ heroSchema.pre('validate', function(next) {
     name: s.name ? s.name.trim() : '',
     icon: s.icon || '',
     description: s.description ? s.description.trim() : ''
-  })).slice(0,5); // still cap at 5 silently
+  })).slice(0, 5); // still cap at 5 silently
 
   // Normalize optional skillBuilds (do not enforce presence)
   if (!Array.isArray(this.skillBuilds)) this.skillBuilds = [];
-  this.skillBuilds = this.skillBuilds.slice(0,3).map(b => ({
+  this.skillBuilds = this.skillBuilds.slice(0, 3).map(b => ({
     name: (b && b.name ? String(b.name) : '').trim(),
-    skills: Array.isArray(b && b.skills) ? b.skills.slice(0,5).map(s => ({
+    skills: Array.isArray(b && b.skills) ? b.skills.slice(0, 5).map(s => ({
       name: s && s.name ? String(s.name).trim() : '',
       icon: s && s.icon ? String(s.icon) : '',
       description: s && s.description ? String(s.description).trim() : ''
@@ -231,8 +231,8 @@ heroSchema.pre('validate', function(next) {
 
   // Normalize optional comboBuilds
   if (!Array.isArray(this.comboBuilds)) this.comboBuilds = [];
-  this.comboBuilds = this.comboBuilds.slice(0,3).map((b,i) => ({
-    name: (b && b.name ? String(b.name) : '').trim() || `Bộ ${i+1}`,
+  this.comboBuilds = this.comboBuilds.slice(0, 3).map((b, i) => ({
+    name: (b && b.name ? String(b.name) : '').trim() || `Bộ ${i + 1}`,
     steps: Array.isArray(b && b.steps) ? b.steps.map(st => ({
       skills: Array.isArray(st && st.skills) ? st.skills.map(n => Number(n)).filter(n => Number.isInteger(n) && n >= 0 && n <= 5) : [],
       description: st && st.description ? String(st.description).trim() : ''
@@ -241,7 +241,7 @@ heroSchema.pre('validate', function(next) {
 
   // Ensure slug exists before required validation kicks in (since slug field is unique)
   if (this.name) {
-  const generated = slugify(this.name);
+    const generated = slugify(this.name);
     if (!this.slug || this.isModified('name')) {
       this.slug = generated;
     }
@@ -250,20 +250,20 @@ heroSchema.pre('validate', function(next) {
 });
 
 // Update the updatedAt timestamp and slug before saving
-heroSchema.pre('save', function(next) {
+heroSchema.pre('save', function (next) {
   console.log('Pre-save hook triggered for hero:', this._id);
   console.log('Hero name:', this.name);
-  
+
   this.slug = slugify(this.name);
   this.updatedAt = Date.now();
 
   // Recompute arcanaBuilds totals if items present
   if (Array.isArray(this.arcanaBuilds)) {
-    const fields = ['attack','defense','magic','health','mana','speed','criticalRate','criticalDamage','penetration','magicPenetration','lifeSteal','magicLifeSteal','cooldownReduction','attackSpeed','movementSpeed'];
+    const fields = ['attack', 'defense', 'magic', 'health', 'mana', 'speed', 'criticalRate', 'criticalDamage', 'penetration', 'magicPenetration', 'lifeSteal', 'magicLifeSteal', 'cooldownReduction', 'attackSpeed', 'movementSpeed'];
     this.arcanaBuilds.forEach(build => {
       if (!Array.isArray(build.items)) return;
       // Only recompute if totals missing or zeroed
-      let need = !build.totals || fields.every(f => (build.totals[f]||0) === 0);
+      let need = !build.totals || fields.every(f => (build.totals[f] || 0) === 0);
       if (!build.totals) build.totals = {};
       if (need) {
         fields.forEach(f => { build.totals[f] = 0; });
@@ -279,10 +279,10 @@ heroSchema.pre('save', function(next) {
       }
     });
   }
-  
+
   console.log('Updated slug:', this.slug);
   console.log('Updated timestamp:', this.updatedAt);
-  
+
   next();
 });
 

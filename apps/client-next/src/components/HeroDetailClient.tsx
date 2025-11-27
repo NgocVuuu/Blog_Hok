@@ -37,14 +37,14 @@ interface HeroDetailClientProps {
 const SkillTabs = ({ skills, isMobile }: { skills: any[], isMobile: boolean }) => {
   const [selected, setSelected] = useState(0);
   if (!skills || skills.length === 0) return null;
-  
+
   return (
     <>
       <Box display="flex" gap={{ xs: 0.75, md: 4 }} mb={2} justifyContent={{ xs: 'center', md: 'flex-start' }}>
         {skills.map((skill, idx) => (
-          <Box 
-            key={idx} 
-            onClick={() => setSelected(idx)} 
+          <Box
+            key={idx}
+            onClick={() => setSelected(idx)}
             sx={{
               cursor: 'pointer',
               border: selected === idx ? { xs: '2px solid #C9A063', md: '4px solid #C9A063' } : { xs: '2px solid transparent', md: '4px solid transparent' },
@@ -106,12 +106,12 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     let rafId: number;
-    
+
     const handleResize = () => {
       // Cancel previous RAF and timeout
       if (rafId) cancelAnimationFrame(rafId);
       if (timeoutId) clearTimeout(timeoutId);
-      
+
       // Debounce resize checks
       timeoutId = setTimeout(() => {
         rafId = requestAnimationFrame(() => {
@@ -119,10 +119,10 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
         });
       }, 150);
     };
-    
+
     // Initial check
     setIsMobile(window.innerWidth < 600);
-    
+
     window.addEventListener('resize', handleResize, { passive: true });
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -151,7 +151,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
       <Box sx={{
         position: 'relative',
         minHeight: { xs: 200, md: 320 },
-        background: hero.image 
+        background: hero.image
           ? `linear-gradient(180deg, rgba(60,20,20,0.7) 0%, rgba(60,20,20,0.2) 60%, #fff 100%), url(${hero.image}) left center/cover no-repeat`
           : 'linear-gradient(180deg, rgba(60,20,20,0.7) 0%, rgba(60,20,20,0.2) 60%, #fff 100%)',
         borderRadius: { xs: 0, md: 6 },
@@ -309,11 +309,11 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                       {hero.allies.map((ally: any) => (
                         <Link prefetch={false} key={ally._id || ally.id} href={`/heroes/${ally.slug}`} style={{ textDecoration: 'none' }}>
                           <Box sx={{ cursor: 'pointer', textAlign: 'center' }}>
-                            <Box sx={{ 
-                              width: { xs: 50, md: 70 }, 
-                              height: { xs: 48, md: 68 }, 
-                              borderRadius: { xs: 1, md: '50%' }, 
-                              overflow: 'hidden', 
+                            <Box sx={{
+                              width: { xs: 50, md: 70 },
+                              height: { xs: 48, md: 68 },
+                              borderRadius: { xs: 1, md: '50%' },
+                              overflow: 'hidden',
                               border: { xs: '2px solid rgba(67, 160, 71, 0.3)', md: '3px solid rgba(67, 160, 71, 0.3)' },
                               position: 'relative'
                             }}>
@@ -321,9 +321,9 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                                 component="img"
                                 src={ally.image}
                                 alt={ally.name}
-                                sx={{ 
-                                  width: '100%', 
-                                  height: '100%', 
+                                sx={{
+                                  width: '100%',
+                                  height: '100%',
                                   objectFit: 'cover',
                                   transform: { xs: 'scale(1.7)', md: 'scale(1)' },
                                   position: 'relative',
@@ -351,11 +351,11 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                       {hero.counters.map((counter: any) => (
                         <Link prefetch={false} key={counter._id || counter.id} href={`/heroes/${counter.slug}`} style={{ textDecoration: 'none' }}>
                           <Box sx={{ cursor: 'pointer', textAlign: 'center' }}>
-                            <Box sx={{ 
-                              width: { xs: 50, md: 70 }, 
-                              height: { xs: 48, md: 68 }, 
-                              borderRadius: { xs: 1, md: '50%' }, 
-                              overflow: 'hidden', 
+                            <Box sx={{
+                              width: { xs: 50, md: 70 },
+                              height: { xs: 48, md: 68 },
+                              borderRadius: { xs: 1, md: '50%' },
+                              overflow: 'hidden',
                               border: { xs: '2px solid rgba(211, 47, 47, 0.3)', md: '3px solid rgba(211, 47, 47, 0.3)' },
                               position: 'relative'
                             }}>
@@ -363,9 +363,9 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                                 component="img"
                                 src={counter.image}
                                 alt={counter.name}
-                                sx={{ 
-                                  width: '100%', 
-                                  height: '100%', 
+                                sx={{
+                                  width: '100%',
+                                  height: '100%',
                                   objectFit: 'cover',
                                   transform: { xs: 'scale(1.7)', md: 'scale(1)' },
                                   position: 'relative',
@@ -393,11 +393,11 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                       {hero.goodAgainst.map((ga: any) => (
                         <Link prefetch={false} key={ga._id || ga.id} href={`/heroes/${ga.slug}`} style={{ textDecoration: 'none' }}>
                           <Box sx={{ cursor: 'pointer', textAlign: 'center' }}>
-                            <Box sx={{ 
-                              width: { xs: 50, md: 70 }, 
-                              height: { xs: 48, md: 68 }, 
-                              borderRadius: { xs: 1, md: '50%' }, 
-                              overflow: 'hidden', 
+                            <Box sx={{
+                              width: { xs: 50, md: 70 },
+                              height: { xs: 48, md: 68 },
+                              borderRadius: { xs: 1, md: '50%' },
+                              overflow: 'hidden',
                               border: { xs: '2px solid rgba(67, 160, 71, 0.3)', md: '3px solid rgba(67, 160, 71, 0.3)' },
                               position: 'relative'
                             }}>
@@ -405,9 +405,9 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                                 component="img"
                                 src={ga.image}
                                 alt={ga.name}
-                                sx={{ 
-                                  width: '100%', 
-                                  height: '100%', 
+                                sx={{
+                                  width: '100%',
+                                  height: '100%',
                                   objectFit: 'cover',
                                   transform: { xs: 'scale(1.7)', md: 'scale(1)' },
                                   position: 'relative',
@@ -442,7 +442,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                 ? hero.skillBuilds
                 : [{ name: String(t('build.default', 'Bộ 1')), skills: hero.skills || [] }];
               const current = builds[Math.max(0, Math.min(builds.length - 1, selectedSkillBuildIdx))] || builds[0];
-              
+
               return (
                 <>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
@@ -456,8 +456,8 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                         exclusive
                         value={selectedSkillBuildIdx}
                         onChange={(e, v) => (v !== null) && setSelectedSkillBuildIdx(v)}
-                        sx={{ 
-                          mb: 1, 
+                        sx={{
+                          mb: 1,
                           flexWrap: 'wrap',
                           '& .MuiToggleButton-root': {
                             fontSize: { xs: '0.7rem', md: '0.875rem' },
@@ -500,7 +500,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                   </Typography>
                 );
               })()}
-              
+
               {/* Build toggle: show only available builds */}
               {(() => {
                 const availableEqBuilds = [1, 2, 3].filter(b => (hero.suggestedEquipment || []).some((e: any) => (e.build || 1) === b));
@@ -512,8 +512,8 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                     exclusive
                     value={selectedEqBuild}
                     onChange={(e, v) => v && setSelectedEqBuild(v)}
-                    sx={{ 
-                      mb: 1, 
+                    sx={{
+                      mb: 1,
                       flexWrap: 'wrap',
                       '& .MuiToggleButton-root': {
                         fontSize: { xs: '0.7rem', md: '0.875rem' },
@@ -585,7 +585,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                   </Typography>
                 );
               })()}
-              
+
               {/* Arcana build toggle */}
               {hero.arcanaBuilds.length > 1 && (
                 <ToggleButtonGroup
@@ -594,8 +594,8 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                   exclusive
                   value={selectedArcanaIdx}
                   onChange={(e, v) => (v !== null) && setSelectedArcanaIdx(v)}
-                  sx={{ 
-                    mb: 2, 
+                  sx={{
+                    mb: 2,
                     flexWrap: 'wrap',
                     '& .MuiToggleButton-root': {
                       fontSize: { xs: '0.7rem', md: '0.875rem' },
@@ -755,12 +755,12 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
               overflow: 'visible',
               border: '1px solid rgba(139, 115, 85, 0.2)',
               mx: { xs: 0, md: -3 },
-                width: { xs: '100%', md: 'calc(100% + 48px)' },
-                // Adjust swiper pagination position on mobile to avoid overlap
-                '& .swiper-pagination': {
-                  bottom: isMobile ? 12 : 32,
-                  zIndex: 5
-                }
+              width: { xs: '100%', md: 'calc(100% + 48px)' },
+              // Adjust swiper pagination position on mobile to avoid overlap
+              '& .swiper-pagination': {
+                bottom: isMobile ? 12 : 32,
+                zIndex: 5
+              }
             }}>
               <Typography variant="h5" sx={{ mt: { xs: 1, md: 2 }, mb: 2, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
                 {String(t('hero.skins', 'Skins'))}
@@ -942,28 +942,28 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                                   '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 6px 16px rgba(201,160,99,0.2)' }
                                 }}
                               >
-                                <Box sx={{ 
-                                  width: '100%', 
+                                <Box sx={{
+                                  width: '100%',
                                   paddingTop: 'calc(100% - 4px)',
-                                  borderRadius: 1.5, 
-                                  overflow: 'hidden', 
+                                  borderRadius: 1.5,
+                                  overflow: 'hidden',
                                   background: 'rgba(0,0,0,0.05)',
                                   position: 'relative'
                                 }}>
-                                  <img src={h.image} alt={h.name} style={{ 
+                                  <img src={h.image} alt={h.name} style={{
                                     position: 'absolute',
                                     top: '17px',
                                     left: 0,
-                                    width: '100%', 
-                                    height: '100%', 
+                                    width: '100%',
+                                    height: '100%',
                                     objectFit: 'cover',
                                     objectPosition: 'center 20%',
                                     transform: 'scale(1.7)'
                                   }} />
                                 </Box>
-                                <Typography variant="body2" sx={{ 
-                                  fontWeight: 700, 
-                                  fontSize: '0.7rem', 
+                                <Typography variant="body2" sx={{
+                                  fontWeight: 700,
+                                  fontSize: '0.7rem',
                                   textAlign: 'center',
                                   lineHeight: 1.2,
                                   px: 0.25,
@@ -1067,28 +1067,28 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                                   '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 6px 16px rgba(201,160,99,0.2)' }
                                 }}
                               >
-                                <Box sx={{ 
-                                  width: '100%', 
+                                <Box sx={{
+                                  width: '100%',
                                   paddingTop: 'calc(100% - 4px)',
-                                  borderRadius: 1.5, 
-                                  overflow: 'hidden', 
+                                  borderRadius: 1.5,
+                                  overflow: 'hidden',
                                   background: 'rgba(0,0,0,0.05)',
                                   position: 'relative'
                                 }}>
-                                  <img src={h.image} alt={h.name} style={{ 
+                                  <img src={h.image} alt={h.name} style={{
                                     position: 'absolute',
                                     top: '17px',
                                     left: 0,
-                                    width: '100%', 
-                                    height: '100%', 
+                                    width: '100%',
+                                    height: '100%',
                                     objectFit: 'cover',
                                     objectPosition: 'center 20%',
                                     transform: 'scale(1.7)'
                                   }} />
                                 </Box>
-                                <Typography variant="body2" sx={{ 
-                                  fontWeight: 700, 
-                                  fontSize: '0.7rem', 
+                                <Typography variant="body2" sx={{
+                                  fontWeight: 700,
+                                  fontSize: '0.7rem',
                                   textAlign: 'center',
                                   lineHeight: 1.2,
                                   px: 0.25,
@@ -1102,8 +1102,8 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                                 }}>
                                   {h.name}
                                 </Typography>
-                                <Typography variant="caption" sx={{ 
-                                  fontSize: '0.65rem', 
+                                <Typography variant="caption" sx={{
+                                  fontSize: '0.65rem',
                                   fontWeight: 600,
                                   textAlign: 'center',
                                   color: 'success.main'
@@ -1117,7 +1117,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                       </Swiper>
                     </Box>
                     {/* Desktop: Grid */}
-                    <Box sx={{ 
+                    <Box sx={{
                       display: { xs: 'none', md: 'grid' },
                       gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
                       gap: 1
@@ -1183,7 +1183,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
             <Typography variant="h5" sx={{ mb: 2, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
               {String(t('news.latest', 'Bài viết mới nhất'))}
             </Typography>
-            
+
             {/* Swiper for both mobile and desktop */}
             <Swiper
               modules={[Navigation, Pagination]}
@@ -1196,25 +1196,25 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
               {latestNews.map((news: any) => (
                 <SwiperSlide key={news._id || news.slug}>
                   <Link prefetch={false} href={`/news/${news.slug || news._id}`} style={{ textDecoration: 'none' }}>
-                    <Box sx={{ 
-                      cursor: 'pointer', 
-                      transition: 'transform 0.2s', 
+                    <Box sx={{
+                      cursor: 'pointer',
+                      transition: 'transform 0.2s',
                       '&:hover': { transform: 'translateY(-4px)' },
                       pb: 1
                     }}>
-                      <Box sx={{ 
-                        width: '100%', 
-                        aspectRatio: '16/9', 
-                        borderRadius: { xs: 2, md: 3 }, 
-                        overflow: 'hidden', 
-                        border: '1px solid rgba(201,160,99,0.25)', 
-                        mb: 1 
+                      <Box sx={{
+                        width: '100%',
+                        aspectRatio: '16/9',
+                        borderRadius: { xs: 2, md: 3 },
+                        overflow: 'hidden',
+                        border: '1px solid rgba(201,160,99,0.25)',
+                        mb: 1
                       }}>
                         <img src={news.image} alt={news.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </Box>
-                      <Typography variant="body2" sx={{ 
-                        fontWeight: 700, 
-                        lineHeight: 1.25, 
+                      <Typography variant="body2" sx={{
+                        fontWeight: 700,
+                        lineHeight: 1.25,
                         fontSize: { xs: '0.85rem', md: '1rem' },
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',

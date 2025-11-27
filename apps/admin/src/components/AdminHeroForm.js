@@ -62,7 +62,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   const [errors, setErrors] = useState({});
   const [lore, setLore] = useState('');
   // Back-compat combo is derived at submit time from comboBuilds[0]
-  const [comboBuilds, setComboBuilds] = useState([ { name: 'Bộ 1', steps: [] } ]);
+  const [comboBuilds, setComboBuilds] = useState([{ name: 'Bộ 1', steps: [] }]);
   const [skins, setSkins] = useState([]);
   const [fetchedHero, setFetchedHero] = useState(null);
   // New state for suggested builds
@@ -100,7 +100,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   const currentBuildList = useMemo(() => {
     return (suggestedEquipment || [])
       .filter(it => (it.build || 1) === activeBuild)
-      .sort((a,b) => (a.order||0) - (b.order||0));
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
   }, [suggestedEquipment, activeBuild]);
   // Use fetchedHero (full detail) to override initial partial editingHero from list
   const editingHeroData = fetchedHero || editingHero;
@@ -124,11 +124,11 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   useEffect(() => {
     const fetchHeroes = async () => {
       try {
-  // Fetch all heroes (paginate client-side to bypass server limit <= 100)
-  const data = await getAllHeroesAll({ page: 1, limit: 100, sort: 'name' });
-  // Ensure array and sort by name for stable grouping
-  const list = Array.isArray(data) ? data.slice().sort((a,b) => (a.name||'').localeCompare(b.name||'')) : [];
-  setAllHeroes(list);
+        // Fetch all heroes (paginate client-side to bypass server limit <= 100)
+        const data = await getAllHeroesAll({ page: 1, limit: 100, sort: 'name' });
+        // Ensure array and sort by name for stable grouping
+        const list = Array.isArray(data) ? data.slice().sort((a, b) => (a.name || '').localeCompare(b.name || '')) : [];
+        setAllHeroes(list);
       } catch (err) {
         console.error('Error fetching heroes:', err);
         setMessage({ type: 'error', text: 'Unable to load heroes list' });
@@ -136,7 +136,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       }
     };
     fetchHeroes();
-  // Fetch arcana list only
+    // Fetch arcana list only
     (async () => {
       try {
         const arcRes = await fetch(`${API_URL}/api/arcana`);
@@ -167,7 +167,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   // Fetch any missing arcana objects by ID for preview
   useEffect(() => {
     const ids = new Set();
-    arcanaBuilds.forEach(b => (b.items||[]).forEach(it => {
+    arcanaBuilds.forEach(b => (b.items || []).forEach(it => {
       const id = typeof it.arcanaId === 'string' && it.arcanaId ? it.arcanaId
         : (typeof it.arcana === 'string' ? it.arcana : (it.arcana && it.arcana._id));
       if (id && !arcanaCache[id] && !allArcana.find(a => a._id === id)) ids.add(id);
@@ -216,53 +216,53 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   // Populate form when we have editingHeroData
   useEffect(() => {
     if (editingHeroData) {
-  console.log('Editing hero data loaded:', editingHeroData);
+      console.log('Editing hero data loaded:', editingHeroData);
       setName(editingHeroData.name || '');
       setTitle(editingHeroData.title || '');
       setRoles(Array.isArray(editingHeroData.roles) ? editingHeroData.roles : []);
-  // Map legacy lane name to new name
-  setLanes(Array.isArray(editingHeroData.lanes) ? editingHeroData.lanes.map(l => l === 'Abyssal Lane' ? 'Clash Lane' : l) : []);
+      // Map legacy lane name to new name
+      setLanes(Array.isArray(editingHeroData.lanes) ? editingHeroData.lanes.map(l => l === 'Abyssal Lane' ? 'Clash Lane' : l) : []);
       setMetaTier(editingHeroData.metaTier || 'S');
       setWinRate(editingHeroData.winRate != null ? String(editingHeroData.winRate) : '');
       setPickRate(editingHeroData.pickRate != null ? String(editingHeroData.pickRate) : '');
       setBanRate(editingHeroData.banRate != null ? String(editingHeroData.banRate) : '');
       setImageUrl(editingHeroData.image || '');
-  // Skills & skill builds
-  const mapToFive = (arr) => {
+      // Skills & skill builds
+      const mapToFive = (arr) => {
         let list = Array.isArray(arr) ? arr.map(s => ({ ...s, iconPreview: s.icon })) : [];
         while (list.length < 5) list.push({ icon: '', description: '', iconPreview: '', name: '' });
-        if (list.length > 5) list = list.slice(0,5);
+        if (list.length > 5) list = list.slice(0, 5);
         return list;
       };
       if (Array.isArray(editingHeroData.skillBuilds) && editingHeroData.skillBuilds.length) {
-        const b = editingHeroData.skillBuilds.slice(0,3).map((sb, i) => ({
-          name: sb.name || `Bộ ${i+1}`,
+        const b = editingHeroData.skillBuilds.slice(0, 3).map((sb, i) => ({
+          name: sb.name || `Bộ ${i + 1}`,
           skills: mapToFive(sb.skills)
         }));
-  setSkillBuilds(b);
-  setActiveSkillBuild(1);
+        setSkillBuilds(b);
+        setActiveSkillBuild(1);
       } else {
         const one = mapToFive(editingHeroData.skills);
         setSkillBuilds([{ name: 'Bộ 1', skills: one }]);
         setActiveSkillBuild(1);
       }
-  const alliesArr = Array.isArray(editingHeroData.allies) ? editingHeroData.allies : [];
-  setAllies(alliesArr.map(a => (typeof a === 'string' ? a : (a.hero?._id || a.hero || a._id || ''))).filter(Boolean));
-  const countersArr = Array.isArray(editingHeroData.counters) ? editingHeroData.counters : [];
-  setCounters(countersArr.map(c => (typeof c === 'string' ? c : (c.hero?._id || c.hero || c._id || ''))).filter(Boolean));
-  const goodAgainstArr = Array.isArray(editingHeroData.goodAgainst) ? editingHeroData.goodAgainst : [];
-  setGoodAgainst(goodAgainstArr.map(g => (typeof g === 'string' ? g : (g.hero?._id || g.hero || g._id || ''))).filter(Boolean));
+      const alliesArr = Array.isArray(editingHeroData.allies) ? editingHeroData.allies : [];
+      setAllies(alliesArr.map(a => (typeof a === 'string' ? a : (a.hero?._id || a.hero || a._id || ''))).filter(Boolean));
+      const countersArr = Array.isArray(editingHeroData.counters) ? editingHeroData.counters : [];
+      setCounters(countersArr.map(c => (typeof c === 'string' ? c : (c.hero?._id || c.hero || c._id || ''))).filter(Boolean));
+      const goodAgainstArr = Array.isArray(editingHeroData.goodAgainst) ? editingHeroData.goodAgainst : [];
+      setGoodAgainst(goodAgainstArr.map(g => (typeof g === 'string' ? g : (g.hero?._id || g.hero || g._id || ''))).filter(Boolean));
       setLore(editingHeroData.lore || '');
       // Combo builds
       if (Array.isArray(editingHeroData.comboBuilds) && editingHeroData.comboBuilds.length) {
-        setComboBuilds(editingHeroData.comboBuilds.slice(0,3).map((b,i)=>({ name: b.name || `Bộ ${i+1}`, steps: Array.isArray(b.steps)? b.steps.map(s=>({ skills: Array.isArray(s.skills)? s.skills.slice():[], description: s.description||'' })) : [] })));
+        setComboBuilds(editingHeroData.comboBuilds.slice(0, 3).map((b, i) => ({ name: b.name || `Bộ ${i + 1}`, steps: Array.isArray(b.steps) ? b.steps.map(s => ({ skills: Array.isArray(s.skills) ? s.skills.slice() : [], description: s.description || '' })) : [] })));
       } else {
-        setComboBuilds([{ name: 'Bộ 1', steps: Array.isArray(editingHeroData.combo) ? editingHeroData.combo.map(s=>({ skills: Array.isArray(s.skills)? s.skills.slice():[], description: s.description||'' })) : [] }]);
+        setComboBuilds([{ name: 'Bộ 1', steps: Array.isArray(editingHeroData.combo) ? editingHeroData.combo.map(s => ({ skills: Array.isArray(s.skills) ? s.skills.slice() : [], description: s.description || '' })) : [] }]);
       }
-  // legacy combo not kept in state; we derive from comboBuilds[0] when submitting
+      // legacy combo not kept in state; we derive from comboBuilds[0] when submitting
       setSkins(Array.isArray(editingHeroData.skins) ? editingHeroData.skins : []);
-  // Removed suggestedArcana and suggestedEquipment population
-  // Populate suggested equipment if available (flattened by API)
+      // Removed suggestedArcana and suggestedEquipment population
+      // Populate suggested equipment if available (flattened by API)
       if (Array.isArray(editingHeroData.suggestedEquipment)) {
         const se = editingHeroData.suggestedEquipment
           .filter(it => it && (it._id || it.equipment))
@@ -270,8 +270,8 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
             equipmentId: typeof it === 'string' ? it : (it._id || it.equipment?._id || it.equipment || ''),
             equipment: typeof it === 'object' ? it : undefined,
             note: (it.note || ''),
-    order: typeof it.order === 'number' ? it.order : 0,
-    build: typeof it.build === 'number' ? it.build : 1,
+            order: typeof it.order === 'number' ? it.order : 0,
+            build: typeof it.build === 'number' ? it.build : 1,
           }));
         setSuggestedEquipment(se);
       } else {
@@ -283,7 +283,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         setArcanaBuilds(editingHeroData.arcanaBuilds.map(b => ({
           name: b.name,
           description: b.description || '',
-          items: (b.items||[]).map(it => {
+          items: (b.items || []).map(it => {
             // Case 1: API returned flattened item: { _id, name, image, color, tier, count }
             if (it && typeof it === 'object' && typeof it._id === 'string' && (it.name || it.image || it.color)) {
               return {
@@ -314,7 +314,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       let out = prev.slice(0, skillBuilds.length);
       while (out.length < skillBuilds.length) {
         const idx = out.length;
-        out.push({ name: skillBuilds[idx]?.name || `Bộ ${idx+1}`, steps: [] });
+        out.push({ name: skillBuilds[idx]?.name || `Bộ ${idx + 1}`, steps: [] });
       }
       // Sync names with skill builds
       out = out.map((b, i) => ({ ...b, name: (skillBuilds[i]?.name || b.name) }));
@@ -443,9 +443,9 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
     if (!validateNumber(pickRate, 'pickRate')) newErrors.pickRate = true;
     if (!validateNumber(banRate, 'banRate')) newErrors.banRate = true;
 
-  // Chỉ cần >=1 skill (ở Bộ 1) có name hoặc description
-  const primarySkills = (skillBuilds[0]?.skills || []).map(s => s || {});
-  const fullSkills = primarySkills.filter(s => {
+    // Chỉ cần >=1 skill (ở Bộ 1) có name hoặc description
+    const primarySkills = (skillBuilds[0]?.skills || []).map(s => s || {});
+    const fullSkills = primarySkills.filter(s => {
       if (!s) return false;
       const hasName = !!(s.name && s.name.trim());
       const hasDesc = !!(s.description && s.description.trim());
@@ -491,9 +491,9 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         setImageUrl(img);
       }
 
-  // Use Bộ 1 as canonical 'skills' for backward compatibility
-  const baseSkills = (skillBuilds[0]?.skills || []).map(s => s || {});
-  const processedSkills = await Promise.all(baseSkills.map(async (skill) => {
+      // Use Bộ 1 as canonical 'skills' for backward compatibility
+      const baseSkills = (skillBuilds[0]?.skills || []).map(s => s || {});
+      const processedSkills = await Promise.all(baseSkills.map(async (skill) => {
         if (!skill) return null;
         const hasName = !!(skill.name && skill.name.trim());
         const hasDesc = !!(skill.description && skill.description.trim());
@@ -550,16 +550,16 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         winRate: parseFloat(winRate),
         pickRate: parseFloat(pickRate),
         banRate: parseFloat(banRate),
-  skills: filteredSkills,
-  skillBuilds: processedSkillBuilds,
+        skills: filteredSkills,
+        skillBuilds: processedSkillBuilds,
         allies: allies.map(id => ({ hero: id })),
         counters: counters.map(id => ({ hero: id })),
         goodAgainst: goodAgainst.map(id => ({ hero: id })),
         lore,
         skins: skins.filter(s => s.name.trim() && s.image),
-  // Back-compat top-level combo uses Bộ 1
-  combo: (comboBuilds[0]?.steps || []).map(s => ({ skills: s.skills, description: s.description })),
-  comboBuilds: (comboBuilds || []).map(b => ({ name: b.name || '', steps: (b.steps||[]).map(s => ({ skills: s.skills, description: s.description })) })),
+        // Back-compat top-level combo uses Bộ 1
+        combo: (comboBuilds[0]?.steps || []).map(s => ({ skills: s.skills, description: s.description })),
+        comboBuilds: (comboBuilds || []).map(b => ({ name: b.name || '', steps: (b.steps || []).map(s => ({ skills: s.skills, description: s.description })) })),
         suggestedEquipment: suggestedEquipment
           .filter(it => it && (it.equipmentId || (it.equipment && it.equipment._id)))
           .map(it => ({ equipment: it.equipmentId || it.equipment._id, note: it.note || '', order: typeof it.order === 'number' ? it.order : 0, build: typeof it.build === 'number' ? it.build : 1 })),
@@ -568,8 +568,8 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
           description: build.description,
           items: build.items && Array.isArray(build.items)
             ? build.items
-                .filter(it => (typeof it.arcanaId === 'string' && it.arcanaId) || (it.arcana && it.arcana._id))
-                .map(it => ({ arcana: (typeof it.arcanaId === 'string' && it.arcanaId) ? it.arcanaId : it.arcana._id, count: it.count }))
+              .filter(it => (typeof it.arcanaId === 'string' && it.arcanaId) || (it.arcana && it.arcana._id))
+              .map(it => ({ arcana: (typeof it.arcanaId === 'string' && it.arcanaId) ? it.arcanaId : it.arcana._id, count: it.count }))
             : [],
         })),
       };
@@ -585,19 +585,19 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
 
       // Debug log
       console.log('Sending payload:', payload);
-  const isEditing = !!editingHeroData;
-  console.log('URL:', isEditing ? `${API_URL}/api/heroes/${editingHeroData._id}` : `${API_URL}/api/heroes`);
-  console.log('Method:', isEditing ? 'PUT' : 'POST');
+      const isEditing = !!editingHeroData;
+      console.log('URL:', isEditing ? `${API_URL}/api/heroes/${editingHeroData._id}` : `${API_URL}/api/heroes`);
+      console.log('Method:', isEditing ? 'PUT' : 'POST');
 
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('Vui lòng đăng nhập lại');
       }
 
-  const url = isEditing ? `${API_URL}/api/heroes/${editingHeroData._id}` : `${API_URL}/api/heroes`;
-  const method = isEditing ? 'PUT' : 'POST';
+      const url = isEditing ? `${API_URL}/api/heroes/${editingHeroData._id}` : `${API_URL}/api/heroes`;
+      const method = isEditing ? 'PUT' : 'POST';
 
-    const res = await fetchWithAuth(url, {
+      const res = await fetchWithAuth(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
@@ -607,33 +607,33 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
 
       if (!res.ok) {
         if (res.status === 401) {
-      openLogin();
+          openLogin();
           return;
         }
-  const error = await res.json().catch(() => ({}));
-  console.warn('[SERVER VALIDATION ERROR]', error);
-  if (error.duplicate && error.field === 'name') {
-    setErrors(prev => ({ ...prev, name: 'Tên tướng đã tồn tại' }));
-  }
-  const detailMsg = error.details ? error.details.join('; ') : '';
-  // Map field specific errors for UI
-  if (Array.isArray(error.fields) && Array.isArray(error.details)) {
-    const fieldErrors = {};
-    error.fields.forEach((f, i) => { fieldErrors[f] = error.details[i] || 'Lỗi'; });
-    setErrors(prev => ({ ...prev, ...fieldErrors }));
-  }
-  // Fallback for express-validator style { errors: [ { param, msg } ] }
-  if (Array.isArray(error.errors)) {
-    const fieldErrors2 = {};
-    error.errors.forEach(e => { if (e.param) fieldErrors2[e.param] = e.msg || 'Lỗi'; });
-    if (Object.keys(fieldErrors2).length) setErrors(prev => ({ ...prev, ...fieldErrors2 }));
-  }
-  throw new Error(detailMsg || error.message || (error.duplicate ? 'Tên tướng đã tồn tại' : 'Có lỗi xảy ra khi thêm/cập nhật tướng'));
+        const error = await res.json().catch(() => ({}));
+        console.warn('[SERVER VALIDATION ERROR]', error);
+        if (error.duplicate && error.field === 'name') {
+          setErrors(prev => ({ ...prev, name: 'Tên tướng đã tồn tại' }));
+        }
+        const detailMsg = error.details ? error.details.join('; ') : '';
+        // Map field specific errors for UI
+        if (Array.isArray(error.fields) && Array.isArray(error.details)) {
+          const fieldErrors = {};
+          error.fields.forEach((f, i) => { fieldErrors[f] = error.details[i] || 'Lỗi'; });
+          setErrors(prev => ({ ...prev, ...fieldErrors }));
+        }
+        // Fallback for express-validator style { errors: [ { param, msg } ] }
+        if (Array.isArray(error.errors)) {
+          const fieldErrors2 = {};
+          error.errors.forEach(e => { if (e.param) fieldErrors2[e.param] = e.msg || 'Lỗi'; });
+          if (Object.keys(fieldErrors2).length) setErrors(prev => ({ ...prev, ...fieldErrors2 }));
+        }
+        throw new Error(detailMsg || error.message || (error.duplicate ? 'Tên tướng đã tồn tại' : 'Có lỗi xảy ra khi thêm/cập nhật tướng'));
       }
 
-  setMessage({ type: 'success', text: isEditing ? 'Hero updated successfully!' : 'Hero added successfully!' });
+      setMessage({ type: 'success', text: isEditing ? 'Hero updated successfully!' : 'Hero added successfully!' });
 
-  if (!isEditing) {
+      if (!isEditing) {
         setName('');
         setTitle('');
         setRoles([]);
@@ -644,14 +644,14 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         setBanRate('');
         setImageFile(null);
         setImageUrl('');
-  setImagePreview('');
-    setSkillBuilds([{ name: 'Build 1', skills: defaultSkills.map(s => ({ ...s })) }]);
-  setActiveSkillBuild(1);
+        setImagePreview('');
+        setSkillBuilds([{ name: 'Build 1', skills: defaultSkills.map(s => ({ ...s })) }]);
+        setActiveSkillBuild(1);
         setAllies([]);
         setCounters([]);
         setLore('');
-  // no combo state to reset
-  setComboBuilds([ { name: 'Bộ 1', steps: [] } ]);
+        // no combo state to reset
+        setComboBuilds([{ name: 'Bộ 1', steps: [] }]);
         setSkins([]);
       }
 
@@ -659,8 +659,8 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         onFormSubmit();
       }
     } catch (err) {
-    console.error('Error submitting form:', err);
-    setMessage({ type: 'error', text: err.message || 'An error occurred while adding/updating hero' });
+      console.error('Error submitting form:', err);
+      setMessage({ type: 'error', text: err.message || 'An error occurred while adding/updating hero' });
     } finally {
       setLoading(false);
     }
@@ -758,25 +758,25 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       </Box>
 
       <Box mt={2}>
-          <Box display="flex" alignItems="center" gap={1} mb={1}>
+        <Box display="flex" alignItems="center" gap={1} mb={1}>
           <Typography variant="subtitle1">Skills</Typography>
           <Box sx={{ ml: 'auto' }}>
-            {[1,2,3].map(b => (
-              <Button key={b} size="small" variant={activeSkillBuild===b?'contained':'outlined'} onClick={()=> setActiveSkillBuild(b)} sx={{ mr: 1 }}>
+            {[1, 2, 3].map(b => (
+              <Button key={b} size="small" variant={activeSkillBuild === b ? 'contained' : 'outlined'} onClick={() => setActiveSkillBuild(b)} sx={{ mr: 1 }}>
                 Build {b}
               </Button>
             ))}
-            <Button size="small" variant="outlined" onClick={()=> {
+            <Button size="small" variant="outlined" onClick={() => {
               setSkillBuilds(list => {
                 if (list.length >= 3) return list;
-                const next = [...list, { name: `Build ${list.length+1}`, skills: defaultSkills.map(s => ({ ...s })) }];
+                const next = [...list, { name: `Build ${list.length + 1}`, skills: defaultSkills.map(s => ({ ...s })) }];
                 // comboBuilds will be synced by effect, but push immediately for responsiveness
                 setComboBuilds(cb => [...cb, { name: `Build ${next.length}`, steps: [] }]);
                 return next;
               });
             }}>Add build</Button>
             {skillBuilds.length > 1 && (
-              <Button size="small" color="error" onClick={()=> {
+              <Button size="small" color="error" onClick={() => {
                 setSkillBuilds(list => {
                   if (list.length <= 1) return list;
                   const newList = list.slice(0, -1);
@@ -789,61 +789,61 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
             )}
           </Box>
         </Box>
-          <Box display="flex" alignItems="center" gap={1} mb={1}>
+        <Box display="flex" alignItems="center" gap={1} mb={1}>
           <TextField size="small" label={`Build name ${activeSkillBuild}`} value={skillBuilds[Math.max(0, Math.min(skillBuilds.length - 1, activeSkillBuild - 1))]?.name || ''}
             onChange={e => {
               const value = e.target.value;
-              setSkillBuilds(list => list.map((b,i) => (i === (activeSkillBuild-1) ? { ...b, name: value } : b)));
-              setComboBuilds(list => list.map((b,i) => (i === (activeSkillBuild-1) ? { ...b, name: value } : b)));
+              setSkillBuilds(list => list.map((b, i) => (i === (activeSkillBuild - 1) ? { ...b, name: value } : b)));
+              setComboBuilds(list => list.map((b, i) => (i === (activeSkillBuild - 1) ? { ...b, name: value } : b)));
             }}
             sx={{ maxWidth: 300 }}
           />
         </Box>
-    {(skillBuilds[Math.max(0, Math.min(skillBuilds.length - 1, activeSkillBuild - 1))]?.skills || []).map((skill, idx) => {
-        const hasName = !!(skill.name && skill.name.trim());
-        const hasDesc = !!(skill.description && skill.description.trim());
-        const nameError = !!errors.skills && !hasName && hasDesc; // desc filled but name missing
-        const descError = !!errors.skills && !hasDesc && hasName; // name filled but desc missing
-        return (
-          <Box key={idx} display="flex" gap={2} mb={1} alignItems="center">
-            <Typography sx={{ minWidth: 80 }}>{skillLabels[idx]}</Typography>
-            <TextField
-              label="Skill name"
-              value={skill.name}
-              onChange={e => handleSkillChange(idx, 'name', e.target.value)}
-              required={false}
-              error={nameError}
-              sx={{ minWidth: 200 }}
-            />
-            <Button
-              variant="outlined"
-              component="label"
-              size="small"
-              startIcon={<UploadIcon />}
-            >
-              Upload icon
-              <input type="file" hidden accept="image/*,.avif" onChange={e => handleSkillIconChange(idx, e.target.files[0])} />
-            </Button>
-            {(skill.iconPreview || skill.icon) && (
-              <Box>
-                <img
-                  src={skill.iconPreview || skill.icon}
-                  alt="icon"
-                  style={{ maxHeight: 40, maxWidth: 40, objectFit: 'contain' }}
-                />
-              </Box>
-            )}
-            <TextField
-              label="Description"
-              value={skill.description}
-              onChange={e => handleSkillChange(idx, 'description', e.target.value)}
-              required={false}
-              error={descError}
-              fullWidth
-            />
-          </Box>
-        );
-      })}
+        {(skillBuilds[Math.max(0, Math.min(skillBuilds.length - 1, activeSkillBuild - 1))]?.skills || []).map((skill, idx) => {
+          const hasName = !!(skill.name && skill.name.trim());
+          const hasDesc = !!(skill.description && skill.description.trim());
+          const nameError = !!errors.skills && !hasName && hasDesc; // desc filled but name missing
+          const descError = !!errors.skills && !hasDesc && hasName; // name filled but desc missing
+          return (
+            <Box key={idx} display="flex" gap={2} mb={1} alignItems="center">
+              <Typography sx={{ minWidth: 80 }}>{skillLabels[idx]}</Typography>
+              <TextField
+                label="Skill name"
+                value={skill.name}
+                onChange={e => handleSkillChange(idx, 'name', e.target.value)}
+                required={false}
+                error={nameError}
+                sx={{ minWidth: 200 }}
+              />
+              <Button
+                variant="outlined"
+                component="label"
+                size="small"
+                startIcon={<UploadIcon />}
+              >
+                Upload icon
+                <input type="file" hidden accept="image/*,.avif" onChange={e => handleSkillIconChange(idx, e.target.files[0])} />
+              </Button>
+              {(skill.iconPreview || skill.icon) && (
+                <Box>
+                  <img
+                    src={skill.iconPreview || skill.icon}
+                    alt="icon"
+                    style={{ maxHeight: 40, maxWidth: 40, objectFit: 'contain' }}
+                  />
+                </Box>
+              )}
+              <TextField
+                label="Description"
+                value={skill.description}
+                onChange={e => handleSkillChange(idx, 'description', e.target.value)}
+                required={false}
+                error={descError}
+                fullWidth
+              />
+            </Box>
+          );
+        })}
         {errors.skills && (
           <Typography color="error" variant="caption">
             {errors.skills}
@@ -888,7 +888,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
           renderInput={(params) => <TextField {...params} placeholder="Select allies" />}
           renderOption={(props, option) => (
             <li {...props} key={option._id}>
-              <Box sx={{ display:'flex', alignItems:'center', gap:1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 {option.image && <img src={option.image} alt="" width={28} height={28} style={{ borderRadius: '50%' }} />}
                 <Typography variant="body2">{option.name}</Typography>
               </Box>
@@ -914,7 +914,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
           renderInput={(params) => <TextField {...params} placeholder="Select counters" />}
           renderOption={(props, option) => (
             <li {...props} key={option._id}>
-              <Box sx={{ display:'flex', alignItems:'center', gap:1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 {option.image && <img src={option.image} alt="" width={28} height={28} style={{ borderRadius: '50%' }} />}
                 <Typography variant="body2">{option.name}</Typography>
               </Box>
@@ -945,7 +945,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
           renderInput={(params) => <TextField {...params} placeholder="Select good against" />}
           renderOption={(props, option) => (
             <li {...props} key={option._id}>
-              <Box sx={{ display:'flex', alignItems:'center', gap:1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 {option.image && <img src={option.image} alt="" width={28} height={28} style={{ borderRadius: '50%' }} />}
                 <Typography variant="body2">{option.name}</Typography>
               </Box>
@@ -977,8 +977,8 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         <Box display="flex" alignItems="center" gap={1} mb={1}>
           <Typography variant="subtitle1">Combo</Typography>
           <Box sx={{ ml: 'auto' }}>
-            {[1,2,3].map(b => (
-              <Button key={b} size="small" variant={activeSkillBuild===b?'contained':'outlined'} onClick={()=> setActiveSkillBuild(b)} sx={{ mr: 1 }}>
+            {[1, 2, 3].map(b => (
+              <Button key={b} size="small" variant={activeSkillBuild === b ? 'contained' : 'outlined'} onClick={() => setActiveSkillBuild(b)} sx={{ mr: 1 }}>
                 Bộ {b}
               </Button>
             ))}
@@ -1006,44 +1006,44 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                     size="small"
                     color="error"
                     sx={{ position: 'absolute', top: -8, right: -8, minWidth: 20, p: 0, fontSize: 12 }}
-                    onClick={() => setComboBuilds(list => list.map((b,i)=> i===(activeSkillBuild-1) ? { ...b, steps: b.steps.map((s, j) => j === idx ? { ...s, skills: s.skills.filter((_, k) => k !== sidx) } : s) } : b))}
+                    onClick={() => setComboBuilds(list => list.map((b, i) => i === (activeSkillBuild - 1) ? { ...b, steps: b.steps.map((s, j) => j === idx ? { ...s, skills: s.skills.filter((_, k) => k !== sidx) } : s) } : b))}
                   >×</Button>
                 </Box>
               ))}
             </Box>
-      {[0,1,2,3,4,BASIC_ATTACK_INDEX].map(skillIdx => (
+            {[0, 1, 2, 3, 4, BASIC_ATTACK_INDEX].map(skillIdx => (
               <Button
                 key={skillIdx}
                 variant="outlined"
                 size="small"
                 sx={{ minWidth: 40, p: 0.5, mx: 0.5 }}
-                onClick={() => setComboBuilds(list => list.map((b,i)=> i===(activeSkillBuild-1) ? { ...b, steps: b.steps.map((s, j) => j === idx ? { ...s, skills: [...s.skills, skillIdx] } : s) } : b))}
+                onClick={() => setComboBuilds(list => list.map((b, i) => i === (activeSkillBuild - 1) ? { ...b, steps: b.steps.map((s, j) => j === idx ? { ...s, skills: [...s.skills, skillIdx] } : s) } : b))}
               >
-  {skillIdx === BASIC_ATTACK_INDEX ? (
+                {skillIdx === BASIC_ATTACK_INDEX ? (
                   <span role="img" aria-label={BASIC_ATTACK_LABEL}>🗡️</span>
-  ) : (skillBuilds[Math.max(0, Math.min(skillBuilds.length - 1, activeSkillBuild - 1))]?.skills?.[skillIdx]?.iconPreview) ? (
-          <img src={skillBuilds[Math.max(0, Math.min(skillBuilds.length - 1, activeSkillBuild - 1))].skills[skillIdx].iconPreview} alt={skillBuilds[Math.max(0, Math.min(skillBuilds.length - 1, activeSkillBuild - 1))].skills[skillIdx].name} style={{ width: 32, height: 32, borderRadius: '50%' }} />
+                ) : (skillBuilds[Math.max(0, Math.min(skillBuilds.length - 1, activeSkillBuild - 1))]?.skills?.[skillIdx]?.iconPreview) ? (
+                  <img src={skillBuilds[Math.max(0, Math.min(skillBuilds.length - 1, activeSkillBuild - 1))].skills[skillIdx].iconPreview} alt={skillBuilds[Math.max(0, Math.min(skillBuilds.length - 1, activeSkillBuild - 1))].skills[skillIdx].name} style={{ width: 32, height: 32, borderRadius: '50%' }} />
                 ) : skillLabels[skillIdx] || BASIC_ATTACK_LABEL}
               </Button>
             ))}
             <TextField
               label="Step description"
               value={step.description}
-              onChange={e => setComboBuilds(list => list.map((b,i)=> i===(activeSkillBuild-1) ? { ...b, steps: b.steps.map((s, j) => j === idx ? { ...s, description: e.target.value } : s) } : b))}
+              onChange={e => setComboBuilds(list => list.map((b, i) => i === (activeSkillBuild - 1) ? { ...b, steps: b.steps.map((s, j) => j === idx ? { ...s, description: e.target.value } : s) } : b))}
               size="small"
               sx={{ minWidth: 200 }}
             />
-            <Button color="error" onClick={() => setComboBuilds(list => list.map((b,i)=> i===(activeSkillBuild-1) ? { ...b, steps: b.steps.filter((_, j) => j !== idx) } : b))}>Remove</Button>
+            <Button color="error" onClick={() => setComboBuilds(list => list.map((b, i) => i === (activeSkillBuild - 1) ? { ...b, steps: b.steps.filter((_, j) => j !== idx) } : b))}>Remove</Button>
           </Box>
         ))}
-        <Button variant="outlined" onClick={() => setComboBuilds(list => list.map((b,i)=> i===(activeSkillBuild-1) ? { ...b, steps: [...b.steps, { skills: [], description: '' }] } : b))}>Add combo step</Button>
+        <Button variant="outlined" onClick={() => setComboBuilds(list => list.map((b, i) => i === (activeSkillBuild - 1) ? { ...b, steps: [...b.steps, { skills: [], description: '' }] } : b))}>Add combo step</Button>
       </Box>
 
       <Box mt={2} mb={2}>
-  <Typography variant="h6">{t('hero.suggestedEquipment', 'Suggested Equipment')}</Typography>
+        <Typography variant="h6">{t('hero.suggestedEquipment', 'Suggested Equipment')}</Typography>
         {/* Category only (text search removed) */}
         <Box display="flex" gap={2} flexWrap="wrap" mb={1}>
-            <FormControl size="small" sx={{ minWidth: 180 }}>
+          <FormControl size="small" sx={{ minWidth: 180 }}>
             <InputLabel id="eq-cat-label">Category</InputLabel>
             <Select
               labelId="eq-cat-label"
@@ -1093,9 +1093,9 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                         transition: 'background-color 0.2s ease',
                         '&:hover': { backgroundColor: 'action.hover' }
                       }}
-                          title={selectedInCurrentBuild ? 'Remove from current build' : 'Add to current build'}
-                   >
-                      <Box sx={{ width: 36, height: 36, borderRadius: 1, overflow: 'hidden', flexShrink: 0, border: '1px solid #eee', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                      title={selectedInCurrentBuild ? 'Remove from current build' : 'Add to current build'}
+                    >
+                      <Box sx={{ width: 36, height: 36, borderRadius: 1, overflow: 'hidden', flexShrink: 0, border: '1px solid #eee', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         {eq.image ? (
                           <img src={eq.image} alt={eq.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'cover' }} />
                         ) : (
@@ -1106,7 +1106,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                         <Typography variant="body2" noWrap title={eq.name} sx={{ fontWeight: 600 }}>{eq.name}</Typography>
                         <Typography variant="caption" color="text.secondary">{eq.category}</Typography>
                       </Box>
-                      <Box sx={{ ml: 'auto', display:'flex', alignItems:'center', gap:1 }}>
+                      <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
                         {selectedInCurrentBuild ? (
                           <Chip label="Remove" color="error" size="small" />
                         ) : (
@@ -1122,8 +1122,8 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         </Box>
         {/* Build selector */}
         <Box display="flex" gap={1} mb={1}>
-          {[1,2,3].map(b => (
-            <Button key={b} variant={activeBuild===b?'contained':'outlined'} size="small" onClick={()=> setActiveBuild(b)}>
+          {[1, 2, 3].map(b => (
+            <Button key={b} variant={activeBuild === b ? 'contained' : 'outlined'} size="small" onClick={() => setActiveBuild(b)}>
               {t('hero.equipmentSet', { number: b, defaultValue: `Build ${b}` })}
             </Button>
           ))}
@@ -1141,7 +1141,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                   labelId={`eq-label-${absIndex}`}
                   label="Select equipment"
                   value={it.equipmentId || ''}
-                  onChange={e => setSuggestedEquipment(list => list.map((x,i) => i===absIndex ? ({ ...x, equipmentId: e.target.value, equipment: allEquipment.find(eq => eq._id === e.target.value) }) : x))}
+                  onChange={e => setSuggestedEquipment(list => list.map((x, i) => i === absIndex ? ({ ...x, equipmentId: e.target.value, equipment: allEquipment.find(eq => eq._id === e.target.value) }) : x))}
                 >
                   <MenuItem value=""><em>-- Select --</em></MenuItem>
                   {filteredEquipmentOptions.map(eq => (
@@ -1155,21 +1155,21 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                 type="number"
                 label="Order"
                 value={it.order ?? 0}
-                onChange={e => setSuggestedEquipment(list => list.map((x,i)=> i===absIndex ? ({ ...x, order: parseInt(e.target.value)||0 }) : x))}
+                onChange={e => setSuggestedEquipment(list => list.map((x, i) => i === absIndex ? ({ ...x, order: parseInt(e.target.value) || 0 }) : x))}
                 sx={{ width: 110 }}
               />
               {selected && selected.image && (
-                <Box sx={{ display:'flex', alignItems:'center', gap:1 }}>
-                  <img src={selected.image} alt={selected.name} style={{ width:40, height:40, objectFit:'cover', borderRadius:6 }} />
-                  <Typography variant="body2" sx={{ fontWeight:600 }}>{selected.name}</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <img src={selected.image} alt={selected.name} style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>{selected.name}</Typography>
                 </Box>
               )}
-              <Button color="error" size="small" onClick={() => setSuggestedEquipment(list => list.filter((_,i)=> i!==absIndex))}>Remove</Button>
+              <Button color="error" size="small" onClick={() => setSuggestedEquipment(list => list.filter((_, i) => i !== absIndex))}>Remove</Button>
               {/* Remove-from-build button removed per request */}
             </Box>
           );
         })}
-        <Button variant="outlined" size="small" onClick={() => setSuggestedEquipment(list => [...list, { equipmentId:'', note:'', order: currentBuildList.length, build: activeBuild }] )}>Add equipment</Button>
+        <Button variant="outlined" size="small" onClick={() => setSuggestedEquipment(list => [...list, { equipmentId: '', note: '', order: currentBuildList.length, build: activeBuild }])}>Add equipment</Button>
       </Box>
 
       <Box mt={2} mb={2}>
@@ -1214,16 +1214,16 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         <Button variant="outlined" onClick={() => setSkins([...skins, { name: '', image: '' }])}>Add skin</Button>
       </Box>
 
-  {/* Gợi ý Arcana và Gợi ý Trang Bị sections removed as requested */}
+      {/* Gợi ý Arcana và Gợi ý Trang Bị sections removed as requested */}
 
       <Box mt={4} mb={2}>
         <Typography variant="h6">Arcana Boards</Typography>
         {arcanaBuilds.map((build, bIdx) => (
-          <Box key={bIdx} sx={{ border: '1px solid #ddd', borderRadius: 2, p:2, mb:2 }}>
+          <Box key={bIdx} sx={{ border: '1px solid #ddd', borderRadius: 2, p: 2, mb: 2 }}>
             <Box display="flex" gap={2} flexWrap="wrap" mb={1}>
-              <TextField label="Board name" size="small" value={build.name} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx?{...b,name:e.target.value}:b))} sx={{ minWidth:200 }} />
-              <TextField label="Description" size="small" value={build.description} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx?{...b,description:e.target.value}:b))} fullWidth multiline minRows={2} />
-              <Button color="error" size="small" onClick={() => setArcanaBuilds(list => list.filter((_,i)=> i!==bIdx))}>Remove board</Button>
+              <TextField label="Board name" size="small" value={build.name} onChange={e => setArcanaBuilds(list => list.map((b, i) => i === bIdx ? { ...b, name: e.target.value } : b))} sx={{ minWidth: 200 }} />
+              <TextField label="Description" size="small" value={build.description} onChange={e => setArcanaBuilds(list => list.map((b, i) => i === bIdx ? { ...b, description: e.target.value } : b))} fullWidth multiline minRows={2} />
+              <Button color="error" size="small" onClick={() => setArcanaBuilds(list => list.filter((_, i) => i !== bIdx))}>Remove board</Button>
             </Box>
             {build.items.map((it, iIdx) => {
               // Resolve arcana object for preview (prefer inline arcana, then list)
@@ -1234,24 +1234,24 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
               }
               return (
                 <Box key={iIdx} display="flex" gap={2} alignItems="center" mb={1}>
-                  <FormControl size="small" sx={{ minWidth:120 }}>
-                    <Select value={it.color || (arcanaObj && arcanaObj.color) || ''} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx ? { ...b, items: b.items.map((x,j)=> j===iIdx ? { ...x, color:e.target.value, arcanaId:'', arcana: undefined } : x) } : b))} displayEmpty>
+                  <FormControl size="small" sx={{ minWidth: 120 }}>
+                    <Select value={it.color || (arcanaObj && arcanaObj.color) || ''} onChange={e => setArcanaBuilds(list => list.map((b, i) => i === bIdx ? { ...b, items: b.items.map((x, j) => j === iIdx ? { ...x, color: e.target.value, arcanaId: '', arcana: undefined } : x) } : b))} displayEmpty>
                       <MenuItem value=""><em>Select color</em></MenuItem>
                       <MenuItem value="red">Red</MenuItem>
                       <MenuItem value="green">Green</MenuItem>
                       <MenuItem value="blue">Blue</MenuItem>
                     </Select>
                   </FormControl>
-                  <FormControl size="small" sx={{ minWidth:160 }}>
+                  <FormControl size="small" sx={{ minWidth: 160 }}>
                     <Select
                       value={selectedId}
-                      onChange={e => setArcanaBuilds(list => list.map((b,i)=> {
+                      onChange={e => setArcanaBuilds(list => list.map((b, i) => {
                         if (i !== bIdx) return b;
                         const id = e.target.value;
                         const obj = allArcana.find(a => a._id === id);
                         return {
                           ...b,
-                          items: b.items.map((x,j)=> j===iIdx ? { ...x, arcanaId:id, arcana: obj, color: obj?.color || x.color } : x)
+                          items: b.items.map((x, j) => j === iIdx ? { ...x, arcanaId: id, arcana: obj, color: obj?.color || x.color } : x)
                         };
                       }))}
                       displayEmpty
@@ -1263,25 +1263,25 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                       ))}
                     </Select>
                   </FormControl>
-                  <TextField type="number" size="small" label="Số lượng" inputProps={{ min:1, max:10 }} value={it.count} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx ? { ...b, items: b.items.map((x,j)=> j===iIdx ? { ...x, count:parseInt(e.target.value)||1 } : x) } : b))} sx={{ width:100 }} />
+                  <TextField type="number" size="small" label="Số lượng" inputProps={{ min: 1, max: 10 }} value={it.count} onChange={e => setArcanaBuilds(list => list.map((b, i) => i === bIdx ? { ...b, items: b.items.map((x, j) => j === iIdx ? { ...x, count: parseInt(e.target.value) || 1 } : x) } : b))} sx={{ width: 100 }} />
                   {/* Hiển thị ảnh, tên, màu arcana nếu có */}
                   {arcanaObj && (
                     <Box display="flex" alignItems="center" gap={1}>
-                      <Box sx={{ width:40, height:40, border:'1px solid #ddd', borderRadius:1, overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                        <img src={arcanaObj.image} alt={arcanaObj.name} style={{ maxWidth:'100%', maxHeight:'100%', objectFit:'cover' }} />
+                      <Box sx={{ width: 40, height: 40, border: '1px solid #ddd', borderRadius: 1, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <img src={arcanaObj.image} alt={arcanaObj.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'cover' }} />
                       </Box>
-                      <Typography variant="body2" sx={{ fontWeight:600 }}>{arcanaObj.name}</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>{arcanaObj.name}</Typography>
                       <Chip label={arcanaObj.color} size="small" sx={{ bgcolor: arcanaObj.color === 'red' ? '#ffcccc' : arcanaObj.color === 'green' ? '#ccffcc' : '#cce5ff', color: '#333' }} />
                     </Box>
                   )}
-                  <Button size="small" color="error" onClick={() => setArcanaBuilds(list => list.map((b,i)=> i===bIdx ? { ...b, items: b.items.filter((_,j)=> j!==iIdx) } : b))}>X</Button>
+                  <Button size="small" color="error" onClick={() => setArcanaBuilds(list => list.map((b, i) => i === bIdx ? { ...b, items: b.items.filter((_, j) => j !== iIdx) } : b))}>X</Button>
                 </Box>
               );
             })}
-                  <Button size="small" variant="outlined" onClick={()=> setArcanaBuilds(list => list.map((b,i)=> i===bIdx?{...b, items:[...b.items,{ arcanaId:'', count:1 }]}:b))}>Add Arcana</Button>
+            <Button size="small" variant="outlined" onClick={() => setArcanaBuilds(list => list.map((b, i) => i === bIdx ? { ...b, items: [...b.items, { arcanaId: '', count: 1 }] } : b))}>Add Arcana</Button>
           </Box>
         ))}
-        <Button variant="contained" size="small" onClick={() => setArcanaBuilds(list => [...list, { name:'', description:'', items:[] }])}>Add Arcana Board</Button>
+        <Button variant="contained" size="small" onClick={() => setArcanaBuilds(list => [...list, { name: '', description: '', items: [] }])}>Add Arcana Board</Button>
       </Box>
 
       <Button
@@ -1291,7 +1291,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         sx={{ mt: 2 }}
         disabled={loading}
       >
-  {loading ? <CircularProgress size={24} /> : (editingHeroData ? 'Update Hero' : 'Add Hero')}
+        {loading ? <CircularProgress size={24} /> : (editingHeroData ? 'Update Hero' : 'Add Hero')}
       </Button>
     </Box>
   );

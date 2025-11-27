@@ -63,7 +63,7 @@ export default function NewsDetailClient({
 }: NewsDetailClientProps) {
   const { t } = useTranslation();
   const [toc, setToc] = useState<{ id: string; text: string; level: number }[]>([]);
-  const [tocOpen, setTocOpen] = useState(true);
+  const [tocOpen, setTocOpen] = useState(false);
 
   // Filter out current category from sidebar lists if categoryLists is provided
   const sidebarCategories = categoryLists ? Object.keys(categoryLists).filter(cat => cat !== post.category) : [];
@@ -359,6 +359,95 @@ export default function NewsDetailClient({
                 </Link>
               ) : <Box flex={1} />}
             </Box>
+
+            {/* Mobile Sidebar Content (Mobile Only) */}
+            <Box sx={{ display: { xs: 'block', md: 'none' }, mt: 4 }}>
+              {/* 1. Related Posts (Same Category) */}
+              {sameCategoryPosts.length > 0 && (
+                <Box mb={4}>
+                  <Typography variant="subtitle2" fontWeight={700} gutterBottom sx={{ borderLeft: '3px solid #C9A063', pl: 1, textTransform: 'uppercase' }}>
+                    More in {post.category}
+                  </Typography>
+                  <Stack spacing={2}>
+                    {sameCategoryPosts.map((p) => (
+                      <Link key={p._id} href={`/news/${p.slug || p._id}`} style={{ textDecoration: 'none' }}>
+                        <Box display="flex" gap={2} sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'translateX(4px)' } }}>
+                          <LazyImage src={p.image} alt={p.title} sx={{ width: 80, height: 80, borderRadius: 1, objectFit: 'cover' }} />
+                          <Box flex={1}>
+                            <Typography variant="body2" fontWeight={600} sx={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.3, mb: 0.5, color: '#333', '&:hover': { color: '#C9A063' } }}>
+                              {p.title}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">{formatDate(p.createdAt)}</Typography>
+                          </Box>
+                        </Box>
+                      </Link>
+                    ))}
+                  </Stack>
+                </Box>
+              )}
+
+              {/* 2. Keywords Section */}
+              {post.keywords && post.keywords.trim() && (
+                <Box mb={4}>
+                  <Typography variant="subtitle2" fontWeight={700} gutterBottom sx={{ borderLeft: '3px solid #C9A063', pl: 1, textTransform: 'uppercase' }}>
+                    Keywords
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                    {post.keywords.split(',').map((keyword: string, index: number) => {
+                      const trimmedKeyword = keyword.trim();
+                      if (!trimmedKeyword) return null;
+                      return (
+                        <Chip
+                          key={index}
+                          label={trimmedKeyword}
+                          size="small"
+                          sx={{
+                            bgcolor: 'rgba(201, 160, 99, 0.1)',
+                            color: '#C9A063',
+                            fontWeight: 500,
+                            fontSize: '0.75rem',
+                            '&:hover': {
+                              bgcolor: '#C9A063',
+                              color: 'white',
+                              cursor: 'pointer',
+                            },
+                            transition: 'all 0.2s'
+                          }}
+                        />
+                      );
+                    })}
+                  </Box>
+                </Box>
+              )}
+
+              {/* 3. Other Categories Lists */}
+              {categoryLists && sidebarCategories.map(cat => {
+                const list = categoryLists[cat];
+                if (!list || list.length === 0) return null;
+                return (
+                  <Box mb={4} key={cat}>
+                    <Typography variant="subtitle2" fontWeight={700} gutterBottom sx={{ borderLeft: '3px solid #C9A063', pl: 1, textTransform: 'uppercase' }}>
+                      Latest {cat}
+                    </Typography>
+                    <Stack spacing={2}>
+                      {list.map((p) => (
+                        <Link key={p._id} href={`/news/${p.slug || p._id}`} style={{ textDecoration: 'none' }}>
+                          <Box display="flex" gap={2} sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'translateX(4px)' } }}>
+                            <LazyImage src={p.image} alt={p.title} sx={{ width: 80, height: 80, borderRadius: 1, objectFit: 'cover' }} />
+                            <Box flex={1}>
+                              <Typography variant="body2" fontWeight={600} sx={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.3, mb: 0.5, color: '#333', '&:hover': { color: '#C9A063' } }}>
+                                {p.title}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">{formatDate(p.createdAt)}</Typography>
+                            </Box>
+                          </Box>
+                        </Link>
+                      ))}
+                    </Stack>
+                  </Box>
+                );
+              })}
+            </Box>
           </Box>
         </Grid>
 
@@ -389,7 +478,41 @@ export default function NewsDetailClient({
               </Box>
             )}
 
-            {/* 2. Other Categories Lists */}
+            {/* 2. Keywords Section */}
+            {post.keywords && post.keywords.trim() && (
+              <Box mb={4}>
+                <Typography variant="subtitle2" fontWeight={700} gutterBottom sx={{ borderLeft: '3px solid #C9A063', pl: 1, textTransform: 'uppercase' }}>
+                  Keywords
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  {post.keywords.split(',').map((keyword: string, index: number) => {
+                    const trimmedKeyword = keyword.trim();
+                    if (!trimmedKeyword) return null;
+                    return (
+                      <Chip
+                        key={index}
+                        label={trimmedKeyword}
+                        size="small"
+                        sx={{
+                          bgcolor: 'rgba(201, 160, 99, 0.1)',
+                          color: '#C9A063',
+                          fontWeight: 500,
+                          fontSize: '0.75rem',
+                          '&:hover': {
+                            bgcolor: '#C9A063',
+                            color: 'white',
+                            cursor: 'pointer',
+                          },
+                          transition: 'all 0.2s'
+                        }}
+                      />
+                    );
+                  })}
+                </Box>
+              </Box>
+            )}
+
+            {/* 3. Other Categories Lists */}
             {categoryLists && sidebarCategories.map(cat => {
               const list = categoryLists[cat];
               if (!list || list.length === 0) return null;
