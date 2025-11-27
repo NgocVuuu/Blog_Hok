@@ -30,17 +30,35 @@ const newsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  summary: {
+    type: String,
+    default: '',
+  },
+  keywords: {
+    type: String,
+    default: '',
+  },
   image: {
     type: String,
   },
   category: {
+    type: String,
+    default: 'guides',
+  },
+  author: {
+    type: String,
+    default: 'BlogHok',
+  },
+  publishedAt: {
     type: Date,
     default: Date.now,
   },
+}, {
+  timestamps: true, // Adds createdAt and updatedAt automatically
 });
 
 // Pre-save middleware to generate slug
-newsSchema.pre('save', function(next) {
+newsSchema.pre('save', function (next) {
   if (this.isModified('title') || this.isNew) {
     let baseSlug = generateSlug(this.title);
     this.slug = baseSlug;

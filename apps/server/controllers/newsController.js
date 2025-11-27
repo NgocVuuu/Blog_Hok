@@ -52,10 +52,18 @@ exports.getAllNews = async (req, res, next) => {
         sortCriteria = { publishedAt: -1 };
     }
 
+    // Pagination calculations
+    const limitNum = parseInt(limit);
+    const skip = (parseInt(page) - 1) * limitNum;
+
+    // Execute query with pagination
+    const [news, total] = await Promise.all([
+      News.find(query)
+        .sort(sortCriteria)
         .skip(skip)
-      .limit(limitNum)
-      .lean()
-      .maxTimeMS(10000),
+        .limit(limitNum)
+        .lean()
+        .maxTimeMS(10000),
       News.countDocuments(query)
     ]);
 

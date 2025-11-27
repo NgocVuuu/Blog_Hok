@@ -53,8 +53,8 @@ const validateHero = [
     .isArray({ min: 1 })
     .withMessage('Hero must have at least one lane'),
   body('lanes.*')
-  .customSanitizer((v) => (v === 'Abyssal Lane' ? 'Clash Lane' : v))
-  .isIn(['Farm Lane', 'Mid Lane', 'Roam', 'Jungle', 'Clash Lane'])
+    .customSanitizer((v) => (v === 'Abyssal Lane' ? 'Clash Lane' : v))
+    .isIn(['Farm Lane', 'Mid Lane', 'Roam', 'Jungle', 'Clash Lane'])
     .withMessage('Invalid lane'),
   body('metaTier')
     .isIn(['S+', 'S', 'A', 'B', 'C'])
@@ -90,14 +90,29 @@ const validateNews = [
     .withMessage('News title must be between 1 and 200 characters'),
   body('content')
     .trim()
-    .isLength({ min: 1, max: 10000 })
-    .withMessage('News content must be between 1 and 10000 characters'),
+    .isLength({ min: 1, max: 50000 })
+    .withMessage('News content must be between 1 and 50000 characters'),
+  body('summary')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Summary must be less than 500 characters'),
+  body('keywords')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 200 })
+    .withMessage('Keywords must be less than 200 characters'),
+  body('image')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Image URL must be less than 500 characters'),
   body('category')
-    .optional()
+    .optional({ checkFalsy: true })
     .isIn(['guides', 'updates', 'events', 'esports'])
     .withMessage('Invalid category'),
   body('author')
-    .optional()
+    .optional({ checkFalsy: true })
     .trim()
     .isLength({ max: 100 })
     .withMessage('Author name must be less than 100 characters'),
@@ -174,8 +189,8 @@ const validateSearch = [
     .withMessage('Page must be a positive integer'),
   query('sort')
     .optional()
-  .isIn(['latest', 'oldest', 'title', 'name', 'winRate', 'pickRate', 'metaTier', 'relevance'])
-  .withMessage('Invalid sort option'),
+    .isIn(['latest', 'oldest', 'title', 'name', 'winRate', 'pickRate', 'metaTier', 'relevance'])
+    .withMessage('Invalid sort option'),
   handleValidationErrors
 ];
 
