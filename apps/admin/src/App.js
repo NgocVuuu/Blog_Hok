@@ -12,7 +12,6 @@ import theme from './theme';
 
 // Only keep admin routes in the legacy CRA app. Public site has been migrated to Next.js (`client-next`).
 const AdminDashboard = React.lazy(() => import('./components/AdminDashboard'));
-const EditPost = React.lazy(() => import('./pages/EditPost'));
 
 // Inline fallback components to avoid importing public-site components which were moved to Next.js
 function AdminLandingFallback() {
@@ -70,7 +69,6 @@ function App() {
                 <Routes>
                   {/* Root explains public site moved; admin routes kept */}
                   <Route path="/" element={<AdminLandingFallback />} />
-                  <Route path="/edit-post/:id" element={<EditPost />} />
                   {process.env.NODE_ENV !== 'production' && (
                     <Route path="/admin" element={isAuthenticated ? <AdminDashboard /> : <AdminGate openLogin={openLogin} />} />
                   )}

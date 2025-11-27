@@ -19,13 +19,25 @@ function TabPanel({ children, value, index }) {
 
 const AdminDashboard = () => {
   const [tab, setTab] = useState(0);
+  const [editingPost, setEditingPost] = useState(null);
   const [editingHero, setEditingHero] = useState(null);
   const [editingArcana, setEditingArcana] = useState(null);
   const [editingEquipment, setEditingEquipment] = useState(null);
 
+  const handleEditPost = (post) => {
+    setEditingPost(post);
+    setTab(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePostFormSubmit = () => {
+    setEditingPost(null);
+  };
+
   const handleEditHero = (hero) => {
     setEditingHero(hero);
     setTab(1); // Switch to heroes tab
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleHeroFormSubmit = () => {
@@ -35,6 +47,7 @@ const AdminDashboard = () => {
   const handleEditArcana = (arcana) => {
     setEditingArcana(arcana);
     setTab(2); // Switch to arcana tab
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleArcanaFormSubmit = () => {
@@ -44,6 +57,7 @@ const AdminDashboard = () => {
   const handleEditEquipment = (equipment) => {
     setEditingEquipment(equipment);
     setTab(3); // Switch to equipment tab
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleEquipmentFormSubmit = () => {
@@ -60,12 +74,12 @@ const AdminDashboard = () => {
         <Tab label="Trang bị" />
       </Tabs>
       <TabPanel value={tab} index={0}>
-        <AdminPostForm />
-        <PostList />
+        <AdminPostForm editingPost={editingPost} onFormSubmit={handlePostFormSubmit} />
+        <PostList onEdit={handleEditPost} />
       </TabPanel>
       <TabPanel value={tab} index={1}>
-        <AdminHeroForm 
-          editingHero={editingHero} 
+        <AdminHeroForm
+          editingHero={editingHero}
           onFormSubmit={handleHeroFormSubmit}
         />
         <HeroList onEdit={handleEditHero} />
@@ -75,7 +89,7 @@ const AdminDashboard = () => {
         <ArcanaList onEdit={handleEditArcana} />
       </TabPanel>
       <TabPanel value={tab} index={3}>
-        <AdminEquipmentForm 
+        <AdminEquipmentForm
           editingEquipment={editingEquipment}
           onFormSubmit={handleEquipmentFormSubmit}
         />
@@ -85,4 +99,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard; 
+export default AdminDashboard;

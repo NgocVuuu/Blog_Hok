@@ -131,7 +131,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   setAllHeroes(list);
       } catch (err) {
         console.error('Error fetching heroes:', err);
-        setMessage({ type: 'error', text: 'Không thể tải danh sách tướng' });
+        setMessage({ type: 'error', text: 'Unable to load heroes list' });
         setAllHeroes([]);
       }
     };
@@ -200,12 +200,12 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       if (!editingHero && routeHeroId) {
         try {
           const res = await fetch(`${API_URL}/api/heroes/${routeHeroId}`);
-          if (!res.ok) throw new Error('Không lấy được dữ liệu tướng');
+          if (!res.ok) throw new Error('Unable to fetch hero data');
           const data = await res.json();
           if (!ignore) setFetchedHero(data);
         } catch (e) {
           console.error(e);
-          if (!ignore) setMessage({ type: 'error', text: 'Không tải được dữ liệu tướng để sửa' });
+          if (!ignore) setMessage({ type: 'error', text: 'Unable to load hero data for editing' });
         }
       }
     };
@@ -343,7 +343,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   const validateNumber = (value, field) => {
     // Relaxed: only check not negative; let server enforce 0-100 if still desired
     const num = parseFloat(value);
-    if (isNaN(num) || num < 0) { setErrors(p => ({ ...p, [field]: 'Sai định dạng số' })); return false; }
+    if (isNaN(num) || num < 0) { setErrors(p => ({ ...p, [field]: 'Invalid number format' })); return false; }
     setErrors(p => ({ ...p, [field]: '' })); return true;
   };
 
@@ -420,7 +420,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         });
         if (!res2.ok) {
           const err2 = await res2.json().catch(() => ({}));
-          throw new Error(err2.error || err2.message || `Upload ảnh thất bại (HTTP ${res2.status})`);
+          throw new Error(err2.error || err2.message || `Upload failed (HTTP ${res2.status})`);
         }
         const data2 = await res2.json();
         return data2.imageUrl;
@@ -428,17 +428,17 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       lastErr = body;
       break;
     }
-    throw new Error(lastErr?.error || lastErr?.message || 'Upload ảnh thất bại. Vui lòng thử lại.');
+    throw new Error(lastErr?.error || lastErr?.message || 'Upload failed. Please try again.');
   };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!name) newErrors.name = 'Vui lòng nhập tên tướng';
-    if (!title) newErrors.title = 'Vui lòng nhập danh hiệu';
-    if (roles.length === 0) newErrors.roles = 'Vui lòng chọn ít nhất một vai trò';
-    if (lanes.length === 0) newErrors.lanes = 'Vui lòng chọn ít nhất một lane';
-    if (!imageFile && !imageUrl) newErrors.image = 'Vui lòng upload ảnh tướng';
-    if (!metaTier) newErrors.metaTier = 'Vui lòng chọn meta tier';
+    if (!name) newErrors.name = 'Please enter a hero name';
+    if (!title) newErrors.title = 'Please enter a title';
+    if (roles.length === 0) newErrors.roles = 'Please select at least one role';
+    if (lanes.length === 0) newErrors.lanes = 'Please select at least one lane';
+    if (!imageFile && !imageUrl) newErrors.image = 'Please upload a hero image';
+    if (!metaTier) newErrors.metaTier = 'Please select a meta tier';
     if (!validateNumber(winRate, 'winRate')) newErrors.winRate = true;
     if (!validateNumber(pickRate, 'pickRate')) newErrors.pickRate = true;
     if (!validateNumber(banRate, 'banRate')) newErrors.banRate = true;
@@ -452,7 +452,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       return hasName || hasDesc;
     });
     if (fullSkills.length === 0) {
-      newErrors.skills = 'Vui lòng nhập ít nhất một kỹ năng (tên hoặc mô tả)';
+      newErrors.skills = 'Please enter at least one skill (name or description)';
     }
 
     setErrors(newErrors);
@@ -474,13 +474,13 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
     e.preventDefault();
     const isValid = validateForm();
     if (!isValid) {
-      setMessage({ type: 'error', text: 'Vui lòng kiểm tra lại thông tin' });
+      setMessage({ type: 'error', text: 'Please review the form fields' });
       return;
     }
     // Validate skins (each skin must have both name & image if provided)
     const incompleteSkin = skins.find(s => (s.name.trim() && !s.image) || (!s.name.trim() && s.image));
     if (incompleteSkin) {
-      setMessage({ type: 'error', text: 'Vui lòng điền đầy đủ tên và ảnh cho mỗi trang phục hoặc xóa dòng chưa hoàn chỉnh' });
+      setMessage({ type: 'error', text: 'Please provide both name and image for each skin or remove the incomplete entry' });
       return;
     }
     setLoading(true);
@@ -631,7 +631,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   throw new Error(detailMsg || error.message || (error.duplicate ? 'Tên tướng đã tồn tại' : 'Có lỗi xảy ra khi thêm/cập nhật tướng'));
       }
 
-  setMessage({ type: 'success', text: isEditing ? 'Cập nhật tướng thành công!' : 'Thêm tướng thành công!' });
+  setMessage({ type: 'success', text: isEditing ? 'Hero updated successfully!' : 'Hero added successfully!' });
 
   if (!isEditing) {
         setName('');
@@ -645,7 +645,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         setImageFile(null);
         setImageUrl('');
   setImagePreview('');
-  setSkillBuilds([{ name: 'Bộ 1', skills: defaultSkills.map(s => ({ ...s })) }]);
+    setSkillBuilds([{ name: 'Build 1', skills: defaultSkills.map(s => ({ ...s })) }]);
   setActiveSkillBuild(1);
         setAllies([]);
         setCounters([]);
@@ -659,8 +659,8 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         onFormSubmit();
       }
     } catch (err) {
-  console.error('Error submitting form:', err);
-  setMessage({ type: 'error', text: err.message || 'Có lỗi xảy ra khi thêm/cập nhật tướng' });
+    console.error('Error submitting form:', err);
+    setMessage({ type: 'error', text: err.message || 'An error occurred while adding/updating hero' });
     } finally {
       setLoading(false);
     }
@@ -669,7 +669,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 800, mx: 'auto', mt: 4 }}>
       <Typography variant="h5" mb={2}>
-        {editingHeroData ? 'Chỉnh sửa tướng' : 'Thêm tướng mới'}
+        {editingHeroData ? 'Edit Hero' : 'Add New Hero'}
       </Typography>
 
       {message.text && (
@@ -679,7 +679,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       )}
 
       <TextField
-        label="Tên tướng"
+        label="Hero Name"
         value={name}
         onChange={e => setName(e.target.value)}
         fullWidth
@@ -690,7 +690,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       />
 
       <TextField
-        label="Danh hiệu"
+        label="Title"
         value={title}
         onChange={e => setTitle(e.target.value)}
         fullWidth
@@ -701,7 +701,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       />
 
       <FormControl fullWidth margin="normal" error={!!errors.roles}>
-        <InputLabel>Vai trò</InputLabel>
+        <InputLabel>Roles</InputLabel>
         <Select multiple value={roles} onChange={e => setRoles(e.target.value)} input={<OutlinedInput label="Vai trò" />} renderValue={selected => (<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>{selected.map(value => (<Chip key={value} label={value} />))}</Box>)}>
           {rolesList.map(role => (<MenuItem key={role} value={role}>{role}</MenuItem>))}
         </Select>
@@ -717,7 +717,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       </FormControl>
 
       <FormControl fullWidth margin="normal" error={!!errors.metaTier}>
-        <InputLabel>Mức độ meta</InputLabel>
+        <InputLabel>Meta Tier</InputLabel>
         <Select value={metaTier} onChange={e => setMetaTier(e.target.value)} label="Mức độ meta">
           {metaTiers.map(tier => (<MenuItem key={tier} value={tier}>{tier}</MenuItem>))}
         </Select>
@@ -726,13 +726,13 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
 
       <Grid container spacing={2}>
         <Grid item xs={4}>
-          <TextField label="Tỉ lệ thắng (%)" value={winRate} onChange={e => { setWinRate(e.target.value); validateNumber(e.target.value, 'winRate'); }} fullWidth required margin="normal" type="number" error={!!errors.winRate} helperText={errors.winRate} />
+          <TextField label="Win Rate (%)" value={winRate} onChange={e => { setWinRate(e.target.value); validateNumber(e.target.value, 'winRate'); }} fullWidth required margin="normal" type="number" error={!!errors.winRate} helperText={errors.winRate} />
         </Grid>
         <Grid item xs={4}>
-          <TextField label="Tỉ lệ pick (%)" value={pickRate} onChange={e => { setPickRate(e.target.value); validateNumber(e.target.value, 'pickRate'); }} fullWidth required margin="normal" type="number" error={!!errors.pickRate} helperText={errors.pickRate} />
+          <TextField label="Pick Rate (%)" value={pickRate} onChange={e => { setPickRate(e.target.value); validateNumber(e.target.value, 'pickRate'); }} fullWidth required margin="normal" type="number" error={!!errors.pickRate} helperText={errors.pickRate} />
         </Grid>
         <Grid item xs={4}>
-          <TextField label="Tỉ lệ ban (%)" value={banRate} onChange={e => { setBanRate(e.target.value); validateNumber(e.target.value, 'banRate'); }} fullWidth required margin="normal" type="number" error={!!errors.banRate} helperText={errors.banRate} />
+          <TextField label="Ban Rate (%)" value={banRate} onChange={e => { setBanRate(e.target.value); validateNumber(e.target.value, 'banRate'); }} fullWidth required margin="normal" type="number" error={!!errors.banRate} helperText={errors.banRate} />
         </Grid>
       </Grid>
 
@@ -741,7 +741,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
           variant="contained"
           component="label"
           startIcon={<UploadIcon />}>
-          Upload ảnh tướng
+          Upload Hero Image
           <input type="file" hidden accept="image/*,.avif" onChange={handleImageChange} />
         </Button>
         {imageFile && <Typography ml={2}>{imageFile.name}</Typography>}
@@ -758,23 +758,23 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       </Box>
 
       <Box mt={2}>
-        <Box display="flex" alignItems="center" gap={1} mb={1}>
-          <Typography variant="subtitle1">Kỹ năng</Typography>
+          <Box display="flex" alignItems="center" gap={1} mb={1}>
+          <Typography variant="subtitle1">Skills</Typography>
           <Box sx={{ ml: 'auto' }}>
             {[1,2,3].map(b => (
               <Button key={b} size="small" variant={activeSkillBuild===b?'contained':'outlined'} onClick={()=> setActiveSkillBuild(b)} sx={{ mr: 1 }}>
-                Bộ {b}
+                Build {b}
               </Button>
             ))}
             <Button size="small" variant="outlined" onClick={()=> {
               setSkillBuilds(list => {
                 if (list.length >= 3) return list;
-                const next = [...list, { name: `Bộ ${list.length+1}`, skills: defaultSkills.map(s => ({ ...s })) }];
+                const next = [...list, { name: `Build ${list.length+1}`, skills: defaultSkills.map(s => ({ ...s })) }];
                 // comboBuilds will be synced by effect, but push immediately for responsiveness
-                setComboBuilds(cb => [...cb, { name: `Bộ ${next.length}`, steps: [] }]);
+                setComboBuilds(cb => [...cb, { name: `Build ${next.length}`, steps: [] }]);
                 return next;
               });
-            }}>Thêm bộ</Button>
+            }}>Add build</Button>
             {skillBuilds.length > 1 && (
               <Button size="small" color="error" onClick={()=> {
                 setSkillBuilds(list => {
@@ -785,12 +785,12 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                   setComboBuilds(cb => cb.slice(0, newList.length));
                   return newList;
                 });
-              }} sx={{ ml: 1 }}>Xóa bộ cuối</Button>
+              }} sx={{ ml: 1 }}>Remove last build</Button>
             )}
           </Box>
         </Box>
-        <Box display="flex" alignItems="center" gap={1} mb={1}>
-          <TextField size="small" label={`Tên bộ ${activeSkillBuild}`} value={skillBuilds[Math.max(0, Math.min(skillBuilds.length - 1, activeSkillBuild - 1))]?.name || ''}
+          <Box display="flex" alignItems="center" gap={1} mb={1}>
+          <TextField size="small" label={`Build name ${activeSkillBuild}`} value={skillBuilds[Math.max(0, Math.min(skillBuilds.length - 1, activeSkillBuild - 1))]?.name || ''}
             onChange={e => {
               const value = e.target.value;
               setSkillBuilds(list => list.map((b,i) => (i === (activeSkillBuild-1) ? { ...b, name: value } : b)));
@@ -808,7 +808,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
           <Box key={idx} display="flex" gap={2} mb={1} alignItems="center">
             <Typography sx={{ minWidth: 80 }}>{skillLabels[idx]}</Typography>
             <TextField
-              label="Tên kỹ năng"
+              label="Skill name"
               value={skill.name}
               onChange={e => handleSkillChange(idx, 'name', e.target.value)}
               required={false}
@@ -834,7 +834,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
               </Box>
             )}
             <TextField
-              label="Mô tả"
+              label="Description"
               value={skill.description}
               onChange={e => handleSkillChange(idx, 'description', e.target.value)}
               required={false}
@@ -854,13 +854,13 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       {/* Shared role filter for all hero selection lists below */}
       <Box mt={2} mb={1} display="flex" gap={2} alignItems="center" flexWrap="wrap">
         <FormControl size="small" sx={{ minWidth: 200 }}>
-          <InputLabel>Lọc theo vai trò</InputLabel>
+          <InputLabel>Filter by role</InputLabel>
           <Select
-            label="Lọc theo vai trò"
+            label="Filter by role"
             value={heroRoleFilter}
             onChange={e => setHeroRoleFilter(e.target.value)}
           >
-            <MenuItem value="all">Tất cả</MenuItem>
+            <MenuItem value="all">All</MenuItem>
             {rolesList.map(role => (
               <MenuItem key={role} value={role}>{role}</MenuItem>
             ))}
@@ -868,7 +868,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         </FormControl>
         <TextField
           size="small"
-          label="Tìm tướng"
+          label="Search hero"
           value={heroSearch}
           onChange={e => setHeroSearch(e.target.value)}
           sx={{ minWidth: 220 }}
@@ -876,7 +876,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       </Box>
 
       <Box mt={1} mb={2}>
-        <Typography variant="h6">Đồng minh</Typography>
+        <Typography variant="h6">Allies</Typography>
         <Autocomplete
           multiple
           options={filteredHeroOptions}
@@ -885,7 +885,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
           getOptionLabel={(option) => option?.name || ''}
           isOptionEqualToValue={(opt, val) => opt._id === val._id}
           onChange={(e, newValue) => setAllies(newValue.map(h => h._id))}
-          renderInput={(params) => <TextField {...params} placeholder="Chọn đồng minh" />}
+          renderInput={(params) => <TextField {...params} placeholder="Select allies" />}
           renderOption={(props, option) => (
             <li {...props} key={option._id}>
               <Box sx={{ display:'flex', alignItems:'center', gap:1 }}>
@@ -902,7 +902,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
       </Box>
 
       <Box mt={2} mb={2}>
-        <Typography variant="h6">Khắc chế bởi</Typography>
+        <Typography variant="h6">Counters</Typography>
         <Autocomplete
           multiple
           options={filteredHeroOptions}
@@ -911,7 +911,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
           getOptionLabel={(option) => option?.name || ''}
           isOptionEqualToValue={(opt, val) => opt._id === val._id}
           onChange={(e, newValue) => setCounters(newValue.map(h => h._id))}
-          renderInput={(params) => <TextField {...params} placeholder="Chọn tướng khắc chế" />}
+          renderInput={(params) => <TextField {...params} placeholder="Select counters" />}
           renderOption={(props, option) => (
             <li {...props} key={option._id}>
               <Box sx={{ display:'flex', alignItems:'center', gap:1 }}>
@@ -927,13 +927,13 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         />
         {counters.length > 0 && (
           <Box sx={{ mt: 1 }}>
-            <Chip label="Xóa tất cả" color="error" onClick={() => setCounters([])} />
+            <Chip label="Clear all" color="error" onClick={() => setCounters([])} />
           </Box>
         )}
       </Box>
 
       <Box mt={2} mb={2}>
-        <Typography variant="h6">Đối đầu tốt</Typography>
+        <Typography variant="h6">Good Against</Typography>
         <Autocomplete
           multiple
           options={filteredHeroOptions}
@@ -942,7 +942,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
           getOptionLabel={(option) => option?.name || ''}
           isOptionEqualToValue={(opt, val) => opt._id === val._id}
           onChange={(e, newValue) => setGoodAgainst(newValue.map(h => h._id))}
-          renderInput={(params) => <TextField {...params} placeholder="Chọn tướng đối đầu tốt" />}
+          renderInput={(params) => <TextField {...params} placeholder="Select good against" />}
           renderOption={(props, option) => (
             <li {...props} key={option._id}>
               <Box sx={{ display:'flex', alignItems:'center', gap:1 }}>
@@ -958,13 +958,13 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         />
         {goodAgainst.length > 0 && (
           <Box sx={{ mt: 1 }}>
-            <Chip label="Xóa tất cả" color="error" onClick={() => setGoodAgainst([])} />
+            <Chip label="Clear all" color="error" onClick={() => setGoodAgainst([])} />
           </Box>
         )}
       </Box>
 
       <TextField
-        label="Xuất thân/Lore"
+        label="Lore"
         value={lore}
         onChange={e => setLore(e.target.value)}
         fullWidth
@@ -975,7 +975,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
 
       <Box mt={2} mb={2}>
         <Box display="flex" alignItems="center" gap={1} mb={1}>
-          <Typography variant="subtitle1">Combo Kill</Typography>
+          <Typography variant="subtitle1">Combo</Typography>
           <Box sx={{ ml: 'auto' }}>
             {[1,2,3].map(b => (
               <Button key={b} size="small" variant={activeSkillBuild===b?'contained':'outlined'} onClick={()=> setActiveSkillBuild(b)} sx={{ mr: 1 }}>
@@ -986,7 +986,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         </Box>
         {(comboBuilds[Math.max(0, Math.min(comboBuilds.length - 1, activeSkillBuild - 1))]?.steps || []).map((step, idx) => (
           <Box key={idx} display="flex" alignItems="center" gap={2} mb={1}>
-            <Typography>Bước {idx + 1}:</Typography>
+            <Typography>Step {idx + 1}:</Typography>
             <Box display="flex" alignItems="center" gap={1}>
               {step.skills.map((skillIdx, sidx) => (
                 <Box key={sidx} sx={{ position: 'relative', display: 'inline-block' }}>
@@ -1027,41 +1027,41 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
               </Button>
             ))}
             <TextField
-              label="Mô tả bước"
+              label="Step description"
               value={step.description}
               onChange={e => setComboBuilds(list => list.map((b,i)=> i===(activeSkillBuild-1) ? { ...b, steps: b.steps.map((s, j) => j === idx ? { ...s, description: e.target.value } : s) } : b))}
               size="small"
               sx={{ minWidth: 200 }}
             />
-            <Button color="error" onClick={() => setComboBuilds(list => list.map((b,i)=> i===(activeSkillBuild-1) ? { ...b, steps: b.steps.filter((_, j) => j !== idx) } : b))}>Xóa</Button>
+            <Button color="error" onClick={() => setComboBuilds(list => list.map((b,i)=> i===(activeSkillBuild-1) ? { ...b, steps: b.steps.filter((_, j) => j !== idx) } : b))}>Remove</Button>
           </Box>
         ))}
-        <Button variant="outlined" onClick={() => setComboBuilds(list => list.map((b,i)=> i===(activeSkillBuild-1) ? { ...b, steps: [...b.steps, { skills: [], description: '' }] } : b))}>Thêm bước combo</Button>
+        <Button variant="outlined" onClick={() => setComboBuilds(list => list.map((b,i)=> i===(activeSkillBuild-1) ? { ...b, steps: [...b.steps, { skills: [], description: '' }] } : b))}>Add combo step</Button>
       </Box>
 
       <Box mt={2} mb={2}>
   <Typography variant="h6">{t('hero.suggestedEquipment', 'Suggested Equipment')}</Typography>
         {/* Category only (text search removed) */}
         <Box display="flex" gap={2} flexWrap="wrap" mb={1}>
-          <FormControl size="small" sx={{ minWidth: 180 }}>
-            <InputLabel id="eq-cat-label">Loại</InputLabel>
+            <FormControl size="small" sx={{ minWidth: 180 }}>
+            <InputLabel id="eq-cat-label">Category</InputLabel>
             <Select
               labelId="eq-cat-label"
-              label="Loại"
+              label="Category"
               value={eqCategory}
               onChange={e => setEqCategory(e.target.value)}
             >
               {equipmentCategories.map(cat => (
-                <MenuItem key={cat} value={cat}>{cat === 'all' ? 'Tất cả' : cat}</MenuItem>
+                <MenuItem key={cat} value={cat}>{cat === 'all' ? 'All' : cat}</MenuItem>
               ))}
             </Select>
           </FormControl>
         </Box>
         {/* Quick-pick gallery by filtered list */}
         <Box mb={2}>
-          <Typography variant="subtitle2" sx={{ mb: 1 }}>Chọn nhanh theo loại</Typography>
+          <Typography variant="subtitle2" sx={{ mb: 1 }}>Quick pick by category</Typography>
           {filteredEquipmentOptions.length === 0 ? (
-            <Typography variant="body2" color="text.secondary">Không có trang bị nào phù hợp</Typography>
+            <Typography variant="body2" color="text.secondary">No matching equipment</Typography>
           ) : (
             <Grid container spacing={1}>
               {filteredEquipmentOptions.map(eq => {
@@ -1093,7 +1093,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                         transition: 'background-color 0.2s ease',
                         '&:hover': { backgroundColor: 'action.hover' }
                       }}
-                      title={selectedInCurrentBuild ? 'Bỏ chọn khỏi build hiện tại' : 'Thêm vào build hiện tại'}
+                          title={selectedInCurrentBuild ? 'Remove from current build' : 'Add to current build'}
                    >
                       <Box sx={{ width: 36, height: 36, borderRadius: 1, overflow: 'hidden', flexShrink: 0, border: '1px solid #eee', display:'flex', alignItems:'center', justifyContent:'center' }}>
                         {eq.image ? (
@@ -1108,9 +1108,9 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                       </Box>
                       <Box sx={{ ml: 'auto', display:'flex', alignItems:'center', gap:1 }}>
                         {selectedInCurrentBuild ? (
-                          <Chip label="Bỏ" color="error" size="small" />
+                          <Chip label="Remove" color="error" size="small" />
                         ) : (
-                          <Chip label="Thêm" color="primary" size="small" />
+                          <Chip label="Add" color="primary" size="small" />
                         )}
                       </Box>
                     </Box>
@@ -1136,14 +1136,14 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
           return (
             <Box key={absIndex} display="flex" alignItems="center" gap={2} mb={1}>
               <FormControl size="small" sx={{ minWidth: 240 }}>
-                <InputLabel id={`eq-label-${absIndex}`}>Chọn trang bị</InputLabel>
+                <InputLabel id={`eq-label-${absIndex}`}>Select equipment</InputLabel>
                 <Select
                   labelId={`eq-label-${absIndex}`}
-                  label="Chọn trang bị"
+                  label="Select equipment"
                   value={it.equipmentId || ''}
                   onChange={e => setSuggestedEquipment(list => list.map((x,i) => i===absIndex ? ({ ...x, equipmentId: e.target.value, equipment: allEquipment.find(eq => eq._id === e.target.value) }) : x))}
                 >
-                  <MenuItem value=""><em>-- Chọn --</em></MenuItem>
+                  <MenuItem value=""><em>-- Select --</em></MenuItem>
                   {filteredEquipmentOptions.map(eq => (
                     <MenuItem key={eq._id} value={eq._id}>{eq.name}</MenuItem>
                   ))}
@@ -1153,7 +1153,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
               <TextField
                 size="small"
                 type="number"
-                label="Thứ tự"
+                label="Order"
                 value={it.order ?? 0}
                 onChange={e => setSuggestedEquipment(list => list.map((x,i)=> i===absIndex ? ({ ...x, order: parseInt(e.target.value)||0 }) : x))}
                 sx={{ width: 110 }}
@@ -1164,20 +1164,20 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                   <Typography variant="body2" sx={{ fontWeight:600 }}>{selected.name}</Typography>
                 </Box>
               )}
-              <Button color="error" size="small" onClick={() => setSuggestedEquipment(list => list.filter((_,i)=> i!==absIndex))}>Xóa</Button>
+              <Button color="error" size="small" onClick={() => setSuggestedEquipment(list => list.filter((_,i)=> i!==absIndex))}>Remove</Button>
               {/* Remove-from-build button removed per request */}
             </Box>
           );
         })}
-        <Button variant="outlined" size="small" onClick={() => setSuggestedEquipment(list => [...list, { equipmentId:'', note:'', order: currentBuildList.length, build: activeBuild }] )}>Thêm trang bị</Button>
+        <Button variant="outlined" size="small" onClick={() => setSuggestedEquipment(list => [...list, { equipmentId:'', note:'', order: currentBuildList.length, build: activeBuild }] )}>Add equipment</Button>
       </Box>
 
       <Box mt={2} mb={2}>
-        <Typography variant="subtitle1">Skins (Trang phục)</Typography>
+        <Typography variant="subtitle1">Skins</Typography>
         {skins.map((skin, idx) => (
           <Box key={idx} display="flex" alignItems="center" gap={2} mb={1}>
             <TextField
-              label="Tên skin"
+              label="Skin name"
               value={skin.name}
               onChange={e => setSkins(skins => skins.map((s, i) => i === idx ? { ...s, name: e.target.value } : s))}
               size="small"
@@ -1189,7 +1189,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
               size="small"
               startIcon={<UploadIcon />}
             >
-              Upload ảnh
+              Upload image
               <input
                 type="file"
                 hidden
@@ -1208,22 +1208,22 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                 <img src={skin.image} alt={skin.name} style={{ maxHeight: 40, maxWidth: 40, objectFit: 'contain' }} />
               </Box>
             )}
-            <Button color="error" onClick={() => setSkins(skins => skins.filter((_, i) => i !== idx))}>Xóa</Button>
+            <Button color="error" onClick={() => setSkins(skins => skins.filter((_, i) => i !== idx))}>Remove</Button>
           </Box>
         ))}
-        <Button variant="outlined" onClick={() => setSkins([...skins, { name: '', image: '' }])}>Thêm skin</Button>
+        <Button variant="outlined" onClick={() => setSkins([...skins, { name: '', image: '' }])}>Add skin</Button>
       </Box>
 
   {/* Gợi ý Arcana và Gợi ý Trang Bị sections removed as requested */}
 
       <Box mt={4} mb={2}>
-        <Typography variant="h6">Bảng Arcana</Typography>
+        <Typography variant="h6">Arcana Boards</Typography>
         {arcanaBuilds.map((build, bIdx) => (
           <Box key={bIdx} sx={{ border: '1px solid #ddd', borderRadius: 2, p:2, mb:2 }}>
             <Box display="flex" gap={2} flexWrap="wrap" mb={1}>
-              <TextField label="Tên bảng" size="small" value={build.name} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx?{...b,name:e.target.value}:b))} sx={{ minWidth:200 }} />
-              <TextField label="Mô tả" size="small" value={build.description} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx?{...b,description:e.target.value}:b))} fullWidth multiline minRows={2} />
-              <Button color="error" size="small" onClick={() => setArcanaBuilds(list => list.filter((_,i)=> i!==bIdx))}>Xóa bảng</Button>
+              <TextField label="Board name" size="small" value={build.name} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx?{...b,name:e.target.value}:b))} sx={{ minWidth:200 }} />
+              <TextField label="Description" size="small" value={build.description} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx?{...b,description:e.target.value}:b))} fullWidth multiline minRows={2} />
+              <Button color="error" size="small" onClick={() => setArcanaBuilds(list => list.filter((_,i)=> i!==bIdx))}>Remove board</Button>
             </Box>
             {build.items.map((it, iIdx) => {
               // Resolve arcana object for preview (prefer inline arcana, then list)
@@ -1236,10 +1236,10 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                 <Box key={iIdx} display="flex" gap={2} alignItems="center" mb={1}>
                   <FormControl size="small" sx={{ minWidth:120 }}>
                     <Select value={it.color || (arcanaObj && arcanaObj.color) || ''} onChange={e => setArcanaBuilds(list => list.map((b,i)=> i===bIdx ? { ...b, items: b.items.map((x,j)=> j===iIdx ? { ...x, color:e.target.value, arcanaId:'', arcana: undefined } : x) } : b))} displayEmpty>
-                      <MenuItem value=""><em>Chọn màu</em></MenuItem>
-                      <MenuItem value="red">Đỏ</MenuItem>
-                      <MenuItem value="green">Lục</MenuItem>
-                      <MenuItem value="blue">Xanh</MenuItem>
+                      <MenuItem value=""><em>Select color</em></MenuItem>
+                      <MenuItem value="red">Red</MenuItem>
+                      <MenuItem value="green">Green</MenuItem>
+                      <MenuItem value="blue">Blue</MenuItem>
                     </Select>
                   </FormControl>
                   <FormControl size="small" sx={{ minWidth:160 }}>
@@ -1257,7 +1257,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                       displayEmpty
                       disabled={!it.color && !(arcanaObj && arcanaObj.color)}
                     >
-                      <MenuItem value=""><em>Chọn Arcana</em></MenuItem>
+                      <MenuItem value=""><em>Select Arcana</em></MenuItem>
                       {allArcana.filter(a => a.color === (it.color || (arcanaObj && arcanaObj.color))).map(a => (
                         <MenuItem key={a._id} value={a._id}>{a.name}</MenuItem>
                       ))}
@@ -1278,10 +1278,10 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                 </Box>
               );
             })}
-            <Button size="small" variant="outlined" onClick={()=> setArcanaBuilds(list => list.map((b,i)=> i===bIdx?{...b, items:[...b.items,{ arcanaId:'', count:1 }]}:b))}>Thêm Arcana</Button>
+                  <Button size="small" variant="outlined" onClick={()=> setArcanaBuilds(list => list.map((b,i)=> i===bIdx?{...b, items:[...b.items,{ arcanaId:'', count:1 }]}:b))}>Add Arcana</Button>
           </Box>
         ))}
-        <Button variant="contained" size="small" onClick={() => setArcanaBuilds(list => [...list, { name:'', description:'', items:[] }])}>Thêm bảng Arcana</Button>
+        <Button variant="contained" size="small" onClick={() => setArcanaBuilds(list => [...list, { name:'', description:'', items:[] }])}>Add Arcana Board</Button>
       </Box>
 
       <Button
@@ -1291,7 +1291,7 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
         sx={{ mt: 2 }}
         disabled={loading}
       >
-  {loading ? <CircularProgress size={24} /> : (editingHeroData ? 'Cập nhật tướng' : 'Thêm tướng')}
+  {loading ? <CircularProgress size={24} /> : (editingHeroData ? 'Update Hero' : 'Add Hero')}
       </Button>
     </Box>
   );

@@ -24,9 +24,9 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
   const API_URL = process.env.REACT_APP_API_URL;
 
   const colors = [
-    { value: 'red', label: t('arcana.colors.red', 'Đỏ') },
-    { value: 'blue', label: t('arcana.colors.blue', 'Xanh dương') },
-    { value: 'green', label: t('arcana.colors.green', 'Xanh lá') }
+    { value: 'red', label: t('arcana.colors.red', 'Red') },
+    { value: 'blue', label: t('arcana.colors.blue', 'Blue') },
+    { value: 'green', label: t('arcana.colors.green', 'Green') }
   ];
 
   const handleInputChange = (field, value) => {
@@ -68,18 +68,18 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
       }
       if (res.status === 503 || /Cloudinary/i.test(body?.error || body?.message || '') || body?.code === 'CLOUDINARY_ERROR') {
         const res2 = await fetchWithAuth(`${API_URL}/api/upload/local`, { method: 'POST', headers: {}, body: formDataUpload });
-        if (!res2.ok) { const err2 = await res2.json().catch(() => ({})); throw new Error(err2.error || err2.message || `Upload ảnh thất bại (HTTP ${res2.status})`); }
+        if (!res2.ok) { const err2 = await res2.json().catch(() => ({})); throw new Error(err2.error || err2.message || `Image upload failed (HTTP ${res2.status})`); }
         const data2 = await res2.json(); return data2.imageUrl;
       }
       lastErr = body; break;
     }
-    throw new Error(lastErr?.error || lastErr?.message || 'Upload ảnh thất bại. Vui lòng thử lại.');
+    throw new Error(lastErr?.error || lastErr?.message || 'Image upload failed. Please try again.');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.description) {
-      setMessage({ type: 'error', text: 'Vui lòng điền tên và mô tả' });
+      setMessage({ type: 'error', text: 'Please provide name and description' });
       return;
     }
 
@@ -108,7 +108,7 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
       });
 
       if (res.ok) {
-        setMessage({ type: 'success', text: isEditing ? 'Cập nhật arcana thành công!' : 'Thêm arcana thành công!' });
+        setMessage({ type: 'success', text: isEditing ? 'Arcana updated successfully!' : 'Arcana added successfully!' });
         // Always reset the form after adding/updating
         setFormData({
           name: '',
@@ -122,13 +122,13 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
       } else {
         const error = await res.json().catch(()=>({}));
         console.warn('[Arcana][SUBMIT][ERROR]', error);
-        let msg = error.message || 'Có lỗi xảy ra khi thêm arcana';
-        if (error.duplicate) msg = 'Tên arcana đã tồn tại';
+          let msg = error.message || 'Error adding arcana';
+          if (error.duplicate) msg = 'Arcana name already exists';
         if (Array.isArray(error.details)) msg += ' - ' + error.details.join('; ');
         setMessage({ type: 'error', text: msg });
       }
     } catch (err) {
-      setMessage({ type: 'error', text: err.message || 'Có lỗi xảy ra khi thêm arcana' });
+        setMessage({ type: 'error', text: err.message || 'Error adding arcana' });
     } finally {
       setLoading(false);
     }
@@ -151,7 +151,7 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 800, mx: 'auto', mt: 4 }}>
-      <Typography variant="h5" mb={2}>Thêm Arcana mới</Typography>
+      <Typography variant="h5" mb={2}>Add New Arcana</Typography>
 
       {message.text && (
         <Alert severity={message.type} sx={{ mb: 2 }}>
@@ -162,7 +162,7 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <TextField
-            label="Tên Arcana"
+            label="Arcana name"
             value={formData.name}
             onChange={e => handleInputChange('name', e.target.value)}
             fullWidth
@@ -173,11 +173,11 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
 
         <Grid item xs={12} md={3}>
           <FormControl fullWidth margin="normal">
-            <InputLabel>Màu sắc</InputLabel>
+            <InputLabel>Color</InputLabel>
             <Select
               value={formData.color}
               onChange={e => handleInputChange('color', e.target.value)}
-              label="Màu sắc"
+              label="Color"
             >
               {colors.map((color) => (
                 <MenuItem key={color.value} value={color.value}>
@@ -190,7 +190,7 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
 
         <Grid item xs={12}>
           <TextField
-            label="Mô tả"
+            label="Description"
             value={formData.description}
             onChange={e => handleInputChange('description', e.target.value)}
             fullWidth
@@ -212,7 +212,7 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
               component="label"
               startIcon={<UploadIcon />}
             >
-              Upload ảnh
+              Upload image
               <input type="file" hidden accept="image/*,.avif" onChange={handleImageChange} />
             </Button>
             {imageFile && <Typography ml={2}>{imageFile.name}</Typography>}
@@ -236,7 +236,7 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
         sx={{ mt: 2 }}
         disabled={loading}
       >
-        {loading ? <CircularProgress size={24} /> : 'Thêm Arcana'}
+        {loading ? <CircularProgress size={24} /> : (editingArcana ? 'Update Arcana' : 'Add Arcana')}
       </Button>
     </Box>
   );

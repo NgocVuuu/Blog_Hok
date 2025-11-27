@@ -15,17 +15,17 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000';
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  
+
   try {
-    const res = await fetch(`${API_URL}/api/news/slug/${slug}`, { 
+    const res = await fetch(`${API_URL}/api/news/slug/${slug}`, {
       next: { revalidate: 1800 } // Cache 30 min
     });
-    
+
     if (!res.ok) return { title: 'Article Not Found' };
-    
+
     const data = await res.json();
     const post = data.success ? data.data : data;
-    
+
     const title = `${post.title} | BlogHok`;
     const description = post.summary || post.content?.substring(0, 160) || 'Read the latest Honor of Kings news, guides, and updates on BlogHok';
     const imageUrl = post.image || `${process.env.NEXT_PUBLIC_BASE_URL || 'https://bloghok.com'}/og-default.jpg`;
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title,
       description,
-      keywords: [
+      keywords: post.keywords || [
         post.title,
         'Honor of Kings',
         'HoK news',
@@ -111,10 +111,11 @@ export default async function PostDetail({ params }: Props) {
   let prevPost: any = null;
   let nextPost: any = null;
   let error: string | null = null;
+  let categoryLists: Record<string, any[]> = {};
 
   try {
     // Fetch main post with caching
-    const res = await fetch(`${API_URL}/api/news/slug/${slug}`, { 
+    const res = await fetch(`${API_URL}/api/news/slug/${slug}`, {
       next: { revalidate: 1800 } // Cache 30 min
     });
     if (!res.ok) throw new Error('Not found');
@@ -122,37 +123,41 @@ export default async function PostDetail({ params }: Props) {
     post = data.success ? data.data : data;
 
     // Fetch all posts for related content with caching
-    const allRes = await fetch(`${API_URL}/api/news`, { 
+    const allRes = await fetch(`${API_URL}/api/news`, {
       next: { revalidate: 600 } // Cache 10 min
     });
     if (allRes.ok) {
       const response = await allRes.json();
       const allPosts = response.success ? response.data : (Array.isArray(response) ? response : []);
 
-      // Same category posts
-      sameCategoryPosts = allPosts.filter((p: any) =>
-        p._id !== post._id && p.category === post.category
-      ).slice(0, 3);
+      // Category specific lists
+      const categories = ['news', 'guides', 'esports', 'updates'];
+      // categoryLists is already defined in outer scope
 
-      // Related posts (random from other categories)
-      const otherPosts = allPosts.filter((p: any) =>
-        p._id !== post._id && p.category !== post.category
-      );
-      relatedPosts = otherPosts.sort(() => 0.5 - Math.random()).slice(0, 3);
+      categories.forEach(cat => {
+        categoryLists[cat] = allPosts
+          .filter((p: any) => p.category === cat && p._id !== post._id)
+          .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .slice(0, 8);
+      });
 
-      // Featured posts (latest 3 posts)
-      featuredPosts = allPosts
-        .filter((p: any) => p._id !== post._id)
-        .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-        .slice(0, 3);
+      // Same category posts (Related)
+      sameCategoryPosts = categoryLists[post.category] || [];
 
-      // Previous and next posts
-      const currentIndex = allPosts.findIndex((p: any) => p._id === post._id);
-      if (currentIndex > 0) {
-        prevPost = allPosts[currentIndex - 1];
-      }
-      if (currentIndex < allPosts.length - 1) {
-        nextPost = allPosts[currentIndex + 1];
+      // Calculate Previous and Next posts
+      // Sort all posts by date descending
+      const sortedPosts = allPosts.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      const currentIndex = sortedPosts.findIndex((p: any) => p._id === post._id);
+
+      if (currentIndex !== -1) {
+        // Next post (newer) is at index - 1
+        if (currentIndex > 0) {
+          nextPost = sortedPosts[currentIndex - 1];
+        }
+        // Previous post (older) is at index + 1
+        if (currentIndex < sortedPosts.length - 1) {
+          prevPost = sortedPosts[currentIndex + 1];
+        }
       }
     }
   } catch (err: any) {
@@ -228,7 +233,7 @@ export default async function PostDetail({ params }: Props) {
           })
         }}
       />
-      
+
       <NewsDetailClient
         post={post}
         sameCategoryPosts={sameCategoryPosts}
@@ -236,6 +241,7 @@ export default async function PostDetail({ params }: Props) {
         relatedPosts={relatedPosts}
         prevPost={prevPost}
         nextPost={nextPost}
+        categoryLists={categoryLists}
       />
     </>
   );

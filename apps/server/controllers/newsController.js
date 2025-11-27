@@ -52,24 +52,10 @@ exports.getAllNews = async (req, res, next) => {
         sortCriteria = { publishedAt: -1 };
     }
 
-    // Calculate pagination
-    const limitNum = Math.min(parseInt(limit), 100); // Max 100 items per page
-    const skip = (parseInt(page) - 1) * limitNum;
-
-    // Build projection for list view (exclude large content field)
-    const projection = limit && parseInt(limit) <= 10
-      ? 'title slug image category author publishedAt createdAt'
-      : 'title slug image category author publishedAt createdAt content';
-
-    // Execute queries in parallel
-    const [news, total] = await Promise.all([
-      News.find(query)
-        .select(projection)
-        .sort(sortCriteria)
         .skip(skip)
-        .limit(limitNum)
-        .lean()
-        .maxTimeMS(10000),
+      .limit(limitNum)
+      .lean()
+      .maxTimeMS(10000),
       News.countDocuments(query)
     ]);
 

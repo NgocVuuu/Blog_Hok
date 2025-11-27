@@ -73,10 +73,10 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
 
   // Categories for equipment
   const categories = [
-  { value: 'Physical', label: t('equipment.categories.physical', 'Vật lý') },
-    { value: 'Magic', label: t('equipment.categories.magic', 'Phép thuật') },
-    { value: 'Defense', label: t('equipment.categories.defense', 'Phòng thủ') },
-    { value: 'Movement', label: t('equipment.categories.movement', 'Di chuyển') },
+  { value: 'Physical', label: t('equipment.categories.physical', 'Physical') },
+    { value: 'Magic', label: t('equipment.categories.magic', 'Magic') },
+    { value: 'Defense', label: t('equipment.categories.defense', 'Defense') },
+    { value: 'Movement', label: t('equipment.categories.movement', 'Movement') },
     { value: 'Roaming', label: t('equipment.categories.roaming', 'Roaming') },
   { value: 'Jungle', label: t('equipment.categories.jungle', 'Jungle') }
   ];
@@ -247,13 +247,13 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
         await wait(backoff); continue;
       }
       if (res.status === 503 || /Cloudinary/i.test(body?.error || body?.message || '') || body?.code === 'CLOUDINARY_ERROR') {
-        const res2 = await fetchWithAuth(`${API_URL}/api/upload/local`, { method: 'POST', headers: {}, body: formDataUpload });
-        if (!res2.ok) { const err2 = await res2.json().catch(() => ({})); throw new Error(err2.error || err2.message || `Upload ảnh thất bại (HTTP ${res2.status})`); }
-        const data2 = await res2.json(); return data2.imageUrl;
+          const res2 = await fetchWithAuth(`${API_URL}/api/upload/local`, { method: 'POST', headers: {}, body: formDataUpload });
+          if (!res2.ok) { const err2 = await res2.json().catch(() => ({})); throw new Error(err2.error || err2.message || `Image upload failed (HTTP ${res2.status})`); }
+          const data2 = await res2.json(); return data2.imageUrl;
+        }
+        lastErr = body; break;
       }
-      lastErr = body; break;
-    }
-    throw new Error(lastErr?.error || lastErr?.message || 'Upload ảnh thất bại. Vui lòng thử lại.');
+      throw new Error(lastErr?.error || lastErr?.message || 'Image upload failed. Please try again.');
   };
 
   // Rich text formatting functions for attributes
@@ -302,7 +302,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.category) {
-      setMessage({ type: 'error', text: t('admin.fillRequired', 'Vui lòng điền đầy đủ thông tin bắt buộc (tên và loại trang bị)') });
+      setMessage({ type: 'error', text: t('admin.fillRequired', 'Please fill required fields (name and category)') });
       return;
     }
 
@@ -360,7 +360,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
       });
 
       if (res.ok) {
-        setMessage({ type: 'success', text: isEditing ? t('admin.updateEquipmentSuccess', 'Cập nhật trang bị thành công!') : t('admin.addEquipmentSuccess', 'Thêm trang bị thành công!') });
+        setMessage({ type: 'success', text: isEditing ? t('admin.updateEquipmentSuccess', 'Equipment updated successfully!') : t('admin.addEquipmentSuccess', 'Equipment added successfully!') });
         // Reset form
         setFormData({
           name: '',
@@ -399,10 +399,10 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
       } else {
         const error = await res.json();
         console.error('Server error response:', error);
-        setMessage({ type: 'error', text: error.message || t('admin.addEquipmentError', 'Có lỗi xảy ra khi thêm trang bị') });
+        setMessage({ type: 'error', text: error.message || t('admin.addEquipmentError', 'Error adding equipment') });
       }
     } catch (err) {
-      setMessage({ type: 'error', text: err.message || t('admin.addEquipmentError', 'Có lỗi xảy ra khi thêm trang bị') });
+      setMessage({ type: 'error', text: err.message || t('admin.addEquipmentError', 'Error adding equipment') });
     } finally {
       setLoading(false);
     }
@@ -467,7 +467,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 900, mx: 'auto', mt: 4 }}>
-  <Typography variant="h5" mb={3}>{editingEquipment ? t('admin.editEquipment', 'Sửa trang bị') : t('admin.addEquipment', 'Thêm trang bị mới')}</Typography>
+  <Typography variant="h5" mb={3}>{editingEquipment ? t('admin.editEquipment', 'Edit Equipment') : t('admin.addEquipment', 'Add Equipment')}</Typography>
 
       {message.text && (
         <Alert severity={message.type} sx={{ mb: 3 }}>
@@ -478,12 +478,12 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
       <Grid container spacing={3}>
         {/* Basic Information */}
         <Grid item xs={12}>
-          <Typography variant="h6" mb={2}>{t('admin.basicInfo', 'Thông tin cơ bản')}</Typography>
+          <Typography variant="h6" mb={2}>{t('admin.basicInfo', 'Basic Information')}</Typography>
         </Grid>
 
         <Grid item xs={12} md={6}>
           <TextField
-            label={t('equipment.name', 'Tên trang bị')}
+            label={t('equipment.name', 'Equipment name')}
             value={formData.name}
             onChange={e => handleInputChange('name', e.target.value)}
             fullWidth
@@ -494,11 +494,11 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
 
         <Grid item xs={12} md={6}>
           <FormControl fullWidth margin="normal">
-            <InputLabel>{t('equipment.category', 'Loại trang bị')}</InputLabel>
+            <InputLabel>{t('equipment.category', 'Category')}</InputLabel>
             <Select
               value={formData.category}
               onChange={e => handleInputChange('category', e.target.value)}
-              label={t('equipment.category', 'Loại trang bị')}
+              label={t('equipment.category', 'Category')}
             >
               {categories.map(cat => (
                 <MenuItem key={cat.value} value={cat.value}>
@@ -511,7 +511,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
 
         <Grid item xs={12} md={6}>
           <TextField
-            label={t('equipment.price', 'Giá (Gold)')}
+            label={t('equipment.price', 'Price (Gold)')}
             type="number"
             value={formData.price}
             onChange={e => handleInputChange('price', parseInt(e.target.value) || 0)}
@@ -528,7 +528,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
               startIcon={<UploadIcon />}
               fullWidth
             >
-              {t('admin.uploadEquipmentImage', 'Upload ảnh trang bị')}
+              {t('admin.uploadEquipmentImage', 'Upload equipment image')}
               <input
                 type="file"
                 hidden
@@ -552,7 +552,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
         <Grid item xs={12}>
           <Divider sx={{ my: 2 }} />
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-            <Typography variant="h6">{t('equipment.quickStats', 'Thông số nhanh')}</Typography>
+            <Typography variant="h6">{t('equipment.quickStats', 'Quick Stats')}</Typography>
             <Button
               variant="outlined"
               startIcon={<AddIcon />}
@@ -560,7 +560,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
               disabled={formData.quickStats.length >= 5}
               size="small"
             >
-              {t('equipment.addQuickStat', 'Thêm thông số')} ({formData.quickStats.length}/5)
+              {t('equipment.addQuickStat', 'Add stat')} ({formData.quickStats.length}/5)
             </Button>
           </Box>
         </Grid>
@@ -586,11 +586,11 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
               <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
                   <FormControl fullWidth>
-                    <InputLabel>{t('equipment.statType', 'Loại thông số')}</InputLabel>
+                    <InputLabel>{t('equipment.statType', 'Stat type')}</InputLabel>
                     <Select
                       value={stat.type}
                       onChange={e => updateQuickStat(index, 'type', e.target.value)}
-                      label={t('equipment.statType', 'Loại thông số')}
+                      label={t('equipment.statType', 'Stat type')}
                       MenuProps={{
                         disablePortal: false,
                         PaperProps: {
@@ -612,7 +612,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
                       }}
                       renderValue={(selected) => {
                         const found = quickStatsOptions.find(o => o.value === selected);
-                        return found ? found.label : (selected || t('equipment.chooseStat', 'Chọn loại'));
+                        return found ? found.label : (selected || t('equipment.chooseStat', 'Choose stat'));
                       }}
                     >
                       {quickStatsOptions.map(option => {
@@ -642,7 +642,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
 
                 <Grid item xs={12} md={3}>
                   <TextField
-                    label={t('equipment.statValue', 'Giá trị')}
+                    label={t('equipment.statValue', 'Value')}
                     value={stat.value}
                     onChange={e => updateQuickStat(index, 'value', e.target.value)}
                     fullWidth
@@ -652,7 +652,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
 
                 <Grid item xs={12} md={5}>
                   <TextField
-                    label={t('equipment.statDescription', 'Mô tả')}
+                    label={t('equipment.statDescription', 'Description')}
                     value={stat.description}
                     onChange={e => updateQuickStat(index, 'description', e.target.value)}
                     fullWidth
@@ -668,14 +668,14 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
         <Grid item xs={12}>
           <Divider sx={{ my: 2 }} />
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-            <Typography variant="h6">{t('equipment.attributes', 'Thuộc tính Active/Passive')}</Typography>
+            <Typography variant="h6">{t('equipment.attributes', 'Attributes (Active/Passive)')}</Typography>
             <Button
               variant="outlined"
               startIcon={<AddIcon />}
               onClick={addAttribute}
               size="small"
             >
-              {t('equipment.addAttribute', 'Thêm thuộc tính')}
+              {t('equipment.addAttribute', 'Add attribute')}
             </Button>
           </Box>
         </Grid>
@@ -701,11 +701,11 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
               <Grid container spacing={2}>
                 <Grid item xs={12} md={3}>
                   <FormControl fullWidth>
-                    <InputLabel>{t('equipment.attributeType', 'Loại')}</InputLabel>
+                    <InputLabel>{t('equipment.attributeType', 'Type')}</InputLabel>
                     <Select
                       value={attribute.type}
                       onChange={e => updateAttribute(index, 'type', e.target.value)}
-                      label={t('equipment.attributeType', 'Loại')}
+                      label={t('equipment.attributeType', 'Type')}
                     >
                       <MenuItem value="passive">Passive</MenuItem>
                       <MenuItem value="active">Active</MenuItem>
@@ -715,7 +715,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
 
                 <Grid item xs={12} md={9}>
                   <TextField
-                    label={t('equipment.attributeName', 'Tên thuộc tính')}
+                    label={t('equipment.attributeName', 'Attribute name')}
                     value={attribute.name}
                     onChange={e => updateAttribute(index, 'name', e.target.value)}
                     fullWidth
@@ -727,29 +727,29 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
                   {/* Formatting Toolbar for this attribute */}
                   <Box sx={{ mb: 1, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                     <Typography variant="caption" sx={{ mr: 2, alignSelf: 'center' }}>
-                      {t('equipment.formatting', 'Định dạng')}:
+                      {t('equipment.formatting', 'Formatting')}:
                     </Typography>
-                    <Tooltip title={t('editor.bold', 'Đậm')}>
+                    <Tooltip title={t('editor.bold', 'Bold')}>
                       <IconButton onClick={() => insertAttributeFormatting(index, 'bold')} size="small">
                         <FormatBoldIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title={t('editor.italic', 'Nghiêng')}>
+                    <Tooltip title={t('editor.italic', 'Italic')}>
                       <IconButton onClick={() => insertAttributeFormatting(index, 'italic')} size="small">
                         <FormatItalicIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title={t('editor.green', 'Màu xanh lá')}>
+                    <Tooltip title={t('editor.green', 'Green')}>
                       <IconButton onClick={() => insertAttributeFormatting(index, 'green')} size="small" sx={{ color: '#43a047' }}>
                         <FormatColorTextIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title={t('editor.orange', 'Màu cam')}>
+                    <Tooltip title={t('editor.orange', 'Orange')}>
                       <IconButton onClick={() => insertAttributeFormatting(index, 'orange')} size="small" sx={{ color: '#ff7a00' }}>
                         <FormatColorTextIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title={t('editor.purple', 'Màu tím')}>
+                    <Tooltip title={t('editor.purple', 'Purple')}>
                       <IconButton onClick={() => insertAttributeFormatting(index, 'purple')} size="small" sx={{ color: '#7b2ff2' }}>
                         <FormatColorTextIcon />
                       </IconButton>
@@ -758,14 +758,14 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
 
                   <TextField
                     id={`attributeDescription-${index}`}
-                    label={t('equipment.attributeDescription', 'Mô tả thuộc tính')}
+                    label={t('equipment.attributeDescription', 'Attribute description')}
                     value={attribute.description}
                     onChange={e => updateAttribute(index, 'description', e.target.value)}
                     fullWidth
                     multiline
                     rows={4}
                     placeholder="VD: Khi tấn công, có 25% cơ hội gây thêm 200 sát thương phép"
-                    helperText={t('equipment.attributeHelp', 'Sử dụng toolbar để định dạng text. Hỗ trợ: **đậm**, *nghiêng*, màu sắc')}
+                    helperText={t('equipment.attributeHelp', 'Use toolbar to format text. Supported: **bold**, *italic*, colors')}
                   />
                 </Grid>
               </Grid>
@@ -808,8 +808,8 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
               startIcon={loading && <CircularProgress size={20} />}
             >
               {loading
-                ? (editingEquipment ? t('admin.saving', 'Đang lưu...') : t('admin.adding', 'Đang thêm...'))
-                : (editingEquipment ? t('admin.updateEquipment', 'Cập nhật trang bị') : t('admin.addEquipment', 'Thêm trang bị'))}
+                ? (editingEquipment ? t('admin.saving', 'Saving...') : t('admin.adding', 'Adding...'))
+                : (editingEquipment ? t('admin.updateEquipment', 'Update Equipment') : t('admin.addEquipment', 'Add Equipment'))}
             </Button>
           </Box>
         </Grid>

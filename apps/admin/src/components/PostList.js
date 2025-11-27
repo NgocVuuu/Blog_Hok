@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Button, Box, Typography, Chip } from '@mui/material';
-import { Link } from 'react-router-dom';
 import { useTranslation } from '../i18nShim';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -75,8 +74,7 @@ const PostList = ({ onEdit }) => {
                     variant="outlined"
                     color="primary"
                     size="small"
-                    component={Link}
-                    to={`/edit-post/${post._id}`}
+                    onClick={() => onEdit(post)}
                   >
                     {t('common.edit', 'Sửa')}
                   </Button>
@@ -98,4 +96,4 @@ const PostList = ({ onEdit }) => {
   );
 };
 
-export default PostList; 
+export default PostList;

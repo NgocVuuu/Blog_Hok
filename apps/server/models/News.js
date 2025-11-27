@@ -34,19 +34,6 @@ const newsSchema = new mongoose.Schema({
     type: String,
   },
   category: {
-    type: String,
-    enum: ['guides', 'updates', 'events', 'esports'],
-    default: 'guides',
-  },
-  author: {
-    type: String,
-    default: 'BlogHok',
-  },
-  publishedAt: {
-    type: Date,
-    default: Date.now,
-  },
-  createdAt: {
     type: Date,
     default: Date.now,
   },

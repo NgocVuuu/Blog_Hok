@@ -28,9 +28,13 @@
     "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
     "react-toastify": "^11.0.5",
-    "swiper": "^12.0.3"
+    "remark-directive": "^4.0.0",
+    "remark-gfm": "^4.0.1",
+    "swiper": "^12.0.3",
+    "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "latest",
     "@next/bundle-analyzer": "^16.0.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
@@ -40,7 +44,6 @@
     "eslint-config-next": "16.0.1",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "@cloudflare/next-on-pages": "latest",
     "wrangler": "latest"
   }
 }

@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Alert, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 import { useTranslation } from '../i18nShim';
 import { useAuth } from '../contexts/AuthContext';
+import MarkdownEditor from './MarkdownEditor';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const AdminPostForm = () => {
+const AdminPostForm = ({ editingPost, onFormSubmit }) => {
   const { t } = useTranslation();
   const { fetchWithAuth, openLogin } = useAuth();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [summary, setSummary] = useState('');
+  const [keywords, setKeywords] = useState('');
   const [category, setCategory] = useState('guides');
   const [author, setAuthor] = useState('BlogHok');
   const [imageFile, setImageFile] = useState(null);
@@ -18,11 +21,7 @@ const AdminPostForm = () => {
   const [imagePreview, setImagePreview] = useState('');
   const [message, setMessage] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
-  const [videoUploading, setVideoUploading] = useState(false);
-  const [inlineImgSize, setInlineImgSize] = useState('medium');
-  const [inlineImgShape, setInlineImgShape] = useState('rectangle');
-  const [inlineImgUrl, setInlineImgUrl] = useState('');
-  const [inlineImgAlign, setInlineImgAlign] = useState('left');
+
 
   // Categories for dropdown
   const categories = [
@@ -31,6 +30,49 @@ const AdminPostForm = () => {
     { value: 'events', label: t('news.categories.events', 'Sự kiện') },
     { value: 'esports', label: t('news.categories.esports', 'Thể thao điện tử') }
   ];
+
+  // Populate form when editingPost changes
+  useEffect(() => {
+    if (editingPost) {
+      setTitle(editingPost.title || '');
+      setContent(editingPost.content || '');
+      setSummary(editingPost.summary || '');
+      setKeywords(editingPost.keywords || '');
+      setCategory(editingPost.category || 'guides');
+      setAuthor(editingPost.author || 'BlogHok');
+      setImageUrl(editingPost.image || '');
+      setImagePreview(editingPost.image || '');
+
+      // If content is missing (e.g. from list view), fetch full details
+      if (!editingPost.content) {
+        const fetchFullPost = async () => {
+          try {
+            const res = await fetchWithAuth(`${API_URL}/api/news/${editingPost._id}`);
+            if (res.ok) {
+              const fullPost = await res.json();
+              setContent(fullPost.content || '');
+              setSummary(fullPost.summary || '');
+              setKeywords(fullPost.keywords || '');
+            }
+          } catch (err) {
+            console.error('Error fetching full post details:', err);
+          }
+        };
+        fetchFullPost();
+      }
+    } else {
+      // Reset form
+      setTitle('');
+      setContent('');
+      setSummary('');
+      setKeywords('');
+      setCategory('guides');
+      setAuthor('BlogHok');
+      setImageFile(null);
+      setImageUrl('');
+      setImagePreview('');
+    }
+  }, [editingPost, fetchWithAuth]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -102,51 +144,6 @@ const AdminPostForm = () => {
     return data.videoUrl;
   };
 
-  const onVideoFileChange = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      setVideoUploading(true);
-      const url = await handleVideoUpload(file);
-      setContent(prev => `${prev}${prev ? '\n\n' : ''}![video](${url})`);
-      setMessage({ type: 'success', text: 'Đã tải video và chèn vào nội dung' });
-    } catch (err) {
-      setMessage({ type: 'error', text: err.message || 'Upload video thất bại' });
-    } finally {
-      setVideoUploading(false);
-      // reset input value so same file can be uploaded again if needed
-      e.target.value = '';
-    }
-  };
-
-  const appendInlineImageToContent = (url) => {
-    const meta = `img|${inlineImgSize}|${inlineImgShape}|${inlineImgAlign}`;
-    setContent(prev => `${prev}${prev ? '\n\n' : ''}![${meta}](${url})`);
-  };
-
-  const onInlineImageFileChange = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      setLoading(true);
-      const url = await handleUpload(file);
-      appendInlineImageToContent(url);
-      setMessage({ type: 'success', text: t('admin.inlineImageInserted', 'Đã chèn ảnh vào nội dung') });
-    } catch (err) {
-      setMessage({ type: 'error', text: err.message || t('common.error', 'Có lỗi xảy ra') });
-    } finally {
-      setLoading(false);
-      e.target.value = '';
-    }
-  };
-
-  const onInsertInlineFromUrl = () => {
-    if (!inlineImgUrl) return;
-    appendInlineImageToContent(inlineImgUrl.trim());
-    setInlineImgUrl('');
-    setMessage({ type: 'success', text: t('admin.inlineImageInserted', 'Đã chèn ảnh vào nội dung') });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !content) {
@@ -157,19 +154,27 @@ const AdminPostForm = () => {
     setLoading(true);
     try {
       let img = imageUrl;
-      if (imageFile && !imageUrl) {
+      if (imageFile && (!imageUrl || imageFile)) { // Upload if new file selected
         img = await handleUpload(imageFile);
         setImageUrl(img);
       }
 
-  const res = await fetchWithAuth(`${API_URL}/api/news`, {
-        method: 'POST',
+      const url = editingPost
+        ? `${API_URL}/api/news/${editingPost._id}`
+        : `${API_URL}/api/news`;
+
+      const method = editingPost ? 'PATCH' : 'POST';
+
+      const res = await fetchWithAuth(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           title,
           content,
+          summary,
+          keywords,
           category,
           author,
           image: img,
@@ -177,15 +182,29 @@ const AdminPostForm = () => {
       });
 
       if (res.ok) {
-        setMessage({ type: 'success', text: t('admin.addSuccess', 'Thêm bài viết thành công!') });
-        // Reset form
-        setTitle('');
-        setContent('');
-        setCategory('guides');
-        setAuthor('BlogHok');
-        setImageFile(null);
-        setImageUrl('');
-        setImagePreview('');
+        setMessage({
+          type: 'success',
+          text: editingPost
+            ? t('admin.updateSuccess', 'Cập nhật bài viết thành công!')
+            : t('admin.addSuccess', 'Thêm bài viết thành công!')
+        });
+
+        if (!editingPost) {
+          // Reset form only if adding new
+          setTitle('');
+          setContent('');
+          setSummary('');
+          setKeywords('');
+          setCategory('guides');
+          setAuthor('BlogHok');
+          setImageFile(null);
+          setImageUrl('');
+          setImagePreview('');
+        }
+
+        if (onFormSubmit) {
+          onFormSubmit();
+        }
       } else {
         const error = await res.json();
         setMessage({ type: 'error', text: error.message || t('common.error', 'Có lỗi xảy ra') });
@@ -199,7 +218,16 @@ const AdminPostForm = () => {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 800, mx: 'auto', mt: 4 }}>
-      <Typography variant="h5" mb={2}>{t('admin.addPost', 'Thêm bài viết mới')}</Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h5">
+          {editingPost ? t('admin.editPost', 'Sửa bài viết') : t('admin.addPost', 'Thêm bài viết mới')}
+        </Typography>
+        {editingPost && (
+          <Button variant="outlined" size="small" onClick={onFormSubmit}>
+            {t('common.cancel', 'Hủy')}
+          </Button>
+        )}
+      </Box>
 
       {message.text && (
         <Alert severity={message.type} sx={{ mb: 2 }}>
@@ -240,16 +268,32 @@ const AdminPostForm = () => {
         </Select>
       </FormControl>
 
-      <TextField
-        label={t('news.content', 'Nội dung')}
+      <Typography variant="subtitle1" fontWeight={600} mt={2} mb={1}>{t('news.content', 'Nội dung')}</Typography>
+      <MarkdownEditor
         value={content}
-        onChange={e => setContent(e.target.value)}
+        onChange={setContent}
+        onImageUpload={handleUpload}
+        onVideoUpload={handleVideoUpload}
+      />
+
+      <TextField
+        label={t('news.summary', 'Mô tả ngắn (SEO)')}
+        value={summary}
+        onChange={e => setSummary(e.target.value)}
         fullWidth
-        required
         multiline
-        rows={10}
+        rows={3}
         margin="normal"
-        helperText={t('admin.markdownHelp', 'Hỗ trợ Markdown: **bold**, *italic*, [link](url), ![image](url). Khi chèn ảnh bằng nút bên dưới, có thể chọn kích thước (nhỏ/vừa/lớn) và dạng (vuông/chữ nhật).')}
+        helperText={t('admin.summaryHelp', 'Mô tả ngắn cho SEO (150-160 ký tự)')}
+      />
+
+      <TextField
+        label={t('news.keywords', 'Từ khóa (SEO)')}
+        value={keywords}
+        onChange={e => setKeywords(e.target.value)}
+        fullWidth
+        margin="normal"
+        helperText={t('admin.keywordsHelp', 'Các từ khóa cách nhau bởi dấu phẩy')}
       />
 
       <Box mt={2} mb={2}>
@@ -258,20 +302,10 @@ const AdminPostForm = () => {
           component="label"
           startIcon={<UploadIcon />}
         >
-          {t('admin.uploadImage', 'Upload ảnh')}
+          {t('admin.uploadImage', 'Upload ảnh bìa')}
           <input type="file" hidden accept="image/*,.avif" onChange={handleImageChange} />
         </Button>
-        <Button
-          sx={{ ml: 2 }}
-          variant="outlined"
-          component="label"
-          disabled={videoUploading}
-          startIcon={<UploadIcon />}
-        >
-          {videoUploading ? t('admin.uploadingVideo', 'Đang upload video...') : t('admin.uploadVideo', 'Upload video')}
-          <input type="file" hidden accept="video/*" onChange={onVideoFileChange} />
-        </Button>
-        {imageFile && <Typography ml={2}>{imageFile.name}</Typography>}
+        {imageFile && <Typography ml={2} component="span">{imageFile.name}</Typography>}
         {(imagePreview || imageUrl) && (
           <Box mt={1}>
             <img
@@ -283,47 +317,6 @@ const AdminPostForm = () => {
         )}
       </Box>
 
-      {/* Inline image insert controls */}
-      <Box mt={3} p={2} sx={{ border: '1px dashed #ddd', borderRadius: 2 }}>
-        <Typography variant="subtitle1" fontWeight={600} mb={1}>{t('admin.insertInlineImage', 'Chèn ảnh vào nội dung')}</Typography>
-        <Box display="flex" gap={2} flexWrap="wrap">
-          <FormControl size="small" sx={{ minWidth: 160 }}>
-            <InputLabel id="inline-size">{t('admin.imageSize', 'Kích cỡ ảnh')}</InputLabel>
-            <Select labelId="inline-size" value={inlineImgSize} label={t('admin.imageSize', 'Kích cỡ ảnh')} onChange={(e) => setInlineImgSize(e.target.value)}>
-              <MenuItem value="small">{t('admin.size.small', 'Nhỏ')}</MenuItem>
-              <MenuItem value="medium">{t('admin.size.medium', 'Vừa')}</MenuItem>
-              <MenuItem value="large">{t('admin.size.large', 'Lớn')}</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl size="small" sx={{ minWidth: 180 }}>
-            <InputLabel id="inline-shape">{t('admin.imageShape', 'Dạng ảnh')}</InputLabel>
-            <Select labelId="inline-shape" value={inlineImgShape} label={t('admin.imageShape', 'Dạng ảnh')} onChange={(e) => setInlineImgShape(e.target.value)}>
-              <MenuItem value="square">{t('admin.shape.square', 'Vuông')}</MenuItem>
-              <MenuItem value="rectangle">{t('admin.shape.rectangle', 'Chữ nhật')}</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl size="small" sx={{ minWidth: 180 }}>
-            <InputLabel id="inline-align">{t('admin.imageAlign', 'Căn ảnh')}</InputLabel>
-            <Select labelId="inline-align" value={inlineImgAlign} label={t('admin.imageAlign', 'Căn ảnh')} onChange={(e) => setInlineImgAlign(e.target.value)}>
-              <MenuItem value="left">{t('admin.align.left', 'Căn trái')}</MenuItem>
-              <MenuItem value="center">{t('admin.align.center', 'Căn giữa')}</MenuItem>
-              <MenuItem value="right">{t('admin.align.right', 'Căn phải')}</MenuItem>
-            </Select>
-          </FormControl>
-          <Button variant="outlined" component="label" startIcon={<UploadIcon />}>
-            {t('admin.uploadAndInsert', 'Upload & chèn ảnh')}
-            <input type="file" hidden accept="image/*,.avif" onChange={onInlineImageFileChange} />
-          </Button>
-        </Box>
-        <Box display="flex" gap={1.5} mt={2} alignItems="center">
-          <TextField size="small" fullWidth label={t('admin.orPasteImageUrl', 'Hoặc dán URL ảnh')} value={inlineImgUrl} onChange={(e) => setInlineImgUrl(e.target.value)} />
-          <Button variant="contained" onClick={onInsertInlineFromUrl}>{t('common.insert', 'Chèn')}</Button>
-        </Box>
-        <Typography variant="caption" color="text.secondary" display="block" mt={1}>
-          {t('admin.inlineImageHint', 'Mẹo: Cú pháp sẽ là ![img|kích-cỡ|dạng|căn](url), ví dụ: ![img|small|square|center](https://...)')}
-        </Typography>
-      </Box>
-
       <Button
         type="submit"
         variant="contained"
@@ -331,10 +324,10 @@ const AdminPostForm = () => {
         sx={{ mt: 2 }}
         disabled={loading}
       >
-        {loading ? <CircularProgress size={24} /> : t('admin.addPost', 'Thêm bài viết')}
+        {loading ? <CircularProgress size={24} /> : (editingPost ? t('common.update', 'Cập nhật') : t('admin.addPost', 'Thêm bài viết'))}
       </Button>
     </Box>
   );
 };
 
-export default AdminPostForm; 
+export default AdminPostForm;
