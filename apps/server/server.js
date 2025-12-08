@@ -84,10 +84,24 @@ try {
   app.use('/api/upload', require('./routes/upload'));
   app.use('/api/heroes', heroesRouter);
   app.use('/api/contact', require('./routes/contact'));
+  app.use('/api/hok-sync', require('./routes/hokSync'));
 } catch (routeErr) {
   console.error('Synchronous route setup error:', routeErr);
   logger.error('Route setup error', { message: routeErr.message, stack: routeErr.stack });
   process.exit(1);
+}
+
+// Initialize and start HoK Meta Sync Scheduler
+try {
+  const { getScheduler } = require('./services/hokMetaScheduler');
+  const scheduler = getScheduler(logger);
+
+  // Auto-start scheduler on server boot
+  scheduler.start();
+  logger.info('[HoK Scheduler] Automated sync scheduler initialized');
+} catch (schedulerErr) {
+  logger.warn('[HoK Scheduler] Failed to initialize scheduler:', schedulerErr.message);
+  // Non-fatal error - server can still run without scheduler
 }
 
 // Serve uploaded images
@@ -222,7 +236,7 @@ app.get('/sitemap.xml', async (req, res, next) => {
 // Compatibility: also serve sitemap under /api path
 app.get('/api/sitemap.xml', async (req, res, next) => {
   try {
-  const baseUrl = getCanonicalBaseUrl(req);
+    const baseUrl = getCanonicalBaseUrl(req);
     const Hero = require('./models/Hero');
     const News = require('./models/News');
     const [heroes, news] = await Promise.all([
