@@ -1,0 +1,266 @@
+{
+  "counter": "Dilawan oleh",
+  "combo_kill": "Combo Kill",
+  "skill": "Skill",
+  "meta_tier": "Meta Tier",
+  "win_rate": "Tingkat Kemenangan",
+  "pick_rate": "Tingkat Pilihan",
+  "ban_rate": "Tingkat Larangan",
+  "back_to_list": "← Kembali ke daftar",
+  "ally": "Sekutu",
+  "allies": "Sekutu",
+  "skin": "Skin",
+  "lore": "Asal-usul",
+  "role": "Peran",
+  "lane": "Jalur",
+  "skills": "Skill",
+  "description": "Deskripsi",
+  "no_data": "Tidak ada data",
+  "nav": {
+    "home": "Beranda",
+    "champions": "Champion",
+    "items": "Item",
+    "arcana": "Arcana",
+    "meta": "Meta",
+    "news": "Berita"
+  },
+  "home": {
+    "welcome": {
+      "title": "Selamat Datang di BlogHok!",
+      "subtitle": "Sumber terbaru untuk informasi hero, equipment, arcana, dan meta game."
+    },
+    "featured": {
+      "title": "Artikel Unggulan"
+    },
+    "latest": {
+      "title": "Artikel Terbaru"
+    },
+    "champions": {
+      "title": "Champion Unggulan"
+    },
+    "items": {
+      "title": "Item Populer"
+    }
+    ,
+    "searchPlaceholder": "Cari hero, equipment, berita... (/ untuk fokus)",
+    "surprise": "Surprise me",
+    "trending": "Hero Tren",
+    "updated": "Diperbarui",
+    "patchHighlights": "Sorotan Patch",
+    "viewFull": "Lihat lengkap",
+    "latestNews": "Berita terbaru",
+    "topCounters": "Counter teratas minggu ini"
+  },
+  "footer": {
+    "about": {
+      "title": "Tentang BlogHok",
+      "description": "BlogHok adalah sumber informasi terpercaya untuk panduan, pembaruan, dan informasi meta terbaru Honor of Kings."
+    },
+    "links": {
+      "title": "Tautan Cepat"
+    },
+    "contact": {
+      "title": "Kontak",
+  "email": "paulvu@swqpz.onmicrosoft.com"
+    },
+    "copyright": "Hak Cipta Dilindungi",
+    "privacy": "Kebijakan Privasi",
+    "terms": "Syarat Penggunaan"
+  },
+  "common": {
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan",
+    "notFound": "Halaman tidak ditemukan",
+    "backToHome": "Kembali ke Beranda",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "cancel": "Batal",
+    "save": "Simpan",
+    "update": "Perbarui",
+    "create": "Buat",
+    "add": "Tambah",
+    "upload": "Upload",
+    "actions": "Aksi",
+    "name": "Nama",
+    "image": "Gambar",
+    "tier": "Tingkat",
+    "sort": "Urutkan",
+    "price": "Harga",
+    "logout": "Keluar"
+  },
+  "time": {
+    "just_now": "baru saja",
+    "minutes_ago": "menit yang lalu",
+    "hours_ago": "jam yang lalu",
+    "days_ago": "hari yang lalu"
+  },
+  "heroes": {
+    "title": "Daftar Hero",
+    "name": "Nama",
+    "roles": "Peran",
+    "lanes": "Jalur",
+    "metaTier": "Tier Meta",
+    "winRate": "Tingkat Kemenangan",
+    "pickRate": "Tingkat Pemilihan",
+    "banRate": "Tingkat Larangan",
+    "skills": "Kemampuan",
+    "allies": "Sekutu",
+    "counters": "Dilawan oleh",
+    "lore": "Kisah",
+    "profile": "Profil",
+    "combo": "Combo",
+  "skins": "Kulit",
+    "goodAgainst": "Unggul melawan",
+    "sameRole": "Hero dengan peran sama",
+    "topWinRate": "Hero dengan win rate tertinggi"
+  },
+  "items": {
+    "title": "Item",
+    "search": "Cari item...",
+    "filter": "Filter berdasarkan kategori",
+    "noResults": "Item tidak ditemukan"
+  },
+  "arcana": {
+    "title": "Arcana",
+    "search": "Cari arcana...",
+    "filter": "Filter berdasarkan warna",
+    "noResults": "Tidak ditemukan arcana",
+    "colors": {
+      "all": "Semua warna",
+      "red": "Merah",
+      "blue": "Biru",
+      "green": "Hijau"
+    },
+    "tiers": {
+      "all": "Semua tingkat",
+      "1": "Tingkat 1",
+      "2": "Tingkat 2",
+      "3": "Tingkat 3"
+    },
+    "attributes": "Atribut",
+    "effects": "Efek",
+    "recommendedFor": "Direkomendasikan untuk"
+  },
+  "newsGeneral": {
+    "title": "Judul",
+    "pageTitle": "Berita & Pembaruan",
+    "latestNews": "Berita Terbaru",
+    "readMore": "Baca Selengkapnya",
+    "noNews": "Tidak ada berita",
+    "search": "Cari artikel...",
+    "filter": "Filter berdasarkan kategori",
+    "sort": "Urut berdasarkan",
+    "sort.latest": "Terbaru",
+    "sort.oldest": "Terlama",
+    "sort.title": "Judul (A-Z)",
+    "noResults": "Artikel tidak ditemukan",
+    "categories": {
+      "all": "Semua kategori",
+      "guides": "Panduan",
+      "updates": "Pembaruan",
+      "events": "Acara",
+      "esports": "Esports"
+    },
+    "author": "Penulis",
+    "publishDate": "Diterbitkan pada",
+    "category": "Kategori",
+    "content": "Konten"
+  },
+  "lanes": {
+    "Farm Lane": "Jalur Bawah",
+    "Jungle": "Hutan",
+    "Mid Lane": "Jalur Tengah",
+  "Clash Lane": "Jalur Dark Slayer",
+    "Abyssal Dragon Lane": "Jalur Naga",
+    "Dark Slayer Lane": "Jalur Dark Slayer"
+  },
+  "roles": {
+    "Marksman": "Penembak Jitu",
+    "Mage": "Penyihir",
+    "Tank": "Tank",
+    "Support": "Pendukung",
+    "Assassin": "Pembunuh",
+    "Fighter": "Petarung"
+  },
+  "hero": {
+    "skills": "Skill",
+    "skins": "Skin",
+  "origin": "Asal-usul",
+  "suggestedEquipment": "Peralatan Rekomendasi",
+  "equipmentSet": "Build {{number}}"
+  },
+  "news": {
+  "title": "Berita",
+  "latestNews": "Berita Terbaru",
+  "latest": "Berita Terbaru",
+    "author": "Penulis",
+    "publishDate": "Tanggal Terbit",
+    "content": "Konten",
+    "category": "Kategori",
+    "relatedPosts": "Artikel Terkait",
+    "sameCategoryPosts": "Kategori Sama",
+    "featuredPosts": "Artikel Unggulan",
+    "prevPost": "Sebelumnya",
+    "nextPost": "Selanjutnya",
+    "categories": {
+      "general": "Umum",
+      "update": "Pembaruan",
+      "guide": "Panduan",
+      "event": "Acara",
+      "patch": "Patch"
+    }
+  },
+  "equipment": {
+    "sortName": "Nama (A-Z)",
+    "sortPrice": "Harga (Tinggi → Rendah)",
+    "stats": "Statistik",
+    "active": "Aktif",
+    "cooldown": "Cooldown",
+    "gold": "Emas",
+    "categories": {
+      "all": "Semua kategori",
+      "physical": "Fisik",
+      "magic": "Sihir",
+      "defense": "Pertahanan",
+      "movement": "Pergerakan",
+      "jungle": "Jungle",
+      "support": "Dukungan",
+      "boots": "Sepatu"
+    },
+    "statLabels": {
+      "magicArmor": "Perisai Sihir",
+      "physicalArmor": "Perisai Fisik",
+      "magicAttack": "Serangan Sihir",
+      "physicalAttack": "Serangan Fisik",
+      "lifeSteal": "Lifesteal",
+      "physicalLifeSteal": "Lifesteal Fisik",
+      "movementSpeed": "Kecepatan Gerak",
+      "attackSpeed": "Kecepatan Serang",
+      "cooldownReduction": "Pengurangan Cooldown",
+      "manaRegen": "Regen Mana"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Kebijakan Privasi",
+      "intro": "Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan BlogHok.",
+      "data": {"title": "Data yang Dikumpulkan", "body": "Kami dapat mengumpulkan analitik penggunaan dan info akun opsional untuk meningkatkan pengalaman."},
+      "usage": {"title": "Penggunaan Data", "body": "Data digunakan untuk optimasi performa, personalisasi, dan keamanan."},
+      "contact": {"title": "Kontak"}
+    },
+    "terms": {
+      "title": "Syarat Penggunaan",
+      "intro": "Dengan mengakses BlogHok Anda menyetujui syarat ini. Jika tidak setuju mohon berhenti menggunakan.",
+      "acceptable": {"title": "Penggunaan yang Diperbolehkan", "body": "Jangan menyalahgunakan layanan, mencoba akses tidak sah, atau menyalahgunakan batasan rate."},
+      "disclaimer": {"title": "Penafian", "body": "Konten disediakan untuk informasi tanpa jaminan."}
+    },
+    "contact": {
+      "title": "Kontak",
+      "intro": "Punya pertanyaan atau masukan? Kirim pesan atau email langsung.",
+      "thanks": "Terima kasih! Pesan Anda telah diterima.",
+      "emailAlternative": "Anda juga dapat menghubungi kami di",
+      "emailLabel": "Hubungi kami di",
+      "form": {"name": "Nama", "email": "Email", "message": "Pesan", "submit": "Kirim"}
+    }
+  }
+}
