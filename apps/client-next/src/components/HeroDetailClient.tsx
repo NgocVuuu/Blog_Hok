@@ -152,8 +152,8 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
         position: 'relative',
         minHeight: { xs: 200, md: 320 },
         background: hero.image
-          ? `linear-gradient(180deg, rgba(60,20,20,0.7) 0%, rgba(60,20,20,0.2) 60%, #fff 100%), url(${hero.image}) left center/cover no-repeat`
-          : 'linear-gradient(180deg, rgba(60,20,20,0.7) 0%, rgba(60,20,20,0.2) 60%, #fff 100%)',
+          ? `linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 70%, rgba(255,255,255,0.95) 100%), url(${hero.image}) center center/cover no-repeat`
+          : 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 70%, rgba(255,255,255,0.95) 100%)',
         borderRadius: { xs: 0, md: 6 },
         overflow: 'hidden',
         mb: { xs: 2, md: 3 },
@@ -163,6 +163,8 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
         width: { xs: '100%', md: '66%' },
         mr: { xs: 0, md: 'auto' },
         ml: 0,
+        imageRendering: '-webkit-optimize-contrast',
+        WebkitFontSmoothing: 'antialiased',
       }}>
         <Box sx={{
           position: 'absolute',
