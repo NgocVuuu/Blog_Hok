@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getAllHeroesAll } from '@/lib/heroService';
 import ComparisonPageClient from './ComparisonPageClient';
 
@@ -10,5 +11,9 @@ export default async function ComparisonPage() {
     // Fetch specific fields only to reduce payload if possible (but API returns all)
     const heroes = await getAllHeroesAll({ limit: 300 });
 
-    return <ComparisonPageClient heroes={heroes} />;
+    return (
+        <Suspense fallback={<div className="min-h-screen pt-24 text-center">Loading comparison...</div>}>
+            <ComparisonPageClient heroes={heroes} />
+        </Suspense>
+    );
 }
