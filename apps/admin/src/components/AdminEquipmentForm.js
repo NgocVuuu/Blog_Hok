@@ -36,7 +36,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
   const { fetchWithAuth, openLogin } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
-  category: 'Physical',
+    category: 'Physical',
     price: 0,
     image: '',
     description: '',
@@ -62,7 +62,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
     },
     passive: { name: '', description: '' },
     active: { name: '', description: '', cooldown: 0 },
-  quickStats: [], // Array of quick stats
+    quickStats: [], // Array of quick stats
     customAttributes: [], // Array of custom attributes for UI only
   });
   const [imageFile, setImageFile] = useState(null);
@@ -73,12 +73,12 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
 
   // Categories for equipment
   const categories = [
-  { value: 'Physical', label: t('equipment.categories.physical', 'Physical') },
+    { value: 'Physical', label: t('equipment.categories.physical', 'Physical') },
     { value: 'Magic', label: t('equipment.categories.magic', 'Magic') },
     { value: 'Defense', label: t('equipment.categories.defense', 'Defense') },
     { value: 'Movement', label: t('equipment.categories.movement', 'Movement') },
     { value: 'Roaming', label: t('equipment.categories.roaming', 'Roaming') },
-  { value: 'Jungle', label: t('equipment.categories.jungle', 'Jungle') }
+    { value: 'Jungle', label: t('equipment.categories.jungle', 'Jungle') }
   ];
 
   // Quick stats options
@@ -196,10 +196,13 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
 
   // Custom Attributes handlers
   const addAttribute = () => {
-    setFormData(prev => ({
-      ...prev,
-      customAttributes: [...prev.customAttributes, { type: 'passive', name: '', description: '' }]
-    }));
+    setFormData(prev => {
+      const hasPassive = prev.customAttributes.some(attr => attr.type === 'passive');
+      return {
+        ...prev,
+        customAttributes: [...prev.customAttributes, { type: hasPassive ? 'active' : 'passive', name: '', description: '' }]
+      };
+    });
   };
 
   const updateAttribute = (index, field, value) => {
@@ -247,13 +250,13 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
         await wait(backoff); continue;
       }
       if (res.status === 503 || /Cloudinary/i.test(body?.error || body?.message || '') || body?.code === 'CLOUDINARY_ERROR') {
-          const res2 = await fetchWithAuth(`${API_URL}/api/upload/local`, { method: 'POST', headers: {}, body: formDataUpload });
-          if (!res2.ok) { const err2 = await res2.json().catch(() => ({})); throw new Error(err2.error || err2.message || `Image upload failed (HTTP ${res2.status})`); }
-          const data2 = await res2.json(); return data2.imageUrl;
-        }
-        lastErr = body; break;
+        const res2 = await fetchWithAuth(`${API_URL}/api/upload/local`, { method: 'POST', headers: {}, body: formDataUpload });
+        if (!res2.ok) { const err2 = await res2.json().catch(() => ({})); throw new Error(err2.error || err2.message || `Image upload failed (HTTP ${res2.status})`); }
+        const data2 = await res2.json(); return data2.imageUrl;
       }
-      throw new Error(lastErr?.error || lastErr?.message || 'Image upload failed. Please try again.');
+      lastErr = body; break;
+    }
+    throw new Error(lastErr?.error || lastErr?.message || 'Image upload failed. Please try again.');
   };
 
   // Rich text formatting functions for attributes
@@ -313,7 +316,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
         imageUrl = await handleUpload(imageFile);
       }
 
-  // Transform data to match backend schema
+      // Transform data to match backend schema
       const passiveAttr = formData.customAttributes.find(attr => attr.type === 'passive');
       const activeAttr = formData.customAttributes.find(attr => attr.type === 'active');
 
@@ -335,11 +338,11 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
           : (formData.active || { name: '', description: '', cooldown: 0 }),
         quickStats: Array.isArray(formData.quickStats)
           ? formData.quickStats.map(q => ({
-              type: normalizeQuickStatTypeKey(q.type) || '',
-              label: q.label || '',
-              value: q.value || '',
-              description: q.description || ''
-            }))
+            type: normalizeQuickStatTypeKey(q.type) || '',
+            label: q.label || '',
+            value: q.value || '',
+            description: q.description || ''
+          }))
           : []
       };
 
@@ -395,7 +398,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
         });
         setImageFile(null);
         setImagePreview('');
-  if (onFormSubmit) onFormSubmit();
+        if (onFormSubmit) onFormSubmit();
       } else {
         const error = await res.json();
         console.error('Server error response:', error);
@@ -431,7 +434,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
           .map(([k, v]) => ({ type: normalizeQuickStatTypeKey(k), value: `+${v}`, description: '' }));
       }
 
-  // Do NOT parse from passive/active text to avoid mixing attribute names into quick stats
+      // Do NOT parse from passive/active text to avoid mixing attribute names into quick stats
 
       // Build customAttributes from passive/active if present
       const nextCustomAttributes = [];
@@ -453,7 +456,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
       setFormData(prev => ({
         ...prev,
         name: editingEquipment.name || '',
-  category: editingEquipment.category || 'Physical',
+        category: editingEquipment.category || 'Physical',
         price: editingEquipment.price || 0,
         image: editingEquipment.image || '',
         description: editingEquipment.description || '',
@@ -467,7 +470,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 900, mx: 'auto', mt: 4 }}>
-  <Typography variant="h5" mb={3}>{editingEquipment ? t('admin.editEquipment', 'Edit Equipment') : t('admin.addEquipment', 'Add Equipment')}</Typography>
+      <Typography variant="h5" mb={3}>{editingEquipment ? t('admin.editEquipment', 'Edit Equipment') : t('admin.addEquipment', 'Add Equipment')}</Typography>
 
       {message.text && (
         <Alert severity={message.type} sx={{ mb: 3 }}>
@@ -548,7 +551,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
           </Box>
         </Grid>
 
-  {/* Quick Stats Section */}
+        {/* Quick Stats Section */}
         <Grid item xs={12}>
           <Divider sx={{ my: 2 }} />
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>

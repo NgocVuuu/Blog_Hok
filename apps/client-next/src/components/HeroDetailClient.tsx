@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Chip, Card, CardContent, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Box, Typography, Chip, Card, CardContent, ToggleButton, ToggleButtonGroup, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import CalculatorButton from '@/components/CalculatorButton';
@@ -26,6 +27,22 @@ const formatDate = (dateString: string) => {
     return '';
   }
 };
+
+const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: 'rgba(20, 20, 25, 0.95)',
+    color: '#fff',
+    maxWidth: 320,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid rgba(201, 160, 99, 0.3)',
+    borderRadius: 8,
+    padding: '12px',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+  },
+}));
+
 interface HeroDetailClientProps {
   hero: any;
   sameRoleHeroes: any[];
@@ -549,17 +566,75 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                       pb: { xs: 0.5, md: 0 }
                     }}>
                       {group.map((eq: any, idx: number) => (
-                        <Box key={eq._id || idx} sx={{ width: { xs: 52, md: 90 }, textAlign: 'center', flex: '0 0 auto' }}>
-                          <Box sx={{ width: '100%', aspectRatio: '1/1', borderRadius: 2, overflow: 'hidden', border: '1px solid rgba(201,160,99,0.25)', mb: 0.5 }}>
-                            <img src={eq.image || null} alt={eq.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <HtmlTooltip
+                          key={eq._id || idx}
+                          title={
+                            <React.Fragment>
+                              <Typography color="#C9A063" fontWeight={700} variant="subtitle1">
+                                {eq.name}
+                              </Typography>
+                              {eq.price > 0 && (
+                                <Typography color="#FFD700" variant="caption" display="block" sx={{ mb: 1 }}>
+                                  {t('equipment.price', 'Price')}: {eq.price}
+                                </Typography>
+                              )}
+
+                              {/* Attributes */}
+                              {eq.attributes && Object.entries(eq.attributes).map(([key, value]) => {
+                                if (!value || typeof value === 'object') return null;
+                                // Basic formatting for keys (e.g., 'attackSpeed' -> 'Attack Speed')
+                                const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                                return (
+                                  <Typography key={key} variant="body2" sx={{ color: '#4caf50', fontSize: '0.8rem' }}>
+                                    +{String(value)} {label}
+                                  </Typography>
+                                );
+                              })}
+
+                              {/* Passive */}
+                              {eq.passive && (
+                                <Box mt={1}>
+                                  <Typography color="#2196f3" fontWeight={600} variant="body2">
+                                    {t('equipment.passive', 'Passive')}: {eq.passive.name}
+                                  </Typography>
+                                  <Typography
+                                    variant="caption"
+                                    color="rgba(255,255,255,0.7)"
+                                    component="div"
+                                    dangerouslySetInnerHTML={{ __html: eq.passive.description }}
+                                  />
+                                </Box>
+                              )}
+
+                              {/* Active */}
+                              {eq.active && (
+                                <Box mt={1}>
+                                  <Typography color="#f44336" fontWeight={600} variant="body2">
+                                    {t('equipment.active_skill', 'Active')}: {eq.active.name}
+                                  </Typography>
+                                  <Typography
+                                    variant="caption"
+                                    color="rgba(255,255,255,0.7)"
+                                    component="div"
+                                    dangerouslySetInnerHTML={{ __html: eq.active.description }}
+                                  />
+                                </Box>
+                              )}
+                            </React.Fragment>
+                          }
+                        >
+                          <Box sx={{ width: { xs: 52, md: 90 }, textAlign: 'center', flex: '0 0 auto', cursor: 'help' }}>
+                            <Box sx={{ width: '100%', aspectRatio: '1/1', borderRadius: 2, overflow: 'hidden', border: '1px solid rgba(201,160,99,0.25)', mb: 0.5 }}>
+                              <img src={eq.image || null} alt={eq.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            </Box>
+                            <Typography variant="body2" sx={{ fontWeight: 700, fontSize: { xs: 10, md: 13 }, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={eq.name}>
+                              {eq.name}
+                            </Typography>
+                            {typeof eq.price === 'number' && (
+                              <Typography variant="caption" color="text.secondary">{eq.price}</Typography>
+                            )}
                           </Box>
-                          <Typography variant="body2" sx={{ fontWeight: 700, fontSize: { xs: 10, md: 13 }, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={eq.name}>
-                            {eq.name}
-                          </Typography>
-                          {typeof eq.price === 'number' && (
-                            <Typography variant="caption" color="text.secondary">{eq.price}</Typography>
-                          )}
-                        </Box>
+                        </HtmlTooltip>
                       ))}
                     </Box>
                   </Box>

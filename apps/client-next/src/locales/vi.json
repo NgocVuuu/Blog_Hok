@@ -146,6 +146,10 @@
     "active": "Kích hoạt",
     "cooldown": "Hồi chiêu",
     "gold": "Vàng",
+    "price": "Giá",
+    "attributes": "Chỉ số",
+    "passive": "Nội tại",
+    "active_skill": "Kích hoạt",
     "statLabels": {
       "magicArmor": "Giáp phép",
       "physicalArmor": "Giáp vật lý",

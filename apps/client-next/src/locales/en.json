@@ -159,7 +159,11 @@
       "manaRegen": "Mana Regen",
       "maxHealth": "Max Health",
       "healthPer5s": "Health/5s"
-    }
+    },
+    "price": "Price",
+    "attributes": "Attributes",
+    "passive": "Passive",
+    "active_skill": "Active"
   },
   "arcana": {
     "title": "Arcana",

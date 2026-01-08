@@ -26,6 +26,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import axios from 'axios';
 import Image from 'next/image';
 import { getAllHeroesAll } from '@/lib/heroService';
@@ -259,6 +260,30 @@ export default function HeroesPage() {
                         sizes="(max-width: 600px) 25vw, (max-width: 900px) 33vw, 16.66vw"
                         priority={shouldPrioritize}
                       />
+                      {/* Compare Button Overlay */}
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          router.push(`/heroes/compare?a=${hero.slug}`);
+                        }}
+                        sx={{
+                          position: 'absolute',
+                          top: 4,
+                          right: 4,
+                          bgcolor: 'rgba(0,0,0,0.6)',
+                          color: '#fff',
+                          backdropFilter: 'blur(4px)',
+                          '&:hover': { bgcolor: '#C9A063' },
+                          width: 24,
+                          height: 24,
+                          zIndex: 5
+                        }}
+                        title={t('common.compare', 'Compare')}
+                      >
+                        <CompareArrowsIcon sx={{ fontSize: 16 }} />
+                      </IconButton>
                     </Box>
                   )}
                   <CardContent sx={{
@@ -347,7 +372,7 @@ export default function HeroesPage() {
             Hero List Honor Of King
           </Typography>
           {/* Controls */}
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 1.5 }}>
             <Box sx={{ position: 'relative', width: { xs: '100%', sm: 260 } }}>
               <TextField
                 size="small"
@@ -379,6 +404,7 @@ export default function HeroesPage() {
                 }}
                 sx={{ width: '100%' }}
               />
+              {/* Quick Search Results Dropdown */}
               {searchFocused && searchTerm && quickMatches.length > 0 && (
                 <Paper elevation={6} sx={{ position: 'absolute', left: 0, right: 0, mt: 0.5, zIndex: 20, maxHeight: 320, overflowY: 'auto' }}>
                   <List dense disablePadding>
@@ -416,10 +442,33 @@ export default function HeroesPage() {
                 ))}
               </Select>
             </FormControl>
-            {selectedRole !== 'all' && (
-              <Chip label={String(t(`roles.${selectedRole}`, selectedRole))} color="primary" onDelete={() => setSelectedRole('all')} />
-            )}
           </Box>
+
+          {/* Active Filters & Result Count */}
+          {(searchTerm || selectedRole !== 'all') && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3, flexWrap: 'wrap' }}>
+              <Typography variant="body2" color="text.secondary">
+                {filteredHeroes.length} {filteredHeroes.length === 1 ? 'result' : 'results'} found
+              </Typography>
+              {searchTerm && (
+                <Chip
+                  label={`${t('common.search', 'Search')}: "${searchTerm}"`}
+                  size="small"
+                  onDelete={() => setSearchTerm('')}
+                  color="secondary"
+                  variant="outlined"
+                />
+              )}
+              {selectedRole !== 'all' && (
+                <Chip
+                  label={`${t('common.role', 'Role')}: ${t(`roles.${selectedRole}`, selectedRole)}`}
+                  size="small"
+                  onDelete={() => setSelectedRole('all')}
+                  color="primary"
+                />
+              )}
+            </Box>
+          )}
 
           {heroesSection}
         </Box>

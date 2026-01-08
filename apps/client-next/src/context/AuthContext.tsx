@@ -75,8 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.error('Logout failed:', error);
         }
         setUser(null);
-        // Optional: window.location.reload() if strictly needed, but state update should be enough
-        window.location.reload();
+        // Page reload removed for better UX
     };
 
     return (

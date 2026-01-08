@@ -107,7 +107,7 @@ exports.getHeroById = async (req, res, next) => {
 
     const hero = await Hero.findById(idPart)
       .populate({ path: 'suggestedArcana.arcana', select: 'name image color tier' })
-      .populate({ path: 'suggestedEquipment.equipment', select: 'name image category tier price' })
+      .populate({ path: 'suggestedEquipment.equipment', select: 'name image category tier price attributes passive active quickStats' })
       .populate({ path: 'arcanaBuilds.items.arcana', select: 'name image color tier attributes' });
     if (!hero) return res.status(404).json({ message: 'Không tìm thấy tướng' });
     const heroObj = hero.toObject();
@@ -136,6 +136,11 @@ exports.getHeroById = async (req, res, next) => {
           category: i.equipment.category,
           tier: i.equipment.tier,
           price: i.equipment.price,
+          price: i.equipment.price,
+          attributes: i.equipment.attributes,
+          passive: i.equipment.passive,
+          active: i.equipment.active,
+          quickStats: i.equipment.quickStats,
           note: i.note || '',
           order: i.order || 0,
           build: typeof i.build === 'number' ? i.build : 1
@@ -298,7 +303,7 @@ exports.getHeroBySlug = async (req, res, next) => {
       })
       .populate({
         path: 'suggestedEquipment.equipment',
-        select: 'name image category tier price',
+        select: 'name image category tier price attributes passive active quickStats',
       })
       .populate({
         path: 'arcanaBuilds.items.arcana',
@@ -375,6 +380,11 @@ exports.getHeroBySlug = async (req, res, next) => {
           category: i.equipment.category,
           tier: i.equipment.tier,
           price: i.equipment.price,
+          price: i.equipment.price,
+          attributes: i.equipment.attributes,
+          passive: i.equipment.passive,
+          active: i.equipment.active,
+          quickStats: i.equipment.quickStats,
           note: i.note || '',
           order: i.order || 0,
           build: typeof i.build === 'number' ? i.build : 1
