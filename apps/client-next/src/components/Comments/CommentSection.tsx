@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, TextField, Button, Avatar, Paper, Divider, IconButton } from '@mui/material';
-import { MdDelete, MdThumbUp } from 'react-icons/md';
+import { Box, Typography, TextField, Button, Avatar, Paper } from '@mui/material';
 import GoogleLoginButton from '../GoogleLoginButton';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/context/AuthContext';
+import CommentItem from './CommentItem';
 
 interface Comment {
     _id: string;
@@ -15,6 +16,8 @@ interface Comment {
     };
     content: string;
     createdAt: string;
+    likes: string[];
+    parentId: string | null;
 }
 
 interface Props {
@@ -24,16 +27,12 @@ interface Props {
 
 export default function CommentSection({ targetType, targetId }: Props) {
     const { t } = useTranslation();
+    const { user, logout } = useAuth();
     const [comments, setComments] = useState<Comment[]>([]);
     const [newComment, setNewComment] = useState('');
-    const [user, setUser] = useState<any>(null);
-    const [loading, setLoading] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        // Check local storage for user (simple check, ideally use Context)
-        const stored = localStorage.getItem('user');
-        if (stored) setUser(JSON.parse(stored));
-
         fetchComments();
     }, [targetId]);
 
@@ -49,36 +48,22 @@ export default function CommentSection({ targetType, targetId }: Props) {
         }
     };
 
-    const handleSubmit = async () => {
+    const handleRootSubmit = async () => {
         if (!newComment.trim()) return;
-        setLoading(true);
+        setSubmitting(true);
 
         try {
-            // Note: We need credentials to send the cookie
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000'}/api/comments`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                    // Cookie is sent automatically if withCredentials is setup or simpler: we are relying on cookie?
-                    // Wait, fetch by default doesn't send cookies cross-origin unless defined.
-                    // But client and server usually same domain or handled via proxy?
-                    // If localhost:3000 -> localhost:7000, we need credentials: 'include'.
-                },
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     content: newComment,
                     targetType,
-                    targetId
+                    targetId,
+                    parentId: null
                 }),
-                // IMPORTANT: Send HttpOnly cookie
-                // credentials: 'include' 
-                // NOTE: Next.js App Router might server-side render, but this is 'use client'.
-                // Browser fetch needs 'credentials: include' to send cookies to a different port on localhost.
             });
-
-            // Actually, standard fetch needs this explicitly:
-            // But let's check if the previous login set it on the backend domain?
-            // If backend is on PORT 7000 and Frontend 3000, cookies might not stick if domains differ or SameSite is strict.
-            // But for now let's assume standard setup.
 
             const data = await res.json();
             if (data.success) {
@@ -90,21 +75,75 @@ export default function CommentSection({ targetType, targetId }: Props) {
         } catch (e) {
             console.error(e);
         } finally {
-            setLoading(false);
+            setSubmitting(false);
         }
     };
 
-    // Custom fetch wrapper to include credentials? 
-    // For now let's try direct. If it fails due to auth, I'll advise user or fix.
-    // Actually, I should add `credentials: 'include'` to the fetch.
+    const handleReply = async (parentId: string, content: string) => {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000'}/api/comments`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content,
+                    targetType,
+                    targetId,
+                    parentId
+                }),
+            });
 
-    const handleLogout = () => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, { method: 'POST' }).then(() => {
-            localStorage.removeItem('user');
-            setUser(null);
-            // window.location.reload(); // Optional
-        });
+            const data = await res.json();
+            if (data.success) {
+                // Add new reply to local state
+                setComments([data.data, ...comments]);
+            } else {
+                alert('Failed to reply: ' + data.message);
+            }
+        } catch (e) {
+            console.error(e);
+        }
     };
+
+    const handleLike = async (commentId: string) => {
+        if (!user) {
+            alert('Please login to like comments');
+            return;
+        }
+
+        // Optimistic update
+        setComments(prev => prev.map(c => {
+            if (c._id === commentId) {
+                const alreadyLiked = c.likes.includes(user._id);
+                return {
+                    ...c,
+                    likes: alreadyLiked
+                        ? c.likes.filter(id => id !== user._id)
+                        : [...c.likes, user._id]
+                };
+            }
+            return c;
+        }));
+
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000'}/api/comments/${commentId}/like`, {
+                method: 'PUT',
+                credentials: 'include',
+            });
+
+            const data = await res.json();
+            if (!data.success) {
+                // Revert if failed (fetch again to be safe)
+                fetchComments();
+            }
+        } catch (e) {
+            console.error(e);
+            fetchComments();
+        }
+    };
+
+    // Filter root comments
+    const rootComments = comments.filter(c => !c.parentId);
 
     return (
         <Box sx={{ mt: 6, mb: 4 }}>
@@ -112,14 +151,14 @@ export default function CommentSection({ targetType, targetId }: Props) {
                 Comments ({comments.length})
             </Typography>
 
-            {/* Input Area */}
-            <Paper sx={{ p: 3, mb: 4, bgcolor: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(201, 160, 99, 0.2)' }}>
+            {/* Input Area (New Root Comment) */}
+            <Paper sx={{ p: 3, mb: 4, bgcolor: 'background.paper', border: '1px solid', borderColor: 'primary.main', borderRadius: 2 }}>
                 {user ? (
                     <Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                             <Avatar src={user.avatar} alt={user.name} sx={{ mr: 2 }} />
-                            <Typography sx={{ fontWeight: 600, color: '#C9A063' }}>{user.name}</Typography>
-                            <Button size="small" onClick={handleLogout} sx={{ ml: 'auto', color: '#666' }}>Logout</Button>
+                            <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>{user.name}</Typography>
+                            <Button size="small" onClick={logout} sx={{ ml: 'auto', color: 'text.secondary' }}>Logout</Button>
                         </Box>
                         <TextField
                             fullWidth
@@ -130,14 +169,16 @@ export default function CommentSection({ targetType, targetId }: Props) {
                             onChange={(e) => setNewComment(e.target.value)}
                             sx={{
                                 mb: 2,
-                                '& .MuiInputBase-root': { color: '#fff' },
-                                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.2)' }
+                                '& .MuiOutlinedInput-root': {
+                                    '& fieldset': { borderColor: 'rgba(201, 160, 99, 0.5)' },
+                                    '&:hover fieldset': { borderColor: 'primary.main' },
+                                }
                             }}
                         />
                         <Button
                             variant="contained"
-                            onClick={handleSubmit} // Wrapper to include credentials
-                            disabled={loading || !newComment.trim()}
+                            onClick={handleRootSubmit}
+                            disabled={submitting || !newComment.trim()}
                             sx={{
                                 bgcolor: '#C9A063',
                                 color: '#000',
@@ -149,7 +190,7 @@ export default function CommentSection({ targetType, targetId }: Props) {
                     </Box>
                 ) : (
                     <Box sx={{ textAlign: 'center', py: 2 }}>
-                        <Typography sx={{ mb: 2, color: '#ccc' }}>Please login to comment</Typography>
+                        <Typography sx={{ mb: 2, color: 'text.secondary' }}>Please login to comment</Typography>
                         <Box sx={{ display: 'inline-block' }}>
                             <GoogleLoginButton />
                         </Box>
@@ -158,25 +199,19 @@ export default function CommentSection({ targetType, targetId }: Props) {
             </Paper>
 
             {/* List */}
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {comments.map(comment => (
-                    <Paper key={comment._id} sx={{ p: 2, bgcolor: 'transparent', borderBottom: '1px solid rgba(255,255,255,0.1)', borderRadius: 0, boxShadow: 'none' }}>
-                        <Box sx={{ display: 'flex', gap: 2 }}>
-                            <Avatar src={comment.user?.avatar} alt={comment.user?.name} />
-                            <Box sx={{ flex: 1 }}>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-                                    <Typography sx={{ fontWeight: 600, color: '#E0E0E0' }}>{comment.user?.name || 'Unknown'}</Typography>
-                                    <Typography variant="caption" sx={{ color: '#888' }}>
-                                        {new Date(comment.createdAt).toLocaleDateString()}
-                                    </Typography>
-                                </Box>
-                                <Typography sx={{ color: '#ccc', fontSize: '0.95rem' }}>{comment.content}</Typography>
-                            </Box>
-                        </Box>
-                    </Paper>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                {rootComments.map(comment => (
+                    <CommentItem
+                        key={comment._id}
+                        comment={comment}
+                        replies={comments.filter(c => c.parentId === comment._id)}
+                        allComments={comments}
+                        onReply={handleReply}
+                        onLike={handleLike}
+                    />
                 ))}
                 {comments.length === 0 && (
-                    <Typography sx={{ color: '#666', fontStyle: 'italic' }}>No comments yet.</Typography>
+                    <Typography sx={{ color: 'text.secondary', fontStyle: 'italic' }}>No comments yet.</Typography>
                 )}
             </Box>
         </Box>

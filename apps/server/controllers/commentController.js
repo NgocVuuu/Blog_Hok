@@ -73,3 +73,32 @@ exports.deleteComment = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server Error' });
     }
 };
+
+// Toggle Like
+exports.toggleLike = async (req, res) => {
+    try {
+        const comment = await Comment.findById(req.params.id);
+
+        if (!comment) {
+            return res.status(404).json({ success: false, message: 'Comment not found' });
+        }
+
+        // Check if user already liked
+        const index = comment.likes.indexOf(req.user.id);
+
+        if (index === -1) {
+            // Not liked yet -> Add like
+            comment.likes.push(req.user.id);
+        } else {
+            // Already liked -> Remove like
+            comment.likes.splice(index, 1);
+        }
+
+        await comment.save();
+
+        res.json({ success: true, data: comment.likes });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Server Error' });
+    }
+};

@@ -9,6 +9,7 @@ import createEmotionCache from '../createEmotionCache';
 import ScrollToTopHandler from './ScrollToTopHandler';
 import ScrollTopButton from './ScrollTopButton';
 import { GoogleProvider } from '../providers/GoogleProvider';
+import { AuthProvider } from '../context/AuthContext';
 
 // Create a client-side cache instance
 const clientSideEmotionCache = createEmotionCache();
@@ -20,7 +21,9 @@ export default function ClientProviders({ children }: { children: React.ReactNod
         <CssBaseline />
         <I18nProvider>
           <GoogleProvider>
-            {children}
+            <AuthProvider>
+              {children}
+            </AuthProvider>
             <ScrollToTopHandler />
             <ScrollTopButton />
           </GoogleProvider>

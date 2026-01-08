@@ -3,9 +3,10 @@
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { useState } from 'react';
 import { Avatar, Box, Button, Menu, MenuItem, Typography } from '@mui/material';
+import { useAuth } from '../context/AuthContext';
 
 export default function GoogleLoginButton() {
-    const [user, setUser] = useState<any>(null);
+    const { user, login, logout } = useAuth();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleSuccess = async (response: CredentialResponse) => {
@@ -17,13 +18,14 @@ export default function GoogleLoginButton() {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ idToken: response.credential }),
+                    credentials: 'include'
                 });
 
                 const data = await res.json();
                 if (data.success) {
-                    setUser(data.user);
-                    // Reload or notify context
-                    window.location.reload();
+                    // Update context directly
+                    login(data.user);
+                    // No need to reload or set localStorage manually
                 } else {
                     console.error('Login failed:', data.message);
                 }
@@ -34,16 +36,8 @@ export default function GoogleLoginButton() {
     };
 
     const handleLogout = async () => {
-        try {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000'}/api/auth/logout`, {
-                method: 'POST',
-            });
-            setUser(null);
-            setAnchorEl(null);
-            window.location.reload();
-        } catch (error) {
-            console.error('Logout error:', error);
-        }
+        await logout();
+        setAnchorEl(null);
     };
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -53,9 +47,6 @@ export default function GoogleLoginButton() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-    // Check initial user state (useEffect to fetch /api/auth/profile)
-    // For simplicity, assumed handled by global context later. Use local state for now.
 
     if (user) {
         return (
