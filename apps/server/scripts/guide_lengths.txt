@@ -1,0 +1,13 @@
+Found 9 generated guides.
+
+| Title | Words | Characters |
+| :--- | :---: | :---: |
+| How to Counter Sima Yi: Silencing the... | 423 | 2579 |
+| How to Counter Ying: Stop the Spear D... | 361 | 2181 |
+| How to Counter Zilong (Zhao Yun): Dra... | 444 | 2639 |
+| How to Counter Ukyo Tachibana: Beatin... | 560 | 3337 |
+| How to Counter Prince of Lanling (Fey... | 607 | 3559 |
+| How to Counter Cirrus (Yun Zhong Jun)... | 607 | 3704 |
+| How to Counter Shouyue (Bai Li): Deal... | 720 | 4301 |
+| How to Counter Wukong (Monkey King): ... | 832 | 4988 |
+| How to Counter Lam (Shark): The Ultim... | 1013 | 6127 |

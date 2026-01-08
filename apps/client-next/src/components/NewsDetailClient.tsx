@@ -17,6 +17,7 @@ import remarkGfm from 'remark-gfm';
 import remarkDirective from 'remark-directive';
 import { visit } from 'unist-util-visit';
 import LazyImage from '@/components/LazyImage';
+import CommentSection from '@/components/Comments/CommentSection';
 import { useTranslation } from 'react-i18next';
 import { FaFacebook, FaTwitter } from 'react-icons/fa';
 
@@ -539,6 +540,9 @@ export default function NewsDetailClient({
                 </Box>
               );
             })}
+            {/* Comments */}
+            <Divider sx={{ my: 4 }} />
+            <CommentSection targetType="News" targetId={post.slug || post._id} />
           </Box>
         </Grid>
       </Grid>

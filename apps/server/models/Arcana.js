@@ -15,12 +15,12 @@ const arcanaSchema = new mongoose.Schema({
     type: Number,
     required: false, // made optional (deprecated)
     min: 1,
-    max: 3,
+    max: 5,
   },
   image: {
-  type: String,
-  required: false,
-  default: '/images/arcana-placeholder.png'
+    type: String,
+    required: false,
+    default: '/images/arcana-placeholder.png'
   },
   description: {
     type: String,

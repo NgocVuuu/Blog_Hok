@@ -8,11 +8,21 @@ exports.getAllNews = async (req, res, next) => {
       page = 1,
       category,
       search,
-      author
+      author,
+      status
     } = req.query;
 
     // Build query
     let query = {};
+
+    // Filter by status (default to published if not specified, unless status='all')
+    if (status) {
+      if (status !== 'all') {
+        query.status = status;
+      }
+    } else {
+      query.status = 'published';
+    }
 
     // Add category filter if provided
     if (category && category !== 'all') {

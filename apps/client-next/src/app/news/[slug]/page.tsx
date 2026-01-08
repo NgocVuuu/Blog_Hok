@@ -179,12 +179,13 @@ export default async function PostDetail({ params }: Props) {
             "@type": "NewsArticle",
             "headline": post.title,
             "description": post.summary || post.content?.substring(0, 160),
-            "image": post.image,
+            "image": post.image?.startsWith('http') ? post.image : `${process.env.NEXT_PUBLIC_BASE_URL || 'https://bloghok.com'}${post.image}`,
             "datePublished": post.publishedAt || post.createdAt,
             "dateModified": post.updatedAt || post.createdAt,
             "author": {
               "@type": "Person",
-              "name": post.author || "BlogHok"
+              "name": post.author || "BlogHok",
+              "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://bloghok.com'
             },
             "publisher": {
               "@type": "Organization",

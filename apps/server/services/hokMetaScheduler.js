@@ -38,7 +38,7 @@ class HoKMetaSyncScheduler {
 
         // Main cron job: Every Friday at 6:00 AM
         const mainJob = cron.schedule('0 6 * * 5', async () => {
-            this.logger.info('[HoK Scheduler] ⏰ Scheduled sync triggered!');
+            this.logger.info('[HoK Scheduler] ⏰ Weekly Sync triggered (Stats + Builds)!');
             await this.runSync();
         }, {
             scheduled: true,
@@ -99,30 +99,75 @@ class HoKMetaSyncScheduler {
             this.logger.info('[HoK Scheduler] 🚀 Starting HoK meta sync process...');
             this.logger.info('[HoK Scheduler] ========================================');
 
-            const result = await fetchAndSync({ logger: this.logger });
+            // --- STEP 1: Stats & Build Sync (Weekly) ---
+            const result = await fetchAndSync({
+                logger: this.logger,
+                scopes: ['stats', 'builds'],
+                healForce: true
+            });
+
+            // --- STEP 2: Bi-Weekly Discovery (Heroes & Skins) ---
+            // Check if this is a "Discovery Week" (odd weeks based on ISO week number or simple toggle?)
+            // Simple approach: Check if current week number is ODD (or even). 
+            // We use ISO week number to be consistent.
+            const currentWeek = this.getWeekNumber(new Date());
+            const isDiscoveryWeek = currentWeek % 2 !== 0; // Run on odd weeks (e.g., W1, W3, W5...)
+
+            let discoveryResult = null;
+
+            if (isDiscoveryWeek) {
+                this.logger.info(`[HoK Scheduler] 🕵️ Discovery Week (W${currentWeek}) - Starting Discovery Service...`);
+
+                const { HoKDiscoveryService } = require('./hokDiscoveryService');
+                const discoveryService = new HoKDiscoveryService(this.logger);
+
+                // 2A. Discover Heroes
+                const heroDiscovery = await discoveryService.scanForNewHeroes();
+                this.logger.info(`[HoK Scheduler] - Hero Discovery: ${JSON.stringify(heroDiscovery)}`);
+
+                // 2B. Discover Skins (Optional: could be heavy, maybe run fewer heroes or separate if timeout issues)
+                const skinDiscovery = await discoveryService.scanForNewSkins();
+                this.logger.info(`[HoK Scheduler] - Skin Discovery: ${JSON.stringify(skinDiscovery)}`);
+
+                discoveryResult = { heroes: heroDiscovery, skins: skinDiscovery };
+            } else {
+                this.logger.info(`[HoK Scheduler] ⏭️ Skipping Discovery (Week W${currentWeek} is Even). Next run: W${currentWeek + 1}`);
+            }
+
+            // --- STEP 3: Automated Draft Generation (Weekly) ---
+            this.logger.info('[HoK Scheduler] ✍️ Generating Weekly Drafts...');
+            const { DraftGeneratorService } = require('./draftGeneratorService');
+            const draftService = new DraftGeneratorService(this.logger);
+            const draftResult = await draftService.generateWeeklyDrafts();
+            this.logger.info(`[HoK Scheduler] Drafts Result: ${JSON.stringify(draftResult)}`);
+
 
             this.lastRun = new Date();
-            this.lastResult = result;
+            this.lastResult = { ...result, discoveryResult, draftResult };
 
             const duration = ((Date.now() - startTime) / 1000).toFixed(2);
 
             this.logger.info('[HoK Scheduler] ========================================');
-            this.logger.info('[HoK Scheduler] ✅ Sync completed successfully!');
-            this.logger.info(`[HoK Scheduler] - Heroes fetched: ${result.fetch.heroCount}`);
-            this.logger.info(`[HoK Scheduler] - Heroes matched: ${result.sync.matched}`);
-            this.logger.info(`[HoK Scheduler] - Heroes updated: ${result.sync.updated}`);
+            this.logger.info('[HoK Scheduler] ✅ All Jobs Completed!');
+            this.logger.info(`[HoK Scheduler] - Stats updated: ${result.sync.updated}`);
+            if (discoveryResult) {
+                this.logger.info(`[HoK Scheduler] - Discovery: ${discoveryResult.heroes.draftsCreated} Heroes, ${discoveryResult.skins.draftsCreated} Skins`);
+            }
+            if (draftResult) {
+                this.logger.info(`[HoK Scheduler] - Articles Drafted: ${draftResult.draftsCreated}`);
+            }
             this.logger.info(`[HoK Scheduler] - Duration: ${duration}s`);
             this.logger.info('[HoK Scheduler] ========================================');
 
             return {
                 success: true,
-                result,
+                result: this.lastResult,
                 duration: `${duration}s`
             };
 
         } catch (error) {
             this.logger.error('[HoK Scheduler] ========================================');
-            this.logger.error('[HoK Scheduler] ❌ Sync failed!');
+            this.logger.error('[HoK Scheduler] ❌ Job Failed!');
             this.logger.error('[HoK Scheduler] Error:', error.message);
             this.logger.error('[HoK Scheduler] ========================================');
 
@@ -141,6 +186,14 @@ class HoKMetaSyncScheduler {
         } finally {
             this.isSyncing = false;
         }
+    }
+
+    getWeekNumber(d) {
+        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+        var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        return weekNo;
     }
 
     /**

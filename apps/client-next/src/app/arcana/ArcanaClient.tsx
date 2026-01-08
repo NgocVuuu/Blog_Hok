@@ -25,6 +25,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useTranslation } from 'react-i18next';
+import CalculatorButton from '@/components/CalculatorButton';
 
 // Helper function to get color chip colors
 const getColorChipColor = (color: string) => {
@@ -97,7 +98,7 @@ const ArcanaCard = memo(({ item, index, t }: any) => {
         >
           {item.name}
         </Typography>
-        
+
         {/* Show attributes or description */}
         <Typography
           variant="caption"
@@ -139,7 +140,7 @@ export default function ArcanaClient() {
   useEffect(() => {
     let mounted = true;
     const abortController = new AbortController();
-    
+
     const fetchArcana = async () => {
       try {
         const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000';
@@ -172,7 +173,7 @@ export default function ArcanaClient() {
       setLoading(true);
       fetchArcana();
     }, 0);
-    
+
     return () => {
       mounted = false;
       clearTimeout(timerId);
@@ -206,7 +207,7 @@ export default function ArcanaClient() {
   // Optimized filtering with useMemo
   const filteredArcana = useMemo(() => {
     // Color filter first (cheapest)
-    let result = colorFilter !== 'all' 
+    let result = colorFilter !== 'all'
       ? arcana.filter((item: any) => item.color === colorFilter)
       : arcana;
 
@@ -226,10 +227,10 @@ export default function ArcanaClient() {
   const quickMatches = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
     if (!term) return [];
-    
+
     const startsWith: any[] = [];
     const includes: any[] = [];
-    
+
     for (const item of arcana) {
       const name = (item.name || '').toLowerCase();
       if (name.startsWith(term)) {
@@ -239,7 +240,7 @@ export default function ArcanaClient() {
         includes.push(item);
       }
     }
-    
+
     return [...startsWith, ...includes].slice(0, 8);
   }, [arcana, searchTerm]);
 
@@ -250,13 +251,13 @@ export default function ArcanaClient() {
       blue: [],
       green: []
     };
-    
+
     filteredArcana.forEach((item: any) => {
       if (groups[item.color]) {
         groups[item.color].push(item);
       }
     });
-    
+
     return groups;
   }, [filteredArcana]);
 
@@ -270,9 +271,14 @@ export default function ArcanaClient() {
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>
-      <Typography variant="h4" component="h1" fontWeight={700} gutterBottom>
-        {t('arcana.title', 'Arcana')}
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+        <Typography variant="h4" component="h1" fontWeight={700}>
+          {t('arcana.title', 'Arcana')}
+        </Typography>
+        <Box sx={{ ml: 'auto' }}>
+          <CalculatorButton size="medium" />
+        </Box>
+      </Box>
 
       {/* Search and Filter Controls */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 4, mt: 2 }}>
@@ -374,7 +380,7 @@ export default function ArcanaClient() {
           {['red', 'blue', 'green'].map((color) => {
             // Only render visible colors for progressive loading
             if (!visibleColors.includes(color)) return null;
-            
+
             const colorArcana = groupedByColor[color];
             if (!colorArcana || colorArcana.length === 0) return null;
 

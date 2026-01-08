@@ -27,14 +27,19 @@ const heroSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  bannerImage: {
+    type: String, // High-res banner from official site
+    default: ''
+  },
   roles: [{
     type: String,
     required: true,
   }],
-  lanes: [{
+  lanes: [String],
+  lore: {
     type: String,
-    required: true,
-  }],
+    default: ''
+  },
   metaTier: {
     type: String,
     required: true,
@@ -198,6 +203,16 @@ const heroSchema = new mongoose.Schema({
       }
     }
   ],
+  // Multiple equipment builds from official API
+  itemBuilds: [
+    {
+      name: { type: String, default: '' },
+      items: [
+        { type: String } // Item names or IDs
+      ]
+    }
+  ],
+
 });
 
 // Relaxed skill validation: just keep skills with either name or description; require at least one

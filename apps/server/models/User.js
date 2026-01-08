@@ -9,12 +9,30 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: function () { return this.authType === 'local'; }
   },
   role: {
     type: String,
-    enum: ['admin'],
-    default: 'admin',
+    enum: ['admin', 'user'],
+    default: 'user',
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  avatar: {
+    type: String,
+    default: ''
+  },
+  name: {
+    type: String,
+    default: ''
+  },
+  authType: {
+    type: String,
+    enum: ['local', 'google'],
+    default: 'local'
   },
   createdAt: {
     type: Date,

@@ -1,5 +1,20 @@
-# Use Node.js LTS version
-FROM node:18-alpine
+# Base image: Use Node 18 (Bullseye)
+# This works for both x86 (DigitalOcean default) and ARM
+FROM node:18-bullseye
+
+# Install system dependencies for Puppeteer/Chromium
+# We install 'chromium' directly which pulls in all necessary libs
+RUN apt-get update \
+  && apt-get install -y wget gnupg \
+  && apt-get install -y chromium \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables for Puppeteer
+# Skip downloading local Chromium (saves size and avoids arch mismatch)
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+# Point Puppeteer to the installed system Chromium
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 # Set working directory
 WORKDIR /app
@@ -13,23 +28,19 @@ RUN npm ci --only=production
 # Copy source code
 COPY . .
 
-# Create logs directory
-RUN mkdir -p logs
+# Create logs directory and set permissions
+RUN mkdir -p logs uploads \
+  && chown -R node:node /app
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nodejs -u 1001
+# Switch to non-root user (Node image comes with 'node' user)
+USER node
 
-# Change ownership of the app directory
-RUN chown -R nodejs:nodejs /app
-USER nodejs
-
-# Expose port
-EXPOSE 10000
+# Expose port (Matches default PORT in server.js)
+EXPOSE 7000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node healthcheck.js
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD node healthcheck.js || exit 1
 
 # Start the application
 CMD ["npm", "start"]

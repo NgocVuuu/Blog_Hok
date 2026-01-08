@@ -47,7 +47,7 @@ export default function HeroesPage() {
     let mounted = true;
     const abortController = new AbortController();
     const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000';
-    
+
     const fetchHeroes = async () => {
       try {
         const heroesData = await getAllHeroesAll(
@@ -55,7 +55,7 @@ export default function HeroesPage() {
           { signal: abortController.signal }
         );
         if (!mounted || abortController.signal.aborted) return;
-        
+
         startTransition(() => {
           setHeroes(Array.isArray(heroesData) ? heroesData : []);
           setLoading(false);
@@ -71,16 +71,16 @@ export default function HeroesPage() {
         });
       }
     };
-    
+
     const fetchGuides = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/news`, { 
+        const res = await axios.get(`${API_URL}/api/news`, {
           params: { category: 'guides', limit: 5, sort: 'latest' },
           signal: abortController.signal
         });
         if (!mounted || abortController.signal.aborted) return;
         const posts = res.data?.success ? res.data.data : (Array.isArray(res.data) ? res.data : []);
-        
+
         startTransition(() => {
           setGuides(posts);
           setLoadingGuides(false);
@@ -95,7 +95,7 @@ export default function HeroesPage() {
         });
       }
     };
-    
+
     // Defer fetch to allow initial render
     const timerId = setTimeout(() => {
       setLoading(true);
@@ -103,7 +103,7 @@ export default function HeroesPage() {
       fetchHeroes();
       fetchGuides();
     }, 0);
-    
+
     return () => {
       mounted = false;
       clearTimeout(timerId);
@@ -114,14 +114,14 @@ export default function HeroesPage() {
   // Filter + search - optimized
   const filteredHeroes = useMemo(() => {
     if (!Array.isArray(heroes) || heroes.length === 0) return [];
-    
+
     let list = heroes;
-    
+
     // Role filter first (cheaper)
     if (selectedRole !== 'all') {
       list = list.filter(h => Array.isArray(h.roles) && h.roles.includes(selectedRole));
     }
-    
+
     // Then search (more expensive)
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
@@ -130,7 +130,7 @@ export default function HeroesPage() {
         (h.title && h.title.toLowerCase().includes(term))
       );
     }
-    
+
     return list;
   }, [heroes, searchTerm, selectedRole]);
 
@@ -138,7 +138,7 @@ export default function HeroesPage() {
   const quickMatches = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
     if (!term || !heroes.length) return [];
-    
+
     // Simple prefix match for better performance
     return heroes
       .filter(h => {
@@ -154,11 +154,11 @@ export default function HeroesPage() {
       return { [selectedRole]: filteredHeroes };
     }
     return filteredHeroes.reduce((acc, hero) => {
-      if (hero && Array.isArray(hero.roles)) {
-        hero.roles.forEach((role: string) => {
-          if (!acc[role]) acc[role] = [];
-          acc[role].push(hero);
-        });
+      if (hero && Array.isArray(hero.roles) && hero.roles.length > 0) {
+        // Dedup: Only show in PRIMARY role (first role) to avoid duplicates
+        const primaryRole = hero.roles[0];
+        if (!acc[primaryRole]) acc[primaryRole] = [];
+        acc[primaryRole].push(hero);
       }
       return acc;
     }, {} as Record<string, any[]>);
@@ -199,129 +199,129 @@ export default function HeroesPage() {
         <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 2, fontWeight: 400 }}>
           {t(`roles.${role}`, role)}
         </Typography>
-        <Box sx={{ 
-          display: 'grid', 
-          gridTemplateColumns: { 
-            xs: 'repeat(4, minmax(0, 1fr))',  
-            sm: 'repeat(3, minmax(0, 1fr))',  
-            md: 'repeat(6, minmax(0, 1fr))'   
+        <Box sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: 'repeat(4, minmax(0, 1fr))',
+            sm: 'repeat(3, minmax(0, 1fr))',
+            md: 'repeat(6, minmax(0, 1fr))'
           },
-          gap: 2,  
+          gap: 2,
           width: '100%'
         }}>
           {heroesByRole[role].map((hero: any, heroIndex: number) => {
             const shouldPrioritize = roleIndex === 0 && heroIndex < 8;
-            
+
             return (
               <Box key={hero._id} sx={{ minWidth: 0, width: '100%' }}>
-              <Card
-                component={Link}
-                prefetch={false}
-                href={`/heroes/${hero.slug}`}
-                sx={{
-                  width: '100%',
-                  height: { xs: 90, sm: 150, md: 200 },
-                  minHeight: { xs: 90, sm: 150, md: 200 },
-                  display: 'flex',
-                  flexDirection: 'column',
-                  textDecoration: 'none',
-                  borderRadius: { xs: 1, md: 2 },
-                  overflow: 'hidden',
-                  '&:hover': {
-                    transform: 'scale(1.02)',
-                    transition: 'transform 0.2s',
-                  },
-                }}
-              >
-                {hero.image && (
-                  <Box sx={{ 
-                    position: 'relative', 
-                    width: '100%', 
-                    height: { xs: '67px', sm: '80px', md: '100px' },
-                    minHeight: { xs: '67px', sm: '80px', md: '100px' },
-                    flexShrink: 0,
+                <Card
+                  component={Link}
+                  prefetch={false}
+                  href={`/heroes/${hero.slug}`}
+                  sx={{
+                    width: '100%',
+                    height: { xs: 90, sm: 150, md: 200 },
+                    minHeight: { xs: 90, sm: 150, md: 200 },
+                    display: 'flex',
+                    flexDirection: 'column',
+                    textDecoration: 'none',
+                    borderRadius: { xs: 1, md: 2 },
                     overflow: 'hidden',
-                    bgcolor: 'grey.200'
-                  }}>
-                    <Box
-                      component={Image}
-                      src={hero.image}
-                      alt={hero.name}
-                      fill
-                      sx={{
-                        objectFit: 'cover',
-                        objectPosition: { xs: 'center 20%', sm: 'center 12%', md: 'center' },
-                        transform: { xs: 'scale(1.63)', sm: 'scale(1.15)', md: 'scale(1)' },
-                        top: { xs: '8px !important', sm: '0 !important', md: '0 !important' },
-                        position: 'absolute',
-                        transition: 'transform 0.25s ease'
-                      }}
-                      sizes="(max-width: 600px) 25vw, (max-width: 900px) 33vw, 16.66vw"
-                      priority={shouldPrioritize}
-                    />
-                  </Box>
-                )}
-                <CardContent sx={{
-                  pt: { xs: '1px', sm: 0.75, md: 0.75 },
-                  px: { xs: '4px', sm: 0.75, md: 0.75 },
-                  pb: { xs: '8px', sm: 0.75, md: 0.75 },
-                  flexGrow: 1,
-                  minHeight: { xs: '22px', sm: 'auto', md: 'auto' },
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  '&:last-child': { pb: { xs: '8px', sm: '6px', md: '6px' } }
-                }}>
-                  <Typography
-                    variant="subtitle1"
-                    component="h2"
-                    noWrap
-                    sx={{
-                      fontSize: { xs: '0.58rem', sm: '0.78rem', md: '0.95rem' },
-                      mb: { xs: '1px', sm: 0.5, md: 0.75 },
-                      lineHeight: { xs: 1.3, sm: 1.1, md: 1.1 },
-                      fontWeight: 600,
-                      overflow: 'visible',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      textAlign: { xs: 'center', sm: 'left', md: 'left' }
-                    }}
-                  >
-                    {hero.name}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    gutterBottom
-                    noWrap
-                    sx={{
-                      display: { xs: 'none', sm: 'block' },
-                      fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.875rem' }
-                    }}
-                  >
-                    {hero.title}
-                  </Typography>
-                  <Stack
-                    direction="row"
-                    spacing={0.5}
-                    flexWrap="wrap"
-                    gap={0.5}
-                    sx={{ display: { xs: 'none', md: 'flex' } }}
-                  >
-                    {(selectedRole !== 'all' ? [selectedRole] : hero.roles || []).map((role: string) => (
-                      <Chip
-                        key={role}
-                        label={String(t(`roles.${role}`, role))}
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                        sx={{ fontSize: '0.6rem', height: '20px' }}
+                    '&:hover': {
+                      transform: 'scale(1.02)',
+                      transition: 'transform 0.2s',
+                    },
+                  }}
+                >
+                  {hero.image && (
+                    <Box sx={{
+                      position: 'relative',
+                      width: '100%',
+                      height: { xs: '67px', sm: '80px', md: '100px' },
+                      minHeight: { xs: '67px', sm: '80px', md: '100px' },
+                      flexShrink: 0,
+                      overflow: 'hidden',
+                      bgcolor: 'grey.200'
+                    }}>
+                      <Box
+                        component={Image}
+                        src={hero.image}
+                        alt={hero.name}
+                        fill
+                        sx={{
+                          objectFit: 'cover',
+                          objectPosition: { xs: 'center 20%', sm: 'center 12%', md: 'center' },
+                          transform: { xs: 'scale(1.63)', sm: 'scale(1.15)', md: 'scale(1)' },
+                          top: { xs: '8px !important', sm: '0 !important', md: '0 !important' },
+                          position: 'absolute',
+                          transition: 'transform 0.25s ease'
+                        }}
+                        sizes="(max-width: 600px) 25vw, (max-width: 900px) 33vw, 16.66vw"
+                        priority={shouldPrioritize}
                       />
-                    ))}
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Box>
+                    </Box>
+                  )}
+                  <CardContent sx={{
+                    pt: { xs: '1px', sm: 0.75, md: 0.75 },
+                    px: { xs: '4px', sm: 0.75, md: 0.75 },
+                    pb: { xs: '8px', sm: 0.75, md: 0.75 },
+                    flexGrow: 1,
+                    minHeight: { xs: '22px', sm: 'auto', md: 'auto' },
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    '&:last-child': { pb: { xs: '8px', sm: '6px', md: '6px' } }
+                  }}>
+                    <Typography
+                      variant="subtitle1"
+                      component="h2"
+                      noWrap
+                      sx={{
+                        fontSize: { xs: '0.58rem', sm: '0.78rem', md: '0.95rem' },
+                        mb: { xs: '1px', sm: 0.5, md: 0.75 },
+                        lineHeight: { xs: 1.3, sm: 1.1, md: 1.1 },
+                        fontWeight: 600,
+                        overflow: 'visible',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        textAlign: { xs: 'center', sm: 'left', md: 'left' }
+                      }}
+                    >
+                      {hero.name}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      gutterBottom
+                      noWrap
+                      sx={{
+                        display: { xs: 'none', sm: 'block' },
+                        fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.875rem' }
+                      }}
+                    >
+                      {hero.title}
+                    </Typography>
+                    <Stack
+                      direction="row"
+                      spacing={0.5}
+                      flexWrap="wrap"
+                      gap={0.5}
+                      sx={{ display: { xs: 'none', md: 'flex' } }}
+                    >
+                      {Array.from(new Set(selectedRole !== 'all' ? [selectedRole] : hero.roles || [])).map((role: unknown) => (
+                        <Chip
+                          key={String(role)}
+                          label={String(t(`roles.${role}`, String(role)))}
+                          size="small"
+                          color="primary"
+                          variant="outlined"
+                          sx={{ fontSize: '0.6rem', height: '20px' }}
+                        />
+                      ))}
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Box>
             );
           })}
         </Box>
@@ -330,16 +330,16 @@ export default function HeroesPage() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ 
+    <Container maxWidth="lg" sx={{
       py: { xs: 1, md: 4 },
-      px: { xs: 1, sm: 2, md: 3 }  
+      px: { xs: 1, sm: 2, md: 3 }
     }}>
-      <Box sx={{ 
-        display: 'grid', 
-        gridTemplateColumns: { 
-          xs: '1fr', 
-          md: '3fr 1fr'  
-        }, 
+      <Box sx={{
+        display: 'grid',
+        gridTemplateColumns: {
+          xs: '1fr',
+          md: '3fr 1fr'
+        },
         gap: { xs: 2, md: 4 }
       }}>
         <Box sx={{ minWidth: 0, overflow: 'hidden' }}>
@@ -425,14 +425,14 @@ export default function HeroesPage() {
         </Box>
         {/* Sidebar */}
         <Box sx={{ display: { xs: 'block', md: 'block' }, minWidth: 0, overflow: 'visible' }}>
-          <Paper elevation={3} sx={{ 
-            p: 2, 
-            position: { xs: 'static', md: 'sticky' }, 
+          <Paper elevation={3} sx={{
+            p: 2,
+            position: { xs: 'static', md: 'sticky' },
             top: { md: '80px' },
             alignSelf: 'start',
-            boxShadow: { 
-              xs: 3, 
-              md: '0 4px 20px rgba(0,0,0,0.1), 0 -4px 20px rgba(0,0,0,0.05)' 
+            boxShadow: {
+              xs: 3,
+              md: '0 4px 20px rgba(0,0,0,0.1), 0 -4px 20px rgba(0,0,0,0.05)'
             }
           }}>
             <Typography variant="h6" gutterBottom sx={{ fontWeight: 700 }}>
@@ -449,12 +449,12 @@ export default function HeroesPage() {
               <List dense disablePadding>
                 {guides.map(post => (
                   <ListItemButton
-                      key={post._id}
-                      component={Link}
-                      prefetch={false}
-                      href={`/news/${post.slug || post._id}`}
-                      sx={{ borderRadius: 1, mb: 0.5 }}
-                    >
+                    key={post._id}
+                    component={Link}
+                    prefetch={false}
+                    href={`/news/${post.slug || post._id}`}
+                    sx={{ borderRadius: 1, mb: 0.5 }}
+                  >
                     <ListItemText
                       primary={
                         <Typography variant="subtitle2" noWrap sx={{ fontWeight: 500 }}>

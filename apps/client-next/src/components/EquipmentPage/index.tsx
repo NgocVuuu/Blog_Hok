@@ -18,21 +18,22 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { GiBroadsword } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
+import CalculatorButton from '@/components/CalculatorButton';
 import Image from 'next/image';
 import axios from 'axios';
 
 // Memoized EquipmentCard component to prevent unnecessary re-renders
-const EquipmentCard = memo(({ 
-  item, 
-  category, 
+const EquipmentCard = memo(({
+  item,
+  category,
   index,
-  formatPrice, 
+  formatPrice,
   renderQuickStats,
-  t 
+  t
 }: any) => {
   // Lazy load images not in viewport
   const shouldPrioritize = index < 6;
-  
+
   return (
     <Card
       sx={{
@@ -48,18 +49,18 @@ const EquipmentCard = memo(({
       }}
     >
       {item.image && (
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
             p: 1,
             minHeight: { xs: '96px', md: '126px' } // Fixed min height to prevent reflow
           }}
         >
-          <Box 
-            sx={{ 
-              position: 'relative', 
-              width: { xs: '80px', md: '110px' }, 
+          <Box
+            sx={{
+              position: 'relative',
+              width: { xs: '80px', md: '110px' },
               height: { xs: '80px', md: '110px' },
               flexShrink: 0
             }}
@@ -145,11 +146,11 @@ const EquipmentCard = memo(({
 EquipmentCard.displayName = 'EquipmentCard';
 
 // Memoized CategorySummaryCard for performance
-const CategorySummaryCard = memo(({ 
-  category, 
-  count, 
+const CategorySummaryCard = memo(({
+  category,
+  count,
   getCategoryIconName,
-  onClick 
+  onClick
 }: any) => {
   return (
     <Card
@@ -293,7 +294,7 @@ const EquipmentPage = () => {
 
     // Progressive loading - show first 2 immediately
     setVisibleCategories(['Physical', 'Magic']);
-    
+
     // Load rest when browser is idle
     const handle = runIdle(() => {
       setVisibleCategories(['Physical', 'Magic', 'Defense', 'Movement', 'Roaming', 'Jungle']);
@@ -305,7 +306,7 @@ const EquipmentPage = () => {
   useEffect(() => {
     let mounted = true;
     const abortController = new AbortController();
-    
+
     const fetchEquipment = async () => {
       try {
         const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000';
@@ -313,11 +314,11 @@ const EquipmentPage = () => {
           signal: abortController.signal,
           timeout: 5000 // Add timeout
         });
-        
+
         if (!mounted || abortController.signal.aborted) return;
-        
+
         const data = res.data?.success ? res.data.data : (Array.isArray(res.data) ? res.data : []);
-        
+
         // Use requestIdleCallback to defer state update
         runIdle(() => {
           if (!mounted || abortController.signal.aborted) return;
@@ -335,10 +336,10 @@ const EquipmentPage = () => {
         });
       }
     };
-    
+
     setLoading(true);
     fetchEquipment();
-    
+
     return () => {
       mounted = false;
       abortController.abort();
@@ -357,11 +358,11 @@ const EquipmentPage = () => {
   // Use the pre-created map instead of useMemo
   const getQuickStatVisual = useCallback((rawLabel: string, rawType: string) => {
     const tNorm = String(rawType || '').trim().toLowerCase().replace(/\s+/g, '');
-    
+
     // Try direct type lookup first
     const directMatch = STAT_VISUAL_MAP.get(tNorm);
     if (directMatch) return directMatch;
-    
+
     // Fallback to label matching
     const label = normalizeQuickStatLabel(rawLabel).toLowerCase();
     if (label.includes('health/5s') || label.includes('hp/5s') || label.includes('health regen')) {
@@ -382,7 +383,7 @@ const EquipmentPage = () => {
     }
     if (label.includes('critical rate') || label.includes('crit rate')) return STAT_VISUAL_MAP.get('criticalrate');
     if (label.includes('mana')) return STAT_VISUAL_MAP.get('mana');
-    
+
     return { type: 'unknown', Icon: GiBroadsword, color: '#C9A063', reactIcon: true };
   }, [normalizeQuickStatLabel]);
 
@@ -431,11 +432,11 @@ const EquipmentPage = () => {
     if (!stats.length) return null;
 
     return (
-      <Box sx={{ 
+      <Box sx={{
         display: { xs: 'flex', md: 'grid' },
         flexDirection: { xs: 'column', md: 'initial' },
         gridTemplateColumns: { md: 'repeat(2, 1fr)' },
-        gap: 0.5, 
+        gap: 0.5,
         mb: 2,
         minHeight: { xs: '80px', md: '60px' } // Prevent layout shift
       }}>
@@ -493,7 +494,7 @@ const EquipmentPage = () => {
   const getCategoryIconName = useCallback((categoryValue: string) => {
     const iconMap: Record<string, string> = {
       'Physical': 'Farm_Lane',
-      'Magic': 'Mid_Lane', 
+      'Magic': 'Mid_Lane',
       'Defense': 'Abyssal_Lane',
       'Movement': 'movement',
       'Roaming': 'Roam',
@@ -505,12 +506,12 @@ const EquipmentPage = () => {
   // Optimized filtering with debouncing for search
   const filteredEquipment = useMemo(() => {
     let list = equipment;
-    
+
     // Filter by category first (fastest)
     if (categoryFilter !== 'all') {
       list = list.filter(item => item.category === categoryFilter);
     }
-    
+
     // Then search if needed (using debounced term)
     if (debouncedSearchTerm) {
       const term = debouncedSearchTerm.toLowerCase();
@@ -519,14 +520,14 @@ const EquipmentPage = () => {
         item.description?.toLowerCase().includes(term)
       );
     }
-    
+
     // Sort in-place (avoid spread operator)
     if (sortBy === 'name') {
       list.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
     } else if (sortBy === 'price') {
       list.sort((a, b) => (b.price || 0) - (a.price || 0));
     }
-    
+
     return list;
   }, [equipment, categoryFilter, debouncedSearchTerm, sortBy]);
 
@@ -534,10 +535,10 @@ const EquipmentPage = () => {
   const quickMatches = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
     if (!term) return [];
-    
+
     const startsWith: any[] = [];
     const includes: any[] = [];
-    
+
     for (const item of equipment) {
       const name = (item.name || '').toLowerCase();
       if (name.startsWith(term)) {
@@ -547,7 +548,7 @@ const EquipmentPage = () => {
         includes.push(item);
       }
     }
-    
+
     return [...startsWith, ...includes].slice(0, 8);
   }, [equipment, searchTerm]);
 
@@ -576,7 +577,7 @@ const EquipmentPage = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const scrollHeight = document.documentElement.scrollHeight;
       const clientHeight = window.innerHeight;
-      
+
       // Load more when 80% scrolled
       if (scrollTop + clientHeight >= scrollHeight * 0.8) {
         setBatchSize(prev => Math.min(prev + 12, filteredEquipment.length));
@@ -599,9 +600,14 @@ const EquipmentPage = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 }, isolation: 'isolate' }}>
-      <Typography variant="h4" component="h1" fontWeight={700} gutterBottom>
-        {t('equipment.title', 'Trang bị')}
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+        <Typography variant="h4" component="h1" fontWeight={700}>
+          {t('equipment.title', 'Trang bị')}
+        </Typography>
+        <Box sx={{ ml: 'auto' }}>
+          <CalculatorButton size="medium" />
+        </Box>
+      </Box>
 
       {/* Category Summary - Show when viewing all and no search */}
       {categoryFilter === 'all' && !debouncedSearchTerm && (
@@ -630,12 +636,12 @@ const EquipmentPage = () => {
       )}
 
       {/* Filters */}
-      <Box 
-        sx={{ 
+      <Box
+        sx={{
           display: 'grid',
           gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr 1fr' },
           gap: 2,
-          mb: 3 
+          mb: 3
         }}
       >
         <Box sx={{ position: 'relative' }}>
@@ -809,15 +815,15 @@ const EquipmentPage = () => {
         </Box>
       ) : (
         // Regular grid when filtered
-        <Box 
-          sx={{ 
-            display: 'grid', 
-            gridTemplateColumns: { 
-              xs: 'repeat(2, 1fr)', 
-              sm: 'repeat(2, 1fr)', 
-              md: 'repeat(3, 1fr)', 
-              lg: 'repeat(4, 1fr)' 
-            }, 
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: 'repeat(2, 1fr)',
+              sm: 'repeat(2, 1fr)',
+              md: 'repeat(3, 1fr)',
+              lg: 'repeat(4, 1fr)'
+            },
             gap: 2,
             // Prevent layout thrashing
             '& > *': {
@@ -841,14 +847,14 @@ const EquipmentPage = () => {
           })}
         </Box>
       )}
-      
+
       {/* Load more indicator */}
       {(categoryFilter !== 'all' || debouncedSearchTerm) && displayedEquipment.length < filteredEquipment.length && (
         <Box display="flex" justifyContent="center" mt={4}>
           <Typography variant="body2" color="text.secondary">
-            {t('equipment.showingCount', 'Showing {{count}} of {{total}}', { 
-              count: displayedEquipment.length, 
-              total: filteredEquipment.length 
+            {t('equipment.showingCount', 'Showing {{count}} of {{total}}', {
+              count: displayedEquipment.length,
+              total: filteredEquipment.length
             })}
           </Typography>
         </Box>

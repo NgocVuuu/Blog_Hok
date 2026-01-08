@@ -13,6 +13,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 const { connectDB } = require('./config/db');
 const heroesRouter = require('./routes/heroes');
 
@@ -43,6 +44,7 @@ app.use(cors(corsOptions));
 // Body parsing middleware with size limits
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cookieParser());
 
 // Sanitize input to prevent NoSQL injection
 app.use(sanitizeInput);
@@ -85,6 +87,8 @@ try {
   app.use('/api/heroes', heroesRouter);
   app.use('/api/contact', require('./routes/contact'));
   app.use('/api/hok-sync', require('./routes/hokSync'));
+  app.use('/api/drafts', require('./routes/draftRoutes'));
+  app.use('/api/comments', require('./routes/comments'));
 } catch (routeErr) {
   console.error('Synchronous route setup error:', routeErr);
   logger.error('Route setup error', { message: routeErr.message, stack: routeErr.stack });

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
+import {
   Container, Grid, Typography, Box,
   TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   Paper, InputAdornment, FormControl, InputLabel, Select, MenuItem, Pagination,
-  CircularProgress, Chip, IconButton
+  CircularProgress, Chip, IconButton, Switch, Tooltip
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -11,12 +11,14 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useAuth } from '../contexts/AuthContext';
 
 const News = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { fetchWithAuth } = useAuth();
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -42,7 +44,7 @@ const News = () => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_URL}/api/news`);
+        const res = await fetch(`${API_URL}/api/news?status=all&limit=1000`);
         if (!res.ok) throw new Error('Failed to fetch news');
         const response = await res.json();
         // Handle new API response format
@@ -80,8 +82,8 @@ const News = () => {
     if (debouncedSearch) {
       const term = debouncedSearch.toLowerCase();
       result = result.filter(
-        post => 
-          post.title.toLowerCase().includes(term) || 
+        post =>
+          post.title.toLowerCase().includes(term) ||
           (post.summary && post.summary.toLowerCase().includes(term)) ||
           (post.content && post.content.toLowerCase().includes(term))
       );
@@ -140,13 +142,48 @@ const News = () => {
     );
   }
 
+  const handleStatusToggle = async (e, post) => {
+    e.stopPropagation(); // Prevent row click navigation
+    const newStatus = post.status === 'published' ? 'draft' : 'published';
+
+    // Optimistic update
+    const updatedPosts = posts.map(p =>
+      p._id === post._id ? { ...p, status: newStatus } : p
+    );
+    setPosts(updatedPosts);
+    setFilteredPosts(updatedPosts);
+
+    try {
+      const res = await fetchWithAuth(`${API_URL}/api/news/${post._id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (!res.ok) throw new Error('Update failed');
+    } catch (err) {
+      console.error('Failed to toggle status:', err);
+      // Revert on error
+      const reverted = posts.map(p =>
+        p._id === post._id ? { ...p, status: post.status } : p
+      );
+      setPosts(reverted);
+      setFilteredPosts(reverted);
+    }
+  };
+
+  // WARNING: News.js currently uses raw fetch. AdminPostForm uses fetchWithAuth.
+  // The user might not have Auth context fully accessible here or I need to import it.
+  // Let's import useAuth.
+
   return (
     <Container maxWidth="lg">
       <Box sx={{ my: { xs: 1, md: 4 } }}>
         <Typography variant="h4" component="h1" fontWeight={700} gutterBottom>
           {t('news.latestNews', 'Tin Tức Mới Nhất')}
         </Typography>
-        
+
         {/* Search and Filter Controls */}
         <Grid container spacing={{ xs: 1.5, md: 2 }} sx={{ mb: 3, mt: 2 }}>
           {/* Search Field */}
@@ -173,7 +210,7 @@ const News = () => {
                 endAdornment: (
                   searchTerm ? (
                     <InputAdornment position="end">
-                      <IconButton aria-label={t('common.clear','Xóa')} size="small" onClick={() => setSearchTerm('')} edge="end">
+                      <IconButton aria-label={t('common.clear', 'Xóa')} size="small" onClick={() => setSearchTerm('')} edge="end">
                         <ClearIcon fontSize="small" />
                       </IconButton>
                     </InputAdornment>
@@ -184,19 +221,19 @@ const News = () => {
             />
 
             {searchTerm && quickMatches.length > 0 && (
-              <Box sx={{ position:'absolute', left:0, right:0, zIndex:5, mt:0.5, bgcolor:'background.paper', border:'1px solid', borderColor:'divider', borderRadius:1, boxShadow:3, maxHeight: 300, overflowY:'auto' }}>
+              <Box sx={{ position: 'absolute', left: 0, right: 0, zIndex: 5, mt: 0.5, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 1, boxShadow: 3, maxHeight: 300, overflowY: 'auto' }}>
                 {quickMatches.map(p => (
                   <Box
                     key={p._id}
                     onMouseDown={(e) => { e.preventDefault(); navigate(`/news/${p.slug || p._id}`); }}
-                    sx={{ display:'flex', alignItems:'center', gap:1, p:1, cursor:'pointer', textDecoration:'none', color:'inherit', '&:hover':{ bgcolor:'action.hover' } }}
+                    sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1, cursor: 'pointer', textDecoration: 'none', color: 'inherit', '&:hover': { bgcolor: 'action.hover' } }}
                   >
                     {p.thumbnail || p.image ? (
-                      <Box component="img" src={p.thumbnail || p.image} alt={p.title} sx={{ width:36, height:36, objectFit:'cover', borderRadius:1, border:'1px solid', borderColor:'divider' }} />
+                      <Box component="img" src={p.thumbnail || p.image} alt={p.title} sx={{ width: 36, height: 36, objectFit: 'cover', borderRadius: 1, border: '1px solid', borderColor: 'divider' }} />
                     ) : (
-                      <Box sx={{ width:36, height:36, bgcolor:'grey.200', borderRadius:1 }} />
+                      <Box sx={{ width: 36, height: 36, bgcolor: 'grey.200', borderRadius: 1 }} />
                     )}
-                    <Typography variant="body2" noWrap sx={{ flex:1, minWidth:0 }}>{p.title}</Typography>
+                    <Typography variant="body2" noWrap sx={{ flex: 1, minWidth: 0 }}>{p.title}</Typography>
                     <Typography variant="caption" color="text.secondary">{new Date(p.createdAt).toLocaleDateString()}</Typography>
                   </Box>
                 ))}
@@ -247,7 +284,8 @@ const News = () => {
             <Table sx={{ minWidth: 650 }}>
               <TableHead sx={{ bgcolor: '#f5f5f5' }}>
                 <TableRow>
-                  <TableCell width="50%">{t('news.title', 'Tiêu đề')}</TableCell>
+                  <TableCell width="40%">{t('news.title', 'Tiêu đề')}</TableCell>
+                  <TableCell>{t('news.status', 'Trạng thái')}</TableCell>
                   <TableCell>{t('news.category', 'Phân loại')}</TableCell>
                   <TableCell>{t('news.author', 'Tác giả')}</TableCell>
                   <TableCell>{t('news.publishDate', 'Ngày đăng')}</TableCell>
@@ -290,6 +328,14 @@ const News = () => {
                       </Box>
                     </TableCell>
                     <TableCell>
+                      <Chip
+                        label={post.status === 'published' ? t('news.published', 'Published') : t('news.draft', 'Draft')}
+                        size="small"
+                        color={post.status === 'published' ? 'success' : 'default'}
+                        variant={post.status === 'published' ? 'filled' : 'outlined'}
+                      />
+                    </TableCell>
+                    <TableCell>
                       {post.category && (
                         <Chip
                           label={t(`news.categories.${post.category}`, post.category)}
@@ -326,11 +372,11 @@ const News = () => {
         {/* Pagination */}
         {pageCount > 1 && (
           <Box display="flex" justifyContent="center" mt={4} mb={2}>
-            <Pagination 
-              count={pageCount} 
-              page={page} 
-              onChange={handlePageChange} 
-              color="primary" 
+            <Pagination
+              count={pageCount}
+              page={page}
+              onChange={handlePageChange}
+              color="primary"
               size="large"
             />
           </Box>

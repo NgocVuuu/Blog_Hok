@@ -19,6 +19,7 @@ const AdminPostForm = ({ editingPost, onFormSubmit }) => {
   const [imageFile, setImageFile] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
   const [imagePreview, setImagePreview] = useState('');
+  const [status, setStatus] = useState('draft'); // Default to draft
   const [message, setMessage] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
 
@@ -40,6 +41,7 @@ const AdminPostForm = ({ editingPost, onFormSubmit }) => {
       setKeywords(editingPost.keywords || '');
       setCategory(editingPost.category || 'guides');
       setAuthor(editingPost.author || 'BlogHok');
+      setStatus(editingPost.status || 'published'); // Default to published for old posts
       setImageUrl(editingPost.image || '');
       setImagePreview(editingPost.image || '');
 
@@ -68,6 +70,7 @@ const AdminPostForm = ({ editingPost, onFormSubmit }) => {
       setKeywords('');
       setCategory('guides');
       setAuthor('BlogHok');
+      setStatus('draft');
       setImageFile(null);
       setImageUrl('');
       setImagePreview('');
@@ -177,6 +180,7 @@ const AdminPostForm = ({ editingPost, onFormSubmit }) => {
           keywords,
           category,
           author,
+          status,
           image: img,
         }),
       });
@@ -197,6 +201,7 @@ const AdminPostForm = ({ editingPost, onFormSubmit }) => {
           setKeywords('');
           setCategory('guides');
           setAuthor('BlogHok');
+          setStatus('draft');
           setImageFile(null);
           setImageUrl('');
           setImagePreview('');
@@ -265,6 +270,19 @@ const AdminPostForm = ({ editingPost, onFormSubmit }) => {
               {cat.label}
             </MenuItem>
           ))}
+        </Select>
+      </FormControl>
+
+      <FormControl fullWidth margin="normal">
+        <InputLabel id="status-label">{t('news.status', 'Trạng thái')}</InputLabel>
+        <Select
+          labelId="status-label"
+          value={status}
+          onChange={e => setStatus(e.target.value)}
+          label={t('news.status', 'Trạng thái')}
+        >
+          <MenuItem value="draft">{t('news.draft', 'Nháp (Draft)')}</MenuItem>
+          <MenuItem value="published">{t('news.published', 'Công khai (Published)')}</MenuItem>
         </Select>
       </FormControl>
 

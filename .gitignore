@@ -125,3 +125,17 @@ apps/client-next/.open-next/
 
 # Ignore admin build artifacts
 apps/admin/build/
+
+# Debug and Scraping Logs
+debug_*.json
+debug_*.html
+debug_*.txt
+debug_*.log
+scraper_log*.txt
+*_dump_*.html
+*_report.csv
+error.log
+last_run_error.log
+api_ranklist_dump.json
+render.yaml
+*.log

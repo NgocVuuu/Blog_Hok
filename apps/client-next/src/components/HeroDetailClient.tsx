@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Chip, Card, CardContent, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
+import CalculatorButton from '@/components/CalculatorButton';
+import CommentSection from '@/components/Comments/CommentSection';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -10,7 +12,6 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '@/i18n'; // Initialize i18n
-
 // Helper function to format date consistently
 const formatDate = (dateString: string) => {
   if (!dateString) return '';
@@ -25,19 +26,16 @@ const formatDate = (dateString: string) => {
     return '';
   }
 };
-
 interface HeroDetailClientProps {
   hero: any;
   sameRoleHeroes: any[];
   topWinHeroes: any[];
   latestNews: any[];
 }
-
 // Skill Tabs Component
 const SkillTabs = ({ skills, isMobile }: { skills: any[], isMobile: boolean }) => {
   const [selected, setSelected] = useState(0);
   if (!skills || skills.length === 0) return null;
-
   return (
     <>
       <Box display="flex" gap={{ xs: 0.75, md: 4 }} mb={2} justifyContent={{ xs: 'center', md: 'flex-start' }}>
@@ -88,7 +86,6 @@ const SkillTabs = ({ skills, isMobile }: { skills: any[], isMobile: boolean }) =
     </>
   );
 };
-
 export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, latestNews }: HeroDetailClientProps) {
   const { t } = useTranslation();
   const [selectedEqBuild, setSelectedEqBuild] = useState(1);
@@ -151,8 +148,8 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
       <Box sx={{
         position: 'relative',
         minHeight: { xs: 200, md: 320 },
-        background: hero.image
-          ? `linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 70%, rgba(255,255,255,0.95) 100%), url(${hero.image}) center center/cover no-repeat`
+        background: (hero.bannerImage || hero.image)
+          ? `linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 70%, rgba(255,255,255,0.95) 100%), url(${hero.bannerImage || hero.image}) center center/cover no-repeat`
           : 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 70%, rgba(255,255,255,0.95) 100%)',
         borderRadius: { xs: 0, md: 6 },
         overflow: 'hidden',
@@ -200,7 +197,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
             </Typography>
           )}
           <Box display="flex" gap={{ xs: 0.5, md: 1 }} flexWrap="wrap" mb={1}>
-            {hero.roles && hero.roles.map((role: string) => (
+            {hero.roles && Array.from(new Set(hero.roles as string[])).map((role: string) => (
               <Chip
                 key={role}
                 label={String(t(`roles.${role}`, role))}
@@ -213,11 +210,11 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                 }}
               />
             ))}
-            {hero.lanes && hero.lanes.map((lane: string) => {
+            {hero.lanes && hero.lanes.filter((l: string) => l).map((lane: string, idx: number) => {
               const displayLane = lane === 'Abyssal Lane' ? 'Clash Lane' : lane;
               return (
                 <Chip
-                  key={lane}
+                  key={`${lane}-${idx}`}
                   label={String(t(`lanes.${displayLane}`, displayLane))}
                   sx={{
                     bgcolor: '#C9A063',
@@ -278,7 +275,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
         </Box>
       </Box>
 
-      {/* Main content + Sidebar */}
+
       <Box
         display={{ xs: 'block', md: 'grid' }}
         gridTemplateColumns={{ md: 'minmax(0, 2fr) minmax(0, 1fr)' }}
@@ -286,7 +283,6 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
         alignItems="stretch"
         sx={{ width: '100%', mb: { xs: 2, md: 4 } }}
       >
-        {/* LEFT: Main content */}
         <Box>
           {/* Allies & Counters */}
           {((hero.allies && hero.allies.length > 0) || (hero.counters && hero.counters.length > 0) || (hero.goodAgainst && hero.goodAgainst.length > 0)) && (
@@ -305,7 +301,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                 {hero.allies && hero.allies.length > 0 && (
                   <Box flex={1}>
                     <Typography variant="h6" sx={{ mb: { xs: 1, md: 2 }, color: '#43a047', fontWeight: 700, fontSize: { xs: '1rem', md: '1.25rem' } }}>
-                      {String(t('heroes.allies', 'Đồng minh tốt'))}
+                      {String(t('heroes.allies', 'Best Allies'))}
                     </Typography>
                     <Box display="flex" gap={{ xs: 1, md: 2 }} flexWrap="wrap">
                       {hero.allies.map((ally: any) => (
@@ -321,7 +317,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                             }}>
                               <Box
                                 component="img"
-                                src={ally.image}
+                                src={ally.image || null}
                                 alt={ally.name}
                                 sx={{
                                   width: '100%',
@@ -347,7 +343,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                 {hero.counters && hero.counters.length > 0 && (
                   <Box flex={1}>
                     <Typography variant="h6" sx={{ mb: { xs: 1, md: 2 }, color: '#d32f2f', fontWeight: 700, fontSize: { xs: '1rem', md: '1.25rem' } }}>
-                      {String(t('heroes.counters', 'Khắc chế'))}
+                      {String(t('heroes.counters', 'Counters'))}
                     </Typography>
                     <Box display="flex" gap={{ xs: 1, md: 2 }} flexWrap="wrap">
                       {hero.counters.map((counter: any) => (
@@ -363,7 +359,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                             }}>
                               <Box
                                 component="img"
-                                src={counter.image}
+                                src={counter.image || null}
                                 alt={counter.name}
                                 sx={{
                                   width: '100%',
@@ -389,7 +385,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                 {hero.goodAgainst && hero.goodAgainst.length > 0 && (
                   <Box mt={{ xs: 2, md: 0 }} flex={1}>
                     <Typography variant="h6" sx={{ mb: { xs: 1, md: 2 }, color: '#43a047', fontWeight: 700, fontSize: { xs: '1rem', md: '1.25rem' } }}>
-                      {String(t('heroes.goodAgainst', 'Hiệu quả chống lại'))}
+                      {String(t('heroes.goodAgainst', 'Strong Against'))}
                     </Typography>
                     <Box display="flex" gap={{ xs: 1, md: 2 }} flexWrap="wrap">
                       {hero.goodAgainst.map((ga: any) => (
@@ -405,7 +401,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                             }}>
                               <Box
                                 component="img"
-                                src={ga.image}
+                                src={ga.image || null}
                                 alt={ga.name}
                                 sx={{
                                   width: '100%',
@@ -497,9 +493,12 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
               {(() => {
                 const buildLabel = t('hero.equipmentSet', { number: selectedEqBuild, defaultValue: `Bộ ${selectedEqBuild}` });
                 return (
-                  <Typography variant="h5" sx={{ mb: 1.5, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
-                    {String(t('hero.suggestedEquipment', 'Trang bị gợi ý'))} - {String(buildLabel)}
-                  </Typography>
+                  <Box display="flex" alignItems="center" justifyContent="space-between" mb={1.5}>
+                    <Typography variant="h5" sx={{ fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
+                      {String(t('hero.suggestedEquipment', 'Trang bị gợi ý'))} - {String(buildLabel)}
+                    </Typography>
+                    <CalculatorButton size="small" variant="icon" />
+                  </Box>
                 );
               })()}
 
@@ -552,7 +551,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                       {group.map((eq: any, idx: number) => (
                         <Box key={eq._id || idx} sx={{ width: { xs: 52, md: 90 }, textAlign: 'center', flex: '0 0 auto' }}>
                           <Box sx={{ width: '100%', aspectRatio: '1/1', borderRadius: 2, overflow: 'hidden', border: '1px solid rgba(201,160,99,0.25)', mb: 0.5 }}>
-                            <img src={eq.image} alt={eq.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <img src={eq.image || null} alt={eq.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           </Box>
                           <Typography variant="body2" sx={{ fontWeight: 700, fontSize: { xs: 10, md: 13 }, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={eq.name}>
                             {eq.name}
@@ -632,8 +631,13 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                     {currentBuild.items.map((arc: any, idx: number) => (
                       <Box key={arc._id || idx} sx={{ width: { xs: 52, md: 90 }, textAlign: 'center', flex: '0 0 auto' }}>
                         <Box sx={{ width: '100%', aspectRatio: '1/1', borderRadius: 2, overflow: 'hidden', border: '1px solid rgba(201,160,99,0.25)', mb: 0.5 }}>
-                          <img src={arc.image} alt={arc.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <img src={arc.image || null} alt={arc.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         </Box>
+                        {arc.count > 1 && (
+                          <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', fontSize: 11, fontWeight: 700, color: '#C9A063', lineHeight: 1, mb: 0.5 }}>
+                            x{arc.count}
+                          </Typography>
+                        )}
                         <Typography variant="body2" sx={{ fontWeight: 700, fontSize: { xs: 10, md: 13 }, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={arc.name}>
                           {arc.name}
                         </Typography>
@@ -717,7 +721,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                                   </Box>
                                 ) : skill ? (
                                   <img
-                                    src={skill.icon}
+                                    src={skill.icon || null}
                                     alt={skill.name}
                                     title={skill.name || orderLabel}
                                     style={{ width: isMobile ? 34 : 40, height: isMobile ? 34 : 40, borderRadius: 8, objectFit: 'cover' }}
@@ -756,12 +760,21 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
               position: 'relative',
               overflow: 'visible',
               border: '1px solid rgba(139, 115, 85, 0.2)',
-              mx: { xs: 0, md: -3 },
-              width: { xs: '100%', md: 'calc(100% + 48px)' },
+              // Removed negative margins to align with other sections
+              width: '100%',
               // Adjust swiper pagination position on mobile to avoid overlap
               '& .swiper-pagination': {
                 bottom: isMobile ? 12 : 32,
                 zIndex: 5
+              },
+              // Move navigation buttons inward
+              '& .swiper-button-next': {
+                right: '40px !important',
+                color: '#C9A063'
+              },
+              '& .swiper-button-prev': {
+                left: '40px !important',
+                color: '#C9A063'
               }
             }}>
               <Typography variant="h5" sx={{ mt: { xs: 1, md: 2 }, mb: 2, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
@@ -801,13 +814,13 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                           transition: 'opacity 0.3s, visibility 0.3s',
                         }}>
                           <img
-                            src={skin.image}
+                            src={skin.image || null}
                             alt={skin.name}
                             style={{
-                              width: isMobile ? 280 : 400,
-                              height: isMobile ? 175 : 250,
-                              minWidth: isMobile ? 280 : 400,
-                              maxWidth: isMobile ? 280 : 400,
+                              width: isMobile ? 300 : 500,
+                              height: isMobile ? 180 : 300,
+                              minWidth: isMobile ? 300 : 500,
+                              maxWidth: isMobile ? 300 : 500,
                               objectFit: 'cover',
                               borderRadius: isMobile ? 12 : 18,
                               boxShadow: isActive ? '0 8px 24px rgba(139, 115, 85, 0.3)' : '0 4px 12px rgba(139, 115, 85, 0.15)',
@@ -848,50 +861,16 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
               backdropFilter: 'blur(12px)',
               p: { xs: 2, md: 3 },
             }}>
+              <Typography variant="h5" sx={{ mb: 1.5, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
+                {String(t('hero.lore', 'Lore'))}
+              </Typography>
               <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap', lineHeight: 1.8 }}>
                 {hero.lore}
               </Typography>
             </Box>
           )}
 
-          {/* Bio/Description */}
-          {(hero.bio || hero.description || hero.summary) && (
-            <Box mb={{ xs: 2, md: 3 }} sx={{
-              background: 'none',
-              borderRadius: { xs: 3, md: 6 },
-              border: '1.5px solid rgba(201,160,99,0.35)',
-              boxShadow: '0 8px 32px 0 rgba(201,160,99,0.08)',
-              backdropFilter: 'blur(12px)',
-              p: { xs: 2, md: 3 },
-            }}>
-              <Typography variant="h5" sx={{ mb: 1.5, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
-                {String(t('hero.bio', 'Giới thiệu'))}
-              </Typography>
-              <Box
-                dangerouslySetInnerHTML={{ __html: hero.bio || hero.description || hero.summary }}
-                sx={{
-                  '& p': { mb: 2 },
-                  '& img': { maxWidth: '100%', height: 'auto' }
-                }}
-              />
-            </Box>
-          )}
 
-          {/* Origin */}
-          {hero.origin && (
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                mt: 2,
-                fontStyle: 'italic',
-                position: 'relative',
-                zIndex: 10
-              }}
-            >
-              {String(t('hero.origin', 'Origin'))}: {hero.origin}
-            </Typography>
-          )}
         </Box>
 
         {/* RIGHT: Sidebar */}
@@ -952,7 +931,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                                   background: 'rgba(0,0,0,0.05)',
                                   position: 'relative'
                                 }}>
-                                  <img src={h.image} alt={h.name} style={{
+                                  <img src={h.image || null} alt={h.name} style={{
                                     position: 'absolute',
                                     top: '17px',
                                     left: 0,
@@ -1010,7 +989,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                             }}
                           >
                             <Box sx={{ width: 52, height: 52, borderRadius: 2, overflow: 'hidden', flex: '0 0 auto' }}>
-                              <img src={h.image} alt={h.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              <img src={h.image || null} alt={h.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             </Box>
                             <Box sx={{ flex: 1, minWidth: 0 }}>
                               <Typography variant="body2" sx={{ fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -1077,7 +1056,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                                   background: 'rgba(0,0,0,0.05)',
                                   position: 'relative'
                                 }}>
-                                  <img src={h.image} alt={h.name} style={{
+                                  <img src={h.image || null} alt={h.name} style={{
                                     position: 'absolute',
                                     top: '17px',
                                     left: 0,
@@ -1147,7 +1126,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                             }}
                           >
                             <Box sx={{ width: 52, height: 52, borderRadius: 2, overflow: 'hidden', flex: '0 0 auto' }}>
-                              <img src={h.image} alt={h.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              <img src={h.image || null} alt={h.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             </Box>
                             <Box sx={{ flex: 1, minWidth: 0 }}>
                               <Typography variant="body2" sx={{ fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -1163,82 +1142,92 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                     </Box>
                   </>
                 ) : (
-                  <Typography variant="body2" color="text.secondary">{String(t('no_data', 'Không có dữ liệu'))}</Typography>
+                  <Typography variant="body2" color="text.secondary">{String(t('no_data', 'No Data'))}</Typography>
                 )}
               </Box>
             </Box>
           </Box>
         </Box>
+
+      </Box>
+
+
+      {/* Comment Section */}
+      <Box sx={{ width: '100%', mb: { xs: 2, md: 3 } }}>
+        <CommentSection targetType="Hero" targetId={hero.slug} />
       </Box>
 
       {/* Latest News Section - Full Width (outside sidebar) */}
-      {latestNews && latestNews.length > 0 && (
-        <Box sx={{ width: '100%', mb: { xs: 2, md: 3 } }}>
-          <Box sx={{
-            background: 'none',
-            borderRadius: { xs: 3, md: 6 },
-            border: '1.5px solid rgba(201,160,99,0.35)',
-            boxShadow: '0 8px 32px 0 rgba(201,160,99,0.08)',
-            backdropFilter: 'blur(12px)',
-            p: { xs: 2, md: 3 },
-          }}>
-            <Typography variant="h5" sx={{ mb: 2, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
-              {String(t('news.latest', 'Bài viết mới nhất'))}
-            </Typography>
+      {
+        latestNews && latestNews.length > 0 && (
+          <Box sx={{ width: '100%', mb: { xs: 2, md: 3 } }}>
+            <Box sx={{
+              background: 'none',
+              borderRadius: { xs: 3, md: 6 },
+              border: '1.5px solid rgba(201,160,99,0.35)',
+              boxShadow: '0 8px 32px 0 rgba(201,160,99,0.08)',
+              backdropFilter: 'blur(12px)',
+              p: { xs: 2, md: 3 },
+            }}>
+              <Typography variant="h5" sx={{ mb: 2, fontSize: { xs: '1.1rem', md: '1.5rem' } }}>
+                {String(t('news.latest', 'Latest News'))}
+              </Typography>
 
-            {/* Swiper for both mobile and desktop */}
-            <Swiper
-              modules={[Navigation, Pagination]}
-              spaceBetween={isMobile ? 12 : 20}
-              slidesPerView={isMobile ? 1.5 : 4}
-              navigation={!isMobile}
-              pagination={{ clickable: true }}
-              style={{ paddingBottom: 40 }}
-            >
-              {latestNews.map((news: any) => (
-                <SwiperSlide key={news._id || news.slug}>
-                  <Link prefetch={false} href={`/news/${news.slug || news._id}`} style={{ textDecoration: 'none' }}>
-                    <Box sx={{
-                      cursor: 'pointer',
-                      transition: 'transform 0.2s',
-                      '&:hover': { transform: 'translateY(-4px)' },
-                      pb: 1
-                    }}>
+              {/* Swiper for both mobile and desktop */}
+              <Swiper
+                modules={[Navigation, Pagination]}
+                spaceBetween={isMobile ? 12 : 20}
+                slidesPerView={isMobile ? 1.5 : 4}
+                navigation={!isMobile}
+                pagination={{ clickable: true }}
+                style={{ paddingBottom: 40 }}
+              >
+                {latestNews.map((news: any) => (
+                  <SwiperSlide key={news._id || news.slug}>
+                    <Link prefetch={false} href={`/news/${news.slug || news._id}`} style={{ textDecoration: 'none' }}>
                       <Box sx={{
-                        width: '100%',
-                        aspectRatio: '16/9',
-                        borderRadius: { xs: 2, md: 3 },
-                        overflow: 'hidden',
-                        border: '1px solid rgba(201,160,99,0.25)',
-                        mb: 1
+                        cursor: 'pointer',
+                        transition: 'transform 0.2s',
+                        '&:hover': { transform: 'translateY(-4px)' },
+                        pb: 1
                       }}>
-                        <img src={news.image} alt={news.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      </Box>
-                      <Typography variant="body2" sx={{
-                        fontWeight: 700,
-                        lineHeight: 1.25,
-                        fontSize: { xs: '0.85rem', md: '1rem' },
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical'
-                      }}>
-                        {news.title}
-                      </Typography>
-                      {news.publishedAt && (
-                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', md: '0.75rem' } }}>
-                          {formatDate(news.publishedAt)}
+                        <Box sx={{
+                          width: '100%',
+                          aspectRatio: '16/9',
+                          borderRadius: { xs: 2, md: 3 },
+                          overflow: 'hidden',
+                          border: '1px solid rgba(201,160,99,0.25)',
+                          mb: 1
+                        }}>
+                          <img src={news.image || null} alt={news.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </Box>
+                        <Typography variant="body2" sx={{
+                          fontWeight: 700,
+                          lineHeight: 1.25,
+                          fontSize: { xs: '0.85rem', md: '1rem' },
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical'
+                        }}>
+                          {news.title}
                         </Typography>
-                      )}
-                    </Box>
-                  </Link>
-                </SwiperSlide>
-              ))}
-            </Swiper>
+                        {news.publishedAt && (
+                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', md: '0.75rem' } }}>
+                            {formatDate(news.publishedAt)}
+                          </Typography>
+                        )}
+                      </Box>
+                    </Link>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </Box>
           </Box>
-        </Box>
-      )}
-    </Box>
+        )
+      }
+
+    </Box >
   );
 }

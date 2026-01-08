@@ -14,14 +14,14 @@ type Props = { params: Promise<{ slug: string }> };
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  
+
   try {
-    const res = await fetch(`${API_URL}/api/heroes/slug/${slug}`, { 
+    const res = await fetch(`${API_URL}/api/heroes/slug/${slug}`, {
       next: { revalidate: 3600 } // Cache 1 hour
     });
-    
+
     if (!res.ok) return { title: 'Hero Not Found' };
-    
+
     const hero = await res.json();
     const heroName = hero.name || 'Unknown Hero';
     const title = `${heroName} - Build, Guide & Stats | BlogHok`;
@@ -103,8 +103,8 @@ export default async function HeroDetailPage({ params }: Props) {
   // Fetch hero data with caching
   let hero: any = null;
   try {
-    const res = await fetch(`${API_URL}/api/heroes/slug/${slug}`, { 
-      next: { revalidate: 3600 } // Cache 1 hour
+    const res = await fetch(`${API_URL}/api/heroes/slug/${slug}`, {
+      next: { revalidate: 0 } // Cache disabled for debugging
     });
     if (!res.ok) throw new Error('Hero not found');
     hero = await res.json();
@@ -120,7 +120,7 @@ export default async function HeroDetailPage({ params }: Props) {
   try {
     const primaryRole = hero.roles?.[0];
     if (primaryRole) {
-      const res = await fetch(`${API_URL}/api/heroes?role=${encodeURIComponent(primaryRole)}&sort=winRate&limit=10`, { 
+      const res = await fetch(`${API_URL}/api/heroes?role=${encodeURIComponent(primaryRole)}&sort=winRate&limit=10`, {
         next: { revalidate: 1800 } // Cache 30 min
       });
       const data = await res.json();
@@ -135,7 +135,7 @@ export default async function HeroDetailPage({ params }: Props) {
   // Fetch top win-rate heroes with caching
   let topWinHeroes: any[] = [];
   try {
-    const res = await fetch(`${API_URL}/api/heroes?sort=winRate&limit=10`, { 
+    const res = await fetch(`${API_URL}/api/heroes?sort=winRate&limit=10`, {
       next: { revalidate: 1800 } // Cache 30 min
     });
     const data = await res.json();
@@ -149,7 +149,7 @@ export default async function HeroDetailPage({ params }: Props) {
   // Fetch latest news with caching
   let latestNews: any[] = [];
   try {
-    const res = await fetch(`${API_URL}/api/news?sort=latest&limit=6`, { 
+    const res = await fetch(`${API_URL}/api/news?sort=latest&limit=6`, {
       next: { revalidate: 600 } // Cache 10 min
     });
     const data = await res.json();
@@ -167,13 +167,14 @@ export default async function HeroDetailPage({ params }: Props) {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "Article",
+            "@type": "TechArticle",
             "headline": `${hero.name} Guide - Honor of Kings`,
-            "description": `Complete guide for ${hero.name} including best builds, arcana, skills, and strategies`,
-            "image": hero.image,
+            "description": `Complete guide for ${hero.name} including best builds, arcana, skills, and strategies. Win rate: ${hero.winRate}%, Tier: ${hero.metaTier}.`,
+            "image": hero.image?.startsWith('http') ? hero.image : `${process.env.NEXT_PUBLIC_BASE_URL || 'https://bloghok.com'}${hero.image}`,
             "author": {
               "@type": "Organization",
-              "name": "BlogHok"
+              "name": "BlogHok",
+              "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://bloghok.com'
             },
             "publisher": {
               "@type": "Organization",
@@ -187,8 +188,20 @@ export default async function HeroDetailPage({ params }: Props) {
               "@type": "WebPage",
               "@id": `${process.env.NEXT_PUBLIC_BASE_URL || 'https://bloghok.com'}/heroes/${slug}`
             },
+            "about": {
+              "@type": "VideoGame",
+              "name": "Honor of Kings",
+              "character": {
+                "@type": "Person",
+                "name": hero.name,
+                "description": hero.title,
+                "image": hero.image
+              }
+            },
             "datePublished": hero.createdAt || new Date().toISOString(),
             "dateModified": hero.updatedAt || new Date().toISOString(),
+            "dependencies": "Honor of Kings",
+            "proficiencyLevel": "Beginner"
           })
         }}
       />
@@ -268,7 +281,7 @@ export default async function HeroDetailPage({ params }: Props) {
           })
         }}
       />
-      
+
       <HeroDetailClient
         hero={hero}
         sameRoleHeroes={sameRoleHeroes}

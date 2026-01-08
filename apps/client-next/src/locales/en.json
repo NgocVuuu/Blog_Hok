@@ -45,18 +45,18 @@
     "champions": {
       "title": "Featured Champions"
     },
-  "items": {
+    "items": {
       "title": "Hot Items"
-  },
-  "searchPlaceholder": "Search heroes, equipment, news... (/ to focus)",
-  "surprise": "Surprise me",
-  "trending": "Trending Heroes",
-  "updated": "Updated",
-  "patchHighlights": "Latest Published",
-  "viewFull": "View full",
-  "latestNews": "Latest news",
-  "topCounters": "Top meta heroes",
-  "specialTrending": "Special Trending"
+    },
+    "searchPlaceholder": "Search heroes, equipment, news... (/ to focus)",
+    "surprise": "Surprise me",
+    "trending": "Trending Heroes",
+    "updated": "Updated",
+    "patchHighlights": "Latest Published",
+    "viewFull": "View full",
+    "latestNews": "Latest news",
+    "topCounters": "Top meta heroes",
+    "specialTrending": "Special Trending"
   },
   "footer": {
     "about": {
@@ -117,9 +117,9 @@
     "profile": "Profile",
     "combo": "Combo",
     "skins": "Skins",
-  "goodAgainst": "Good Against",
-  "sameRole": "Same-role Heroes",
-  "topWinRate": "Top Win Rate Heroes"
+    "goodAgainst": "Good Against",
+    "sameRole": "Same-role Heroes",
+    "topWinRate": "Top Win Rate Heroes"
   },
   "equipment": {
     "title": "Equipment",
@@ -131,7 +131,7 @@
     "passiveEffect": "Passive",
     "categories": {
       "all": "All categories",
-  "physical": "Physical",
+      "physical": "Physical",
       "attack": "Attack",
       "defense": "Defense",
       "magic": "Magic",
@@ -147,8 +147,8 @@
     "cooldown": "Cooldown",
     "gold": "Gold",
     "statLabels": {
-  "magicArmor": "Magical Defense",
-  "physicalArmor": "Physical Defense",
+      "magicArmor": "Magical Defense",
+      "physicalArmor": "Physical Defense",
       "magicAttack": "Magic Attack",
       "physicalAttack": "Physical Attack",
       "lifeSteal": "Life Steal",
@@ -156,11 +156,9 @@
       "movementSpeed": "Movement Speed",
       "attackSpeed": "Attack Speed",
       "cooldownReduction": "Cooldown Reduction",
-      "manaRegen": "Mana Regen"
-  ,
-  "maxHealth": "Max Health"
-  ,
-  "healthPer5s": "Health/5s"
+      "manaRegen": "Mana Regen",
+      "maxHealth": "Max Health",
+      "healthPer5s": "Health/5s"
     }
   },
   "arcana": {
@@ -187,8 +185,8 @@
   "news": {
     "title": "Title",
     "pageTitle": "News & Updates",
-  "latestNews": "Latest News",
-  "latest": "Latest News",
+    "latestNews": "Latest News",
+    "latest": "Latest News",
     "readMore": "Read More",
     "noNews": "No news available",
     "search": "Search articles...",
@@ -261,7 +259,7 @@
     "Farm Lane": "Farm Lane",
     "Jungle": "Jungle",
     "Mid Lane": "Mid Lane",
-  "Clash Lane": "Clash Lane",
+    "Clash Lane": "Clash Lane",
     "Abyssal Dragon Lane": "Abyssal Dragon Lane",
     "Dark Slayer Lane": "Dark Slayer Lane"
   },
@@ -290,15 +288,29 @@
     "privacy": {
       "title": "Privacy Policy",
       "intro": "This Privacy Policy explains how we collect, use, and protect your information when you use BlogHok.",
-      "data": {"title": "Data We Collect", "body": "We may collect usage analytics and optional account information to improve the experience."},
-      "usage": {"title": "How We Use Data", "body": "Data is used for performance optimization, personalization, and security."},
-      "contact": {"title": "Contact"}
+      "data": {
+        "title": "Data We Collect",
+        "body": "We may collect usage analytics and optional account information to improve the experience."
+      },
+      "usage": {
+        "title": "How We Use Data",
+        "body": "Data is used for performance optimization, personalization, and security."
+      },
+      "contact": {
+        "title": "Contact"
+      }
     },
     "terms": {
       "title": "Terms of Use",
       "intro": "By accessing BlogHok you agree to these terms. If you do not agree, please discontinue use.",
-      "acceptable": {"title": "Acceptable Use", "body": "Do not misuse the service, attempt unauthorized access, or abuse rate limits."},
-      "disclaimer": {"title": "Disclaimer", "body": "Content is provided for informational purposes without warranty."}
+      "acceptable": {
+        "title": "Acceptable Use",
+        "body": "Do not misuse the service, attempt unauthorized access, or abuse rate limits."
+      },
+      "disclaimer": {
+        "title": "Disclaimer",
+        "body": "Content is provided for informational purposes without warranty."
+      }
     },
     "contact": {
       "title": "Contact",
@@ -306,7 +318,23 @@
       "thanks": "Thank you! Your message has been received.",
       "emailAlternative": "You can also reach us at",
       "emailLabel": "Contact us at",
-      "form": {"name": "Name", "email": "Email", "message": "Message", "submit": "Send"}
+      "form": {
+        "name": "Name",
+        "email": "Email",
+        "message": "Message",
+        "submit": "Send"
+      }
     }
+  },
+  "compare": {
+    "title": "Hero Comparison",
+    "subtitle": "Compare stats, attributes, and playstyles side-by-side.",
+    "select_hero_1": "Select First Hero",
+    "select_hero_2": "Select Second Hero",
+    "select_hint": "Select two heroes to compare"
+  },
+  "calculator": {
+    "button": "Calculator",
+    "title": "Build Calculator"
   }
 }

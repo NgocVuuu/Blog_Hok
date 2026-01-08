@@ -18,7 +18,7 @@ const navLinks = [
   { to: '/news', label: 'nav.news' }
 ];
 
-export default function Navbar(){
+export default function Navbar() {
   const { t, i18n } = useTranslation();
   const pathname = usePathname() || '/';
   const router = useRouter();
@@ -62,23 +62,23 @@ export default function Navbar(){
   // Effect 1: listen to scroll and update scrolled state
   useEffect(() => {
     let ticking = false;
-    
+
     const onScroll = () => {
       if (!ticking) {
         ticking = true;
-        
+
         requestAnimationFrame(() => {
           // Use simple comparison, update state only if changed
           const y = window.scrollY || document.documentElement.scrollTop || 0;
           const shouldShrink = y > 24;
-          
+
           setScrolled(prev => {
             if (prev !== shouldShrink) {
               return shouldShrink;
             }
             return prev;
           });
-          
+
           ticking = false;
         });
       }
@@ -86,7 +86,7 @@ export default function Navbar(){
 
     // Only listen to window scroll for performance
     window.addEventListener('scroll', onScroll, { passive: true });
-    
+
     // Initial check
     onScroll();
 
@@ -243,19 +243,16 @@ export default function Navbar(){
             <MenuItem onClick={() => changeLanguage('id')}>Bahasa Indonesia</MenuItem>
             <MenuItem onClick={() => changeLanguage('zh')}>中文</MenuItem>
           </Menu>
+
         </Box>
-        {/* Logout - ẩn trên mobile */}
-        {user && user.role === 'admin' && (
-          <Button
-            variant="outlined"
-            color="success"
-            sx={{ ml: 2, fontWeight: 700 }}
-            onClick={handleLogout}
-            className="desktop-only"
-          >
-            {t('logout')}
-          </Button>
-        )}
+
+
+
+        {/* Logout - ẩn trên mobile - Refactored to GoogleLoginButton but keeping logic if needed for old admin? */}
+        {/* {user && user.role === 'admin' && ( ... )} --> Removing old logic in favor of GoogleLoginButton which handles user state */}
+
+        {/* Old logout button removed, using GoogleLoginButton instead */}
+
         {/* Hamburger menu - chỉ hiện trên mobile */}
         <IconButton
           color="inherit"
@@ -321,10 +318,10 @@ export default function Navbar(){
                     sx={{
                       '& .MuiTypography-root': {
                         color: '#2D1B06',
-                      fontWeight: 500
-                    }
-                  }}
-                />
+                        fontWeight: 500
+                      }
+                    }}
+                  />
                 </ListItemButton>
               </ListItem>
             ))}
@@ -417,6 +414,6 @@ export default function Navbar(){
           )}
         </Drawer>
       </Toolbar>
-    </AppBar>
+    </AppBar >
   );
 }

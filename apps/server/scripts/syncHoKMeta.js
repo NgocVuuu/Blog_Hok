@@ -18,13 +18,19 @@ const envLoaded = dotenv.config({ path: serverEnvPath });
 if (envLoaded.error) {
   dotenv.config({ path: rootEnvPath });
 }
-
 const { connectDB } = require('../config/db');
 const { syncHoKMeta } = require('../services/syncHoKMetaService');
 
 (async () => {
   const args = process.argv.slice(2);
   const dryRun = args.includes('--dry-run');
+  const heal = args.includes('--heal');
+
+  if (heal) {
+    process.env.HOK_RANKLIST_JSON_FILE = path.join(__dirname, '..', 'heroes_to_heal.json');
+    console.log('[HoK Sync] Auto-selected dump file for healing:', process.env.HOK_RANKLIST_JSON_FILE);
+  }
+
   try {
     if (process.env.DEBUG_HOK === '1') {
       console.log('[HoK Sync] Debug env:');
@@ -32,7 +38,11 @@ const { syncHoKMeta } = require('../services/syncHoKMetaService');
       console.log('  HOK_RANKLIST_INLINE_JSON:', process.env.HOK_RANKLIST_INLINE_JSON ? '(set)' : '(not set)');
     }
     await connectDB();
-    const res = await syncHoKMeta({ dryRun });
+    const res = await syncHoKMeta({
+      dryRun,
+      healForce: heal,
+      staticFile: process.env.HOK_RANKLIST_JSON_FILE
+    });
     console.log('[HoK Sync] Result:', JSON.stringify(res, null, 2));
     process.exit(0);
   } catch (err) {

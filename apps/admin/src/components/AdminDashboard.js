@@ -8,6 +8,7 @@ import PostList from './PostList';
 import HeroList from './HeroList';
 import ArcanaList from './ArcanaList';
 import EquipmentList from './EquipmentList';
+import DraftChangesPage from '../pages/DraftChangesPage';
 
 function TabPanel({ children, value, index }) {
   return value === index && (
@@ -72,6 +73,7 @@ const AdminDashboard = () => {
         <Tab label="Tướng" />
         <Tab label="Arcana" />
         <Tab label="Trang bị" />
+        <Tab label="Bản nháp" />
       </Tabs>
       <TabPanel value={tab} index={0}>
         <AdminPostForm editingPost={editingPost} onFormSubmit={handlePostFormSubmit} />
@@ -94,6 +96,9 @@ const AdminDashboard = () => {
           onFormSubmit={handleEquipmentFormSubmit}
         />
         <EquipmentList onEdit={handleEditEquipment} />
+      </TabPanel>
+      <TabPanel value={tab} index={4}>
+        <DraftChangesPage />
       </TabPanel>
     </Box>
   );

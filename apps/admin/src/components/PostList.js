@@ -9,7 +9,7 @@ const PostList = ({ onEdit }) => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/news`)
+    fetch(`${API_URL}/api/news?status=all&limit=100`)
       .then(res => res.json())
       .then(response => {
         // Handle new API response format
@@ -63,6 +63,18 @@ const PostList = ({ onEdit }) => {
                       bgcolor: '#C9A063',
                       color: 'white',
                       fontWeight: 500
+                    }}
+                  />
+                )}
+                {post.status === 'draft' && (
+                  <Chip
+                    label="Draft"
+                    size="small"
+                    variant="outlined"
+                    sx={{
+                      ml: 1,
+                      color: 'text.secondary',
+                      borderColor: 'text.divider'
                     }}
                   />
                 )}

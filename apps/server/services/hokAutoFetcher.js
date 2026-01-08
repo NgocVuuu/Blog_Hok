@@ -161,7 +161,12 @@ async function fetchAndSync(options = {}) {
         // Step 2: Run sync
         logger.info('[HoK Auto Sync] Step 2/2: Syncing to database...');
         const { syncHoKMeta } = require('./syncHoKMetaService');
-        const syncResult = await syncHoKMeta({ logger });
+        // Pass scopes and healForce options
+        const syncResult = await syncHoKMeta({
+            logger,
+            scopes: options.scopes,
+            healForce: options.healForce
+        });
 
         return {
             success: true,

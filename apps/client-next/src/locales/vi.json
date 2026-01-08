@@ -52,11 +52,11 @@
     "surprise": "Surprise me",
     "trending": "Tướng thịnh hành",
     "updated": "Cập nhật",
-  "patchHighlights": "Mới phát hành",
+    "patchHighlights": "Mới phát hành",
     "viewFull": "Xem đầy đủ",
     "latestNews": "Bản tin mới",
-  "topCounters": "Top tướng meta",
-  "specialTrending": "Xu hướng đặc biệt"
+    "topCounters": "Top tướng meta",
+    "specialTrending": "Xu hướng đặc biệt"
   },
   "footer": {
     "about": {
@@ -259,7 +259,7 @@
     "Farm Lane": "Đường rồng",
     "Jungle": "Rừng",
     "Mid Lane": "Đường giữa",
-  "Clash Lane": "Đường Caesar",
+    "Clash Lane": "Đường Caesar",
     "Abyssal Dragon Lane": "Đường rồng",
     "Dark Slayer Lane": "Đường Caesar"
   },
@@ -288,13 +288,32 @@
     "privacy": {
       "title": "Chính sách bảo mật",
       "intro": "Chính sách này giải thích cách chúng tôi thu thập, sử dụng, và bảo vệ thông tin bạn khi dùng BlogHok.",
-      "data": {"title": "Dữ liệu thu thập", "body": "Chúng tôi có thể thu thập thống kê sử dụng và thông tin tài khoản tùy chọn để cải thiện trải nghiệm."},
-      "usage": {"title": "Cách sử dụng dữ liệu", "body": "Dữ liệu dùng để tối ưu hiệu năng, cá nhân hóa, và bảo mật."},
-      "contact": {"title": "Liên hệ"}
+      "data": {
+        "title": "Dữ liệu thu thập",
+        "body": "Chúng tôi có thể thu thập thống kê sử dụng và thông tin tài khoản tùy chọn để cải thiện trải nghiệm."
+      },
+      "usage": {
+        "title": "Cách sử dụng dữ liệu",
+        "body": "Dữ liệu dùng để tối ưu hiệu năng, cá nhân hóa, và bảo mật."
+      },
+      "contact": {
+        "title": "Liên hệ"
+      }
     },
     "terms": {
       "title": "Syarat Penggunaan",
       "intro": "..."
     }
+  },
+  "compare": {
+    "title": "So Sánh Tướng",
+    "subtitle": "So sánh chỉ số, thuộc tính và lối chơi side-by-side.",
+    "select_hero_1": "Chọn Tướng 1",
+    "select_hero_2": "Chọn Tướng 2",
+    "select_hint": "Chọn hai tướng để so sánh"
+  },
+  "calculator": {
+    "button": "Tính toán",
+    "title": "Công cụ tính Build"
   }
 }

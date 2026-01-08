@@ -53,6 +53,11 @@ const newsSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  status: {
+    type: String,
+    enum: ['draft', 'published'],
+    default: 'published',
+  },
 }, {
   timestamps: true, // Adds createdAt and updatedAt automatically
 });

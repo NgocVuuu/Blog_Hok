@@ -62,7 +62,7 @@ exports.getAllHeroes = async (req, res, next) => {
     // Execute queries in parallel
     const [heroes, total] = await Promise.all([
       Hero.find(query)
-        .select('name title image roles lanes metaTier winRate pickRate banRate slug')
+        .select('name title image bannerImage roles lanes metaTier winRate pickRate banRate slug')
         .sort(sortCriteria)
         .skip(skip)
         .limit(limitNum)
@@ -99,12 +99,12 @@ exports.getHeroById = async (req, res, next) => {
   try {
     // Extract the MongoDB ID part before any colon if present
     const idPart = req.params.id.split(':')[0];
-    
+
     // Check if the ID format is valid
     if (!mongoose.Types.ObjectId.isValid(idPart)) {
       return res.status(400).json({ message: 'ID tướng không hợp lệ' });
     }
-    
+
     const hero = await Hero.findById(idPart)
       .populate({ path: 'suggestedArcana.arcana', select: 'name image color tier' })
       .populate({ path: 'suggestedEquipment.equipment', select: 'name image category tier price' })
@@ -114,7 +114,7 @@ exports.getHeroById = async (req, res, next) => {
     if (Array.isArray(heroObj.suggestedArcana)) {
       heroObj.suggestedArcana = heroObj.suggestedArcana
         .filter(i => i && i.arcana)
-        .sort((a,b) => (a.order||0) - (b.order||0))
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
         .map(i => ({
           _id: i.arcana._id,
           name: i.arcana.name,
@@ -128,7 +128,7 @@ exports.getHeroById = async (req, res, next) => {
     if (Array.isArray(heroObj.suggestedEquipment)) {
       heroObj.suggestedEquipment = heroObj.suggestedEquipment
         .filter(i => i && i.equipment)
-        .sort((a,b) => (a.order||0) - (b.order||0))
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
         .map(i => ({
           _id: i.equipment._id,
           name: i.equipment.name,
@@ -143,7 +143,7 @@ exports.getHeroById = async (req, res, next) => {
     }
     // Normalize arcanaBuilds to flattened items and computed totals (same as /slug)
     if (Array.isArray(heroObj.arcanaBuilds)) {
-      const fields = ['attack','defense','magic','health','mana','speed','criticalRate','criticalDamage','penetration','magicPenetration','lifeSteal','magicLifeSteal','cooldownReduction','attackSpeed','movementSpeed'];
+      const fields = ['attack', 'defense', 'magic', 'health', 'mana', 'speed', 'criticalRate', 'criticalDamage', 'penetration', 'magicPenetration', 'lifeSteal', 'magicLifeSteal', 'cooldownReduction', 'attackSpeed', 'movementSpeed'];
       heroObj.arcanaBuilds = heroObj.arcanaBuilds.map(build => {
         let totals = { ...(build.totals || {}) };
         fields.forEach(f => { if (typeof totals[f] !== 'number') totals[f] = 0; });
@@ -183,8 +183,8 @@ exports.createHero = async (req, res, next) => {
     console.log('[HERO][CREATE] Incoming body keys:', Object.keys(req.body));
     if (Array.isArray(req.body.arcanaBuilds)) {
       console.log('[HERO][CREATE] arcanaBuilds count:', req.body.arcanaBuilds.length);
-      req.body.arcanaBuilds.forEach((b,i)=>{
-        console.log(`  Build[${i}] name=${b.name} items=${b.items?b.items.length:0}`);
+      req.body.arcanaBuilds.forEach((b, i) => {
+        console.log(`  Build[${i}] name=${b.name} items=${b.items ? b.items.length : 0}`);
       });
     } else {
       console.log('[HERO][CREATE] arcanaBuilds missing or not array');
@@ -201,37 +201,37 @@ exports.updateHero = async (req, res, next) => {
   try {
     // Extract the MongoDB ID part before any colon if present
     const idPart = req.params.id.split(':')[0];
-    
+
     // Check if the ID format is valid
     if (!mongoose.Types.ObjectId.isValid(idPart)) {
       return res.status(400).json({ message: 'ID tướng không hợp lệ' });
     }
-    
+
     const hero = await Hero.findById(idPart);
     if (!hero) return res.status(404).json({ message: 'Không tìm thấy tướng' });
-    
+
     // Log for debugging
     console.log('Updating hero:', idPart);
     console.log('Request body:', req.body);
     console.log('Existing hero before assign:', { name: hero.name, slug: hero.slug, id: hero._id });
-    
+
     Object.assign(hero, req.body);
-  console.log('[HERO][UPDATE] After assign arcanaBuilds type:', Array.isArray(hero.arcanaBuilds) ? 'array' : typeof hero.arcanaBuilds, 'length:', Array.isArray(hero.arcanaBuilds)?hero.arcanaBuilds.length:0);
+    console.log('[HERO][UPDATE] After assign arcanaBuilds type:', Array.isArray(hero.arcanaBuilds) ? 'array' : typeof hero.arcanaBuilds, 'length:', Array.isArray(hero.arcanaBuilds) ? hero.arcanaBuilds.length : 0);
     console.log('Hero after assign (pre-save):', { name: hero.name, slug: hero.slug, id: hero._id });
-    
+
     try {
       const updatedHero = await hero.save();
       console.log('Updated hero successfully');
       return res.json(updatedHero);
     } catch (err) {
       if (err.name === 'ValidationError') {
-  console.error('Hero validation error messages:', Object.values(err.errors).map(e => e.message));
-  console.error('Hero validation error raw:', Object.keys(err.errors).reduce((acc,k)=>{acc[k]={ message: err.errors[k].message, value: err.errors[k].value }; return acc;}, {}));
+        console.error('Hero validation error messages:', Object.values(err.errors).map(e => e.message));
+        console.error('Hero validation error raw:', Object.keys(err.errors).reduce((acc, k) => { acc[k] = { message: err.errors[k].message, value: err.errors[k].value }; return acc; }, {}));
         return res.status(400).json({
           success: false,
-            message: 'Validation Error',
-            details: Object.values(err.errors).map(e => e.message),
-            fields: Object.keys(err.errors)
+          message: 'Validation Error',
+          details: Object.values(err.errors).map(e => e.message),
+          fields: Object.keys(err.errors)
         });
       }
       if (err && err.code === 11000) { // duplicate key
@@ -257,15 +257,15 @@ exports.deleteHero = async (req, res, next) => {
   try {
     // Extract the MongoDB ID part before any colon if present
     const idPart = req.params.id.split(':')[0];
-    
+
     // Check if the ID format is valid
     if (!mongoose.Types.ObjectId.isValid(idPart)) {
       return res.status(400).json({ message: 'ID tướng không hợp lệ' });
     }
-    
+
     const hero = await Hero.findById(idPart);
     if (!hero) return res.status(404).json({ message: 'Không tìm thấy tướng' });
-    
+
     // Note: hero.remove() is deprecated in newer Mongoose versions
     // Use deleteOne instead
     await Hero.deleteOne({ _id: idPart });
@@ -353,35 +353,35 @@ exports.getHeroBySlug = async (req, res, next) => {
     if (Array.isArray(heroObj.suggestedArcana)) {
       heroObj.suggestedArcana = heroObj.suggestedArcana
         .filter(i => i && i.arcana)
-        .sort((a,b) => (a.order||0) - (b.order||0))
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
         .map(i => ({
           _id: i.arcana._id,
-            name: i.arcana.name,
-            image: i.arcana.image,
-            color: i.arcana.color,
-            tier: i.arcana.tier,
-            note: i.note || '',
-            order: i.order || 0
+          name: i.arcana.name,
+          image: i.arcana.image,
+          color: i.arcana.color,
+          tier: i.arcana.tier,
+          note: i.note || '',
+          order: i.order || 0
         }));
     }
     if (Array.isArray(heroObj.suggestedEquipment)) {
       heroObj.suggestedEquipment = heroObj.suggestedEquipment
         .filter(i => i && i.equipment)
-        .sort((a,b) => (a.order||0) - (b.order||0))
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
         .map(i => ({
           _id: i.equipment._id,
-            name: i.equipment.name,
-            image: i.equipment.image,
-            category: i.equipment.category,
-            tier: i.equipment.tier,
-            price: i.equipment.price,
-            note: i.note || '',
-            order: i.order || 0,
-            build: typeof i.build === 'number' ? i.build : 1
+          name: i.equipment.name,
+          image: i.equipment.image,
+          category: i.equipment.category,
+          tier: i.equipment.tier,
+          price: i.equipment.price,
+          note: i.note || '',
+          order: i.order || 0,
+          build: typeof i.build === 'number' ? i.build : 1
         }));
     }
     if (Array.isArray(heroObj.arcanaBuilds)) {
-      const fields = ['attack','defense','magic','health','mana','speed','criticalRate','criticalDamage','penetration','magicPenetration','lifeSteal','magicLifeSteal','cooldownReduction','attackSpeed','movementSpeed'];
+      const fields = ['attack', 'defense', 'magic', 'health', 'mana', 'speed', 'criticalRate', 'criticalDamage', 'penetration', 'magicPenetration', 'lifeSteal', 'magicLifeSteal', 'cooldownReduction', 'attackSpeed', 'movementSpeed'];
       heroObj.arcanaBuilds = heroObj.arcanaBuilds.map(build => {
         // Compute totals from populated arcana attributes if not provided
         let totals = { ...(build.totals || {}) };
@@ -414,7 +414,7 @@ exports.getHeroBySlug = async (req, res, next) => {
       });
     }
 
-  res.json(heroObj);
+    res.json(heroObj);
   } catch (err) {
     next(err);
   }

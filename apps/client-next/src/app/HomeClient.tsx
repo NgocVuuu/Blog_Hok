@@ -7,6 +7,7 @@ import HomeSearch from '@/components/HomeSearch';
 import NewsCard from '@/components/NewsCard';
 import SectionUnderline from '@/components/SectionUnderline';
 import { Box, Container, Typography, Skeleton } from '@mui/material';
+import CalculatorButton from '@/components/CalculatorButton';
 import { useTranslation } from 'react-i18next';
 import { getAllHeroesAll } from '@/lib/heroService';
 
@@ -52,17 +53,17 @@ const timeAgoRaw = (date: Date | null, t: any) => {
   return `${Math.floor(diff / 86400)} ${t('time.days_ago', 'days ago')}`;
 };
 
-export default function HomePage(){
+export default function HomePage() {
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
-  
+
   // Separate state for better performance
   const [heroes, setHeroes] = useState<any[]>([]);
   const [heroesUpdatedAt, setHeroesUpdatedAt] = useState<Date | null>(null);
   const [news, setNews] = useState<any[]>([]);
   const [special, setSpecial] = useState<any[]>([]);
   const [newsUpdatedAt, setNewsUpdatedAt] = useState<Date | null>(null);
-  
+
   const [loadingHeroes, setLoadingHeroes] = useState(true);
   const [loadingNews, setLoadingNews] = useState(true);
   const [loadingSpecial, setLoadingSpecial] = useState(true);
@@ -71,16 +72,16 @@ export default function HomePage(){
   useEffect(() => {
     let mounted = true;
     const abortController = new AbortController();
-    
+
     const fetchHeroes = async () => {
       try {
         const hData = await getAllHeroesAll(
-          { page: 1, limit: 100, sort: 'name' }, 
+          { page: 1, limit: 100, sort: 'name' },
           { signal: abortController.signal }
         );
-        
+
         if (!mounted || abortController.signal.aborted) return;
-        
+
         startTransition(() => {
           setHeroes(Array.isArray(hData) ? hData : []);
           setLoadingHeroes(false);
@@ -113,7 +114,7 @@ export default function HomePage(){
     };
 
     setTimeout(fetchHeroes, 0);
-    
+
     return () => {
       mounted = false;
       abortController.abort();
@@ -124,18 +125,18 @@ export default function HomePage(){
   useEffect(() => {
     let mounted = true;
     const abortController = new AbortController();
-    
+
     const fetchNews = async () => {
       try {
         const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000';
-        const res = await axios.get(`${API_URL}/api/news`, { 
-          signal: abortController.signal 
+        const res = await axios.get(`${API_URL}/api/news`, {
+          signal: abortController.signal
         });
-        
+
         if (!mounted || abortController.signal.aborted) return;
-        
+
         const nData = res.data?.success ? res.data.data : (Array.isArray(res.data) ? res.data : []);
-        
+
         startTransition(() => {
           setNews(Array.isArray(nData) ? nData : []);
           setNewsUpdatedAt(new Date());
@@ -153,7 +154,7 @@ export default function HomePage(){
 
     // Defer news fetch slightly after heroes
     setTimeout(fetchNews, 100);
-    
+
     return () => {
       mounted = false;
       abortController.abort();
@@ -164,18 +165,18 @@ export default function HomePage(){
   useEffect(() => {
     let mounted = true;
     const abortController = new AbortController();
-    
+
     const fetchSpecial = async () => {
       try {
         const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000';
-        const res = await axios.get(`${API_URL}/api/meta/special-trending`, { 
-          signal: abortController.signal 
+        const res = await axios.get(`${API_URL}/api/meta/special-trending`, {
+          signal: abortController.signal
         });
-        
+
         if (!mounted || abortController.signal.aborted) return;
-        
+
         const sData = res.data?.success ? (res.data.data || []) : (Array.isArray(res.data) ? res.data : []);
-        
+
         startTransition(() => {
           setSpecial(Array.isArray(sData) ? sData : []);
           setLoadingSpecial(false);
@@ -192,7 +193,7 @@ export default function HomePage(){
 
     // Defer special fetch even more
     setTimeout(fetchSpecial, 200);
-    
+
     return () => {
       mounted = false;
       abortController.abort();
@@ -202,10 +203,10 @@ export default function HomePage(){
   // Optimized memoization with proper dependencies
   const latest = useMemo(() => {
     if (!Array.isArray(news) || news.length === 0) return [];
-    
+
     return news
-      .sort((a: any, b: any) => 
-        new Date(b.createdAt || b.date || 0).getTime() - 
+      .sort((a: any, b: any) =>
+        new Date(b.createdAt || b.date || 0).getTime() -
         new Date(a.createdAt || a.date || 0).getTime()
       )
       .slice(0, 8);
@@ -229,23 +230,25 @@ export default function HomePage(){
       </Box>
 
       <Box component="section" sx={{ mb: 4 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 0.25 }}>
-          {/* Use semantic heading level h2 for section title while keeping visual h5 styling */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Typography component="h2" variant="h5" noWrap sx={{ fontWeight: 800, fontSize: { xs: 18, sm: 'inherit' }, minWidth: 0 }}>
             {t('home.specialTrending', 'Special Trending')}
           </Typography>
+          <CalculatorButton />
         </Box>
-        {loadingSpecial ? (
-          <Skeleton variant="rectangular" height={220} sx={{ borderRadius: 2 }} />
-        ) : (
-          <SpecialTrending items={special} />
-        )}
+        <Box>
+          {loadingSpecial ? (
+            <Skeleton variant="rectangular" height={220} sx={{ borderRadius: 2 }} />
+          ) : (
+            <SpecialTrending items={special} />
+          )}
+        </Box>
       </Box>
 
       <Box component="section" sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h5" noWrap sx={{ fontWeight: 800, minWidth: 0, fontSize: { xs: 18, sm: 'inherit' } }}>
-            {t('home.topCounters','Top meta heroes')}
+            {t('home.topCounters', 'Top meta heroes')}
           </Typography>
         </Box>
         <TopCounters heroes={heroes} loading={loadingHeroes} />
@@ -254,7 +257,7 @@ export default function HomePage(){
       <Box component="section">
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1, flexWrap: 'nowrap' }}>
           <Typography variant="h5" noWrap sx={{ fontWeight: 700, color: 'text.primary', minWidth: 0, flex: 1, fontSize: { xs: 18, sm: 'inherit' } }}>
-            {t('home.patchHighlights','Patch highlights')}
+            {t('home.patchHighlights', 'Patch highlights')}
           </Typography>
           {/* Removed the 'Updated just now' caption for Latest Published as requested */}
         </Box>
@@ -265,12 +268,12 @@ export default function HomePage(){
           </Box>
         ) : (
           featuredNewsItem && (
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, 
+            <Box sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
               gap: { xs: 2, md: 7, lg: 8 },
-              mb: 3, 
-              alignItems: 'stretch' 
+              mb: 3,
+              alignItems: 'stretch'
             }}>
               <PatchHighlights item={featuredNewsItem} loading={loadingNews} />
               <HeroMetaPanel heroes={heroes} loading={loadingHeroes} lastUpdated={heroesUpdatedAt} />
@@ -282,7 +285,7 @@ export default function HomePage(){
       <Box component="section">
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h5" noWrap sx={{ fontWeight: 800, minWidth: 0, fontSize: { xs: 18, sm: 'inherit' } }}>
-            {t('home.latestNews','Latest news')}
+            {t('home.latestNews', 'Latest news')}
           </Typography>
         </Box>
         {loadingNews ? (
@@ -292,8 +295,8 @@ export default function HomePage(){
             ))}
           </Box>
         ) : (
-          <Box 
-            sx={{ 
+          <Box
+            sx={{
               display: { xs: 'flex', sm: 'grid' },
               gap: 2,
               overflowX: { xs: 'auto', sm: 'visible' },
@@ -307,9 +310,9 @@ export default function HomePage(){
             }}
           >
             {latest.map((item: any, i: number) => (
-              <Box 
+              <Box
                 key={item.slug || item._id || i}
-                sx={{ 
+                sx={{
                   minWidth: { xs: '85%', sm: 'auto' },
                   scrollSnapAlign: { xs: 'center', sm: 'unset' },
                   scrollSnapStop: { xs: 'always', sm: 'unset' }
