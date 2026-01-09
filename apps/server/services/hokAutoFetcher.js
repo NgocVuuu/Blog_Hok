@@ -86,10 +86,19 @@ async function fetchHeroStats(options = {}) {
         logger.info('[HoK Auto Fetcher] Navigating to HoK website...');
 
         // Navigate to the hero ranking page
-        await page.goto('https://camp.honorofkings.com/h5/app/index.html?lang=en&from=official&heroId=199#/hero-hot-list', {
-            waitUntil: 'networkidle2',
-            timeout
-        });
+        try {
+            await page.goto('https://camp.honorofkings.com/h5/app/index.html?lang=en&from=official&heroId=199#/hero-hot-list', {
+                waitUntil: 'networkidle2',
+                timeout
+            });
+        } catch (navError) {
+            // If data is already captured, we typically don't care if the UI finished loading
+            if (heroStatsData) {
+                logger.warn(`[HoK Auto Fetcher] Navigation timed out/failed but API data was captured (${heroStatsData.data?.list?.length} heroes). Proceeding...`);
+            } else {
+                throw navError;
+            }
+        }
 
         // Wait for API call to complete
         logger.info('[HoK Auto Fetcher] Waiting for API response...');
