@@ -51,6 +51,20 @@ class HeroDetailFetcher {
             // Set User Agent to avoid bot detection
             await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
+            // --- OPTIMIZATION: Block heavy resources ---
+            await page.setRequestInterception(true);
+            page.on('request', (req) => {
+                // If it's the hero detail page itself or an API call, let it pass
+                // We also need to be careful NOT to block the API we are listening for (getherodataall)
+                // The API is XHR/Fetch.
+                const resourceType = req.resourceType();
+                if (['image', 'stylesheet', 'font', 'media'].includes(resourceType)) {
+                    req.abort();
+                } else {
+                    req.continue();
+                }
+            });
+
             // Setup wait BEFORE navigation
             // Setup wait BEFORE navigation
             // Collection for API responses
@@ -345,6 +359,16 @@ class HeroDetailFetcher {
             const page = await browser.newPage();
             await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
+            // --- OPTIMIZATION: Block heavy resources ---
+            await page.setRequestInterception(true);
+            page.on('request', (req) => {
+                if (['image', 'stylesheet', 'font', 'media'].includes(req.resourceType())) {
+                    req.abort();
+                } else {
+                    req.continue();
+                }
+            });
+
             const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
             if (!response.ok()) {
                 this.logger.warn(`[Hero Scraper] Liquipedia page not found for ${heroName} (Status: ${response.status()})`);
@@ -569,6 +593,16 @@ class HeroDetailFetcher {
             const page = await browser.newPage();
             const urlName = heroName.replace(/ /g, '_');
             const targetUrl = `https://honor-of-kings.fandom.com/wiki/${urlName}`;
+
+            // --- OPTIMIZATION: Block heavy resources ---
+            await page.setRequestInterception(true);
+            page.on('request', (req) => {
+                if (['image', 'stylesheet', 'font', 'media'].includes(req.resourceType())) {
+                    req.abort();
+                } else {
+                    req.continue();
+                }
+            });
 
             await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
 

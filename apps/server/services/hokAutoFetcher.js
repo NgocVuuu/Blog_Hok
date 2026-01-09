@@ -52,12 +52,17 @@ async function fetchHeroStats(options = {}) {
         // Variable to store the intercepted response
         let heroStatsData = null;
 
-        // Enable request interception
+        // Enable request interception to block heavy resources
         await page.setRequestInterception(true);
 
-        // Intercept API requests
-        page.on('request', (request) => {
-            request.continue();
+        page.on('request', (req) => {
+            const resourceType = req.resourceType();
+            // Block images, fonts, media, stylesheets, and other non-essentials
+            if (['image', 'stylesheet', 'font', 'media', 'other'].includes(resourceType)) {
+                req.abort();
+            } else {
+                req.continue();
+            }
         });
 
         // Intercept API responses
