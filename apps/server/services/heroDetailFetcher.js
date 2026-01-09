@@ -641,6 +641,8 @@ class HeroDetailFetcher {
                 // console.log('Available Headers:', h2s.map(h => h.innerText)); 
                 data.debugHeaders = h2s.map(h => h.innerText);
 
+                let loreHeader = null; // Fix: Initialize variable
+
                 // Find all candidates
                 const candidates = h2s.filter(h => {
                     const t = h.innerText.trim().toLowerCase();
