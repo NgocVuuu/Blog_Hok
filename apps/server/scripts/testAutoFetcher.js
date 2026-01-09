@@ -61,6 +61,32 @@ async function testFetchAndSync() {
             });
         }
 
+        // --- NEW: Add Secondary Tasks (Discovery & News) ---
+        // Originally in hokMetaScheduler.js
+        console.log('\n========================================');
+        console.log('STEP 3: Running Additional Tasks (Discovery & Drafts)');
+        console.log('========================================\n');
+
+        const { HoKDiscoveryService } = require('../services/hokDiscoveryService');
+        const { HoKMetaSyncScheduler } = require('../services/hokMetaScheduler');
+
+        // Use a dummy scheduler instance just to access methods if needed, 
+        // OR better: Instantiate DiscoveryService directly.
+        const discovery = new HoKDiscoveryService();
+        console.log('[Task] Scanning for New Heroes...');
+        await discovery.scanForNewHeroes();
+
+        console.log('[Task] Scanning for New Skins...');
+        await discovery.scanForNewSkins();
+
+        // For drafts, we need the scheduler instance or move logic. 
+        // Let's create a temporary scheduler instance to run the draft logic.
+        const scheduler = new HoKMetaSyncScheduler();
+        console.log('[Task] Generating Weekly News Drafts...');
+        await scheduler.generateWeeklyDrafts();
+
+        console.log('\n✅ All Secondary Tasks Completed!');
+
         process.exit(0);
     } catch (error) {
         console.error('\n❌ Fetch & Sync Failed:', error.message);
