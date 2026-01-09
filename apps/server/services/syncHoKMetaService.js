@@ -560,28 +560,36 @@ async function syncHoKMeta({
           try {
             officialData = OfficialId ? await fetcher.fetchOfficialData(OfficialId) : null;
 
-            const [w, l] = await Promise.all([
-              fetcher.fetchWikiData(rawName),
-              fetcher.fetchLiquipediaData(rawName)
-            ]);
-            wikiData = w;
-            liquipediaData = l;
+            // Only fetch wiki/liquipedia if we really need lore/skills/images
+            if (scopes.includes('images') || scopes.includes('skills') || scopes.includes('lore')) {
+              const [w, l] = await Promise.all([
+                fetcher.fetchWikiData(rawName),
+                fetcher.fetchLiquipediaData(rawName)
+              ]);
+              wikiData = w;
+              liquipediaData = l;
+            }
           } catch (e) {
             logger.warn(`Fetch error for ${rawName}: ${e.message}`);
           }
         }
       }
 
-      // --- 2. COMMON DATA (Lanes/Roles) ---
-      if (!hero || scopes.includes('all')) {
+      // --- 2. COMMON DATA (Lanes/Roles) & LORE ---
+      // CRITICAL: Remove 'all' to prevent overwriting unless explicit 'lore' scope
+      if (!hero || scopes.includes('lore')) {
         if (liquipediaData || wikiData || officialData) {
           const destLanes = (liquipediaData?.lanes?.length) ? liquipediaData.lanes : (wikiData?.lane || []);
           const destRoles = (liquipediaData?.roles?.length) ? liquipediaData.roles : (wikiData?.class || []);
 
           if (destLanes.length) patchData.lanes = destLanes;
           if (destRoles.length) patchData.roles = destRoles;
-          patchData.title = liquipediaData?.title || wikiData?.title || officialData?.title || (hero?.title);
-          patchData.slug = slugify(rawName);
+
+          // Only update title/slug on creation or explicit
+          if (!hero) {
+            patchData.title = liquipediaData?.title || wikiData?.title || officialData?.title || (hero?.title);
+            patchData.slug = slugify(rawName);
+          }
 
           const sourceLore = wikiData?.lore || liquipediaData?.lore || (officialData?.story || '');
           if (sourceLore && sourceLore.length > 10) {
@@ -591,7 +599,8 @@ async function syncHoKMeta({
       }
 
       // --- 3. IMAGES SCOPE ---
-      if (scopes.includes('all') || scopes.includes('images') || !hero) {
+      // CRITICAL: Remove 'all', requires explicit 'images'
+      if (scopes.includes('images') || !hero) {
         try {
           const imgPatch = await processImages(hero || {}, rawName, officialData, s.heroId, liquipediaData, wikiData, dryRun, logger);
           patchData = { ...patchData, ...imgPatch };
@@ -601,7 +610,8 @@ async function syncHoKMeta({
       }
 
       // --- 3.5 SKINS IMAGES SCOPE ---
-      if ((scopes.includes('all') || scopes.includes('skins')) && s.heroId) {
+      // CRITICAL: Remove 'all', requires explicit 'skins'
+      if ((scopes.includes('skins')) && s.heroId) {
         try {
           const skinPatch = await processSkins(hero || {}, rawName, s.heroId, liquipediaData, wikiData, dryRun, logger);
           patchData = { ...patchData, ...skinPatch };
@@ -611,7 +621,8 @@ async function syncHoKMeta({
       }
 
       // --- 4. SKILLS SCOPE ---
-      if ((scopes.includes('all') || scopes.includes('skills') || !hero) && (officialData || liquipediaData)) {
+      // CRITICAL: Remove 'all', requires explicit 'skills'
+      if ((scopes.includes('skills') || !hero) && (officialData || liquipediaData)) {
         const skillPatch = await processSkills(hero || {}, rawName, officialData, liquipediaData, wikiData, dryRun, logger);
         patchData = { ...patchData, ...skillPatch }; // Fixed: Was waiting but not assigning
       }
