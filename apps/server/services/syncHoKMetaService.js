@@ -556,9 +556,13 @@ async function syncHoKMeta({
       if (needsDetails) {
         const OfficialId = s.heroId;
 
+        const IsDiscoveryMode = scopes.includes('images') || scopes.includes('skills') || scopes.includes('skins');
+
         if (healForce || !hero || scopes.length > 0) {
           try {
-            officialData = OfficialId ? await fetcher.fetchOfficialData(OfficialId) : null;
+            // Block resources if we ONLY need stats/builds (Weekly Sync) -> Fast!
+            // Unblock if we need Images/Skills (Discovery/Repair) -> Full render!
+            officialData = OfficialId ? await fetcher.fetchOfficialData(OfficialId, { blockResources: !IsDiscoveryMode }) : null;
 
             // Only fetch wiki/liquipedia if we really need lore/skills/images
             if (scopes.includes('images') || scopes.includes('skills') || scopes.includes('lore')) {

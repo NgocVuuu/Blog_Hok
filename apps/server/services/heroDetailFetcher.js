@@ -34,9 +34,10 @@ class HeroDetailFetcher {
      * Fetch data from Official HoK Website
      * Intercepts `getinformationcard` API
      * @param {string} heroId The official hero ID (e.g., 199)
+     * @param {Object} options Options { blockResources: boolean }
      */
-    async fetchOfficialData(heroId) {
-        this.logger.info(`[Hero Scraper] Fetching official data for ID: ${heroId}`);
+    async fetchOfficialData(heroId, { blockResources = false } = {}) {
+        this.logger.info(`[Hero Scraper] Fetching official data for ID: ${heroId} (Block Resources: ${blockResources})`);
         let browser = null;
         let cardData = null;
         let pageDetails = {
@@ -51,18 +52,18 @@ class HeroDetailFetcher {
             // Set User Agent to avoid bot detection
             await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
-            // --- OPTIMIZATION: Block heavy resources ---
-            await page.setRequestInterception(true);
-            page.on('request', (req) => {
-                const resourceType = req.resourceType();
-                // Block ONLY visual/heavy resources. 
-                // Do NOT block 'script', 'xhr', 'fetch' or 'other' (APIs)
-                if (['image', 'media', 'font', 'stylesheet', 'texttrack'].includes(resourceType)) {
-                    req.abort();
-                } else {
-                    req.continue();
-                }
-            });
+            // --- OPTIMIZATION: Block heavy resources if requested ---
+            if (blockResources) {
+                await page.setRequestInterception(true);
+                page.on('request', (req) => {
+                    const resourceType = req.resourceType();
+                    if (['image', 'media', 'font', 'stylesheet', 'texttrack'].includes(resourceType)) {
+                        req.abort();
+                    } else {
+                        req.continue();
+                    }
+                });
+            }
 
             // Setup wait BEFORE navigation
             // Setup wait BEFORE navigation
