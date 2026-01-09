@@ -506,7 +506,8 @@ async function syncHoKMeta({
   const fetcher = new HeroDetailFetcher(logger);
 
   // Process List
-  const CONCURRENCY_LIMIT = 5;
+  // OPTIMIZATION: Reduced from 5 to 1 to prevent VPS crash (1 vCPU/2GB RAM)
+  const CONCURRENCY_LIMIT = 1;
   const processSingleHero = async (s) => {
     const rawName = s.name || s.heroName || s.heroInfo?.heroName;
     if (!rawName) {
