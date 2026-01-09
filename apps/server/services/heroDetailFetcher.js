@@ -54,11 +54,9 @@ class HeroDetailFetcher {
             // --- OPTIMIZATION: Block heavy resources ---
             await page.setRequestInterception(true);
             page.on('request', (req) => {
-                // If it's the hero detail page itself or an API call, let it pass
-                // We also need to be careful NOT to block the API we are listening for (getherodataall)
-                // The API is XHR/Fetch.
-                const resourceType = req.resourceType();
-                if (['image', 'stylesheet', 'font', 'media'].includes(resourceType)) {
+                // Block ONLY visual/heavy resources. 
+                // Do NOT block 'script', 'xhr', 'fetch' or 'other' (APIs)
+                if (['image', 'media', 'font', 'stylesheet', 'texttrack'].includes(resourceType)) {
                     req.abort();
                 } else {
                     req.continue();
@@ -597,7 +595,7 @@ class HeroDetailFetcher {
             // --- OPTIMIZATION: Block heavy resources ---
             await page.setRequestInterception(true);
             page.on('request', (req) => {
-                if (['image', 'stylesheet', 'font', 'media'].includes(req.resourceType())) {
+                if (['image', 'media', 'font', 'stylesheet'].includes(req.resourceType())) {
                     req.abort();
                 } else {
                     req.continue();

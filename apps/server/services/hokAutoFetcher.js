@@ -57,8 +57,9 @@ async function fetchHeroStats(options = {}) {
 
         page.on('request', (req) => {
             const resourceType = req.resourceType();
-            // Block images, fonts, media, stylesheets, and other non-essentials
-            if (['image', 'stylesheet', 'font', 'media', 'other'].includes(resourceType)) {
+            // Block ONLY visual/heavy resources. 
+            // CRITICAL: Do NOT block 'script', 'xhr', 'fetch', or 'other' (which can be APIs)
+            if (['image', 'media', 'font', 'stylesheet', 'texttrack', 'imageset', 'bacon', 'csp_report'].includes(resourceType)) {
                 req.abort();
             } else {
                 req.continue();
