@@ -54,6 +54,7 @@ class HeroDetailFetcher {
             // --- OPTIMIZATION: Block heavy resources ---
             await page.setRequestInterception(true);
             page.on('request', (req) => {
+                const resourceType = req.resourceType();
                 // Block ONLY visual/heavy resources. 
                 // Do NOT block 'script', 'xhr', 'fetch' or 'other' (APIs)
                 if (['image', 'media', 'font', 'stylesheet', 'texttrack'].includes(resourceType)) {
@@ -360,7 +361,8 @@ class HeroDetailFetcher {
             // --- OPTIMIZATION: Block heavy resources ---
             await page.setRequestInterception(true);
             page.on('request', (req) => {
-                if (['image', 'stylesheet', 'font', 'media'].includes(req.resourceType())) {
+                const resourceType = req.resourceType();
+                if (['image', 'stylesheet', 'font', 'media'].includes(resourceType)) {
                     req.abort();
                 } else {
                     req.continue();
@@ -593,9 +595,11 @@ class HeroDetailFetcher {
             const targetUrl = `https://honor-of-kings.fandom.com/wiki/${urlName}`;
 
             // --- OPTIMIZATION: Block heavy resources ---
+            // --- OPTIMIZATION: Block heavy resources ---
             await page.setRequestInterception(true);
             page.on('request', (req) => {
-                if (['image', 'media', 'font', 'stylesheet'].includes(req.resourceType())) {
+                const resourceType = req.resourceType();
+                if (['image', 'media', 'font', 'stylesheet'].includes(resourceType)) {
                     req.abort();
                 } else {
                     req.continue();
