@@ -465,6 +465,7 @@ async function syncHoKMeta({
 } = {}) {
 
   const nameMap = loadNameMap();
+  logger.info(`[syncHoKMeta] Received directData: ${directData ? (Array.isArray(directData) ? `Array(${directData.length})` : typeof directData) : 'null/undefined'}`);
   let stats = directData;
 
   try {
