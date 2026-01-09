@@ -184,7 +184,7 @@ async function fetchAndSync(options = {}) {
         // CRITICAL FIX: Pass the fetched data directly!
         const syncResult = await syncHoKMeta({
             logger,
-            scopes: options.scopes,
+            scopes: options.scopes || ['stats', 'builds'], // DEFAULT: Only sync Stats & Builds. Never 'all' by default.
             healForce: options.healForce,
             directData: heroList // Pass the array of heroes
         });
