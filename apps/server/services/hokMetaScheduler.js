@@ -36,16 +36,25 @@ class HoKMetaSyncScheduler {
         this.logger.info('[HoK Scheduler] Starting automated meta sync scheduler...');
         this.logger.info('[HoK Scheduler] Schedule: Every Friday at 6:00 AM (Vietnam time)');
 
-        // Main cron job: Every Friday at 6:00 AM
+        // MIGRATION: Moved to GitHub Actions to save VPS resources
+        // This ensures the heavy crawler runs on GitHub infrastructure, not on our 1 vCPU server.
+        // See: .github/workflows/weekly-sync.yml
+        /*
         const mainJob = cron.schedule('0 6 * * 5', async () => {
             this.logger.info('[HoK Scheduler] ⏰ Weekly Sync triggered (Stats + Builds)!');
-            await this.runSync();
+            try {
+                await this.runSync();
+            } catch (error) {
+                this.logger.error('[HoK Scheduler] Sync failed:', error);
+            }
         }, {
             scheduled: true,
             timezone: 'Asia/Ho_Chi_Minh'
         });
-
         this.jobs.push({ name: 'weekly-sync', job: mainJob });
+        */
+        this.logger.info('[HoK Scheduler] Internal Weekly Sync disabled (Moved to GitHub Actions)');
+
 
         // Optional: Add a daily check at 6 AM for testing (comment out in production)
         // const dailyJob = cron.schedule('0 6 * * *', async () => {

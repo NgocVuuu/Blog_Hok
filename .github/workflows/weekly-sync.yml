@@ -1,0 +1,43 @@
+name: Weekly HoK Data Sync
+
+on:
+  schedule:
+    # 6:00 AM VN Time (Friday) = 23:00 UTC (Thursday)
+    - cron: '0 23 * * 4'
+  workflow_dispatch: # Allow manual trigger button
+
+jobs:
+  sync-data:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed if we want to commit changes (optional)
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: apps/server/package-lock.json
+
+    - name: Install Dependencies
+      working-directory: ./apps/server
+      run: npm ci
+
+    - name: Run Sync (Test Fetcher Full)
+      working-directory: ./apps/server
+      env:
+        # DB Connection
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        
+        # Cloudinary (for uploading hero images/skins)
+        CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+        CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+        CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+        
+        # Optional: Logging level
+        LOG_LEVEL: info
+      run: npm run test-fetcher:full
