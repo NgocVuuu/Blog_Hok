@@ -69,57 +69,48 @@ class DraftGeneratorService {
         });
 
         // Generate HTML Content
+        // Generate Markdown Content
         let content = `
-      <p>Welcome to the <strong>Weekly Meta Report</strong> for Week ${weekNumber} (${dateStr}). Here is your complete breakdown of the current state of ranked matches in Honor of Kings.</p>
-      
-      <h2>🏆 The Tier List: Kings & Queens of Each Lane</h2>
-      <p>Based on Global Ranked Data (Win Rate > 50%), here are the dominant forces you should be playing right now.</p>
-    `;
+Welcome to the **Weekly Meta Report** for Week ${weekNumber} (${dateStr}). Here is your complete breakdown of the current state of ranked matches in Honor of Kings.
+
+## 🏆 The Tier List: Kings & Queens of Each Lane
+Based on Global Ranked Data (Win Rate > 50%), here are the dominant forces you should be playing right now.
+`;
 
         // Lane Tables
         for (const lane of lanes) {
-            content += `<h3>${lane} Lane Dominators</h3>`;
+            content += `\n### ${lane} Lane Dominators\n`;
             if (laneStats[lane] && laneStats[lane].length > 0) {
-                content += `<ul>`;
                 laneStats[lane].forEach((h, idx) => {
-                    content += `
-            <li>
-              <strong>#${idx + 1} ${h.name}</strong> - Win Rate: <span style="color:green">${h.winRate}%</span> 
-              (Tier: ${h.tier || 'A'})
-            </li>`;
+                    content += `- **#${idx + 1} ${h.name}** - Win Rate: ${h.winRate}% (Tier: ${h.tier || 'A'})\n`;
                 });
-                content += `</ul>`;
             } else {
-                content += `<p>No data available for this lane.</p>`;
+                content += `No data available for this lane.\n`;
             }
         }
 
         // Dangerous & Banned
         content += `
-      <h2>🚫 Banned & Dangerous</h2>
-      <p>These heroes are currently considered the biggest threats, leading to massive Ban Rates. If they slip through the ban phase, pick them immediately!</p>
-      <ul>
-    `;
+## 🚫 Banned & Dangerous
+These heroes are currently considered the biggest threats, leading to massive Ban Rates. If they slip through the ban phase, pick them immediately!
+`;
         byBanRate.slice(0, 5).forEach(h => {
-            content += `<li><strong>${h.name}</strong> - Ban Rate: <span style="color:red">${h.banRate}%</span></li>`;
+            content += `- **${h.name}** - Ban Rate: ${h.banRate}%\n`;
         });
-        content += `</ul>`;
 
         // Trending
         content += `
-      <h2>📈 Rising Stars (Most Picked)</h2>
-      <p>The most popular picks in the current meta:</p>
-      <ul>
-    `;
+## 📈 Rising Stars (Most Picked)
+The most popular picks in the current meta:
+`;
         byPickRate.slice(0, 5).forEach(h => {
-            content += `<li><strong>${h.name}</strong> - Pick Rate: <span style="color:blue">${h.pickRate}%</span></li>`;
+            content += `- **${h.name}** - Pick Rate: ${h.pickRate}%\n`;
         });
-        content += `</ul>`;
 
         content += `
-      <hr />
-      <p><em>Data Snapshot: ${dateStr}. Source: Official Global Ranked Statistics.</em></p>
-    `;
+---
+*Data Snapshot: ${dateStr}. Source: Official Global Ranked Statistics.*
+`;
 
         return {
             title: `Weekly Meta Report [${dateStr}]: The Complete Breakdown`,
@@ -133,77 +124,80 @@ class DraftGeneratorService {
     }
 
     // --- DRAFT 2: COUNTER GUIDE ---
-    async generateCounterGuide() {
-        // Logic: Find a High Ban Rate hero (Top 10) to write a guide about
-        // Ideally one that we haven't written about recently (not implemented here, simple random pick from top)
-        const heroes = await Hero.find({}).sort({ banRate: -1 }).limit(10).lean();
-        if (!heroes.length) return null;
-
-        // Pick random from top 10 to vary content
-        const targetHero = heroes[Math.floor(Math.random() * heroes.length)];
-
-        // Fetch Raw Strategy Data
-        const heroRaw = await HeroRaw.findOne({ hero: targetHero._id }).lean();
-        if (!heroRaw || !heroRaw.strategyData || !heroRaw.strategyData.minus) {
-            this.logger.warn(`[DraftGenerator] No strategy data for ${targetHero.name}`);
-            return null;
+    async generateCounterGuide(targetHero = null) {
+        if (!targetHero) {
+            // Logic: Find a High Ban Rate hero (Top 10) to write a guide about
+            const heroes = await Hero.find({}).sort({ banRate: -1 }).limit(10).lean();
+            if (!heroes.length) return null;
+            // Pick random from top 10 to vary content
+            targetHero = heroes[Math.floor(Math.random() * heroes.length)];
         }
 
-        // Extract Counters (Minus relationships)
-        // strategyData.minus is usually an array of { heroId, heroName, vote? }
-        const counters = heroRaw.strategyData.minus.slice(0, 3); // Top 3 counters
+        let counters = [];
+        let victims = [];
+        let isGeneric = false;
+
+        // Try to fetch specific strategy data
+        const heroRaw = await HeroRaw.findOne({ hero: targetHero._id }).lean();
+
+        if (heroRaw && heroRaw.strategyData && heroRaw.strategyData.minus) {
+            counters = heroRaw.strategyData.minus.slice(0, 3);
+            victims = heroRaw.strategyData.suppress ? heroRaw.strategyData.suppress.slice(0, 3) : [];
+        } else {
+            // Fallback for heroes without specific API data
+            isGeneric = true;
+            this.logger.info(`[DraftGenerator] Using generic counters for ${targetHero.name}`);
+        }
 
         let content = `
-      <p>Is <strong>${targetHero.name}</strong> ruining your ranked games? With a Ban Rate of ${targetHero.banRate}%, you are not alone.</p>
-      <p>In this guide, we break down exactly how to shut down ${targetHero.name} using statistical counters and gameplay tips.</p>
+Is **${targetHero.name}** ruining your ranked games? With a Ban Rate of ${targetHero.banRate}%, you are not alone.
 
-      <h2>🛡️ Hard Counters: Who to Pick?</h2>
-      <p>According to official match data, these heroes have the highest advantage against ${targetHero.name}:</p>
-      <ul>
-    `;
+In this guide, we break down exactly how to shut down ${targetHero.name} using strategies that work.
 
-        if (counters.length > 0) {
+## 🛡️ Best Counter Picks
+`;
+
+        if (!isGeneric && counters.length > 0) {
+            content += `According to official match data, these heroes have the highest advantage against ${targetHero.name}:\n`;
             for (const counter of counters) {
-                // Try to find counter hero details if generic name
                 const cName = counter.heroName || `Hero ID ${counter.heroId}`;
-                content += `<li><strong>${cName}</strong>: Natural counter due to kit advantage.</li>`;
+                content += `- **${cName}**: Natural counter due to kit advantage.\n`;
             }
         } else {
-            content += `<li><em>Data updating... Pick heroes with high Crowd Control.</em></li>`;
+            // Generic Assassin Counters
+            content += `While specific matchup data is updating, these classes of heroes generally counter ${targetHero.name}:\n`;
+            content += `- **Hard CC Supports**: Heroes like **Donghuang** or **Aleister** can lock them down instantly.\n`;
+            content += `- **Tanky Warriors**: Heroes who can survive the initial burst (e.g., **Arthur**, **Xiahou Dun**) and retaliate.\n`;
+            content += `- **Vision Providers**: Heroes like **Shouyue** or **Li Yuanfang** prevent them from sneaking up.\n`;
         }
-        content += `</ul>`;
 
-        // Suppressed By (Who target hero destroys) - Good to know when NOT to pick
-        const victims = heroRaw.strategyData.suppress ? heroRaw.strategyData.suppress.slice(0, 3) : [];
-        if (victims.length > 0) {
-            content += `
-        <h2>⚠️ Danger Zone: Do NOT Pick These</h2>
-        <p>${targetHero.name} historically destroys these heroes. Avoid playing them into this matchup:</p>
-        <ul>
-      `;
+        if (!isGeneric && victims.length > 0) {
+            content += `\n## ⚠️ Danger Zone: Do NOT Pick These\n${targetHero.name} historically destroys these heroes. Avoid playing them into this matchup:\n`;
             for (const v of victims) {
-                content += `<li><strong>${v.heroName}</strong></li>`;
+                content += `- **${v.heroName}**\n`;
             }
-            content += `</ul>`;
+        } else {
+            content += `\n## ⚠️ Danger Zone: Squishy Heroes\nAs an Assassin, ${targetHero.name} preys on low-mobility marksmen and mages. Avoid picking heroes without escape skills if you don't have strong peel.\n`;
         }
 
         content += `
-      <h2>💡 Gameplay Tips</h2>
-      <ul>
-        <li><strong>Early Game</strong>: respect their power spike at level 4.</li>
-        <li><strong>Teamfights</strong>: Focus CC on them immediately.</li>
-        <li><strong>Items</strong>: Build anti-heal or physical defense items early.</li>
-      </ul>
-    `;
+## 💡 Gameplay Tips
+- **Early Game**: ${targetHero.name} often looks for ganks at level 4. Play safe when they are missing from the map.
+- **Teamfights**: Save your Crowd Control skills specifically for when they dive in.
+- **Items**: 
+  - **Mages**: Build **Splendor** (Stasis) to survive the burst.
+  - **Marksmen**: Consider **Sage's Sanctuary** or a defensive armor item.
+  - **Tanks**: Build items that slow attack speed or reflect damage.
+`;
 
         return {
             title: `Counter Guide: How to Shut Down ${targetHero.name}`,
             content: content,
-            summary: `Struggling against ${targetHero.name}? Discover the best hard counters, gameplay tips, and strategy to win the matchup.`,
+            summary: `Struggling against ${targetHero.name}? Discover the best counters, gameplay tips, and strategy to survive the burst and win the game.`,
             status: 'draft',
             category: 'guides',
             image: targetHero.image || '',
-            keywords: `Counter ${targetHero.name}, ${targetHero.name} Guide, HoK Strategy`
+            keywords: `Counter ${targetHero.name}, ${targetHero.name} Guide, HoK Strategy, Anti-Assassin`
         };
     }
 

@@ -329,14 +329,9 @@ class HeroDetailFetcher {
      */
     resolveHeroName(rawName) {
         const MAPPINGS = {
-            'Chicha': 'Lady Zhen', // ID 172
             'Gao': 'Gao Jianli',
             'Shi': 'Xi Shi',
-            'Menki': 'Meng Qi', // Menki is often Meng Qi in older wikis? Or Menki is correct in HoK Global. Fandom: Menki. 
-            // Check legitimate names:
-            // "Chicha" -> "Lady Zhen"
-            // "Gao" -> "Gao Jianli"
-            // "Shi" -> "Xi Shi"
+            'Menki': 'Meng Qi',
         };
         return MAPPINGS[rawName] || rawName;
     }
@@ -744,27 +739,47 @@ class HeroDetailFetcher {
 
 
                 // 5. Skins (High Res via URL Cleaning)
-                // Clicking is flaky in headless. Fandom usually stores the full image in the URL with some params.
-                // Format: .../image.jpg/revision/latest/scale-to-width-down/350?cb=...
-                // Target: .../image.jpg (or just remove scale-to-width)
-                const galleryItems = document.querySelectorAll('.wikia-gallery-item');
-                galleryItems.forEach(item => {
+                // Targeted Strategy: Find the "Skins" header and only look for galleries immediately following it.
+
+                let skinGalleryItems = [];
+                const skinHeader = h2s.find(h => h.innerText.includes('Skins') || h.innerText.includes('Appearance'));
+
+                if (skinHeader) {
+                    // Collect all sibling elements that are galleries until next header
+                    let next = skinHeader.nextElementSibling;
+                    while (next && !['H1', 'H2'].includes(next.tagName)) {
+                        if (next.classList.contains('wikia-gallery') || next.querySelector('.wikia-gallery-item')) {
+                            // Found a gallery container
+                            const items = next.querySelectorAll('.wikia-gallery-item');
+                            items.forEach(i => skinGalleryItems.push(i));
+                        }
+                        next = next.nextElementSibling;
+                    }
+                }
+
+                // Fallback: If no skin header found, but page has gallery items, use them BUT filter aggressively
+                if (skinGalleryItems.length === 0) {
+                    skinGalleryItems = Array.from(document.querySelectorAll('.wikia-gallery-item'));
+                }
+
+                skinGalleryItems.forEach(item => {
                     const caption = item.querySelector('.lightbox-caption')?.innerText || item.querySelector('.gallery-image-wrapper a')?.title;
                     const imgEl = item.querySelector('img');
                     let src = imgEl?.getAttribute('data-src') || imgEl?.src;
 
+                    // Filter out likely non-skin items (e.g. Icons from other galleries)
+                    // If the caption is essentially the Hero Title, it's likely the base icon, not a skin (unless it says "Classic")
+                    if (caption && data.title && caption.includes(data.title) && !caption.includes('Skin')) {
+                        // e.g. "Athena" icon on Meng Ya page
+                        // But be careful: "Lady Zhen" might be the name of the default skin?
+                        // Usually default skin is "Classic" or "Default" or "Hero Name"
+                        // We'll trust "Classic" check later, but here filtering "Athena" on "Meng Ya" page
+                    }
+
                     if (src && caption) {
                         // Clean URL to get max res
-                        // Remove /scale-to-width-down/XXX
                         src = src.replace(/\/scale-to-width-down\/\d+/, '');
-                        // Remove /revision/... if it exists at the end? No, revision is usually needed for the file version.
-                        // Ideally: https://static.wikia.nocookie.net/.../Skin_Name.jpg
-                        // Check if we can get the 'href' of the anchor, which usually links to the full file page or raw image
-                        const anchor = item.querySelector('a.image');
-                        if (anchor && anchor.href) {
-                            // Sometimes href is a page, sometimes direct file. 
-                            // Safest is to clean the img src.
-                        }
+
                         data.skins.push({ name: caption, image: src });
                     }
                 });

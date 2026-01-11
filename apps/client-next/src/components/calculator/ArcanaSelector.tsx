@@ -79,10 +79,18 @@ export default function ArcanaSelector({ arcanaList, build, onUpdate }: ArcanaSe
                                     MenuProps={{
                                         PaperProps: {
                                             sx: {
-                                                maxHeight: 300,
                                                 bgcolor: '#1a1d21',
+                                                border: '1px solid rgba(255,255,255,0.1)',
+                                                '& .MuiList-root': {
+                                                    maxHeight: 250,
+                                                    overflowY: 'auto !important',
+                                                    '&::-webkit-scrollbar': { width: '8px' },
+                                                    '&::-webkit-scrollbar-track': { background: 'rgba(255,255,255,0.05)' },
+                                                    '&::-webkit-scrollbar-thumb': { background: 'rgba(255,255,255,0.3)', borderRadius: '4px' },
+                                                    '&::-webkit-scrollbar-thumb:hover': { background: 'rgba(255,255,255,0.5)' }
+                                                },
                                                 '& .MuiMenuItem-root': { color: '#fff' },
-                                                '& .MuiMenuItem-root:hover': { bgcolor: 'rgba(255,255,255,0.1)' }
+                                                '& .MuiMenuItem-root:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
                                             }
                                         }
                                     }}
