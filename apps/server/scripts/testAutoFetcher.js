@@ -79,11 +79,11 @@ async function testFetchAndSync() {
         console.log('[Task] Scanning for New Skins...');
         await discovery.scanForNewSkins();
 
-        // For drafts, we need the scheduler instance or move logic. 
-        // Let's create a temporary scheduler instance to run the draft logic.
-        const scheduler = new HoKMetaSyncScheduler();
+        // For drafts, we need the DraftGeneratorService directly (Fixed ref)
+        const { DraftGeneratorService } = require('../services/draftGeneratorService');
+        const draftService = new DraftGeneratorService();
         console.log('[Task] Generating Weekly News Drafts...');
-        await scheduler.generateWeeklyDrafts();
+        await draftService.generateWeeklyDrafts();
 
         console.log('\n✅ All Secondary Tasks Completed!');
 

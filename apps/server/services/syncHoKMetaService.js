@@ -33,17 +33,124 @@ function loadNameMap() {
 
 // --- SUB-PROCESSORS ---
 
-async function processStats(hero, statData, dryRun, logger) {
+// Helper to normalize rates (0.53 -> 53.0)
+function pct100(x) {
+  if (x === null || x === undefined) return 0;
+  let n = x;
+  if (typeof x === 'string') {
+    n = parseFloat(x.replace('%', ''));
+  }
+  n = Number(n);
+  if (!Number.isFinite(n)) return 0;
+
+  // If > 1 (e.g. 53.2), keep it.
+  if (n > 1) return Math.round(n * 100) / 100;
+  // If <= 1 (e.g. 0.532), multiply by 100.
+  return Math.round(n * 10000) / 100;
+}
+
+async function processStats(hero, statData, dryRun, logger, scopes = []) {
   if (dryRun) {
     logger.info(`[Stats] Would update stats for ${hero.name}: Tier ${statData.metaTier}, WR ${statData.winRate}%`);
     return {};
   }
-  const patch = {
-    tier: statData.metaTier || hero.tier || 'A',
-    winRate: statData.winRate || hero.winRate || 0,
-    pickRate: statData.pickRate || hero.pickRate || 0,
-    banRate: statData.banRate || hero.banRate || 0,
+
+  // Map Tier (0 -> T0, 1 -> T1 or "T0" -> "T0")
+  let tier = statData.metaTier;
+  if (statData.tRank !== undefined && statData.tRank !== null) {
+    tier = statData.tRank;
+  }
+  // Fix: 0 is falsy, so !tier is true. Must check strict undefined/null.
+  if ((tier === undefined || tier === null || tier === '') && hero.metaTier) {
+    tier = hero.metaTier;
+  }
+  if (tier === undefined || tier === null || tier === '') {
+    tier = 'A';
+  }
+
+  if (typeof tier === 'number') {
+    tier = 'T' + tier;
+  }
+  // Convert T0->S+, T1->S, T2->A, T3->B, T4->C?
+  // User Schema says enum: ['S+', 'S', 'A', 'B', 'C']
+  // Official API returns 0,1,2... (T0, T1, T2)
+  // We need a mapper if Schema enforces Enum.
+  // Let's assume Schema Enum is strict.
+  // T0 = S+
+  // T0.5 = S
+  // T1 = S
+  // T2 = A
+  // T3 = B
+  // T4 = C ?
+
+  // Or maybe we should relax Schema?
+  // Let's check what `checkCurrentStats.js` normally prints. It prints `tier`.
+  // If Schema only allows S/A/B, and we try to save 'T0', Mongoose will reject it!
+  // This is why it's not saving!
+
+  // Let's check Schema again (Step 844).
+  // `metaTier: { type: String, required: true, enum: ['S+', 'S', 'A', 'B', 'C'] }`
+  // And `processStats` tries to save `T0`, `T1`.
+  // THIS IS THE BUG.
+
+  const TIER_MAP = {
+    0: 'S',  // T0 -> S
+    1: 'A',  // T1 -> A
+    2: 'B',  // T2 -> B
+    3: 'C',  // T3 -> C
+    4: 'C',  // T4 -> C (Fallback)
+    'T0': 'S', 'T1': 'A', 'T2': 'B', 'T3': 'C', 'T4': 'C'
   };
+
+  // If it's a number, map it.
+  if (typeof tier === 'number' || (typeof tier === 'string' && tier.startsWith('T'))) {
+    let key = typeof tier === 'number' ? tier : tier; // 0 or "T0"
+    if (typeof key === 'string' && key.startsWith('T')) key = parseInt(key.replace('T', ''));
+    if (TIER_MAP[key]) tier = TIER_MAP[key];
+    else tier = 'A'; // Default fallback
+  }
+
+  // Map Roles (heroCareer: "Fighter/Tank" -> roles: ["Fighter", "Tank"])
+  let roles = hero.roles || [];
+  if (scopes.includes('roles')) {
+    const rawCareer = statData.heroCareer || statData.heroInfo?.heroCareer || statData.heroInfo?.job;
+
+    if (rawCareer) {
+      roles = rawCareer.split('/').map(r => r.trim());
+    }
+  }
+
+  // Map Lanes (Verified: 0=Clash, 1=Mid, 2=Farm, 3=Jungle, 4=Roam)
+  const LANE_MAP = {
+    0: 'Clash Lane',
+    1: 'Mid Lane',
+    2: 'Farm Lane',
+    3: 'Jungler',
+    4: 'Roamer'
+  };
+  let lanes = hero.lanes || [];
+
+  if (scopes.includes('lanes')) {
+    if (statData.position !== undefined && statData.position !== null && LANE_MAP[statData.position]) {
+      lanes = [LANE_MAP[statData.position]];
+    }
+  }
+
+  const patch = {
+    metaTier: tier, // Correct field name
+    winRate: pct100(statData.winRate || statData.win_rate || hero.winRate),
+    pickRate: pct100(statData.pickRate || statData.showRate || hero.show_rate || hero.pickRate),
+    banRate: pct100(statData.banRate || statData.ban_rate || hero.banRate),
+  };
+
+  // STRICT SCOPE: Only add roles/lanes if explicitly requested
+  if (scopes.includes('roles')) {
+    patch.roles = roles;
+  }
+  if (scopes.includes('lanes')) {
+    patch.lanes = lanes;
+  }
+
   return patch;
 }
 
@@ -163,7 +270,12 @@ async function processSkills(hero, sourceName, officialData, liquipediaData, wik
   }
 
   // 2. Select Skills Source (Official > Liquip > Wiki)
-  let selectedSkills = (officialData?.skills && officialData.skills.length > 0)
+  // Fix: Ensure officialData.skills actually has valid content (names) before preferring it
+  const hasValidOfficialSkills = officialData?.skills &&
+    officialData.skills.length > 0 &&
+    officialData.skills.some(s => s.name && s.name.trim().length > 0);
+
+  let selectedSkills = hasValidOfficialSkills
     ? officialData.skills
     : ((liquipediaData?.allSkills && liquipediaData.allSkills.length > 0) ? liquipediaData.allSkills : (wikiData?.skills || hero.skills || []));
 
@@ -312,18 +424,20 @@ async function processOfficialBuilds(hero, officialData, dryRun, logger) {
       for (const r of suit.runes) {
         if (!dryRun && r.runeName) {
           try {
-            const slug = slugify(r.runeName);
-            let arcanaDoc = await Arcana.findOne({ $or: [{ name: r.runeName }, { slug: slug }] });
+            // FIX: Remove "Lvl 5: " prefix
+            const cleanName = r.runeName.replace(/^(Lvl|Lv)\s*\d+\s*:\s*/i, '').trim();
+            const slug = slugify(cleanName);
+            let arcanaDoc = await Arcana.findOne({ $or: [{ name: cleanName }, { slug: slug }] });
             if (!arcanaDoc) {
               arcanaDoc = await Arcana.create({
-                name: r.runeName,
+                name: cleanName,
                 slug: slug,
                 image: r.runeIcon || '',
                 description: r.runeDesc || '',
                 color: GAME_CONFIG.arcanaColors[r.runeColor] || 'red',
                 tier: r.runeLevel || GAME_CONFIG.defaults.arcanaTier
               });
-              logger.info(`[Builds] Created New Arcana: ${r.runeName}`);
+              logger.info(`[Builds] Created New Arcana: ${cleanName}`);
             }
 
             if (arcanaDoc) {
@@ -352,13 +466,14 @@ async function processOfficialBuilds(hero, officialData, dryRun, logger) {
           // Find definition in suit.runes
           const def = suit.runes.find(r => r.runeId == id);
           if (def) {
-            const slug = slugify(def.runeName);
-            const arcanaDoc = await Arcana.findOne({ $or: [{ name: def.runeName }, { slug: slug }] });
+            const cleanName = def.runeName.replace(/^(Lvl|Lv)\s*\d+\s*:\s*/i, '').trim();
+            const slug = slugify(cleanName);
+            const arcanaDoc = await Arcana.findOne({ $or: [{ name: cleanName }, { slug: slug }] });
             if (arcanaDoc) {
               currentArcanaRefs.push({ arcana: arcanaDoc._id, count: count });
-              logger.info(`[Builds] Arcana Added: ${def.runeName} x${count}`);
+              logger.info(`[Builds] Arcana Added: ${cleanName} x${count}`);
             } else {
-              logger.warn(`[Builds] Arcana Doc Not Found: ${def.runeName}`);
+              logger.warn(`[Builds] Arcana Doc Not Found: ${cleanName}`);
             }
           } else {
             logger.warn(`[Builds] Arcana Definition Not Found for ID: ${id}`);
@@ -422,8 +537,11 @@ async function processBuilds(hero, officialData, equipMap, arcanaMap, dryRun, lo
       if (Array.isArray(buildArcanas)) {
         const counts = {};
         buildArcanas.forEach(a => {
-          const name = a.inscriptionName || a.item_name;
-          if (name) counts[name] = (counts[name] || 0) + (a.cnt || 1);
+          let name = a.inscriptionName || a.item_name;
+          if (name) {
+            name = name.replace(/^(Lvl|Lv)\s*\d+\s*:\s*/i, '').trim();
+            counts[name] = (counts[name] || 0) + (a.cnt || 1);
+          }
         });
         const buildItems = [];
         Object.entries(counts).forEach(([name, count]) => {
@@ -543,8 +661,8 @@ async function syncHoKMeta({
       let patchData = {};
 
       // --- 1. STATS SCOPE ---
-      if (scopes.includes('all') || scopes.includes('stats') || !hero) {
-        const statsPatch = await processStats(hero || { name: rawName }, s, dryRun, logger);
+      if (scopes.includes('all') || scopes.includes('stats') || !hero || scopes.includes('roles') || scopes.includes('lanes')) {
+        const statsPatch = await processStats(hero || { name: rawName }, s, dryRun, logger, scopes);
         patchData = { ...patchData, ...statsPatch };
       }
 
@@ -586,8 +704,8 @@ async function syncHoKMeta({
           const destLanes = (liquipediaData?.lanes?.length) ? liquipediaData.lanes : (wikiData?.lane || []);
           const destRoles = (liquipediaData?.roles?.length) ? liquipediaData.roles : (wikiData?.class || []);
 
-          if (destLanes.length) patchData.lanes = destLanes;
-          if (destRoles.length) patchData.roles = destRoles;
+          if (scopes.includes('lanes') && destLanes.length) patchData.lanes = destLanes;
+          if (scopes.includes('roles') && destRoles.length) patchData.roles = destRoles;
 
           // Only update title/slug on creation or explicit
           if (!hero) {

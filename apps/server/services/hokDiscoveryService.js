@@ -110,6 +110,10 @@ class HoKDiscoveryService {
 
                     for (const skin of wikiData.skins) {
                         const normSkinName = this.normalizeName(skin.name);
+
+                        // Fix: Ignore "Classic" or "Default" skins which are often the base hero
+                        if (['classic', 'default'].includes(normSkinName)) continue;
+
                         if (dbSkins.has(normSkinName)) continue;
 
                         // Check pending draft

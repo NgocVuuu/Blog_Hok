@@ -24,8 +24,8 @@ module.exports = {
 
     arcanaColors: {
         1: 'red',
-        2: 'green',
-        3: 'blue'
+        2: 'blue',
+        3: 'green'
     },
 
     // Defaults
