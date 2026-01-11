@@ -1,0 +1,6433 @@
+[
+  {
+    "_id": "689a93ee0d0388be4842ac97",
+    "name": "Boots of Dexterity",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754960874/BlogHok/svg/kpljunwuqeecmn3x0wim.svg",
+    "description": "passive: Swift - <span style=\"color: #43a047\">Movement Speed +60</span>",
+    "category": "Movement",
+    "tier": "Basic",
+    "price": 710,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 20,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Swift",
+      "description": "<span style=\"color: #43a047\">Movement Speed +60</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T01:07:58.419Z",
+    "__v": 1,
+    "quickStats": [
+      {
+        "type": "movementSpeed",
+        "value": "20%",
+        "description": "Attack Speed",
+        "_id": "689a9e2129bbd4d426f3bfb0"
+      }
+    ]
+  },
+  {
+    "_id": "689aa16229bbd4d426f3bfd0",
+    "name": "Doomsday",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754964318/BlogHok/svg/fif0zc3uw3xwgdp8plgt.svg",
+    "description": "passive: Destruction - Basic attacks deal additional <span style=\"color: #00000\">physical damage</span> equal to <span style=\"color: #43a047\">8% of the target's current</span> Health (Max 80 damage to monsters).",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2160,
+    "attributes": {
+      "attack": 60,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 10,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 30,
+      "movementSpeed": 30,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Destruction",
+      "description": "Basic attacks deal additional <span style=\"color: #00000\">physical damage</span> equal to <span style=\"color: #43a047\">8% of the target's current</span> Health (Max 80 damage to monsters)."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+60",
+        "description": "Physical Attack",
+        "_id": "689af823c27a33e8e71b3db7"
+      },
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+30",
+        "description": "Attack Speed",
+        "_id": "689af823c27a33e8e71b3db8"
+      },
+      {
+        "type": "physicalLifeSteal",
+        "label": "physicalLifeSteal",
+        "value": "+10%",
+        "description": "Physical Lifesteal",
+        "_id": "689af823c27a33e8e71b3db9"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T02:05:22.069Z",
+    "__v": 3
+  },
+  {
+    "_id": "689aa6dae2dde85faa6ddd3f",
+    "name": "Shadow Ripper",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754965718/BlogHok/svg/jd4q3sfpzzfsv0ierlnn.svg",
+    "description": "passive: Storm Strike - Increases Basic Attacks damage by 40.\n\nAfter a critical hit, increases <span style=\"color: #43a047\">20% Attack Speed</span> and <span style=\"color: #43a047\">5% Movement Speed</span> for 3s.",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 1950,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 25,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 35,
+      "movementSpeed": 5,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Storm Strike",
+      "description": "Increases Basic Attacks damage by 40.\n\nAfter a critical hit, increases <span style=\"color: #43a047\">20% Attack Speed</span> and <span style=\"color: #43a047\">5% Movement Speed</span> for 3s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+35",
+        "description": "Attack Speed",
+        "_id": "689aa6dae2dde85faa6ddd40"
+      },
+      {
+        "type": "criticalRate",
+        "label": "criticalRate",
+        "value": "+25%",
+        "description": "Critical Rate",
+        "_id": "689aa6dae2dde85faa6ddd41"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+5%",
+        "description": "Movement Speed",
+        "_id": "689aa6dae2dde85faa6ddd42"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T02:28:42.102Z",
+    "__v": 0
+  },
+  {
+    "_id": "689aa7b2e2dde85faa6ddd46",
+    "name": "Eternity Blade",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754965934/BlogHok/svg/lrouhumde3ry8fprwxsz.svg",
+    "description": "passive: Relentless - Gains <span style=\"color: #ff9800\">20% Critical Damage</span>, and every 2% Critical Chance increases <span style=\"color: #ff9800\">Critical Damage by 1%</span> (Max 50%).",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2140,
+    "attributes": {
+      "attack": 110,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 20,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Relentless",
+      "description": "Gains <span style=\"color: #ff9800\">20% Critical Damage</span>, and every 2% Critical Chance increases <span style=\"color: #ff9800\">Critical Damage by 1%</span> (Max 50%)."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+110",
+        "description": "Physical Attack",
+        "_id": "689aa7b2e2dde85faa6ddd47"
+      },
+      {
+        "type": "criticalRate",
+        "label": "criticalRate",
+        "value": "+20%",
+        "description": "Critical Rate",
+        "_id": "689aa7b2e2dde85faa6ddd48"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T02:32:18.282Z",
+    "__v": 0
+  },
+  {
+    "_id": "689aa889e2dde85faa6ddd4c",
+    "name": "Daybreaker",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754966149/BlogHok/svg/xthtgaw4ewvoewkldt52.svg",
+    "description": "passive: Sunder - <span style=\"color: #ff7a00\">Physical Pierce +15%</span> (doubled for ranged heroes)",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2760,
+    "attributes": {
+      "attack": 50,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 10,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 30,
+      "movementSpeed": 30,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Sunder",
+      "description": "<span style=\"color: #ff7a00\">Physical Pierce +15%</span> (doubled for ranged heroes)"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+50%",
+        "description": "Physical Attack",
+        "_id": "689ef11cc9aa8394a95081a3"
+      },
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+30%",
+        "description": "Attack Speed",
+        "_id": "689ef11cc9aa8394a95081a4"
+      },
+      {
+        "type": "criticalRate",
+        "label": "criticalRate",
+        "value": "+10",
+        "description": "Critical Rate",
+        "_id": "689ef11cc9aa8394a95081a5"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T02:35:53.119Z",
+    "__v": 2
+  },
+  {
+    "_id": "689aa976e2dde85faa6ddd53",
+    "name": "Sage’s Sanctuary",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754966386/BlogHok/svg/pzbwxl5mxqjrcy97xavr.svg",
+    "description": "passive: Revive - <span style=\"color: #ff7a00\">Resurrects</span> the wearer 2s after dyingand restores <span style=\"color: #43a047\">2100-3500 Health</span>",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 2100,
+    "attributes": {
+      "attack": 0,
+      "defense": 140,
+      "magic": 140,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Revive",
+      "description": "<span style=\"color: #ff7a00\">Resurrects</span> the wearer 2s after dyingand restores <span style=\"color: #43a047\">2100-3500 Health</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+140",
+        "description": "Physical Defense",
+        "_id": "689af8c2c27a33e8e71b3e10"
+      },
+      {
+        "type": "magicArmor",
+        "label": "magicArmor",
+        "value": "+140",
+        "description": "Magical Defense",
+        "_id": "689af8c2c27a33e8e71b3e11"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T02:39:50.620Z",
+    "__v": 1
+  },
+  {
+    "_id": "689af9fac27a33e8e71b3e9d",
+    "name": "Lightfoot Shoes",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754986998/BlogHok/svg/pehgyet6u6euj3gl6zep.svg",
+    "description": "passive: Swift - <span style=\"color: #43a047\">Movement Speed +30</span>",
+    "category": "Movement",
+    "tier": "Basic",
+    "price": 250,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Swift",
+      "description": "<span style=\"color: #43a047\">Movement Speed +30</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T08:23:22.432Z",
+    "__v": 0
+  },
+  {
+    "_id": "689afa67c27a33e8e71b3edd",
+    "name": "Boots of Fortitude",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754987107/BlogHok/svg/pv173gb3cmgpi7cxd7r0.svg",
+    "description": "passive: Swift - <span style=\"color: #43a047\">Movement Speed +60</span>",
+    "category": "Movement",
+    "tier": "Basic",
+    "price": 710,
+    "attributes": {
+      "attack": 0,
+      "defense": 120,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Swift",
+      "description": "<span style=\"color: #43a047\">Movement Speed +60</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+120",
+        "description": "Physical Defense",
+        "_id": "689afa67c27a33e8e71b3ede"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T08:25:11.036Z",
+    "__v": 0
+  },
+  {
+    "_id": "689afaefc27a33e8e71b3ee2",
+    "name": "Boots of Resistance",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754987243/BlogHok/svg/noejaz8grwn5eiu0caoc.svg",
+    "description": "passive: Swift - <span style=\"color: #43a047\">+ 60 Movement Speed.</span>\npassive: Tough - <span style=\"color: #43a047\">+25% Resistance</span>",
+    "category": "Movement",
+    "tier": "Basic",
+    "price": 710,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 120,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Swift",
+      "description": "<span style=\"color: #43a047\">+ 60 Movement Speed.</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicArmor",
+        "label": "magicArmor",
+        "value": "+120",
+        "description": "Magical Defense",
+        "_id": "689afaefc27a33e8e71b3ee3"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T08:27:27.248Z",
+    "__v": 0
+  },
+  {
+    "_id": "689afb65c27a33e8e71b3ee7",
+    "name": "Boots of Tranquility",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754987361/BlogHok/svg/lazsmjhx1hjqfs7khg6f.svg",
+    "description": "passive: Swift - <span style=\"color: #43a047\">+ 60 Movement Speed</span>\npassive: Tranquility - Reduces cooldown of basic attacks by 15%.",
+    "category": "Movement",
+    "tier": "Basic",
+    "price": 710,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 15,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Swift",
+      "description": "<span style=\"color: #43a047\">+ 60 Movement Speed</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+15%",
+        "description": "Cooldown Reduction",
+        "_id": "689afb65c27a33e8e71b3ee8"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T08:29:25.384Z",
+    "__v": 0
+  },
+  {
+    "_id": "689afbcfc27a33e8e71b3eec",
+    "name": "Boots of the Arcane",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754987467/BlogHok/svg/toislf8gmot10d494an4.svg",
+    "description": "passive: Swift - <span style=\"color: #43a047\">+ 60 Movement Speed</span>\npassive: Magical Mastery - <span style=\"color: #7b2ff2\">+100 Magic Penetration.</span>",
+    "category": "Movement",
+    "tier": "Basic",
+    "price": 710,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 15,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Swift",
+      "description": "<span style=\"color: #43a047\">+ 60 Movement Speed</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "manaRegen",
+        "label": "manaRegen",
+        "value": "+15",
+        "description": "mana/5s",
+        "_id": "689afbcfc27a33e8e71b3eed"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T08:31:11.325Z",
+    "__v": 0
+  },
+  {
+    "_id": "689afd78c27a33e8e71b3f75",
+    "name": "Boots of Deftness",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754987892/BlogHok/svg/m2yr85lmvh9atrujbinf.svg",
+    "description": "passive: Swift - <span style=\"color: #43a047\">+ 70 Movement Speed.</span>\npassive: Divine Wind - Outside combat, increases 50 movement speed.",
+    "category": "Movement",
+    "tier": "Basic",
+    "price": 710,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 300,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Swift",
+      "description": "<span style=\"color: #43a047\">+ 70 Movement Speed.</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalLifeSteal",
+        "label": "physicalLifeSteal",
+        "value": "+300",
+        "description": "Max Health",
+        "_id": "689afd78c27a33e8e71b3f76"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T08:38:16.497Z",
+    "__v": 0
+  },
+  {
+    "_id": "689afe6ac27a33e8e71b401a",
+    "name": "Runeblade",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754988134/BlogHok/svg/ibhd1ge4zspehtv8arja.svg",
+    "description": "passive: Hunter - Basic attacks or abilities deal an additional 90 (+30% AP) magic damage every 0.5s for 2s to jungle monsters (champions only take 20% damage)",
+    "category": "Jungle",
+    "tier": "Basic",
+    "price": 2160,
+    "attributes": {
+      "attack": 150,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 5,
+      "attackSpeed": 0,
+      "movementSpeed": 7,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Hunter",
+      "description": "Basic attacks or abilities deal an additional 90 (+30% AP) magic damage every 0.5s for 2s to jungle monsters (champions only take 20% damage)"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+150",
+        "description": "Magical Attack",
+        "_id": "689afe6ac27a33e8e71b401b"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+5%",
+        "description": "Cooldown Reduction",
+        "_id": "689afe6ac27a33e8e71b401c"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+7% ",
+        "description": "Movement Speed",
+        "_id": "689afe6ac27a33e8e71b401d"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T08:42:18.514Z",
+    "__v": 0
+  },
+  {
+    "_id": "689afee4c27a33e8e71b4021",
+    "name": "Rapacious Bite",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754988256/BlogHok/svg/j4dvwd2seim75irr9rxg.svg",
+    "description": "passive: Hunter - Basic attacks or abilities deal an additional 90 (+60% bonus physical attack) physical damage every 0.5s for 2s to jungle monsters (champions only take 20% damage, only applies to melee champions).",
+    "category": "Jungle",
+    "tier": "Basic",
+    "price": 2160,
+    "attributes": {
+      "attack": 90,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 5,
+      "attackSpeed": 0,
+      "movementSpeed": 8,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Hunter",
+      "description": "Basic attacks or abilities deal an additional 90 (+60% bonus physical attack) physical damage every 0.5s for 2s to jungle monsters (champions only take 20% damage, only applies to melee champions)."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+90",
+        "description": "Physical Attack",
+        "_id": "689afee4c27a33e8e71b4022"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": " +5%",
+        "description": "Cooldown Reduction",
+        "_id": "689afee4c27a33e8e71b4023"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+8%",
+        "description": "Movement Speed",
+        "_id": "689afee4c27a33e8e71b4024"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T08:44:20.641Z",
+    "__v": 0
+  },
+  {
+    "_id": "689aff69b0e307cefa688b0c",
+    "name": "Giant’s Grip",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754988390/BlogHok/svg/oa9epdc31i9mlyvnzgqe.svg",
+    "description": "passive: Hunter - Basic attacks or abilities deal an additional 75 (+7% bonus Health) true damage every 0.5s for 2s to jungle monsters (champions only take 20% damage)",
+    "category": "Jungle",
+    "tier": "Basic",
+    "price": 2160,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 1200,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 5,
+      "attackSpeed": 0,
+      "movementSpeed": 6,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Hunter",
+      "description": "Basic attacks or abilities deal an additional 75 (+7% bonus Health) true damage every 0.5s for 2s to jungle monsters (champions only take 20% damage)"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+5%",
+        "description": "Cooldown Reduction",
+        "_id": "689ecd80db87b91dd20a95fe"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1200",
+        "description": "Max Health",
+        "_id": "689ecd80db87b91dd20a95ff"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+6%",
+        "description": "Movement Speed",
+        "_id": "689ecd80db87b91dd20a9600"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T08:46:33.836Z",
+    "__v": 1
+  },
+  {
+    "_id": "689b12de33f08d686d17a76a",
+    "name": "Guardian",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754993371/BlogHok/svg/ggmd2kgr0alhpbgmbnq9.svg",
+    "description": "passive: Guardian Aura - Grants 32-60 Physical and Magical defense to allies allies within the range of 800",
+    "category": "Roaming",
+    "tier": "Basic",
+    "price": 900,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 500,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 6,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Guardian Aura",
+      "description": "Grants 32-60 Physical and Magical defense to allies allies within the range of 800"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+500",
+        "description": "Maximum Health",
+        "_id": "689ea373c6451acfaac30866"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+6%",
+        "description": "Movement Speed",
+        "_id": "689ea373c6451acfaac30867"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T10:09:34.997Z",
+    "__v": 1
+  },
+  {
+    "_id": "689b143533f08d686d17a84d",
+    "name": "Crimson Shadow",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754993713/BlogHok/svg/xbq3eaqe5hdot7vkgluh.svg",
+    "description": "passive: Agility Aura - Grants 8% Attack Speed and Cooldown Reduction, and 10 Mana every 5 seconds to all allies within the range of 800",
+    "category": "Roaming",
+    "tier": "Basic",
+    "price": 900,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 500,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 6,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Agility Aura",
+      "description": "Grants 8% Attack Speed and Cooldown Reduction, and 10 Mana every 5 seconds to all allies within the range of 800"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+500",
+        "description": "Max Health",
+        "_id": "689ea37cc6451acfaac3086d"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+6%",
+        "description": "Movement Speed",
+        "_id": "689ea37cc6451acfaac3086e"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T10:15:17.302Z",
+    "__v": 1
+  },
+  {
+    "_id": "689b14f533f08d686d17a853",
+    "name": "Crimson Shadow-Redemption",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755222929/BlogHok/dsr830mupzvyuz4xfw7b.png",
+    "description": "passive: Agility - Grant Attack Speed by 20%, Cooldown Reduction by 15%, and restores 15 Mana every 5s\nactive: Recure - Grant a (240-480 +10% Health) Shield to team within range for 4s",
+    "category": "Roaming",
+    "tier": "Basic",
+    "price": 1900,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 10,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Agility",
+      "description": "Grant Attack Speed by 20%, Cooldown Reduction by 15%, and restores 15 Mana every 5s"
+    },
+    "active": {
+      "name": "Recure",
+      "description": "Grant a (240-480 +10% Health) Shield to team within range for 4s",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "689ea38ac6451acfaac30874"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+10%",
+        "description": "Movement Speed",
+        "_id": "689ea38ac6451acfaac30875"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-12T10:18:29.613Z",
+    "__v": 3
+  },
+  {
+    "_id": "689bec25d3d6b3176c4dc984",
+    "name": "Cuirass of Savagery",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755048994/BlogHok/ynyqcpekcijrywvdnsyn.png",
+    "description": "passive: Fearless - When taking damage, all damage dealt by yourself will be increased by 2% and Movement Speed will be increased by 1% for 3s.",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 2050,
+    "attributes": {
+      "attack": 30,
+      "defense": 220,
+      "magic": 0,
+      "health": 900,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Fearless",
+      "description": "When taking damage, all damage dealt by yourself will be increased by 2% and Movement Speed will be increased by 1% for 3s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+30",
+        "description": "Physical Attack",
+        "_id": "689ea4f4c6451acfaac30b5f"
+      },
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+220",
+        "description": "Physical Defense",
+        "_id": "689ea4f4c6451acfaac30b60"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+900",
+        "description": "Max Health",
+        "_id": "689ea4f4c6451acfaac30b61"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T01:36:37.507Z",
+    "__v": 1
+  },
+  {
+    "_id": "689bee1fd3d6b3176c4dca52",
+    "name": "Sparkforged Dagger",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755049500/BlogHok/w4d4y5tejl1tncade7cj.png",
+    "description": "passive: Spark - BA deal <span style=\"color: #7b2ff2\">40-82 extra Magical Damag</span>e. Every third BA unleashes chain lightning deals <span style=\"color: #7b2ff2\">140-420 Magical Damage</span>",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 1840,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 35,
+      "movementSpeed": 8,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Spark",
+      "description": "BA deal <span style=\"color: #7b2ff2\">40-82 extra Magical Damag</span>e. Every third BA unleashes chain lightning deals <span style=\"color: #7b2ff2\">140-420 Magical Damage</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+35%",
+        "description": "Attack Speed",
+        "_id": "689ef41ac9aa8394a95085d5"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+8%",
+        "description": "Movement Speed",
+        "_id": "689ef41ac9aa8394a95085d6"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T01:45:03.528Z",
+    "__v": 1
+  },
+  {
+    "_id": "689bf723faf99339a93315c7",
+    "name": "Scepter of Reverberation",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755051806/BlogHok/svg/aamb88thb4bn3rofoc2x.svg",
+    "description": "passive: Echo - When landing a skill hit, dealing 120 (+40 Magical Damage) ",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2100,
+    "attributes": {
+      "attack": 240,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 7,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Echo",
+      "description": "When landing a skill hit, dealing 120 (+40 Magical Damage) "
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+240",
+        "description": "Magic Attack",
+        "_id": "689bf723faf99339a93315c8"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+7%",
+        "description": "Movement Speed",
+        "_id": "689bf723faf99339a93315c9"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T02:23:31.145Z",
+    "__v": 0
+  },
+  {
+    "_id": "689bf772faf99339a93315cd",
+    "name": "Savant’s Wrath",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755051886/BlogHok/svg/u5a8zips8bxpb5ucrlrd.svg",
+    "description": "passive: Doom - +30% Magical Damage",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2230,
+    "attributes": {
+      "attack": 240,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Doom",
+      "description": "+30% Magical Damage"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+240",
+        "description": "Magical Attack",
+        "_id": "689bf772faf99339a93315ce"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T02:24:50.586Z",
+    "__v": 0
+  },
+  {
+    "_id": "689bf7fcfaf99339a93315d2",
+    "name": "Mask of Agony ",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755052023/BlogHok/svg/g1bdlvyegqrn72fydsoi.svg",
+    "description": "passive: Torment - Hitting a target will cause the target to take 4 times more <span style=\"color: #7b2ff2\">magic damage equal to 3%</span> of the <span style=\"color: #43a047\">target's current Health</span> for 3s. (Maximum damage to jungle monsters is 200)",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2040,
+    "attributes": {
+      "attack": 120,
+      "defense": 0,
+      "magic": 0,
+      "health": 800,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 5,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Torment",
+      "description": "Hitting a target will cause the target to take 4 times more <span style=\"color: #7b2ff2\">magic damage equal to 3%</span> of the <span style=\"color: #43a047\">target's current Health</span> for 3s. (Maximum damage to jungle monsters is 200)"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+120",
+        "description": "Magical Attack",
+        "_id": "689ef33ac9aa8394a950852b"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+5%",
+        "description": "Cooldown Reduction",
+        "_id": "689ef33ac9aa8394a950852c"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+800",
+        "description": "Max Health",
+        "_id": "689ef33ac9aa8394a950852d"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T02:27:08.042Z",
+    "__v": 2
+  },
+  {
+    "_id": "689bf885faf99339a93315d9",
+    "name": "Twilight Stream",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755052160/BlogHok/svg/oog7kjckexic4vsf1qtw.svg",
+    "description": "passive: Purge - Dealing damage to enemy champions grants 16 ~ 30 Magic Penetration for 4s.",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2040,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 300,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 10,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Purge",
+      "description": "Dealing damage to enemy champions grants 16 ~ 30 Magic Penetration for 4s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "Twilight Stream",
+        "description": "Magical Attack",
+        "_id": "689ea4c0c6451acfaac30aad"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "689ea4c0c6451acfaac30aae"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+300",
+        "description": "Max Health",
+        "_id": "689ea4c0c6451acfaac30aaf"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T02:29:25.155Z",
+    "__v": 1
+  },
+  {
+    "_id": "689bf8fefaf99339a93315e0",
+    "name": "Void Staff",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755052282/BlogHok/svg/uniblhqpqlg05z4ab4y5.svg",
+    "description": "passive: Devastation - +45% Magic Penetration.",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2100,
+    "attributes": {
+      "attack": 240,
+      "defense": 0,
+      "magic": 0,
+      "health": 500,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Devastation",
+      "description": "+45% Magic Penetration."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+240",
+        "description": "Magical Attack",
+        "_id": "689ea4d3c6451acfaac30ab5"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+500",
+        "description": "Max Health",
+        "_id": "689ea4d3c6451acfaac30ab6"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T02:31:26.071Z",
+    "__v": 1
+  },
+  {
+    "_id": "689bf97efaf99339a93315e6",
+    "name": "Insatiable Tome",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755052410/BlogHok/svg/xqeeitozjj1g1js6ni7o.svg",
+    "description": "passive: Bloodthirst - Magical Lifesteal +25%",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2090,
+    "attributes": {
+      "attack": 180,
+      "defense": 0,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 10,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Bloodthirst",
+      "description": "Magical Lifesteal +25%"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+180",
+        "description": "Magical Attack",
+        "_id": "689ea490c6451acfaac30a9b"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "689ea490c6451acfaac30a9c"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "689ea490c6451acfaac30a9d"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T02:33:34.002Z",
+    "__v": 1
+  },
+  {
+    "_id": "689bf9f9faf99339a93315ed",
+    "name": "Tome of Wisdom",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755052534/BlogHok/svg/yzsoel9z7a6hs1eh6gvo.svg",
+    "description": "passive: Enlightenment - For every 100 Magic Power, damage increases by 0.8%.\nMaximum 12%.",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2810,
+    "attributes": {
+      "attack": 400,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 10,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Enlightenment",
+      "description": "For every 100 Magic Power, damage increases by 0.8%.\nMaximum 12%."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+400",
+        "description": "Magical Attack",
+        "_id": "689bf9f9faf99339a93315ee"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "689bf9f9faf99339a93315ef"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T02:35:37.748Z",
+    "__v": 0
+  },
+  {
+    "_id": "689bfa80334a0de59fc90b2c",
+    "name": "Splendor",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755052668/BlogHok/svg/r6up8jesjpfbttfctrwi.svg",
+    "description": "passive: Moonguard  - Grants immunity to all effects but makes your hero unable to move, attack or use skills for 1.5s.",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 1990,
+    "attributes": {
+      "attack": 160,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 10,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Moonguard ",
+      "description": "Grants immunity to all effects but makes your hero unable to move, attack or use skills for 1.5s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+160",
+        "description": "Magical Attack",
+        "_id": "689bfa80334a0de59fc90b2d"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "689bfa80334a0de59fc90b2e"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T02:37:52.433Z",
+    "__v": 0
+  },
+  {
+    "_id": "689bfb46334a0de59fc90baa",
+    "name": "Holy Grail",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755052867/BlogHok/a0ja3hpdzdgi1w86hs0j.png",
+    "description": "passive: Mana Spring - Restores 1.5% max Mana/1s, if Mana is full, restores 1% health /1s ",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 1900,
+    "attributes": {
+      "attack": 180,
+      "defense": 0,
+      "magic": 0,
+      "health": 500,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 15,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Mana Spring",
+      "description": "Restores 1.5% max Mana/1s, if Mana is full, restores 1% health /1s "
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+180",
+        "description": "Magical Attack",
+        "_id": "689ea47ac6451acfaac30a92"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+15%",
+        "description": "Cooldown Reduction",
+        "_id": "689ea47ac6451acfaac30a93"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+500",
+        "description": "Max Health",
+        "_id": "689ea47ac6451acfaac30a94"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T02:41:10.374Z",
+    "__v": 1
+  },
+  {
+    "_id": "689bfc65334a0de59fc90bb1",
+    "name": "Frozen Breath",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755053153/BlogHok/svg/xxchly9gesk0ulyhty27.svg",
+    "description": "passive: Deep Freeze - Skill hits will reduce the target's Movement Speed by 15~30% for 1.5 seconds.",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2100,
+    "attributes": {
+      "attack": 160,
+      "defense": 0,
+      "magic": 0,
+      "health": 600,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 5,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Deep Freeze",
+      "description": "Skill hits will reduce the target's Movement Speed by 15~30% for 1.5 seconds."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+5%",
+        "description": "Cooldown Reduction",
+        "_id": "689ea463c6451acfaac30a89"
+      },
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+160",
+        "description": "Magical Attack",
+        "_id": "689ea463c6451acfaac30a8a"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+600",
+        "description": "Max Health",
+        "_id": "689ea463c6451acfaac30a8b"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T02:45:57.896Z",
+    "__v": 1
+  },
+  {
+    "_id": "689bfcde334a0de59fc90bb8",
+    "name": "Venomous Staff",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755053275/BlogHok/ewkbphdxshd3u4hctpsm.png",
+    "description": "passive: Imperil - When a basic attack/skill hits an enemy, it reduces their healing ability by 35% for 2.5s.",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2050,
+    "attributes": {
+      "attack": 240,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 10,
+      "attackSpeed": 0,
+      "movementSpeed": 5,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Imperil",
+      "description": "When a basic attack/skill hits an enemy, it reduces their healing ability by 35% for 2.5s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+240",
+        "description": "Magical Attack",
+        "_id": "689bfcde334a0de59fc90bb9"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "689bfcde334a0de59fc90bba"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+5%",
+        "description": "Movement Speed",
+        "_id": "689bfcde334a0de59fc90bbb"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-13T02:47:58.995Z",
+    "__v": 0
+  },
+  {
+    "_id": "689e952fc6451acfaac3029f",
+    "name": "Crimson Shadow - Starspring",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755223339/BlogHok/qvj57yi8wxps2ctcfmkv.png",
+    "description": "passive: Agility Aura - Increases Attack Speed by 15%, Cooldown Reduction by 15%, and restores 20 Energy every 5s to yourself and allies within 800 range.\nactive: Starburst - After linking for 5s, both sides will recover 500 - 1060 (+20% Max Health) Health and 25% Max Energy. Stored once every 50s. Maximum 2 times.",
+    "category": "Roaming",
+    "tier": "Basic",
+    "price": 1900,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 10,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Agility Aura",
+      "description": "Increases Attack Speed by 15%, Cooldown Reduction by 15%, and restores 20 Energy every 5s to yourself and allies within 800 range."
+    },
+    "active": {
+      "name": "Starburst",
+      "description": "After linking for 5s, both sides will recover 500 - 1060 (+20% Max Health) Health and 25% Max Energy. Stored once every 50s. Maximum 2 times.",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "689ea3e0c6451acfaac3091d"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+10%",
+        "description": "Movement Speed",
+        "_id": "689ea3e0c6451acfaac3091e"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-15T02:02:23.764Z",
+    "__v": 1
+  },
+  {
+    "_id": "689e9759c6451acfaac30409",
+    "name": "Crimson Shadow - Howl",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755223893/BlogHok/tu11joamqon5dmndqj4d.png",
+    "description": "passive: Agility Aura - Increases Attack Speed by 20%, Cooldown Reduction by 15%, and restores 15 Mana every 5s.\nactive: Rally - Increases the movement speed of yourself and allies within range by 100% – 200% for 5s.",
+    "category": "Roaming",
+    "tier": "Basic",
+    "price": 1900,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 10,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Agility Aura",
+      "description": "Increases Attack Speed by 20%, Cooldown Reduction by 15%, and restores 15 Mana every 5s."
+    },
+    "active": {
+      "name": "Rally",
+      "description": "Increases the movement speed of yourself and allies within range by 100% – 200% for 5s.",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "689ea3f1c6451acfaac30924"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+10%",
+        "description": "Movement Speed",
+        "_id": "689ea3f1c6451acfaac30925"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-15T02:11:37.153Z",
+    "__v": 1
+  },
+  {
+    "_id": "689e98d2c6451acfaac3040f",
+    "name": "Crimson Shadow - Radiance",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755224270/BlogHok/vsxfhxnvfjxlfp8hce4u.png",
+    "description": "passive: Agility - Increases Attack Speed by 20%, Cooldown Reduction by 15%, and restores 15 Mana every 5s.\nactive: Mirror Domain - Dealing magic damage equal to  6%  of the enemy's current Health, and inflicting their Movement Speed by 25%-50%",
+    "category": "Roaming",
+    "tier": "Basic",
+    "price": 1900,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 10,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Agility",
+      "description": "Increases Attack Speed by 20%, Cooldown Reduction by 15%, and restores 15 Mana every 5s."
+    },
+    "active": {
+      "name": "Mirror Domain",
+      "description": "Dealing magic damage equal to  6%  of the enemy's current Health, and inflicting their Movement Speed by 25%-50%",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "689ea3fbc6451acfaac3092b"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+10%",
+        "description": "Movement Speed",
+        "_id": "689ea3fbc6451acfaac3092c"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-15T02:17:54.102Z",
+    "__v": 2
+  },
+  {
+    "_id": "689e9a74c6451acfaac305cd",
+    "name": "Guardian-Redemption",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755224688/BlogHok/lotutfpzaa3mysn8mb5p.png",
+    "description": "passive: Guardian Aura - Grants 65-130 Physical and Magical defense, and restore 0.6% Health/5s to allies allies within the range of 800\nactive: Rescue - Grant a (240-480 +10% Health) Shield to team within range for 4s",
+    "category": "Roaming",
+    "tier": "Basic",
+    "price": 1900,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 10,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Guardian Aura",
+      "description": "Grants 65-130 Physical and Magical defense, and restore 0.6% Health/5s to allies allies within the range of 800"
+    },
+    "active": {
+      "name": "Rescue",
+      "description": "Grant a (240-480 +10% Health) Shield to team within range for 4s",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max-Health",
+        "_id": "689ea43bc6451acfaac30a81"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+10%",
+        "description": "Movement Speed",
+        "_id": "689ea43bc6451acfaac30a82"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-15T02:24:52.918Z",
+    "__v": 1
+  },
+  {
+    "_id": "689e9b8dc6451acfaac30669",
+    "name": "Guardian - Starspring",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755224969/BlogHok/ixpoigsxslr6b6yniurz.png",
+    "description": "passive: Guardian Aura - Grants 65-130 Physical and Magical defense, and restore 0.6% Health/5s to allies allies within the range of 800\nactive: Starburst - Links with an ally within range, both sides will recover 500 - 1060 (+20% Max Health) Health and 25% Max Mana/5s.",
+    "category": "Roaming",
+    "tier": "Basic",
+    "price": 1900,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 10,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Guardian Aura",
+      "description": "Grants 65-130 Physical and Magical defense, and restore 0.6% Health/5s to allies allies within the range of 800"
+    },
+    "active": {
+      "name": "Starburst",
+      "description": "Links with an ally within range, both sides will recover 500 - 1060 (+20% Max Health) Health and 25% Max Mana/5s.",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "689ea412c6451acfaac30932"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+10%",
+        "description": "Movement Speed",
+        "_id": "689ea412c6451acfaac30933"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-15T02:29:33.879Z",
+    "__v": 1
+  },
+  {
+    "_id": "689ea25fc6451acfaac30709",
+    "name": "Guardian - Howl",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755226715/BlogHok/s5i8p8cc8h4vtmwaxfxh.png",
+    "description": "active: Rally - Increases the movement speed of yourself and allies within range by 100% – 200% for 5s.\npassive: Guardian Aura - Grants 65-130 Physical and Magical defense, and restore 0.6% Health/5s to allies allies within the range of 800",
+    "category": "Roaming",
+    "tier": "Basic",
+    "price": 1900,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 10,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Guardian Aura",
+      "description": "Grants 65-130 Physical and Magical defense, and restore 0.6% Health/5s to allies allies within the range of 800"
+    },
+    "active": {
+      "name": "Rally",
+      "description": "Increases the movement speed of yourself and allies within range by 100% – 200% for 5s.",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": " Max Health",
+        "_id": "689ea25fc6451acfaac3070a"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+10%",
+        "description": "Movement",
+        "_id": "689ea25fc6451acfaac3070b"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-15T02:58:39.617Z",
+    "__v": 0
+  },
+  {
+    "_id": "689ea317c6451acfaac3070f",
+    "name": "Guardian - Radiance",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755226899/BlogHok/fzujaeay63vefbffipqc.png",
+    "description": "active: Mirror Domain - Dealing magic damage equal to 3% of the enemy's current Health, and inflicting their Movement Speed by 25%-50%\npassive: Guardian Aura - Grants 65-130 Physical and Magical defense, and restore 0.6% Health/5s to allies allies within the range of 800",
+    "category": "Roaming",
+    "tier": "Basic",
+    "price": 1900,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 10,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Guardian Aura",
+      "description": "Grants 65-130 Physical and Magical defense, and restore 0.6% Health/5s to allies allies within the range of 800"
+    },
+    "active": {
+      "name": "Mirror Domain",
+      "description": "Dealing magic damage equal to 3% of the enemy's current Health, and inflicting their Movement Speed by 25%-50%",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "689ea317c6451acfaac30710"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+10%",
+        "description": "Movement Speed",
+        "_id": "689ea317c6451acfaac30711"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-15T03:01:43.668Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1d98bde1e6eb898cb643f",
+    "name": "Dawnlight",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755437444/BlogHok/svg/lrs9mejbvzns6xtggsji.svg",
+    "description": "passive: First Light - Skills or basic attacks that hit enemies will grant a shield that absorbs <span style=\"color: #43a047\">250 ~ 530 (+4% Max Health)</span> damage to yourself and the nearby ally with the lowest health for 3s.",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 1950,
+    "attributes": {
+      "attack": 0,
+      "defense": 240,
+      "magic": 0,
+      "health": 150,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 10,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "First Light",
+      "description": "Skills or basic attacks that hit enemies will grant a shield that absorbs <span style=\"color: #43a047\">250 ~ 530 (+4% Max Health)</span> damage to yourself and the nearby ally with the lowest health for 3s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "68a1d98bde1e6eb898cb6440"
+      },
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+240",
+        "description": "Physical Defense",
+        "_id": "68a1d98bde1e6eb898cb6441"
+      },
+      {
+        "type": "healthPer5s",
+        "label": "healthPer5s",
+        "value": "+150",
+        "description": "Health/5s",
+        "_id": "68a1d98bde1e6eb898cb6442"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-17T13:30:51.259Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1db84de1e6eb898cb6446",
+    "name": "Blazing Cape",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755437950/BlogHok/svg/rehszdahiif9bnd4ncez.svg",
+    "description": "passive: Conflagration - Burns nearby enemies <span style=\"color: #43a047\">(1.5 Max health)</span> <span style=\"color: #7b2ff2\">magical damage</span>. \npassive: Imperil - reduces enemy Health recovery an lifesteal by 35%",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 1950,
+    "attributes": {
+      "attack": 0,
+      "defense": 240,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Conflagration",
+      "description": "Burns nearby enemies <span style=\"color: #43a047\">(1.5 Max health)</span> <span style=\"color: #7b2ff2\">magical damage</span>. "
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+ 240",
+        "description": "Physical Defense",
+        "_id": "68a1db84de1e6eb898cb6447"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max health",
+        "_id": "68a1db84de1e6eb898cb6448"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-17T13:39:16.446Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1dcecde1e6eb898cb644c",
+    "name": "Ominous Premonition",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755438309/BlogHok/svg/mrepykrhz5xkqujt0v40.svg",
+    "description": "passive: Cold Steel - When taking damage, the attacker will have their Attack Speed reduced by 40% and Movement Speed reduced by 7.5~15% for 3s.",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 2150,
+    "attributes": {
+      "attack": 0,
+      "defense": 270,
+      "magic": 0,
+      "health": 1200,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Cold Steel",
+      "description": "When taking damage, the attacker will have their Attack Speed reduced by 40% and Movement Speed reduced by 7.5~15% for 3s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+270",
+        "description": "Physical Defense",
+        "_id": "68a1dcecde1e6eb898cb644d"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1200",
+        "description": "Max Health",
+        "_id": "68a1dcecde1e6eb898cb644e"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-17T13:45:16.680Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1de81de1e6eb898cb6452",
+    "name": "Glacial Buckler",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755438715/BlogHok/svg/yavvbditxuiurizykzjs.svg",
+    "description": "passive: Frost Shock - When taking damage from an attack that exceeds <span style=\"color: #43a047\">10% of current Health</span>, Frost Shock will be activated, launching towards the enemy, dealing <span style=\"color: #7b2ff2\">130 - 260  magic damage</span> while reducing Attack Speed by 15% and Movement Speed by 15 ~ 30% for 2s for enemies within range.",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 2100,
+    "attributes": {
+      "attack": 0,
+      "defense": 360,
+      "magic": 0,
+      "health": 0,
+      "mana": 500,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 20,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Frost Shock",
+      "description": "When taking damage from an attack that exceeds <span style=\"color: #43a047\">10% of current Health</span>, Frost Shock will be activated, launching towards the enemy, dealing <span style=\"color: #7b2ff2\">130 - 260  magic damage</span> while reducing Attack Speed by 15% and Movement Speed by 15 ~ 30% for 2s for enemies within range."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+20%",
+        "description": "Cooldown Reduction",
+        "_id": "68a1e19ade1e6eb898cb65ed"
+      },
+      {
+        "type": "manaRegen",
+        "label": "manaRegen",
+        "value": "+500",
+        "description": "Max mana",
+        "_id": "68a1e19ade1e6eb898cb65ee"
+      },
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+360",
+        "description": "Physical Defense",
+        "_id": "68a1e19ade1e6eb898cb65ef"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-17T13:52:01.821Z",
+    "__v": 1
+  },
+  {
+    "_id": "68a1dff9de1e6eb898cb6459",
+    "name": "Spikemail",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755439091/BlogHok/svg/qlalqjeurcgeltabzzzw.svg",
+    "description": "passive: Spiked Armor - 25% of <span style=\"color: #ff7a00\">physical damage</span> taken is returned to the enemy as <span style=\"color: #7b2ff2\">magic damage</span>. This damage decreases with distance (Reduces to 70% at 800 range).\npassive: Countersiege - When taking physical damage exceeding 2000 within 2s, it will explode, dealing magic damage equal to <span style=\"color: #43a047\">8% of maximum Health</span> to surrounding targets within 400 range.",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 1950,
+    "attributes": {
+      "attack": 30,
+      "defense": 360,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Spiked Armor",
+      "description": "25% of <span style=\"color: #ff7a00\">physical damage</span> taken is returned to the enemy as <span style=\"color: #7b2ff2\">magic damage</span>. This damage decreases with distance (Reduces to 70% at 800 range)."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+30",
+        "description": "Phyisical Attack",
+        "_id": "68a1dff9de1e6eb898cb645a"
+      },
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+360",
+        "description": "Physical Defense",
+        "_id": "68a1dff9de1e6eb898cb645b"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-17T13:58:17.225Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1e0c8de1e6eb898cb645f",
+    "name": "Succubus Cloak",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755439298/BlogHok/svg/ezxmr88mwvyfukwudzev.svg",
+    "description": "passive: Mist Veil - Grants a <span style=\"color: #43a047\">shield</span> that negates 100-1500 <span style=\"color: #7b2ff2\">magical damage</span> when out of combat\npassive: Anti Mage - Increases <span style=\"color: #7b2ff2\">Magical Damage by 8-120</span>",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 2080,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 200,
+      "health": 100,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Mist Veil",
+      "description": "Grants a <span style=\"color: #43a047\">shield</span> that negates 100-1500 <span style=\"color: #7b2ff2\">magical damage</span> when out of combat"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicArmor",
+        "label": "magicArmor",
+        "value": "+200",
+        "description": "Magical Defense",
+        "_id": "68a1f2df55b4a78215d59a89"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "68a1f2df55b4a78215d59a8a"
+      },
+      {
+        "type": "healthPer5s",
+        "label": "healthPer5s",
+        "value": "+100",
+        "description": "Health/5s",
+        "_id": "68a1f2df55b4a78215d59a8b"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-17T14:01:44.897Z",
+    "__v": 5
+  },
+  {
+    "_id": "68a1e3b955b4a78215d58e7f",
+    "name": "Longnight Guardian",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755440051/BlogHok/svg/bcyinmjm9p9oxmpsri3s.svg",
+    "description": "passive: Guardian - When taking damage greater than <span style=\"color: #43a047\">30% of maximum Health</span> in 3s, restore 320 <span style=\"color: #43a047\">(+8% of maximum Health)</span> Health in 3s.",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 2110,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 360,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Guardian",
+      "description": "When taking damage greater than <span style=\"color: #43a047\">30% of maximum Health</span> in 3s, restore 320 <span style=\"color: #43a047\">(+8% of maximum Health)</span> Health in 3s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicArmor",
+        "label": "magicArmor",
+        "value": "+360",
+        "description": "Magical Defense",
+        "_id": "68a1e3b955b4a78215d58e80"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "68a1e3b955b4a78215d58e81"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-17T14:14:17.816Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1f61fde1a05e677364fd3",
+    "name": "Dragon’s Rage",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755444762/BlogHok/svg/czoeztjax9e5pgmwrnuk.svg",
+    "description": "passive: Devatasting Blow - Basic attacks deal (<span style=\"color: #43a047\">+6%Health</span>) <span style=\"color: #ff7a00\">physical damage</span> to minions and monsters, and restore health equal to 50% of the damage.",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 2000,
+    "attributes": {
+      "attack": 0,
+      "defense": 150,
+      "magic": 75,
+      "health": 1200,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Devatasting Blow",
+      "description": "Basic attacks deal (<span style=\"color: #43a047\">+6%Health</span>) <span style=\"color: #ff7a00\">physical damage</span> to minions and monsters, and restore health equal to 50% of the damage."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+150",
+        "description": "Physical Defense",
+        "_id": "68a1f61fde1a05e677364fd4"
+      },
+      {
+        "type": "magicArmor",
+        "label": "magicArmor",
+        "value": "+75",
+        "description": "Magical Defense",
+        "_id": "68a1f61fde1a05e677364fd5"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1200",
+        "description": "Max Health",
+        "_id": "68a1f61fde1a05e677364fd6"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "passives": [],
+    "actives": [],
+    "createdAt": "2025-08-17T15:32:47.926Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1f6a3de1a05e677364fda",
+    "name": "Eye of the Phoenix",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755444893/BlogHok/svg/lkco6m90ydbxzocg4tjn.svg",
+    "description": "passive: Bloodline - Increases Health recovery by 6% for every <span style=\"color: #43a047\">10% Health</span> lost",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 2100,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 240,
+      "health": 100,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Bloodline",
+      "description": "Increases Health recovery by 6% for every <span style=\"color: #43a047\">10% Health</span> lost"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicArmor",
+        "label": "magicArmor",
+        "value": "+240",
+        "description": "Magical Defense",
+        "_id": "68a1f6a3de1a05e677364fdb"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1200",
+        "description": "Max Health",
+        "_id": "68a1f6a3de1a05e677364fdc"
+      },
+      {
+        "type": "healthPer5s",
+        "label": "healthPer5s",
+        "value": "+100",
+        "description": "Health/5s",
+        "_id": "68a1f6a3de1a05e677364fdd"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "passives": [],
+    "actives": [],
+    "createdAt": "2025-08-17T15:34:59.434Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1f728de1a05e677364fe1",
+    "name": "Overlord’s Platemail",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755445025/BlogHok/svg/fnmdkkjoa4chm2e0l3ou.svg",
+    "description": "passive: Fated - Increases <span style=\"color: #43a047\">Health by 4%</span>",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 2150,
+    "attributes": {
+      "attack": 0,
+      "defense": 100,
+      "magic": 50,
+      "health": 1500,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Fated",
+      "description": "Increases <span style=\"color: #43a047\">Health by 4%</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+100",
+        "description": "Physical Defense",
+        "_id": "68a1f728de1a05e677364fe2"
+      },
+      {
+        "type": "magicArmor",
+        "label": "magicArmor",
+        "value": "+50",
+        "description": "Magical Defense",
+        "_id": "68a1f728de1a05e677364fe3"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1500",
+        "description": "Max Health",
+        "_id": "68a1f728de1a05e677364fe4"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "passives": [],
+    "actives": [],
+    "createdAt": "2025-08-17T15:37:12.426Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1f7eade1a05e677364fe8",
+    "name": "Frostscar’s Embrace",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755445220/BlogHok/svg/cdquwll560k290fpbktk.svg",
+    "description": "passive: Savagery - After using a skill, the next basic attack within 5s deals an additional <span style=\"color: #ff7a00\">210 ~ 420 physical damage</span> to enemies within range and reduces enemy Movement Speed by 15 ~ 30% ( 50% for ranged champions ) for 0.5s.",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 2100,
+    "attributes": {
+      "attack": 40,
+      "defense": 240,
+      "magic": 0,
+      "health": 500,
+      "mana": 400,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 10,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Savagery",
+      "description": "After using a skill, the next basic attack within 5s deals an additional <span style=\"color: #ff7a00\">210 ~ 420 physical damage</span> to enemies within range and reduces enemy Movement Speed by 15 ~ 30% ( 50% for ranged champions ) for 0.5s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+40",
+        "description": "Physical Attack",
+        "_id": "68a1f7eade1a05e677364fe9"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "68a1f7eade1a05e677364fea"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+500",
+        "description": "Max Health",
+        "_id": "68a1f7eade1a05e677364feb"
+      },
+      {
+        "type": "manaRegen",
+        "label": "manaRegen",
+        "value": "+400",
+        "description": "Max Mana",
+        "_id": "68a1f7eade1a05e677364fec"
+      },
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+240",
+        "description": "Physical Defense",
+        "_id": "68a1f7eade1a05e677364fed"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "passives": [],
+    "actives": [],
+    "createdAt": "2025-08-17T15:40:26.172Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1f8a9de1a05e677364ff1",
+    "name": "Blood Rage",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755445412/BlogHok/svg/tehftdkyuzvvyq77k1yu.svg",
+    "description": "passive: Apoplexy - Basic Attack deals an extra (2% Health) physical damage. When Health drops below 50%, the damage increases by 50%",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 2100,
+    "attributes": {
+      "attack": 40,
+      "defense": 0,
+      "magic": 0,
+      "health": 800,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Apoplexy",
+      "description": "Basic Attack deals an extra (2% Health) physical damage. When Health drops below 50%, the damage increases by 50%"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+40",
+        "description": "Physical Attack",
+        "_id": "68a1f8a9de1a05e677364ff2"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+800",
+        "description": "Max Health",
+        "_id": "68a1f8a9de1a05e677364ff3"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "passives": [],
+    "actives": [],
+    "createdAt": "2025-08-17T15:43:37.982Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1f933de1a05e6773650db",
+    "name": "Phantom",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755445549/BlogHok/svg/kul5po1xtwcsqdclzzje.svg",
+    "description": "passive: Apoplexy - Basic Attack deals an extra (<span style=\"color: #43a047\">2% Health</span>) <span style=\"color: #ff7a00\">physical damage</span>. When Health drops below 50%, the damage increases by 75%",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 3350,
+    "attributes": {
+      "attack": 40,
+      "defense": 0,
+      "magic": 0,
+      "health": 800,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Apoplexy",
+      "description": "Basic Attack deals an extra (<span style=\"color: #43a047\">2% Health</span>) <span style=\"color: #ff7a00\">physical damage</span>. When Health drops below 50%, the damage increases by 75%"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+40",
+        "description": "Physical Attack",
+        "_id": "68a1f933de1a05e6773650dc"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+800",
+        "description": "Max Health",
+        "_id": "68a1f933de1a05e6773650dd"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "passives": [],
+    "actives": [],
+    "createdAt": "2025-08-17T15:45:55.227Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1f9adde1a05e6773650e1",
+    "name": "Frigid Charge",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755445671/BlogHok/svg/oq6oc7ynud6uwo1lw5kj.svg",
+    "description": "passive: Ice Armor -  When you are hard controlled except for suppression, you will receive a s<span style=\"color: #43a047\">hield equal to 12% of your maximum Health</span> for 5s.",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 2100,
+    "attributes": {
+      "attack": 0,
+      "defense": 240,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Ice Armor",
+      "description": " When you are hard controlled except for suppression, you will receive a s<span style=\"color: #43a047\">hield equal to 12% of your maximum Health</span> for 5s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+240",
+        "description": "Physical Defense",
+        "_id": "68a1f9adde1a05e6773650e2"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "68a1f9adde1a05e6773650e3"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "passives": [],
+    "actives": [],
+    "createdAt": "2025-08-17T15:47:57.061Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a1fa98de1a05e6773651d3",
+    "name": "Winter",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755445902/BlogHok/svg/xsnfrazhruxuw80rjb8l.svg",
+    "description": "passive: Ice Armor - When affected by hard crowd control effects other than suppression, grant a shield equal to <span style=\"color: #43a047\">12% Health</span> for 5s.",
+    "category": "Defense",
+    "tier": "Basic",
+    "price": 3350,
+    "attributes": {
+      "attack": 0,
+      "defense": 240,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Ice Armor",
+      "description": "When affected by hard crowd control effects other than suppression, grant a shield equal to <span style=\"color: #43a047\">12% Health</span> for 5s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+240",
+        "description": "Physical Defense",
+        "_id": "68a1fa98de1a05e6773651d4"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "68a1fa98de1a05e6773651d5"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "passives": [],
+    "actives": [],
+    "createdAt": "2025-08-17T15:51:52.543Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a273e9c8d168c7db1b83fd",
+    "name": "Axe of Torment",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755476964/BlogHok/svg/yzicxbyoj9dd3fyxvb7p.svg",
+    "description": "passive: Sever - Increases Physical Pierce by 90-180",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2090,
+    "attributes": {
+      "attack": 85,
+      "defense": 0,
+      "magic": 0,
+      "health": 500,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 10,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Sever",
+      "description": "Increases Physical Pierce by 90-180"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+85",
+        "description": "Physical Attack",
+        "_id": "68a273e9c8d168c7db1b83fe"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "68a273e9c8d168c7db1b83ff"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+500",
+        "description": "Max Health",
+        "_id": "68a273e9c8d168c7db1b8400"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T00:29:29.853Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a27485c8d168c7db1b8404",
+    "name": "Bloodweeper",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755477119/BlogHok/svg/dbhdkxwunrpxj8kvlqpf.svg",
+    "description": "passive: Revive - Restores 400-610 Health over 5s when Health drops below 30%",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 1800,
+    "attributes": {
+      "attack": 100,
+      "defense": 0,
+      "magic": 0,
+      "health": 500,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 25,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Revive",
+      "description": "Restores 400-610 Health over 5s when Health drops below 30%"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+100",
+        "description": "Physical Attack",
+        "_id": "68a27485c8d168c7db1b8405"
+      },
+      {
+        "type": "physicalLifeSteal",
+        "label": "physicalLifeSteal",
+        "value": "+25%",
+        "description": "Physical Lifesteal",
+        "_id": "68a27485c8d168c7db1b8406"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+500",
+        "description": "Max Health",
+        "_id": "68a27485c8d168c7db1b8407"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T00:32:05.065Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a27559c8d168c7db1b840b",
+    "name": "Destiny",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755477332/BlogHok/svg/kru6hc3zrdyloweknzhi.svg",
+    "description": "passive: Dark Curtain - When taking fatal damage, instead of dying immediately, gain <span style=\"color: #43a047\">30% Movement Speed</span> for 1s (0.5s for heroes with long range attacks).",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 1900,
+    "attributes": {
+      "attack": 60,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 5,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Dark Curtain",
+      "description": "When taking fatal damage, instead of dying immediately, gain <span style=\"color: #43a047\">30% Movement Speed</span> for 1s (0.5s for heroes with long range attacks)."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+60",
+        "description": "Physical Attack",
+        "_id": "68a27559c8d168c7db1b840c"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+5%",
+        "description": "Cooldown Reduction",
+        "_id": "68a27559c8d168c7db1b840d"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T00:35:37.624Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a2761cc8d168c7db1b8411",
+    "name": "Master Sword",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755477526/BlogHok/svg/wn4qepkhnwa1dejzizwf.svg",
+    "description": "passive: Savagery - Casting a skill increases, <span style=\"color: #43a047\">Movement Speed by 12%</span> for 2s and the next normal attack within 5s will deal an additional <span style=\"color: #ff7a00\">(80% Physical Attack) physical damage</span>.",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2100,
+    "attributes": {
+      "attack": 80,
+      "defense": 0,
+      "magic": 0,
+      "health": 500,
+      "mana": 400,
+      "speed": 0,
+      "criticalRate": 20,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Savagery",
+      "description": "Casting a skill increases, <span style=\"color: #43a047\">Movement Speed by 12%</span> for 2s and the next normal attack within 5s will deal an additional <span style=\"color: #ff7a00\">(80% Physical Attack) physical damage</span>."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+80",
+        "description": "Physical Attack",
+        "_id": "68a2761cc8d168c7db1b8412"
+      },
+      {
+        "type": "criticalRate",
+        "label": "criticalRate",
+        "value": "+20% ",
+        "description": "Cirtical Rate",
+        "_id": "68a2761cc8d168c7db1b8413"
+      },
+      {
+        "type": "manaRegen",
+        "label": "manaRegen",
+        "value": "+400",
+        "description": "Max Mana",
+        "_id": "68a2761cc8d168c7db1b8414"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+500",
+        "description": "Max Health",
+        "_id": "68a2761cc8d168c7db1b8415"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T00:38:52.048Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a2767bc8d168c7db1b8419",
+    "name": "Starbreaker",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755477621/BlogHok/svg/wt7i356zgopswlih25c0.svg",
+    "description": "passive: Sunder - <span style=\"color: #ff7a00\">Physical Pierce +40%</span>",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2099,
+    "attributes": {
+      "attack": 80,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 10,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Sunder",
+      "description": "<span style=\"color: #ff7a00\">Physical Pierce +40%</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+80",
+        "description": "Physical Attack",
+        "_id": "68a2767bc8d168c7db1b841a"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "68a2767bc8d168c7db1b841b"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T00:40:27.242Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a276ecc8d168c7db1b841f",
+    "name": "Siege Breaker",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755477734/BlogHok/svg/qqy48ef48zzir57vsfnd.svg",
+    "description": "passive: Siege Breaker - Deals 30% extra damage to enemies below 50% Health",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2680,
+    "attributes": {
+      "attack": 170,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Siege Breaker",
+      "description": "Deals 30% extra damage to enemies below 50% Health"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+170",
+        "description": "Physical Attack",
+        "_id": "68a276ecc8d168c7db1b8420"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T00:42:20.094Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a2775fc8d168c7db1b8424",
+    "name": "Dreamforged – Tempest",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755477850/BlogHok/svg/nojmtpggyrflfp3svyks.svg",
+    "description": "passive: Sever - Basic attacks increase <span style=\"color: #ff7a00\">physical pierce by 45 ~ 9</span>0, lasting 3s, with a maximum of 2 stacks of armor penetration.",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2090,
+    "attributes": {
+      "attack": 65,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 25,
+      "movementSpeed": 25,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Sever",
+      "description": "Basic attacks increase <span style=\"color: #ff7a00\">physical pierce by 45 ~ 9</span>0, lasting 3s, with a maximum of 2 stacks of armor penetration."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+65",
+        "description": "Physical Attack",
+        "_id": "68a2775fc8d168c7db1b8425"
+      },
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+25%",
+        "description": "Attack Speed",
+        "_id": "68a2775fc8d168c7db1b8426"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T00:44:15.954Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a277eac8d168c7db1b842a",
+    "name": "Dreamforged – Skypiercer",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755477988/BlogHok/svg/v4obrzlqkhzysjzzvtxv.svg",
+    "description": "passive: Armor Breaker - Basic attacks and skills that hit the target will reduce the target's Physical Armor by 10% for 2s.",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2129,
+    "attributes": {
+      "attack": 100,
+      "defense": 0,
+      "magic": 0,
+      "health": 800,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 10,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Armor Breaker",
+      "description": "Basic attacks and skills that hit the target will reduce the target's Physical Armor by 10% for 2s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+100",
+        "description": "Physical Attack",
+        "_id": "68a277eac8d168c7db1b842b"
+      },
+      {
+        "type": "criticalRate",
+        "label": "criticalRate",
+        "value": "+10%",
+        "description": "Critical Rate",
+        "_id": "68a277eac8d168c7db1b842c"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+800",
+        "description": "Max Health",
+        "_id": "68a277eac8d168c7db1b842d"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T00:46:34.435Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a2785fc8d168c7db1b8431",
+    "name": "Deepfrost Siege",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755478105/BlogHok/svg/hzvjwslwliftw9yh6jfw.svg",
+    "description": "passive: Deepfrost - Basic attacks reduce Movement Speed by 3%, lasts for 2s, can stack up to 5 times. When fully stacked, the target takes 30% more damage from basic attacks.",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2050,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 600,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 30,
+      "movementSpeed": 30,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Deepfrost",
+      "description": "Basic attacks reduce Movement Speed by 3%, lasts for 2s, can stack up to 5 times. When fully stacked, the target takes 30% more damage from basic attacks."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+30%",
+        "description": "Attack Speed",
+        "_id": "68a2785fc8d168c7db1b8432"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+600",
+        "description": "Max Health",
+        "_id": "68a2785fc8d168c7db1b8433"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T00:48:31.913Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a28a2bc8d168c7db1b85ee",
+    "name": "Mortal Punisher",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755482661/BlogHok/svg/ygoanfjcwgtv8lect32w.svg",
+    "description": "passive: Revive - Restores 400-610 Health over 5s when Health drops below 30%",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 1860,
+    "attributes": {
+      "attack": 100,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 15,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 15,
+      "movementSpeed": 15,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Revive",
+      "description": "Restores 400-610 Health over 5s when Health drops below 30%"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+100",
+        "description": "Physical Attack",
+        "_id": "68a28a2bc8d168c7db1b85ef"
+      },
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+15%",
+        "description": "Attack Speed",
+        "_id": "68a28a2bc8d168c7db1b85f0"
+      },
+      {
+        "type": "physicalLifeSteal",
+        "label": "physicalLifeSteal",
+        "value": "+15%",
+        "description": "Physical Lifesteal",
+        "_id": "68a28a2bc8d168c7db1b85f1"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T02:04:27.145Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a28ab5c8d168c7db1b85f5",
+    "name": "Demonsbane",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755482800/BlogHok/svg/x9gcdnc2vxyefjmdohvk.svg",
+    "description": "passive: Anti Mage - Increases <span style=\"color: #7b2ff2\">Magical Defense</span> by <span style=\"color: #ff7a00\">(60% Phyical Damage)</span> up to 300.",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2090,
+    "attributes": {
+      "attack": 90,
+      "defense": 0,
+      "magic": 100,
+      "health": 500,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Anti Mage",
+      "description": "Increases <span style=\"color: #7b2ff2\">Magical Defense</span> by <span style=\"color: #ff7a00\">(60% Phyical Damage)</span> up to 300."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+90",
+        "description": "Physical Attack",
+        "_id": "68a28ab5c8d168c7db1b85f6"
+      },
+      {
+        "type": "magicArmor",
+        "label": "magicArmor",
+        "value": "+100",
+        "description": "Magical Defense",
+        "_id": "68a28ab5c8d168c7db1b85f7"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+500",
+        "description": "Max Health",
+        "_id": "68a28ab5c8d168c7db1b85f8"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T02:06:45.861Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a28b54c8d168c7db1b85fc",
+    "name": "Pure Sky",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755482959/BlogHok/svg/j5ldlmlinjnkrtyw6hl4.svg",
+    "description": "passive: Maim - Skill slows the first enemy hit by 15%-30% for 3s and reduces damage taken from that enemy by 20% for 3s.",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2149,
+    "attributes": {
+      "attack": 100,
+      "defense": 0,
+      "magic": 0,
+      "health": 500,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 10,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Maim",
+      "description": "Skill slows the first enemy hit by 15%-30% for 3s and reduces damage taken from that enemy by 20% for 3s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+100",
+        "description": "Physical Attack ",
+        "_id": "68a28b54c8d168c7db1b85fd"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "68a28b54c8d168c7db1b85fe"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+500",
+        "description": "Max Health",
+        "_id": "68a28b54c8d168c7db1b85ff"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T02:09:24.881Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a28c37c8d168c7db1b8731",
+    "name": "Sunpool",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755483185/BlogHok/svg/dux0tsxjmwixdreaxocd.svg",
+    "description": "passive: Daybreak - Increases basic attack range by 125 and Movement Speed by 40% for 5s, during which basic attacks 30% extra damage to 1 enemies nearby.",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 3300,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 10,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 25,
+      "movementSpeed": 5,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Daybreak",
+      "description": "Increases basic attack range by 125 and Movement Speed by 40% for 5s, during which basic attacks 30% extra damage to 1 enemies nearby."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+25%",
+        "description": "Attack Speed",
+        "_id": "68a28c37c8d168c7db1b8732"
+      },
+      {
+        "type": "criticalRate",
+        "label": "criticalRate",
+        "value": "+10%",
+        "description": "Cirtical Rate",
+        "_id": "68a28c37c8d168c7db1b8733"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+5%",
+        "description": "Movement Speed",
+        "_id": "68a28c37c8d168c7db1b8734"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T02:13:11.294Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a28cc3c8d168c7db1b886c",
+    "name": "Sunchaser",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755483325/BlogHok/svg/t4xmmpdxvjftc80pznnt.svg",
+    "description": "passive: Daybreak - Increases basic attack range by 150 and Movement Speed by 20% for 5s.",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 2050,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 10,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 25,
+      "movementSpeed": 5,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Daybreak",
+      "description": "Increases basic attack range by 150 and Movement Speed by 20% for 5s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+25%",
+        "description": "Attack Speed",
+        "_id": "68a28cc3c8d168c7db1b886d"
+      },
+      {
+        "type": "criticalRate",
+        "label": "criticalRate",
+        "value": "+10%",
+        "description": "Cirtical Rate",
+        "_id": "68a28cc3c8d168c7db1b886e"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+5%",
+        "description": "Movement Speed",
+        "_id": "68a28cc3c8d168c7db1b886f"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T02:15:31.116Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a28d34c8d168c7db1b89ad",
+    "name": "Sky Dome",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755483438/BlogHok/svg/hlfmw5gqzppqpkujm3jf.svg",
+    "description": "passive: Maim - Skill slows the first enemy hit by 15%-30% for 3s and reduces damage taken from that enemy by 20% for 3s.",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 3369,
+    "attributes": {
+      "attack": 100,
+      "defense": 0,
+      "magic": 0,
+      "health": 500,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 10,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Maim",
+      "description": "Skill slows the first enemy hit by 15%-30% for 3s and reduces damage taken from that enemy by 20% for 3s."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+100",
+        "description": "Physical Attack",
+        "_id": "68a28d34c8d168c7db1b89ae"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "68a28d34c8d168c7db1b89af"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+500",
+        "description": "Max Health",
+        "_id": "68a28d34c8d168c7db1b89b0"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T02:17:24.298Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a2edbddc11203a72d7628a",
+    "name": "Golden Blade",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755508151/BlogHok/svg/gd9akn38gcuejskbdcfa.svg",
+    "description": "passive: Excalibur - When a Basic Attack hits a target, increases Attack Speed by 10% for 5s, anh up to 2 stacks. When fully stacked, Basic Attacks deal <span style=\"color: #7b2ff2\">(30 Magical Damage</span>) extra <span style=\"color: #7b2ff2\">magical damage</span>.",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2070,
+    "attributes": {
+      "attack": 160,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 20,
+      "movementSpeed": 5,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Excalibur",
+      "description": "When a Basic Attack hits a target, increases Attack Speed by 10% for 5s, anh up to 2 stacks. When fully stacked, Basic Attacks deal <span style=\"color: #7b2ff2\">(30 Magical Damage</span>) extra <span style=\"color: #7b2ff2\">magical damage</span>."
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+20",
+        "description": "Attack Speed",
+        "_id": "68a2edbddc11203a72d7628b"
+      },
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+160",
+        "description": "Magic Attack",
+        "_id": "68a2edbddc11203a72d7628c"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+5%",
+        "description": "Movement Speed",
+        "_id": "68a2edbddc11203a72d7628d"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T09:09:17.025Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a2ee89dc11203a72d763d7",
+    "name": "Staves of Sorcery",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755508355/BlogHok/svg/dz3x9bmqagmvrvj8e2uf.svg",
+    "description": "passive: Savagery - The next Basic Attack within 5s after casting a skill deals (<span style=\"color: #ff7a00\">30% physical damage</span> + <span style=\"color: #ff7a00\">70% magical damage</span>) extra <span style=\"color: #7b2ff2\">magical damage</span>",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2120,
+    "attributes": {
+      "attack": 180,
+      "defense": 0,
+      "magic": 0,
+      "health": 500,
+      "mana": 400,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 8,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Savagery",
+      "description": "The next Basic Attack within 5s after casting a skill deals (<span style=\"color: #ff7a00\">30% physical damage</span> + <span style=\"color: #ff7a00\">70% magical damage</span>) extra <span style=\"color: #7b2ff2\">magical damage</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+180",
+        "description": "Magical Attack",
+        "_id": "68a2ee89dc11203a72d763d8"
+      },
+      {
+        "type": "manaRegen",
+        "label": "manaRegen",
+        "value": "+400",
+        "description": "Max Mana",
+        "_id": "68a2ee89dc11203a72d763d9"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+500",
+        "description": "Max Health",
+        "_id": "68a2ee89dc11203a72d763da"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+8%",
+        "description": "Movement Speed",
+        "_id": "68a2ee89dc11203a72d763db"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T09:12:41.977Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a2ef3ddc11203a72d763df",
+    "name": "Augur’s Word",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755508535/BlogHok/svg/pgqwqeeai9sebzmqnali.svg",
+    "description": "passive: Hero's Reward - Leveling up restores <span style=\"color: #43a047\">20% Health</span> and <span style=\"color: #7b2ff2\">mana</span> over 3s",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2150,
+    "attributes": {
+      "attack": 140,
+      "defense": 0,
+      "magic": 0,
+      "health": 1000,
+      "mana": 350,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Hero's Reward",
+      "description": "Leveling up restores <span style=\"color: #43a047\">20% Health</span> and <span style=\"color: #7b2ff2\">mana</span> over 3s"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+140",
+        "description": "Magical Damage",
+        "_id": "68a2ef3ddc11203a72d763e0"
+      },
+      {
+        "type": "manaRegen",
+        "label": "manaRegen",
+        "value": "+350",
+        "description": "Max Mana",
+        "_id": "68a2ef3ddc11203a72d763e1"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "68a2ef3ddc11203a72d763e2"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T09:15:41.548Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a2efd0dc11203a72d763e6",
+    "name": "Ardent Dominator",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755508682/BlogHok/svg/rpyvj5pi2xa8n8b0rf17.svg",
+    "description": "passive: Mana shield - When HP is lower than 30%, the control will be immediately released, and at the same time, the shield will absorb (500 + 150% Magic Power ) damage and increase Movement Speed by 30%. Maximum 4s",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 1950,
+    "attributes": {
+      "attack": 200,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 15,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Mana shield",
+      "description": "When HP is lower than 30%, the control will be immediately released, and at the same time, the shield will absorb (500 + 150% Magic Power ) damage and increase Movement Speed by 30%. Maximum 4s"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+200",
+        "description": "Magical Attack",
+        "_id": "68a2efd0dc11203a72d763e7"
+      },
+      {
+        "type": "manaRegen",
+        "label": "manaRegen",
+        "value": "+600",
+        "description": "Max Mana",
+        "_id": "68a2efd0dc11203a72d763e8"
+      },
+      {
+        "type": "manaRegen",
+        "label": "manaRegen",
+        "value": "+15 ",
+        "description": "Mana/5s",
+        "_id": "68a2efd0dc11203a72d763e9"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T09:18:08.159Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a2f051dc11203a72d763ed",
+    "name": "Breakthrough Robe",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755508811/BlogHok/svg/wu8jj8rcfepdzoqzutqm.svg",
+    "description": "passive: Breakthrough - Grants <span style=\"color: #7b2ff2\">magical damage</span> equal to <span style=\"color: #7b2ff2\">4% extra Health</span>, up to100",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 2160,
+    "attributes": {
+      "attack": 120,
+      "defense": 0,
+      "magic": 0,
+      "health": 1000,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Breakthrough",
+      "description": "Grants <span style=\"color: #7b2ff2\">magical damage</span> equal to <span style=\"color: #7b2ff2\">4% extra Health</span>, up to100"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+120",
+        "description": "Magical Attack",
+        "_id": "68a2f051dc11203a72d763ee"
+      },
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+1000",
+        "description": "Max Health",
+        "_id": "68a2f051dc11203a72d763ef"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T09:20:17.298Z",
+    "__v": 0
+  },
+  {
+    "_id": "68a2f0d4dc11203a72d763f3",
+    "name": "Moon Goddess",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755508942/BlogHok/svg/wvxbbjnw4ou5074kh1tw.svg",
+    "description": "passive: Moonguard - Grants immunity to effects but makes your hero unable to move, attack or use skills for 1.5s.\n\nAfter the effect ends, you will gain 60% Movement Speed that gradually decreases over 2s, and at the same time restore (1000 + <span style=\"color: #7b2ff2\">100% Magical damage</span> ) <span style=\"color: #43a047\">Health.</span>",
+    "category": "Magic",
+    "tier": "Basic",
+    "price": 3240,
+    "attributes": {
+      "attack": 160,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 10,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "passive": {
+      "name": "Moonguard",
+      "description": "Grants immunity to effects but makes your hero unable to move, attack or use skills for 1.5s.\n\nAfter the effect ends, you will gain 60% Movement Speed that gradually decreases over 2s, and at the same time restore (1000 + <span style=\"color: #7b2ff2\">100% Magical damage</span> ) <span style=\"color: #43a047\">Health.</span>"
+    },
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+160",
+        "description": "Magical Attack",
+        "_id": "68a2f0d4dc11203a72d763f4"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "68a2f0d4dc11203a72d763f5"
+      }
+    ],
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "createdAt": "2025-08-18T09:22:28.059Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c5dee7675d7e596628593",
+    "name": "Stone of Sorcery",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1224.png",
+    "description": "MATK +60\nMSPD +7.5%",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 800,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T00:57:18.583Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c5dee7675d7e596628599",
+    "name": "Savant's Wrath",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1232.png",
+    "description": "<color=#7FFFD4>MATK</color> +210\nGreatly boosts MATK",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2140,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T00:57:18.732Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c5dee7675d7e59662859f",
+    "name": "Sage's Tome",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1238.png",
+    "description": "MATK +350, CDR +10%\nGreat for mages",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2610,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T00:57:18.872Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c5dee7675d7e5966285a2",
+    "name": "Sage's Sanctuary",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1337.png",
+    "description": "HP +900, PDEF +150, MDEF +150\nResurrect on the spot",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2280,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T00:57:18.966Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c5def7675d7e5966285a5",
+    "name": "Enigma - Moon Goddess",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1242.png",
+    "description": "MATK +160, CDR +7.5%, Magical Lifesteal +12%\nTemp. invincibility",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 3340,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T00:57:19.062Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c5def7675d7e5966285a8",
+    "name": "Ardent Dominion",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1227.png",
+    "description": "MATK +150, Magical Lifesteal +12%, MSPD +7.5%\nCleanse and shield at low HP",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 2040,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T00:57:19.159Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c5def7675d7e5966285be",
+    "name": "Nebulon Wood",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1243.png",
+    "description": "MATK +60, HP +450",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 840,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T00:57:19.866Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c5df07675d7e5966285c4",
+    "name": "Blood Clan's Grimoire",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1222.png",
+    "description": "MATK +60, Magical Lifesteal +12%",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 800,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T00:57:20.003Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c612052cfd164458a4d48",
+    "name": "Ravage - Phantom",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1350.png",
+    "description": "PATK +75, HP +900\nTrades HP for shield",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 3350,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:10:56.725Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c612152cfd164458a4d5c",
+    "name": "Vampiric Scythe",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1114.png",
+    "description": "Physical Lifesteal",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 300,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:10:57.380Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c612152cfd164458a4d68",
+    "name": "Tempest",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1159.png",
+    "description": "PATK +50, ASPD +30%, Max HP +600\nBoosts BA damage",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2080,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:10:57.607Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c612252cfd164458a4d7c",
+    "name": "Relentless Blade",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1523.png",
+    "description": "Monster kills boost PATK",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 700,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:10:58.316Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c626bb3a211b0b32853b0",
+    "name": "Stone of All Creation",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/13212.png",
+    "description": "PDEF +150, MDEF +150",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 800,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:16:27.366Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c626cb3a211b0b32853d4",
+    "name": "Protector's Cuirass",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1325.png",
+    "description": "PDEF +150, HP +450",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 800,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:16:28.214Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c626cb3a211b0b32853eb",
+    "name": "Giant's Grip",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1532.png",
+    "description": "HP +1,200, MSPD +5%, CDR +5%\nMonster kills boost HP",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2160,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:16:28.755Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c6285b3a211b0b32854b6",
+    "name": "Mask of Agony",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1235.png",
+    "description": "MATK +100, CDR +7.5%, HP +900\nBoosts skill damage",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2080,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:16:53.962Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c6293b3a211b0b328553a",
+    "name": "Meteor",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1124.png",
+    "description": "PATK +35\nCDR +7.5%",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 760,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:17:07.105Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c6293b3a211b0b3285544",
+    "name": "Twinblades of Destruction",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1123.png",
+    "description": "ASPD +15%, MSPD +7.5%",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 760,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:17:07.287Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c6294b3a211b0b328556c",
+    "name": "Daybreaker's Virtue",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1155.png",
+    "description": "PATK +75, ASPD +30%, Crit Rate +15%\nGreat for marksmen",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2570,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:17:08.206Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c6294b3a211b0b3285573",
+    "name": "Overlord's Might",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1138.png",
+    "description": "PATK +150, CDR +5%\nHigh-damage attack",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2540,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:17:08.340Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62adb3a211b0b32856a2",
+    "name": "Overlord's Platemail",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1332.png",
+    "description": "HP +1,800, PDEF +160, MDEF +80\nExtra HP",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2450,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:17:33.876Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62aeb3a211b0b32856ae",
+    "name": "Knowledge Gem",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1701.png",
+    "description": "Extra Gold & EXP (for roamers)",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 300,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:17:34.274Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62aeb3a211b0b32856b6",
+    "name": "Crimson Shadow - Redemption",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1746.png",
+    "description": "HP +1,200, MSPD +7.5%\nDPS aura",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2080,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:17:34.453Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62b8b3a211b0b3285708",
+    "name": "Dagger",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1112.png",
+    "description": "Attack Speed",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 300,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 10,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:17:44.964Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62b9b3a211b0b3285721",
+    "name": "Haste - Sunpool",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1156.png",
+    "description": "PATK +40, ASPD +20%, Crit Rate +15%, MSPD +7.5%\nBoosts attack range",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 3320,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:17:45.406Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62c6b3a211b0b32857cb",
+    "name": "Frostscar's Embrace",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/13310.png",
+    "description": "PATK +60, PDEF +300, CDR +10%\nEnhanced BAs slow",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2060,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:17:58.697Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62c7b3a211b0b32857db",
+    "name": "Swiftstrike Lance",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1129.png",
+    "description": "ASPD +15%, PATK +35",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 800,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:17:59.227Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62c7b3a211b0b32857e5",
+    "name": "Belt of Might",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1321.png",
+    "description": "HP +900",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 850,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:17:59.407Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62dfb3a211b0b3285849",
+    "name": "Augur's Word",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1237.png",
+    "description": "MATK +140, MP +450, HP +900\nOffense & defense",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2150,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:18:23.502Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62ebb3a211b0b32858ab",
+    "name": "Iron Sword",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1111.png",
+    "description": "PATK +20",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 275,
+    "attributes": {
+      "attack": 20,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:18:35.231Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62ebb3a211b0b32858b4",
+    "name": "Ironbrand",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/11211.png",
+    "description": "ASPD +15%, HP +450",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 850,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:18:35.454Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62ebb3a211b0b32858b7",
+    "name": "Cloth Jerkin",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1312.png",
+    "description": "PDEF +100",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 275,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:18:35.545Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62ebb3a211b0b32858be",
+    "name": "Sunglow Striker",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1122.png",
+    "description": "PATK +35, HP +450",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 760,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:18:35.677Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62ecb3a211b0b32858dc",
+    "name": "Primordial Crystal",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1218.png",
+    "description": "CDR +5%",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 300,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:18:36.339Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c62ecb3a211b0b32858e6",
+    "name": "Immovable - Sky Dome",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1157.png",
+    "description": "PATK +80, PDEF +150, CDR +10%\nTemp. damage reduction",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 3280,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:18:36.604Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c6301b3a211b0b32859d1",
+    "name": "Hunting Knife",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1511.png",
+    "description": "Increases jungling earnings & efficiency",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 250,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:18:57.781Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c6301b3a211b0b32859d6",
+    "name": "Guerrilla Machete",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1521.png",
+    "description": "Monster kills boost MATK",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 700,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:18:57.916Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c6302b3a211b0b32859d9",
+    "name": "Sage's Codex",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1214.png",
+    "description": "MATK +60, CDR +7.5%",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 800,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:18:58.005Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c6357b3a211b0b3285b23",
+    "name": "Spell Tome",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1211.png",
+    "description": "MATK +35",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 275,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 40,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:20:23.148Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c63bab3a211b0b3285d38",
+    "name": "Plume of Enchantment",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/11110.png",
+    "description": "MSPD +5%",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 300,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:22:02.931Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c63e7b3a211b0b3285f44",
+    "name": "Cloud Piercer",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1154.png",
+    "description": "Crit Rate +12%, ASPD +15%",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 800,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:22:47.642Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c6416b3a211b0b32860d0",
+    "name": "Guardian - Redemption",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1751.png",
+    "description": "HP +1,200, MSPD +7.5%\nSurvivability aura",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2080,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:23:34.655Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c6420b3a211b0b3286130",
+    "name": "Bloodsoul",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1158.png",
+    "description": "PATK +35, Physical Lifesteal +12%",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 800,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:23:44.879Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c642eb3a211b0b3286218",
+    "name": "Patrol Axe",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1522.png",
+    "description": "Monster kills boost Health",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 700,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:23:58.512Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c642eb3a211b0b328621d",
+    "name": "Dragon's Rage",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1536.png",
+    "description": "HP +1,350, PDEF +180, MDEF +90\nBoosts BA damage",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2040,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:23:58.645Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c6450b3a211b0b3286391",
+    "name": "Mystic Page",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1217.png",
+    "description": "Magical Lifesteal +8%",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 300,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:24:32.228Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c64d8b3a211b0b3286528",
+    "name": "Nettle Gauntlet",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1345.png",
+    "description": "PDEF +150, PATK +35\nBalanced attack & defense",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 750,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:26:48.199Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c653ab3a211b0b328679a",
+    "name": "Frosthold Targe",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1324.png",
+    "description": "PDEF +150, CDR +7.5%",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 750,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:28:26.842Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c65e7b3a211b0b3286c8a",
+    "name": "Clandestine Cape",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1323.png",
+    "description": "MDEF +150, HP +450",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 800,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:31:19.097Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c672eb3a211b0b3287351",
+    "name": "Thunderclap Brand",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1116.png",
+    "description": "PATK +35, Crit Rate +12%",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 820,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:36:46.523Z",
+    "__v": 0
+  },
+  {
+    "_id": "695c67d2b3a211b0b3287703",
+    "name": "Storm Sword",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1121.png",
+    "description": "Physical Attack +75",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 850,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-06T01:39:30.899Z",
+    "__v": 0
+  },
+  {
+    "_id": "69606398e4d7af58ac6ec898",
+    "name": "Lance of Swiftness",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/11151.png",
+    "description": "PATK +35, MSPD +7.5%",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 760,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-09T02:10:32.107Z",
+    "__v": 0
+  },
+  {
+    "_id": "6960668ce4d7af58ac6ed5cb",
+    "name": "Pugilist's Gauntlet",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1113.png",
+    "description": "Critical Rate",
+    "category": "Physical",
+    "tier": "Basic",
+    "price": 300,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-09T02:23:08.864Z",
+    "__v": 0
+  }
+]
