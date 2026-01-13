@@ -270,15 +270,18 @@ export default function NewsDetailClient({
                     let maxWidth = '800px';
                     let borderRadius = '8px';
                     let align = 'center';
+                    let shape = 'rectangle';
 
                     if (alt && typeof alt === 'string' && (alt.startsWith('img|') || alt.startsWith('img;') || alt.startsWith('img:'))) {
                       const separator = alt.includes('|') ? '|' : alt.includes(';') ? ';' : ':';
                       const parts = alt.split(separator);
                       const sizeStr = parts[1] || 'medium';
-                      // shape ignored for now, always rounded
+                      shape = parts[2] || 'rectangle';
                       align = parts[3] || 'center';
 
-                      if (sizeStr === 'small') maxWidth = '300px';
+                      if (sizeStr === 'icon') maxWidth = '60px'; // New icon size
+                      else if (sizeStr === 'tiny') maxWidth = '120px'; // New tiny size
+                      else if (sizeStr === 'small') maxWidth = '300px';
                       else if (sizeStr === 'medium') maxWidth = '600px';
                       else if (sizeStr === 'large') maxWidth = '100%';
                     }
@@ -289,12 +292,33 @@ export default function NewsDetailClient({
                         ? { marginLeft: 'auto', marginRight: 0, display: 'block' }
                         : { display: 'block' };
 
+                    const wrapperShapeStyle = shape === 'square'
+                      ? { aspectRatio: '1 / 1', overflow: 'hidden' }
+                      : {};
+
+                    const imgShapeStyle = shape === 'square'
+                      ? { objectFit: 'cover' }
+                      : {};
+
                     return (
-                      <Box component="span" className="media-wrapper" sx={{ ...alignmentStyle, maxWidth, width: '100%', mb: 3, display: 'block' }}>
+                      <Box component="span" className="media-wrapper" sx={{
+                        ...alignmentStyle,
+                        maxWidth,
+                        width: '100%',
+                        mb: 3,
+                        display: 'block',
+                        ...wrapperShapeStyle
+                      }}>
                         <LazyImage
                           src={src || ''}
                           alt={alt || ''}
-                          sx={{ width: '100%', height: 'auto', borderRadius, boxShadow: 1 }}
+                          sx={{
+                            width: '100%',
+                            height: shape === 'square' ? '100%' : 'auto',
+                            borderRadius,
+                            boxShadow: 1,
+                            ...imgShapeStyle
+                          }}
                         />
                         {alt && !alt.startsWith('img|') && !alt.startsWith('video|') && !alt.startsWith('img;') && !alt.startsWith('video;') && !alt.startsWith('img:') && !alt.startsWith('video:') && (
                           <Typography component="span" variant="caption" display="block" align="center" color="text.secondary" mt={1}>

@@ -215,24 +215,87 @@ const MarkdownEditor = ({ value, onChange, onImageUpload, onVideoUpload }) => {
                         '& th': { bgcolor: '#f5f5f5', fontWeight: 600, border: '1px solid #ddd', p: 1, textAlign: 'center' },
                         '& td': { border: '1px solid #ddd', p: 1, textAlign: 'center', verticalAlign: 'middle' },
                         '& table p': { m: 0 },
-                        '& table img': { maxWidth: '60px !important', height: 'auto !important', borderRadius: '4px !important', boxShadow: 'none !important' }
+                        // Removed strict overrides for table images to allow custom sizing. Added border radius.
+                        '& table img': { borderRadius: '4px' }
                     }}>
                         <ReactMarkdown
                             remarkPlugins={[remarkGfm, remarkDirective, remarkDirectiveRehype]}
                             components={{
+                                table: ({ children }) => <table>{children}</table>,
+                                thead: ({ children }) => <thead>{children}</thead>,
+                                tbody: ({ children }) => <tbody>{children}</tbody>,
+                                tr: ({ children }) => <tr>{children}</tr>,
+                                th: ({ children }) => <th>{children}</th>,
+                                td: ({ children }) => <td>{children}</td>,
                                 img: ({ src, alt }) => {
-                                    // Simple preview for images/videos
-                                    if (alt && (alt === 'video' || alt.startsWith('video|') || alt.startsWith('video;'))) {
-                                        return <Box p={2} bgcolor="#eee" textAlign="center">[Video: {src}]</Box>;
+                                    // Video support
+                                    if (alt && typeof alt === 'string' && (alt === 'video' || alt.startsWith('video|') || alt.startsWith('video;') || alt.startsWith('video:'))) {
+                                        let size = 'medium';
+                                        const separator = alt.includes('|') ? '|' : alt.includes(';') ? ';' : ':';
+                                        if (alt.includes(separator)) {
+                                            const parts = alt.split(separator);
+                                            size = parts[1] || 'medium';
+                                        }
+
+                                        // Simplify preview video
+                                        return <Box p={2} bgcolor="#eee" textAlign="center" borderRadius={1}>[Video: {src}] ({size})</Box>;
                                     }
-                                    let width = '100%';
-                                    if (alt && (alt.startsWith('img|') || alt.startsWith('img;'))) {
-                                        const separator = alt.includes('|') ? '|' : ';';
+
+                                    // Image with size/shape support
+                                    let maxWidth = '800px';
+                                    let borderRadius = '8px';
+                                    let align = 'center';
+                                    let shape = 'rectangle';
+
+                                    if (alt && typeof alt === 'string' && (alt.startsWith('img|') || alt.startsWith('img;') || alt.startsWith('img:'))) {
+                                        const separator = alt.includes('|') ? '|' : alt.includes(';') ? ';' : ':';
                                         const parts = alt.split(separator);
-                                        if (parts[1] === 'small') width = '200px';
-                                        if (parts[1] === 'medium') width = '400px';
+                                        const sizeStr = parts[1] || 'medium';
+                                        shape = parts[2] || 'rectangle';
+                                        align = parts[3] || 'center';
+
+                                        if (sizeStr === 'icon') maxWidth = '60px';
+                                        else if (sizeStr === 'tiny') maxWidth = '120px';
+                                        else if (sizeStr === 'small') maxWidth = '300px';
+                                        else if (sizeStr === 'medium') maxWidth = '600px';
+                                        else if (sizeStr === 'large') maxWidth = '100%';
                                     }
-                                    return <img src={src} alt={alt} style={{ maxWidth: width }} />;
+
+                                    const alignmentStyle = align === 'center'
+                                        ? { marginLeft: 'auto', marginRight: 'auto', display: 'block' }
+                                        : align === 'right'
+                                            ? { marginLeft: 'auto', marginRight: 0, display: 'block' }
+                                            : { display: 'block' };
+
+                                    const wrapperShapeStyle = shape === 'square'
+                                        ? { aspectRatio: '1 / 1', overflow: 'hidden' }
+                                        : {};
+
+                                    const imgShapeStyle = shape === 'square'
+                                        ? { objectFit: 'cover' }
+                                        : {};
+
+                                    return (
+                                        <Box component="span" className="media-wrapper" sx={{
+                                            ...alignmentStyle,
+                                            maxWidth,
+                                            width: '100%',
+                                            mb: 2,
+                                            display: 'block',
+                                            ...wrapperShapeStyle
+                                        }}>
+                                            <img
+                                                src={src}
+                                                alt={alt}
+                                                style={{
+                                                    width: '100%',
+                                                    height: shape === 'square' ? '100%' : 'auto',
+                                                    borderRadius: borderRadius,
+                                                    ...imgShapeStyle
+                                                }}
+                                            />
+                                        </Box>
+                                    );
                                 }
                             }}
                         >
