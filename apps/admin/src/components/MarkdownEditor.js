@@ -275,11 +275,14 @@ const MarkdownEditor = ({ value, onChange, onImageUpload, onVideoUpload }) => {
                                         ? { objectFit: 'cover' }
                                         : {};
 
+                                    const wrapperWidth = (shape === 'square' || maxWidth === '100%') ? '100%' : 'fit-content';
+                                    const imgWidth = (shape === 'square' || maxWidth === '100%') ? '100%' : 'auto';
+
                                     return (
                                         <Box component="span" className="media-wrapper" sx={{
                                             ...alignmentStyle,
                                             maxWidth,
-                                            width: '100%',
+                                            width: wrapperWidth,
                                             mb: 2,
                                             display: 'block',
                                             ...wrapperShapeStyle
@@ -288,8 +291,9 @@ const MarkdownEditor = ({ value, onChange, onImageUpload, onVideoUpload }) => {
                                                 src={src}
                                                 alt={alt}
                                                 style={{
-                                                    width: '100%',
+                                                    width: imgWidth,
                                                     height: shape === 'square' ? '100%' : 'auto',
+                                                    maxWidth: '100%',
                                                     borderRadius: borderRadius,
                                                     ...imgShapeStyle
                                                 }}

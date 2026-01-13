@@ -300,11 +300,14 @@ export default function NewsDetailClient({
                       ? { objectFit: 'cover' }
                       : {};
 
+                    const wrapperWidth = (shape === 'square' || maxWidth === '100%') ? '100%' : 'fit-content';
+                    const imgWidth = (shape === 'square' || maxWidth === '100%') ? '100%' : 'auto';
+
                     return (
                       <Box component="span" className="media-wrapper" sx={{
                         ...alignmentStyle,
                         maxWidth,
-                        width: '100%',
+                        width: wrapperWidth,
                         mb: 3,
                         display: 'block',
                         ...wrapperShapeStyle
@@ -313,8 +316,9 @@ export default function NewsDetailClient({
                           src={src || ''}
                           alt={alt || ''}
                           sx={{
-                            width: '100%',
+                            width: imgWidth,
                             height: shape === 'square' ? '100%' : 'auto',
+                            maxWidth: '100%',
                             borderRadius,
                             boxShadow: 1,
                             ...imgShapeStyle
