@@ -216,8 +216,8 @@ export default function NewsDetailClient({
               '& th': { bgcolor: '#f5f5f5', fontWeight: 700, p: 1, border: '1px solid #e0e0e0', textAlign: 'center', fontSize: '0.95rem' },
               '& td': { p: 1, border: '1px solid #e0e0e0', verticalAlign: 'middle', fontSize: '0.95rem', textAlign: 'center' },
               '& table p': { m: 0 },
-              '& table .media-wrapper': { m: '0 !important', width: 'auto !important', display: 'inline-block !important' },
-              '& table img': { maxWidth: '60px !important', height: 'auto !important', borderRadius: '4px !important', boxShadow: 'none !important' },
+              // Removed strict overrides for table images to allow custom sizing
+              '& table img': { borderRadius: '4px' },
             }}>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkDirective, remarkDirectiveRehype]}
@@ -231,10 +231,10 @@ export default function NewsDetailClient({
                   td: ({ children }) => <td>{children}</td>,
                   img: ({ src, alt }: any) => {
                     // Video support
-                    if (alt && typeof alt === 'string' && (alt === 'video' || alt.startsWith('video|') || alt.startsWith('video;'))) {
+                    if (alt && typeof alt === 'string' && (alt === 'video' || alt.startsWith('video|') || alt.startsWith('video;') || alt.startsWith('video:'))) {
                       let size = 'medium';
                       let align = 'center';
-                      const separator = alt.includes('|') ? '|' : ';';
+                      const separator = alt.includes('|') ? '|' : alt.includes(';') ? ';' : ':';
                       if (alt.includes(separator)) {
                         const parts = alt.split(separator);
                         size = parts[1] || 'medium';
@@ -271,8 +271,8 @@ export default function NewsDetailClient({
                     let borderRadius = '8px';
                     let align = 'center';
 
-                    if (alt && typeof alt === 'string' && (alt.startsWith('img|') || alt.startsWith('img;'))) {
-                      const separator = alt.includes('|') ? '|' : ';';
+                    if (alt && typeof alt === 'string' && (alt.startsWith('img|') || alt.startsWith('img;') || alt.startsWith('img:'))) {
+                      const separator = alt.includes('|') ? '|' : alt.includes(';') ? ';' : ':';
                       const parts = alt.split(separator);
                       const sizeStr = parts[1] || 'medium';
                       // shape ignored for now, always rounded
@@ -296,7 +296,7 @@ export default function NewsDetailClient({
                           alt={alt || ''}
                           sx={{ width: '100%', height: 'auto', borderRadius, boxShadow: 1 }}
                         />
-                        {alt && !alt.startsWith('img|') && !alt.startsWith('video|') && !alt.startsWith('img;') && !alt.startsWith('video;') && (
+                        {alt && !alt.startsWith('img|') && !alt.startsWith('video|') && !alt.startsWith('img;') && !alt.startsWith('video;') && !alt.startsWith('img:') && !alt.startsWith('video:') && (
                           <Typography component="span" variant="caption" display="block" align="center" color="text.secondary" mt={1}>
                             {alt}
                           </Typography>
