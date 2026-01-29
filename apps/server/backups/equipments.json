@@ -4578,9 +4578,9 @@
   {
     "_id": "695c5dee7675d7e596628593",
     "name": "Stone of Sorcery",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1224.png",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1769437164/BlogHok/imoemobflxcycislm4a4.png",
     "description": "MATK +60\nMSPD +7.5%",
-    "category": "Physical",
+    "category": "Magic",
     "tier": "Advanced",
     "price": 800,
     "attributes": {
@@ -4606,191 +4606,33 @@
     "buildsInto": [],
     "recommendedFor": [],
     "tags": [],
-    "quickStats": [],
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+90 ",
+        "description": "Magical Attack",
+        "_id": "697777f228ceca2cb0b3ca82"
+      }
+    ],
     "createdAt": "2026-01-06T00:57:18.583Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c5dee7675d7e596628599",
-    "name": "Savant's Wrath",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1232.png",
-    "description": "<color=#7FFFD4>MATK</color> +210\nGreatly boosts MATK",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2140,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
+    "__v": 2,
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
     },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T00:57:18.732Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c5dee7675d7e59662859f",
-    "name": "Sage's Tome",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1238.png",
-    "description": "MATK +350, CDR +10%\nGreat for mages",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2610,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
-    },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T00:57:18.872Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c5dee7675d7e5966285a2",
-    "name": "Sage's Sanctuary",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1337.png",
-    "description": "HP +900, PDEF +150, MDEF +150\nResurrect on the spot",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2280,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
-    },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T00:57:18.966Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c5def7675d7e5966285a5",
-    "name": "Enigma - Moon Goddess",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1242.png",
-    "description": "MATK +160, CDR +7.5%, Magical Lifesteal +12%\nTemp. invincibility",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 3340,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
-    },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T00:57:19.062Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c5def7675d7e5966285a8",
-    "name": "Ardent Dominion",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1227.png",
-    "description": "MATK +150, Magical Lifesteal +12%, MSPD +7.5%\nCleanse and shield at low HP",
-    "category": "Physical",
-    "tier": "Advanced",
-    "price": 2040,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
-    },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T00:57:19.159Z",
-    "__v": 0
+    "passive": {
+      "name": "",
+      "description": ""
+    }
   },
   {
     "_id": "695c5def7675d7e5966285be",
     "name": "Nebulon Wood",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1243.png",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1769437594/BlogHok/lgqrc823mkaunppcriq4.png",
     "description": "MATK +60, HP +450",
-    "category": "Physical",
+    "category": "Magic",
     "tier": "Advanced",
     "price": 840,
     "attributes": {
@@ -4816,16 +4658,33 @@
     "buildsInto": [],
     "recommendedFor": [],
     "tags": [],
-    "quickStats": [],
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+70",
+        "description": "Magical Attack",
+        "_id": "6977799f28ceca2cb0b3ca9d"
+      }
+    ],
     "createdAt": "2026-01-06T00:57:19.866Z",
-    "__v": 0
+    "__v": 1,
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "passive": {
+      "name": "",
+      "description": ""
+    }
   },
   {
     "_id": "695c5df07675d7e5966285c4",
     "name": "Blood Clan's Grimoire",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1222.png",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1769437825/BlogHok/fmq9iy1btdp4vfanr0md.png",
     "description": "MATK +60, Magical Lifesteal +12%",
-    "category": "Physical",
+    "category": "Magic",
     "tier": "Advanced",
     "price": 800,
     "attributes": {
@@ -4851,49 +4710,38 @@
     "buildsInto": [],
     "recommendedFor": [],
     "tags": [],
-    "quickStats": [],
+    "quickStats": [
+      {
+        "type": "magicAttack",
+        "label": "magicAttack",
+        "value": "+75",
+        "description": "Magical Attack  ",
+        "_id": "69777a8828ceca2cb0b3caa4"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+10%",
+        "description": "Cooldown Reduction",
+        "_id": "69777a8828ceca2cb0b3caa5"
+      }
+    ],
     "createdAt": "2026-01-06T00:57:20.003Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c612052cfd164458a4d48",
-    "name": "Ravage - Phantom",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1350.png",
-    "description": "PATK +75, HP +900\nTrades HP for shield",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 3350,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
+    "__v": 1,
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
     },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T01:10:56.725Z",
-    "__v": 0
+    "passive": {
+      "name": "",
+      "description": ""
+    }
   },
   {
     "_id": "695c612152cfd164458a4d5c",
     "name": "Vampiric Scythe",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1114.png",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1769437954/BlogHok/dmelwikedeygn0o2q1d5.png",
     "description": "Physical Lifesteal",
     "category": "Physical",
     "tier": "Basic",
@@ -4921,51 +4769,33 @@
     "buildsInto": [],
     "recommendedFor": [],
     "tags": [],
-    "quickStats": [],
+    "quickStats": [
+      {
+        "type": "physicalLifeSteal",
+        "label": "physicalLifeSteal",
+        "value": "+ 8% ",
+        "description": "Physical Lifesteal",
+        "_id": "69777b0828ceca2cb0b3cab0"
+      }
+    ],
     "createdAt": "2026-01-06T01:10:57.380Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c612152cfd164458a4d68",
-    "name": "Tempest",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1159.png",
-    "description": "PATK +50, ASPD +30%, Max HP +600\nBoosts BA damage",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2080,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
+    "__v": 1,
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
     },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T01:10:57.607Z",
-    "__v": 0
+    "passive": {
+      "name": "",
+      "description": ""
+    }
   },
   {
     "_id": "695c612252cfd164458a4d7c",
     "name": "Relentless Blade",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1523.png",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1769438132/BlogHok/eb18kubxagzwsrfpayht.png",
     "description": "Monster kills boost PATK",
-    "category": "Physical",
+    "category": "Jungle",
     "tier": "Advanced",
     "price": 700,
     "attributes": {
@@ -4991,9 +4821,26 @@
     "buildsInto": [],
     "recommendedFor": [],
     "tags": [],
-    "quickStats": [],
+    "quickStats": [
+      {
+        "type": "maxHealth",
+        "label": "maxHealth",
+        "value": "+400 ",
+        "description": "Max Health",
+        "_id": "69777bba28ceca2cb0b3cabb"
+      }
+    ],
     "createdAt": "2026-01-06T01:10:58.316Z",
-    "__v": 0
+    "__v": 1,
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "passive": {
+      "name": "",
+      "description": ""
+    }
   },
   {
     "_id": "695c626bb3a211b0b32853b0",
@@ -5033,7 +4880,7 @@
   {
     "_id": "695c626cb3a211b0b32853d4",
     "name": "Protector's Cuirass",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1325.png",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1769438325/BlogHok/wollqs1elrafieej1amn.png",
     "description": "PDEF +150, HP +450",
     "category": "Physical",
     "tier": "Advanced",
@@ -5061,16 +4908,33 @@
     "buildsInto": [],
     "recommendedFor": [],
     "tags": [],
-    "quickStats": [],
+    "quickStats": [
+      {
+        "type": "physicalArmor",
+        "label": "physicalArmor",
+        "value": "+210 ",
+        "description": "Physical Defense",
+        "_id": "69777c7b28ceca2cb0b3cac2"
+      }
+    ],
     "createdAt": "2026-01-06T01:16:28.214Z",
-    "__v": 0
+    "__v": 1,
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "passive": {
+      "name": "",
+      "description": ""
+    }
   },
   {
     "_id": "695c626cb3a211b0b32853eb",
     "name": "Giant's Grip",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1532.png",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1769438464/BlogHok/cmtp7ryfn54ktpknv2do.png",
     "description": "HP +1,200, MSPD +5%, CDR +5%\nMonster kills boost HP",
-    "category": "Physical",
+    "category": "Jungle",
     "tier": "Epic",
     "price": 2160,
     "attributes": {
@@ -5096,50 +4960,46 @@
     "buildsInto": [],
     "recommendedFor": [],
     "tags": [],
-    "quickStats": [],
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+90",
+        "description": "Physical Attack",
+        "_id": "69777d0628ceca2cb0b3cac9"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+5%",
+        "description": "Cooldown Reduction",
+        "_id": "69777d0628ceca2cb0b3caca"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+8%",
+        "description": "Movement Speed",
+        "_id": "69777d0628ceca2cb0b3cacb"
+      }
+    ],
     "createdAt": "2026-01-06T01:16:28.755Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c6285b3a211b0b32854b6",
-    "name": "Mask of Agony",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1235.png",
-    "description": "MATK +100, CDR +7.5%, HP +900\nBoosts skill damage",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2080,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
+    "__v": 1,
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
     },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T01:16:53.962Z",
-    "__v": 0
+    "passive": {
+      "name": "",
+      "description": ""
+    }
   },
   {
     "_id": "695c6293b3a211b0b328553a",
     "name": "Meteor",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1124.png",
-    "description": "PATK +35\nCDR +7.5%",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1769438576/BlogHok/wpxycvz9a0iijrynxbff.png",
+    "description": "passive: Sever - Physical Pierce +60",
     "category": "Physical",
     "tier": "Advanced",
     "price": 760,
@@ -5166,14 +5026,31 @@
     "buildsInto": [],
     "recommendedFor": [],
     "tags": [],
-    "quickStats": [],
+    "quickStats": [
+      {
+        "type": "",
+        "label": "",
+        "value": " +55 ",
+        "description": "Physical Attack Passive ",
+        "_id": "69777d7628ceca2cb0b3cad6"
+      }
+    ],
     "createdAt": "2026-01-06T01:17:07.105Z",
-    "__v": 0
+    "__v": 1,
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "passive": {
+      "name": "Sever",
+      "description": "Physical Pierce +60"
+    }
   },
   {
     "_id": "695c6293b3a211b0b3285544",
     "name": "Twinblades of Destruction",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1123.png",
+    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1769438680/BlogHok/hmb5ehmbgn7tlbn5ca7s.png",
     "description": "ASPD +15%, MSPD +7.5%",
     "category": "Physical",
     "tier": "Advanced",
@@ -5201,9 +5078,40 @@
     "buildsInto": [],
     "recommendedFor": [],
     "tags": [],
-    "quickStats": [],
+    "quickStats": [
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+ 15% ",
+        "description": " Attack Speed ",
+        "_id": "69777dde28ceca2cb0b3cadd"
+      },
+      {
+        "type": "criticalRate",
+        "label": "criticalRate",
+        "value": "+ 10%",
+        "description": "Critical Rate ",
+        "_id": "69777dde28ceca2cb0b3cade"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+ 5% ",
+        "description": "Movement Speed",
+        "_id": "69777dde28ceca2cb0b3cadf"
+      }
+    ],
     "createdAt": "2026-01-06T01:17:07.287Z",
-    "__v": 0
+    "__v": 1,
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "passive": {
+      "name": "",
+      "description": ""
+    }
   },
   {
     "_id": "695c6294b3a211b0b328556c",
@@ -6533,6 +6441,41 @@
     "tags": [],
     "quickStats": [],
     "createdAt": "2026-01-15T23:38:28.386Z",
+    "__v": 0
+  },
+  {
+    "_id": "6972b3b54cfec51ceb02135e",
+    "name": "Mirror of Radiance",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/13211.png",
+    "description": "HP +450, MSPD +7.5%",
+    "category": "Physical",
+    "tier": "Advanced",
+    "price": 800,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-22T23:33:09.308Z",
     "__v": 0
   }
 ]
