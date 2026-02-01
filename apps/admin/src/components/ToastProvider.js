@@ -9,19 +9,19 @@ const ToastContext = createContext();
 // Custom toast styles
 const toastStyles = {
   success: {
-    background: 'linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)',
+    background: 'linear-gradient(135deg, #4BA3A6 0%, #2E8B8E 100%)', // Teal from theme
     color: 'white',
   },
   error: {
-    background: 'linear-gradient(135deg, #f44336 0%, #ef5350 100%)',
+    background: 'linear-gradient(135deg, #B85C38 0%, #A04020 100%)', // Rust from theme
     color: 'white',
   },
   warning: {
-    background: 'linear-gradient(135deg, #ff9800 0%, #ffb74d 100%)',
-    color: 'white',
+    background: 'linear-gradient(135deg, #E9C46A 0%, #D4A325 100%)', // Yellow from theme
+    color: '#2D1B06', // Dark text for contrast on yellow
   },
   info: {
-    background: 'linear-gradient(135deg, #2196f3 0%, #42a5f5 100%)',
+    background: 'linear-gradient(135deg, #C9A063 0%, #B08030 100%)', // Gold (Primary) from theme
     color: 'white',
   },
 };
@@ -70,7 +70,7 @@ const toastService = {
   error: (message, options) => createToast('error', message, options),
   warning: (message, options) => createToast('warning', message, options),
   info: (message, options) => createToast('info', message, options),
-  
+
   // Specialized toasts
   loading: (message, options) => {
     return toast.loading(message, {
@@ -78,7 +78,7 @@ const toastService = {
       ...options
     });
   },
-  
+
   promise: (promise, messages, options) => {
     return toast.promise(promise, {
       pending: {
@@ -98,11 +98,11 @@ const toastService = {
       }
     }, options);
   },
-  
+
   update: (toastId, options) => toast.update(toastId, options),
   dismiss: (toastId) => toast.dismiss(toastId),
   dismissAll: () => toast.dismiss(),
-  
+
   // API response handlers
   handleApiResponse: (response, successMessage) => {
     if (response.success) {
@@ -112,30 +112,30 @@ const toastService = {
     }
     return response;
   },
-  
+
   handleApiError: (error) => {
-    const message = error.response?.data?.message || 
-                   error.response?.data?.error ||
-                   error.message || 
-                   'An unexpected error occurred';
-    
+    const message = error.response?.data?.message ||
+      error.response?.data?.error ||
+      error.message ||
+      'An unexpected error occurred';
+
     toastService.error(message);
     return Promise.reject(error);
   },
-  
+
   // Form validation helpers
   validationError: (message) => {
     toastService.error(message || 'Please check your input and try again');
   },
-  
+
   networkError: () => {
     toastService.error('Network error. Please check your connection and try again.');
   },
-  
+
   unauthorized: () => {
     toastService.error('You are not authorized to perform this action.');
   },
-  
+
   sessionExpired: () => {
     toastService.warning('Your session has expired. Please log in again.');
   }
@@ -192,16 +192,16 @@ export const useToast = () => {
 export const withToastErrorHandling = (Component) => {
   const WrappedComponent = (props) => {
     const toast = useToast();
-    
+
     const handleError = (error) => {
       toast.handleApiError(error);
     };
-    
+
     return <Component {...props} onError={handleError} toast={toast} />;
   };
-  
+
   WrappedComponent.displayName = `withToastErrorHandling(${Component.displayName || Component.name})`;
-  
+
   return WrappedComponent;
 };
 

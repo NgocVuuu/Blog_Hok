@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, Button, Box, Typography } from '@mui/material';
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow, Button, Box, Typography, Tabs, Tab } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -9,12 +8,14 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import { GiBroadsword } from 'react-icons/gi';
 import { useTranslation } from '../i18nShim';
+import ConfirmDialog from './ConfirmDialog';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
 
-const EquipmentList = ({ onEdit }) => {
+const EquipmentList = ({ onEdit, editingItem }) => {
   const [equipment, setEquipment] = useState([]);
   const [category, setCategory] = useState('all');
+  const [deleteId, setDeleteId] = useState(null);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -37,19 +38,19 @@ const EquipmentList = ({ onEdit }) => {
       return item.quickStats
         .filter(q => q && (q.value || q.description || q.type))
         .slice(0, 5)
-  .map(q => ({ label: q.label || q.type || '', value: q.value || '', type: q.type || '' }));
+        .map(q => ({ label: q.label || q.type || '', value: q.value || '', type: q.type || '' }));
     }
     if (item?.stats && typeof item.stats === 'object') {
       return Object.entries(item.stats)
         .filter(([, v]) => v !== null && v !== undefined && v !== '')
         .slice(0, 5)
-  .map(([k, v]) => ({ label: k, value: `+${v}`, type: k }));
+        .map(([k, v]) => ({ label: k, value: `+${v}`, type: k }));
     }
     if (item?.attributes && typeof item.attributes === 'object') {
       return Object.entries(item.attributes)
         .filter(([, v]) => typeof v === 'number' && v !== 0)
         .slice(0, 5)
-  .map(([k, v]) => ({ label: k, value: `+${v}`, type: k }));
+        .map(([k, v]) => ({ label: k, value: `+${v}`, type: k }));
     }
     return [];
   };
@@ -107,8 +108,8 @@ const EquipmentList = ({ onEdit }) => {
         break;
     }
     // Fallback by label heuristics
-  if (has('health/5s') || has('hp/5s') || has('hp5') || has('health per 5') || has('health regen') || has('regeneration') || has('hồi máu/5s')) {
-  return { Icon: FavoriteIcon, color: '#43a047', react: false, type: 'healthPer5s', overlayPlus: true };
+    if (has('health/5s') || has('hp/5s') || has('hp5') || has('health per 5') || has('health regen') || has('regeneration') || has('hồi máu/5s')) {
+      return { Icon: FavoriteIcon, color: '#43a047', react: false, type: 'healthPer5s', overlayPlus: true };
     }
     if (has('max health') || label === 'maxhealth') {
       return { Icon: LocalFireDepartmentIcon, color: '#43a047', react: false, type: 'maxHealth' };
@@ -182,35 +183,38 @@ const EquipmentList = ({ onEdit }) => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xóa trang bị này?')) return;
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteId) return;
     const token = localStorage.getItem('token');
-    await fetch(`${API_URL}/api/equipment/${id}`, {
+    await fetch(`${API_URL}/api/equipment/${deleteId}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     });
-    setEquipment(equipment.filter(item => item._id !== id));
+    setEquipment(equipment.filter(item => item._id !== deleteId));
+    setDeleteId(null);
   };
 
   return (
     <Box sx={{ mt: 4 }}>
       <Typography variant="h6" mb={2}>Danh sách trang bị</Typography>
       {/* Category filter */}
-      <Box sx={{ mb: 2, display: 'flex', gap: 2 }}>
-        <FormControl size="small" sx={{ minWidth: 220 }}>
-          <InputLabel id="cat-label">Lọc theo loại</InputLabel>
-          <Select
-            labelId="cat-label"
-            label="Lọc theo loại"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <MenuItem value="all">Tất cả</MenuItem>
-            {Array.from(new Set(equipment.map(it => it.category).filter(Boolean))).map(cat => (
-              <MenuItem key={cat} value={cat}>{cat}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+      <Box sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs
+          value={category}
+          onChange={(e, newVal) => setCategory(newVal)}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="equipment category tabs"
+        >
+          <Tab label="Tất cả" value="all" />
+          {Array.from(new Set(equipment.map(it => it.category).filter(Boolean))).sort().map(cat => (
+             <Tab key={cat} label={cat} value={cat} />
+          ))}
+        </Tabs>
       </Box>
       <Table>
         <TableHead>
@@ -225,7 +229,14 @@ const EquipmentList = ({ onEdit }) => {
         </TableHead>
         <TableBody>
           {(category === 'all' ? equipment : equipment.filter(it => it.category === category)).map(item => (
-            <TableRow key={item._id}>
+            <TableRow 
+              key={item._id}
+              sx={{
+                bgcolor: editingItem && editingItem._id === item._id ? 'rgba(25, 118, 210, 0.12)' : 'inherit',
+                transition: 'background-color 0.3s',
+                '&:hover': { bgcolor: editingItem && editingItem._id === item._id ? 'rgba(25, 118, 210, 0.18)' : 'rgba(0, 0, 0, 0.04)' }
+              }}
+            >
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.category}</TableCell>
               <TableCell><img src={item.image} alt="" width={40} /></TableCell>
@@ -277,12 +288,19 @@ const EquipmentList = ({ onEdit }) => {
                 <Button variant="outlined" color="primary" onClick={() => onEdit && onEdit(item)}>Sửa</Button>
               </TableCell>
               <TableCell>
-                <Button variant="outlined" color="error" onClick={() => handleDelete(item._id)}>Xóa</Button>
+                <Button variant="outlined" color="error" onClick={() => handleDeleteClick(item._id)}>Xóa</Button>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <ConfirmDialog
+        open={!!deleteId}
+        title="Xóa trang bị"
+        content="Bạn có chắc chắn muốn xóa trang bị này?"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteId(null)}
+      />
     </Box>
   );
 };

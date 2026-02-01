@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  Box, TextField, Button, Typography, Alert, CircularProgress, 
+import {
+  Box, TextField, Button, Typography, CircularProgress,
   FormControl, InputLabel, Select, MenuItem, Grid
 } from '@mui/material';
+import { toast } from 'react-toastify';
 import UploadIcon from '@mui/icons-material/Upload';
 import { useTranslation } from '../i18nShim';
 import { useAuth } from '../contexts/AuthContext';
@@ -18,7 +19,7 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
-  const [message, setMessage] = useState({ type: '', text: '' });
+  // const [message, setMessage] = useState({ type: '', text: '' }); // Replaced by toast
   const [loading, setLoading] = useState(false);
   // Auto-reset behavior is now default; removed toggles and counters
   const API_URL = process.env.REACT_APP_API_URL;
@@ -79,7 +80,7 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.description) {
-      setMessage({ type: 'error', text: 'Please provide name and description' });
+      toast.error('Please provide name and description');
       return;
     }
 
@@ -108,7 +109,7 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
       });
 
       if (res.ok) {
-        setMessage({ type: 'success', text: isEditing ? 'Arcana updated successfully!' : 'Arcana added successfully!' });
+        toast.success(isEditing ? 'Arcana updated successfully!' : 'Arcana added successfully!');
         // Always reset the form after adding/updating
         setFormData({
           name: '',
@@ -120,15 +121,15 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
         setImagePreview('');
         if (onFormSubmit) onFormSubmit();
       } else {
-        const error = await res.json().catch(()=>({}));
+        const error = await res.json().catch(() => ({}));
         console.warn('[Arcana][SUBMIT][ERROR]', error);
-          let msg = error.message || 'Error adding arcana';
-          if (error.duplicate) msg = 'Arcana name already exists';
+        let msg = error.message || 'Error adding arcana';
+        if (error.duplicate) msg = 'Arcana name already exists';
         if (Array.isArray(error.details)) msg += ' - ' + error.details.join('; ');
-        setMessage({ type: 'error', text: msg });
+        toast.error(msg);
       }
     } catch (err) {
-        setMessage({ type: 'error', text: err.message || 'Error adding arcana' });
+      toast.error(err.message || 'Error adding arcana');
     } finally {
       setLoading(false);
     }
@@ -145,7 +146,7 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
       });
       setImagePreview(editingArcana.image || '');
       setImageFile(null);
-      setMessage({ type: '', text: '' });
+      // setMessage({ type: '', text: '' }); // Msg state removed
     }
   }, [editingArcana]);
 
@@ -153,11 +154,11 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
     <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 800, mx: 'auto', mt: 4 }}>
       <Typography variant="h5" mb={2}>Add New Arcana</Typography>
 
-      {message.text && (
+      {/* {message.text && (
         <Alert severity={message.type} sx={{ mb: 2 }}>
           {message.text}
         </Alert>
-      )}
+      )} */}
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
@@ -203,7 +204,7 @@ const AdminArcanaForm = ({ editingArcana, onFormSubmit }) => {
 
 
 
-  {/* Removed effects & usage fields as requested */}
+        {/* Removed effects & usage fields as requested */}
 
         <Grid item xs={12}>
           <Box mt={2} mb={2}>

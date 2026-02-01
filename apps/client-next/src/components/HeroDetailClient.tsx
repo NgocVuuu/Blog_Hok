@@ -727,9 +727,13 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
           {/* Combo Kill Section */}
           {(() => {
             const hasBuilds = Array.isArray(hero.comboBuilds) && hero.comboBuilds.length > 0;
-            const steps = hasBuilds
+            let steps = hasBuilds
               ? ((hero.comboBuilds[Math.max(0, Math.min((hero.comboBuilds.length - 1), selectedSkillBuildIdx))] || {}).steps || [])
               : (hero.combo || []);
+            
+            // Filter out empty combos (no skills added)
+            steps = steps.filter((s: any) => s.skills && s.skills.length > 0);
+
             if (!steps || steps.length === 0) return null;
 
             return (
@@ -814,7 +818,7 @@ export default function HeroDetailClient({ hero, sameRoleHeroes, topWinHeroes, l
                             </React.Fragment>
                           );
                         }) : (
-                          <Typography variant="body2" color="text.secondary">(Không có kỹ năng)</Typography>
+                          <Typography variant="body2" color="text.secondary">(No skills)</Typography>
                         )}
                       </Box>
                     </Box>

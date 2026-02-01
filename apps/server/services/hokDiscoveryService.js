@@ -110,9 +110,13 @@ class HoKDiscoveryService {
 
                     for (const skin of wikiData.skins) {
                         const normSkinName = this.normalizeName(skin.name);
+                        const lowerName = skin.name.toLowerCase();
 
                         // Fix: Ignore "Classic" or "Default" skins which are often the base hero
                         if (['classic', 'default'].includes(normSkinName)) continue;
+
+                        // Filter: Ignore AOV / Arena of Valor skins
+                        if (lowerName.includes('aov') || lowerName.includes('arena of valor')) continue;
 
                         if (dbSkins.has(normSkinName)) continue;
 

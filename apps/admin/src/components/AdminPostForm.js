@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, Typography, Alert, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Box, TextField, Button, Typography, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 import { useTranslation } from '../i18nShim';
 import { useAuth } from '../contexts/AuthContext';
 import MarkdownEditor from './MarkdownEditor';
+import { toast } from 'react-toastify';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const AdminPostForm = ({ editingPost, onFormSubmit }) => {
+const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
   const { t } = useTranslation();
   const { fetchWithAuth, openLogin } = useAuth();
   const [title, setTitle] = useState('');
@@ -20,7 +21,7 @@ const AdminPostForm = ({ editingPost, onFormSubmit }) => {
   const [imageUrl, setImageUrl] = useState('');
   const [imagePreview, setImagePreview] = useState('');
   const [status, setStatus] = useState('draft'); // Default to draft
-  const [message, setMessage] = useState({ type: '', text: '' });
+  // const [message, setMessage] = useState({ type: '', text: '' }); // Replaced by toast
   const [loading, setLoading] = useState(false);
 
 
@@ -150,7 +151,7 @@ const AdminPostForm = ({ editingPost, onFormSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !content) {
-      setMessage({ type: 'error', text: 'Vui lòng điền đầy đủ thông tin' });
+      toast.error('Vui lòng điền đầy đủ thông tin');
       return;
     }
 
@@ -186,12 +187,11 @@ const AdminPostForm = ({ editingPost, onFormSubmit }) => {
       });
 
       if (res.ok) {
-        setMessage({
-          type: 'success',
-          text: editingPost
+        toast.success(
+          editingPost
             ? t('admin.updateSuccess', 'Cập nhật bài viết thành công!')
             : t('admin.addSuccess', 'Thêm bài viết thành công!')
-        });
+        );
 
         if (!editingPost) {
           // Reset form only if adding new
@@ -207,22 +207,28 @@ const AdminPostForm = ({ editingPost, onFormSubmit }) => {
           setImagePreview('');
         }
 
-        if (onFormSubmit) {
+        if (onFormSubmit && !editingPost) {
+          // Only close/reset if adding new. For editing, keep form open.
           onFormSubmit();
+        }
+
+        // Trigger generic update callback (for list refresh) regardless of mode
+        if (onPostUpdated) {
+          onPostUpdated();
         }
       } else {
         const error = await res.json();
-        setMessage({ type: 'error', text: error.message || t('common.error', 'Có lỗi xảy ra') });
+        toast.error(error.message || t('common.error', 'Có lỗi xảy ra'));
       }
     } catch (err) {
-      setMessage({ type: 'error', text: err.message || t('common.error', 'Có lỗi xảy ra') });
+      toast.error(err.message || t('common.error', 'Có lỗi xảy ra'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 800, mx: 'auto', mt: 4 }}>
+    <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 1000, mx: 'auto', mt: 4 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h5">
           {editingPost ? t('admin.editPost', 'Sửa bài viết') : t('admin.addPost', 'Thêm bài viết mới')}
@@ -234,11 +240,7 @@ const AdminPostForm = ({ editingPost, onFormSubmit }) => {
         )}
       </Box>
 
-      {message.text && (
-        <Alert severity={message.type} sx={{ mb: 2 }}>
-          {message.text}
-        </Alert>
-      )}
+
 
       <TextField
         label={t('news.title', 'Tiêu đề')}

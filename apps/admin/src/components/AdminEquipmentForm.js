@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, TextField, Button, Typography, Alert, CircularProgress,
+  Box, TextField, Button, Typography, CircularProgress,
   FormControl, InputLabel, Select, MenuItem, Grid, Divider,
   IconButton, Tooltip
 } from '@mui/material';
+import { toast } from 'react-toastify';
 import UploadIcon from '@mui/icons-material/Upload';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
@@ -67,7 +68,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
-  const [message, setMessage] = useState({ type: '', text: '' });
+  // const [message, setMessage] = useState({ type: '', text: '' }); // Replaced by toast
   const [loading, setLoading] = useState(false);
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
 
@@ -305,7 +306,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.category) {
-      setMessage({ type: 'error', text: t('admin.fillRequired', 'Please fill required fields (name and category)') });
+      toast.error(t('admin.fillRequired', 'Please fill required fields (name and category)'));
       return;
     }
 
@@ -363,7 +364,7 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
       });
 
       if (res.ok) {
-        setMessage({ type: 'success', text: isEditing ? t('admin.updateEquipmentSuccess', 'Equipment updated successfully!') : t('admin.addEquipmentSuccess', 'Equipment added successfully!') });
+        toast.success(isEditing ? t('admin.updateEquipmentSuccess', 'Equipment updated successfully!') : t('admin.addEquipmentSuccess', 'Equipment added successfully!'));
         // Reset form
         setFormData({
           name: '',
@@ -402,10 +403,10 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
       } else {
         const error = await res.json();
         console.error('Server error response:', error);
-        setMessage({ type: 'error', text: error.message || t('admin.addEquipmentError', 'Error adding equipment') });
+        toast.error(error.message || t('admin.addEquipmentError', 'Error adding equipment'));
       }
     } catch (err) {
-      setMessage({ type: 'error', text: err.message || t('admin.addEquipmentError', 'Error adding equipment') });
+      toast.error(err.message || t('admin.addEquipmentError', 'Error adding equipment'));
     } finally {
       setLoading(false);
     }
@@ -472,11 +473,11 @@ const AdminEquipmentForm = ({ editingEquipment, onFormSubmit }) => {
     <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 900, mx: 'auto', mt: 4 }}>
       <Typography variant="h5" mb={3}>{editingEquipment ? t('admin.editEquipment', 'Edit Equipment') : t('admin.addEquipment', 'Add Equipment')}</Typography>
 
-      {message.text && (
+      {/* {message.text && (
         <Alert severity={message.type} sx={{ mb: 3 }}>
           {message.text}
         </Alert>
-      )}
+      )} */}
 
       <Grid container spacing={3}>
         {/* Basic Information */}

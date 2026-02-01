@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { toast } from 'react-toastify';
 import {
     Box, Button, TextField, Typography, Paper, Tabs, Tab, IconButton,
     Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions,
@@ -138,25 +139,26 @@ const MarkdownEditor = ({ value, onChange, onImageUpload, onVideoUpload }) => {
             }
         } catch (error) {
             console.error('Upload failed', error);
-            alert('Upload failed: ' + error.message);
+            toast.error('Upload failed: ' + error.message);
         } finally {
             setUploading(false);
         }
     };
 
     return (
-        <Paper variant="outlined" sx={{ mt: 2, mb: 2, overflow: 'hidden' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: '#f5f5f5' }}>
-                <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ minHeight: 40 }}>
-                    <Tab label={t('admin.write', 'Write')} sx={{ minHeight: 40, py: 1 }} />
-                    <Tab label={t('admin.preview', 'Preview')} sx={{ minHeight: 40, py: 1 }} />
-                </Tabs>
-            </Box>
+        <Paper variant="outlined" sx={{ mt: 2, mb: 2 }}>
+            {/* Sticky Header Wrapper - Adjusted top to clear fixed Navbar (approx 64px) */}
+            <Box sx={{ position: 'sticky', top: 64, zIndex: 10, bgcolor: 'background.paper', borderBottom: 1, borderColor: 'divider' }}>
+                <Box sx={{ bgcolor: '#f5f5f5' }}>
+                    <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ minHeight: 40 }}>
+                        <Tab label={t('admin.write', 'Write')} sx={{ minHeight: 40, py: 1 }} />
+                        <Tab label={t('admin.preview', 'Preview')} sx={{ minHeight: 40, py: 1 }} />
+                    </Tabs>
+                </Box>
 
-            {tab === 0 && (
-                <>
-                    {/* Toolbar */}
-                    <Box p={1} display="flex" gap={0.5} flexWrap="wrap" borderBottom={1} borderColor="divider" bgcolor="white">
+                {tab === 0 && (
+                    /* Toolbar */
+                    <Box p={1} display="flex" gap={0.5} flexWrap="wrap" bgcolor="background.paper">
                         <Tooltip title="Bold"><IconButton size="small" onClick={() => handleFormat('bold')}><FormatBoldIcon /></IconButton></Tooltip>
                         <Tooltip title="Italic"><IconButton size="small" onClick={() => handleFormat('italic')}><FormatItalicIcon /></IconButton></Tooltip>
                         <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
@@ -183,26 +185,28 @@ const MarkdownEditor = ({ value, onChange, onImageUpload, onVideoUpload }) => {
                         <Tooltip title="Insert Image"><IconButton size="small" onClick={() => { setMediaType('image'); setMediaDialogOpen(true); }}><ImageIcon /></IconButton></Tooltip>
                         <Tooltip title="Insert Video"><IconButton size="small" onClick={() => { setMediaType('video'); setMediaDialogOpen(true); }}><MovieIcon /></IconButton></Tooltip>
                     </Box>
+                )}
+            </Box>
 
-                    <TextField
-                        inputRef={textareaRef}
-                        multiline
-                        fullWidth
-                        minRows={20}
-                        value={value}
-                        onChange={(e) => onChange(e.target.value)}
-                        placeholder="Write your post content here using Markdown..."
-                        sx={{
-                            '& .MuiInputBase-root': {
-                                fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-                                fontSize: '14px',
-                                lineHeight: 1.6,
-                                borderRadius: 0,
-                                '& fieldset': { border: 'none' }
-                            }
-                        }}
-                    />
-                </>
+            {tab === 0 && (
+                <TextField
+                    inputRef={textareaRef}
+                    multiline
+                    fullWidth
+                    minRows={20}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    placeholder="Write your post content here using Markdown..."
+                    sx={{
+                        '& .MuiInputBase-root': {
+                            fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+                            fontSize: '14px',
+                            lineHeight: 1.6,
+                            borderRadius: 0,
+                            '& fieldset': { border: 'none' }
+                        }
+                    }}
+                />
             )}
 
             {tab === 1 && (
@@ -356,7 +360,7 @@ const MarkdownEditor = ({ value, onChange, onImageUpload, onVideoUpload }) => {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </Paper>
+        </Paper >
     );
 };
 

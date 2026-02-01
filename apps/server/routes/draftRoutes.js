@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const DraftChange = require('../models/DraftChange');
 const Hero = require('../models/Hero');
+const { uploadImageFromUrl } = require('../services/cloudinaryService');
 
 // GET /api/drafts - List pending drafts
 router.get('/', async (req, res) => {
@@ -47,6 +48,26 @@ router.post('/:id/approve', async (req, res) => {
             // Deduplicate check
             const exists = hero.skins.some(s => s.name === draft.payload.name);
             if (!exists) {
+                // Upload image to Cloudinary before saving to DB
+                if (draft.payload.image) {
+                    try {
+                        const safeSkinName = draft.payload.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                        const safeHeroName = hero.slug || hero.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                        const publicId = `${safeHeroName}-${safeSkinName}`;
+                        
+                        console.log(`[DraftApproval] Uploading skin image for ${draft.payload.name}...`);
+                        const cloudUrl = await uploadImageFromUrl(draft.payload.image, 'BlogHok/heroes/skins_splash', publicId);
+                        
+                        if (cloudUrl) {
+                            draft.payload.image = cloudUrl;
+                        } else {
+                            console.warn(`[DraftApproval] Failed to upload image for ${draft.payload.name}, using original URL.`);
+                        }
+                    } catch (uploadErr) {
+                        console.error(`[DraftApproval] Error uploading skin image: ${uploadErr.message}`);
+                    }
+                }
+
                 hero.skins.push(draft.payload);
                 await hero.save();
             }

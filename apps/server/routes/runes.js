@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const runeController = require('../controllers/runeController');
-const authMiddleware = require('../middleware/authMiddleware');
+const { enhancedAuth } = require('../middleware/security');
 const { adminOpsGuard } = require('../middleware/security');
 
 // Lấy tất cả rune
@@ -11,12 +11,12 @@ router.get('/', runeController.getAllRunes);
 router.get('/:id', runeController.getRuneById);
 
 // Thêm rune (admin)
-router.post('/', adminOpsGuard, authMiddleware, runeController.createRune);
+router.post('/', adminOpsGuard, enhancedAuth, runeController.createRune);
 
 // Sửa rune (admin)
-router.patch('/:id', adminOpsGuard, authMiddleware, runeController.updateRune);
+router.patch('/:id', adminOpsGuard, enhancedAuth, runeController.updateRune);
 
 // Xóa rune (admin)
-router.delete('/:id', adminOpsGuard, authMiddleware, runeController.deleteRune);
+router.delete('/:id', adminOpsGuard, enhancedAuth, runeController.deleteRune);
 
 module.exports = router; 

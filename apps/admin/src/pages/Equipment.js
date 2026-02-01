@@ -553,6 +553,7 @@ const Equipment = () => {
         )}
         
         {/* Search and Filter Controls */}
+        {/* Search and Filter Controls */}
         <Grid container spacing={2} sx={{ mb: 4, mt: 2 }}>
           {/* Search Field */}
           <Grid item xs={12} md={4}>

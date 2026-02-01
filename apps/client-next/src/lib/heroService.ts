@@ -45,9 +45,13 @@ const fetchHeroesInternal = async (params: any = {}, options: any = {}) => {
       params: {
         ...params,
         page: 1,
-        limit: 300, // Server max is 300, we have ~110 heroes
+        limit: 300, 
         sort: params.sort || 'name'
       },
+      headers: {
+        'Cache-Control': 'no-cache'
+      },
+      timeout: 10000, // 10s timeout to prevent hanging
       signal: options.signal
     });
 
@@ -102,6 +106,9 @@ const fetchHeroesInternal = async (params: any = {}, options: any = {}) => {
     }
 
     console.error('❌ Error fetching heroes:', err.message);
+    if (err.message === 'Network Error') {
+      console.error('👉 Check if the backend server is running on port 7000 and CORS is configured.');
+    }
     throw err;
   }
 };

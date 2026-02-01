@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const metaController = require('../controllers/metaController');
-const authMiddleware = require('../middleware/authMiddleware');
+const { enhancedAuth } = require('../middleware/security');
 const { syncHoKMeta } = require('../services/syncHoKMetaService');
 
 // Lấy meta hiện tại
@@ -14,16 +14,16 @@ router.get('/special-trending', metaController.getSpecialTrending);
 router.get('/site-info/:key', metaController.getSiteInfoByKey);
 
 // Thêm meta (admin)
-router.post('/', authMiddleware, metaController.createMeta);
+router.post('/', enhancedAuth, metaController.createMeta);
 
 // Sửa meta (admin)
-router.patch('/:id', authMiddleware, metaController.updateMeta);
+router.patch('/:id', enhancedAuth, metaController.updateMeta);
 
 // Xóa meta (admin)
-router.delete('/:id', authMiddleware, metaController.deleteMeta);
+router.delete('/:id', enhancedAuth, metaController.deleteMeta);
 
 // Trigger HoK meta sync (admin)
-router.post('/sync/hok', authMiddleware, async (req, res, next) => {
+router.post('/sync/hok', enhancedAuth, async (req, res, next) => {
 	try {
 		const dryRun = Boolean(req.query.dry === '1' || req.body?.dry === true);
 		const result = await syncHoKMeta({ dryRun });

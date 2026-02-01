@@ -817,6 +817,20 @@ async function syncHoKMeta({
     // await new Promise(r => setTimeout(r, 500)); 
   }
 
+  // Update SiteInfo timestamp
+  if (!dryRun) {
+    try {
+      await SiteInfo.findOneAndUpdate(
+        { key: 'heroes_meta_updated' },
+        { key: 'heroes_meta_updated', updatedAt: new Date() },
+        { upsert: true, new: true }
+      );
+      logger.info('[Sync] Updated heroes_meta_updated timestamp.');
+    } catch (e) {
+      logger.error(`[Sync] Failed to update timestamp: ${e.message}`);
+    }
+  }
+
   return { matched, updated };
 }
 

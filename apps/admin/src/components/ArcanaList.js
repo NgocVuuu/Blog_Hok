@@ -16,11 +16,13 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ConfirmDialog from './ConfirmDialog';
 
-const ArcanaList = ({ onEdit }) => {
+const ArcanaList = ({ onEdit, editingItem }) => {
   const [arcana, setArcana] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [deleteId, setDeleteId] = useState(null);
   const API_URL = process.env.REACT_APP_API_URL;
 
   const fetchArcana = useCallback(async () => {
@@ -45,25 +47,29 @@ const ArcanaList = ({ onEdit }) => {
     fetchArcana();
   }, [fetchArcana]);
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa arcana này?')) {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${API_URL}/api/arcana/${id}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+  };
 
-        if (res.ok) {
-          setArcana(arcana.filter(item => item._id !== id));
-        } else {
-          setError('Không thể xóa arcana');
-        }
-      } catch (err) {
-        setError('Có lỗi xảy ra khi xóa arcana');
+  const handleConfirmDelete = async () => {
+    if (!deleteId) return;
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/arcana/${deleteId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        setArcana(arcana.filter(item => item._id !== deleteId));
+        setDeleteId(null);
+      } else {
+        setError('Không thể xóa arcana');
       }
+    } catch (err) {
+      setError('Có lỗi xảy ra khi xóa arcana');
     }
   };
 
@@ -124,7 +130,14 @@ const ArcanaList = ({ onEdit }) => {
                   .join(', ');
 
                 return (
-                  <TableRow key={item._id}>
+                  <TableRow 
+                    key={item._id}
+                    sx={{
+                      bgcolor: editingItem && editingItem._id === item._id ? 'rgba(25, 118, 210, 0.12)' : 'inherit',
+                      transition: 'background-color 0.3s',
+                      '&:hover': { bgcolor: editingItem && editingItem._id === item._id ? 'rgba(25, 118, 210, 0.18)' : 'rgba(0, 0, 0, 0.04)' }
+                    }}
+                  >
                     <TableCell>
                       {item.image && (
                         <img
@@ -188,7 +201,7 @@ const ArcanaList = ({ onEdit }) => {
                           size="small"
                           color="error"
                           startIcon={<DeleteIcon />}
-                          onClick={() => handleDelete(item._id)}
+                          onClick={() => handleDeleteClick(item._id)}
                         >
                           Xóa
                         </Button>
@@ -201,6 +214,13 @@ const ArcanaList = ({ onEdit }) => {
           </Table>
         </TableContainer>
       )}
+      <ConfirmDialog
+        open={!!deleteId}
+        title="Xóa Arcana"
+        content="Bạn có chắc chắn muốn xóa arcana này không?"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteId(null)}
+      />
     </Box>
   );
 };

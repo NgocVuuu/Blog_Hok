@@ -87,6 +87,7 @@ try {
   app.use('/api/heroes', heroesRouter);
   app.use('/api/contact', require('./routes/contact'));
   app.use('/api/hok-sync', require('./routes/hokSync'));
+  app.use('/api/data-checks', require('./routes/dataCheckRoutes'));
   app.use('/api/drafts', require('./routes/draftRoutes'));
   app.use('/api/comments', require('./routes/comments'));
 } catch (routeErr) {
@@ -289,46 +290,8 @@ app.get('/api/sitemap.xml', async (req, res, next) => {
 app.use(errorLogger);
 
 // Enhanced error handling middleware
-app.use((err, req, res, next) => {
-  // Log error details
-  logger.error('Request error', {
-    error: {
-      message: err.message,
-      stack: err.stack,
-      name: err.name,
-      code: err.code
-    },
-    request: {
-      method: req.method,
-      url: req.url,
-      ip: req.ip
-    }
-  });
-
-  // Handle specific error types
-  if (err.name === 'ValidationError') {
-    return res.status(400).json({
-      success: false,
-      message: 'Validation Error',
-      details: Object.values(err.errors).map(e => e.message)
-    });
-  }
-
-  if (err.name === 'MongoError' || err.name === 'MongoServerError') {
-    return res.status(500).json({
-      success: false,
-      message: 'Database Error',
-      details: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
-    });
-  }
-
-  // Default error response
-  res.status(err.status || 500).json({
-    success: false,
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong!',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-  });
-});
+const errorHandler = require('./middleware/errorHandler');
+app.use(errorHandler);
 
 // 404 handler
 app.use((req, res) => {

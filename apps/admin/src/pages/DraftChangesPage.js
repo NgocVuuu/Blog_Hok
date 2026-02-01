@@ -19,6 +19,7 @@ import { KeyboardArrowDown, KeyboardArrowUp, Check, Close } from '@mui/icons-mat
 import axios from 'axios';
 // Simple toast implementation if not available globally, or assume existing toast usage
 // adapting to minimal deps.
+import { toast } from 'react-toastify';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
 
@@ -120,9 +121,9 @@ export default function DraftChangesPage() {
             await axios.post(`${API_URL}/api/drafts/${id}/${action}`);
             // Refresh list
             fetchDrafts();
-            alert(`Draft ${action}d successfully`);
+            toast.success(`Draft ${action}d successfully`);
         } catch (err) {
-            alert(`Failed to ${action} draft: ${err.message}`);
+            toast.error(`Failed to ${action} draft: ${err.message}`);
         }
     };
 

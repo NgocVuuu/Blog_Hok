@@ -139,3 +139,5 @@ last_run_error.log
 api_ranklist_dump.json
 render.yaml
 *.log
+debug_*.png
+sync_debug.txt

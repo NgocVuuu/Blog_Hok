@@ -45,7 +45,7 @@ const createRateLimit = (windowMs, max, message, skipSuccessfulRequests = false,
         if (req.user && (req.user.id || req.user._id)) {
           return `user:${req.user.id || req.user._id}`;
         }
-      } catch {}
+      } catch { }
       // Use x-forwarded-for aware IP if available
       const ip = (req.ip || req.connection?.remoteAddress || 'unknown');
       return `ip:${ip}`;
@@ -97,7 +97,7 @@ const uploadLimiter = createRateLimit(
     const adminMax = parseInt(process.env.ADMIN_UPLOAD_RATE_LIMIT_MAX) || 60;
     try {
       if (req.user && req.user.role === 'admin') return adminMax;
-    } catch {}
+    } catch { }
     return base;
   },
   'Too many file uploads, please try again later'
@@ -109,12 +109,12 @@ const searchLimiter = createRateLimit(
   'Too many search requests, please slow down'
 );
 
-// Token blacklist (in production, use Redis)
-const blacklistedTokens = new Set();
+const BlacklistToken = require('../models/BlacklistToken');
 
 // Enhanced JWT verification
-const verifyToken = (token) => {
-  if (blacklistedTokens.has(token)) {
+const verifyToken = async (token) => {
+  const isBlacklisted = await BlacklistToken.findOne({ token });
+  if (isBlacklisted) {
     throw new Error('Token has been revoked');
   }
 
@@ -122,13 +122,14 @@ const verifyToken = (token) => {
 };
 
 // Blacklist token
-const blacklistToken = (token) => {
-  blacklistedTokens.add(token);
-
-  // Auto-remove expired tokens (cleanup)
-  setTimeout(() => {
-    blacklistedTokens.delete(token);
-  }, parseInt(process.env.TOKEN_BLACKLIST_DURATION) || 24 * 60 * 60 * 1000); // 24 hours
+const blacklistToken = async (token) => {
+  try {
+    await BlacklistToken.create({ token });
+  } catch (err) {
+    if (err.code !== 11000) { // Ignore duplicate key error
+      console.error('Error blacklisting token:', err);
+    }
+  }
 };
 
 // Enhanced auth middleware with better error handling
@@ -153,7 +154,7 @@ const enhancedAuth = async (req, res, next) => {
     }
 
     try {
-      const decoded = verifyToken(token);
+      const decoded = await verifyToken(token);
 
       // Check if user still exists and has admin role
       const User = require('../models/User');
@@ -216,7 +217,7 @@ const corsOptions = {
       'http://127.0.0.1:3002',
       'http://127.0.0.1:3000',
       'https://bloghok-frontend.onrender.com',
-  'https://blog-hok-fe.pages.dev',
+      'https://blog-hok-fe.pages.dev',
       'https://blog-hok.onrender.com',
       process.env.FRONTEND_URL,
       process.env.CORS_ORIGIN
@@ -224,6 +225,11 @@ const corsOptions = {
 
     // Allow requests with no origin (mobile apps, etc.)
     if (!origin) return callback(null, true);
+
+    // Allow all localhost origins in development
+    if (process.env.NODE_ENV !== 'production' && (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1'))) {
+      return callback(null, true);
+    }
 
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
@@ -237,7 +243,7 @@ const corsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cache-Control', 'Pragma', 'Expires'],
   maxAge: 86400 // 24 hours
 };
 
