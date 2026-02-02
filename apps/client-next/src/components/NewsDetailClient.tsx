@@ -308,7 +308,8 @@ export default function NewsDetailClient({
                            {...(htmlWidth ? { width: htmlWidth } : {})}
                            {...(htmlHeight ? { height: htmlHeight } : {})}
                            sx={{  
-                             maxWidth: '100%', 
+                             maxWidth: '100%',
+                             height: 'auto !important',
                              borderRadius: '4px', // moderate radius for inline/table images
                              // Ensure we don't force display:block if it's intended to be inline
                              display: style?.display || 'inline-block',
