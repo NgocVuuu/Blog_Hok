@@ -30,6 +30,7 @@
     "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
     "react-toastify": "^11.0.5",
+    "rehype-raw": "^7.0.0",
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
     "swiper": "^12.0.3",

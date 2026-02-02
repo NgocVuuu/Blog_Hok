@@ -15,6 +15,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkDirective from 'remark-directive';
+import rehypeRaw from 'rehype-raw';
 import { visit } from 'unist-util-visit';
 import LazyImage from '@/components/LazyImage';
 import CommentSection from '@/components/Comments/CommentSection';
@@ -213,25 +214,29 @@ export default function NewsDetailClient({
               '& [data-directive="row"]': { display: 'flex', flexWrap: 'wrap', gap: '24px', mb: 3, width: '100%', alignItems: 'flex-start' },
               '& [data-directive="col"]': { flex: 1, minWidth: '250px', '& > *:first-of-type': { mt: 0 } },
               '& table': { width: '100%', borderCollapse: 'collapse', mb: 3, border: '1px solid #e0e0e0', tableLayout: 'fixed' },
-              '& th': { bgcolor: '#f5f5f5', fontWeight: 700, p: 1, border: '1px solid #e0e0e0', textAlign: 'center', fontSize: '0.95rem' },
-              '& td': { p: 1, border: '1px solid #e0e0e0', verticalAlign: 'middle', fontSize: '0.95rem', textAlign: 'center' },
+              '& th': { bgcolor: '#f5f5f5', fontWeight: 700, p: 1, border: '1px solid #e0e0e0', fontSize: '0.95rem', wordWrap: 'break-word' },
+              '& td': { p: 1, border: '1px solid #e0e0e0', verticalAlign: 'middle', fontSize: '0.95rem', wordWrap: 'break-word' },
               '& table p': { m: 0 },
               // Removed strict overrides for table images to allow custom sizing
               '& table img': { borderRadius: '4px' },
             }}>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkDirective, remarkDirectiveRehype]}
+                rehypePlugins={[rehypeRaw]}
                 components={{
-                  // Use standard HTML table elements styled via parent Box to avoid nesting issues and ensure "clean" look
-                  table: ({ children }) => <table>{children}</table>,
-                  thead: ({ children }) => <thead>{children}</thead>,
-                  tbody: ({ children }) => <tbody>{children}</tbody>,
-                  tr: ({ children }) => <tr>{children}</tr>,
-                  th: ({ children }) => <th>{children}</th>,
-                  td: ({ children }) => <td>{children}</td>,
-                  img: ({ src, alt }: any) => {
+                  // Pass all props including styles to preserve formatting from TinyMCE/CKEditor
+                  table: (props) => <table {...props} />,
+                  thead: (props) => <thead {...props} />,
+                  tbody: (props) => <tbody {...props} />,
+                  tr: (props) => <tr {...props} />,
+                  th: (props) => <th {...props} />,
+                  td: (props) => <td {...props} />,
+                  img: (props: any) => {
+                    const { src, alt, style, width: htmlWidth, height: htmlHeight } = props;
+                    
                     // Video support
                     if (alt && typeof alt === 'string' && (alt === 'video' || alt.startsWith('video|') || alt.startsWith('video;') || alt.startsWith('video:'))) {
+                      // ... (video logic remains same, just adapt variable names if needed)
                       let size = 'medium';
                       let align = 'center';
                       const separator = alt.includes('|') ? '|' : alt.includes(';') ? ';' : ':';
@@ -265,25 +270,52 @@ export default function NewsDetailClient({
                         />
                       );
                     }
-                    // Image with size/shape support
-                    let width = '100%';
-                    let maxWidth = '800px';
+                    
+                    // Check for HTML attributes (from SunEditor/HTML tables)
+                    // If regular HTML styles/attributes are present, respect them over Markdown-specific logic
+                    const hasHtmlStyles = style || htmlWidth || htmlHeight;
+                    
+                    // Defaults for Markdown images
+                    let maxWidth = '800px'; 
                     let borderRadius = '8px';
                     let align = 'center';
                     let shape = 'rectangle';
+                    let isCustomMarkdown = false;
 
                     if (alt && typeof alt === 'string' && (alt.startsWith('img|') || alt.startsWith('img;') || alt.startsWith('img:'))) {
+                      isCustomMarkdown = true;
                       const separator = alt.includes('|') ? '|' : alt.includes(';') ? ';' : ':';
                       const parts = alt.split(separator);
                       const sizeStr = parts[1] || 'medium';
                       shape = parts[2] || 'rectangle';
                       align = parts[3] || 'center';
 
-                      if (sizeStr === 'icon') maxWidth = '60px'; // New icon size
-                      else if (sizeStr === 'tiny') maxWidth = '120px'; // New tiny size
+                      if (sizeStr === 'icon') maxWidth = '60px';
+                      else if (sizeStr === 'tiny') maxWidth = '120px';
                       else if (sizeStr === 'small') maxWidth = '300px';
                       else if (sizeStr === 'medium') maxWidth = '600px';
                       else if (sizeStr === 'large') maxWidth = '100%';
+                    }
+
+                    // If it's a raw HTML image (e.g. inside table from SunEditor) and NOT a custom markdown tag
+                    if (hasHtmlStyles && !isCustomMarkdown) {
+                       return (
+                        <LazyImage 
+                           src={src || ''} 
+                           alt={alt || ''}
+                           style={style}
+                           // Pass through width/height if present
+                           {...(htmlWidth ? { width: htmlWidth } : {})}
+                           {...(htmlHeight ? { height: htmlHeight } : {})}
+                           sx={{  
+                             maxWidth: '100%', 
+                             borderRadius: '4px', // moderate radius for inline/table images
+                             // Ensure we don't force display:block if it's intended to be inline
+                             display: style?.display || 'inline-block',
+                             verticalAlign: 'middle'
+                           }}
+                        />
+                       );
                     }
 
                     const alignmentStyle = align === 'center'
@@ -300,6 +332,7 @@ export default function NewsDetailClient({
                       ? { objectFit: 'cover' }
                       : {};
 
+                    // Logic: If custom markdown, follow strict rules. If plain markdown, default to centered block.
                     const wrapperWidth = (shape === 'square' || maxWidth === '100%') ? '100%' : 'fit-content';
                     const imgWidth = (shape === 'square' || maxWidth === '100%') ? '100%' : 'auto';
 
@@ -324,6 +357,7 @@ export default function NewsDetailClient({
                             ...imgShapeStyle
                           }}
                         />
+
                         {alt && !alt.startsWith('img|') && !alt.startsWith('video|') && !alt.startsWith('img;') && !alt.startsWith('video;') && !alt.startsWith('img:') && !alt.startsWith('video:') && (
                           <Typography component="span" variant="caption" display="block" align="center" color="text.secondary" mt={1}>
                             {alt}

@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Box, TextField, Button, Typography, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
 import { useTranslation } from '../i18nShim';
 import { useAuth } from '../contexts/AuthContext';
-import MarkdownEditor from './MarkdownEditor';
+// Import TinyMCE via script loading to avoid bundling issues with self-hosted version
+import { Editor } from '@tinymce/tinymce-react';
+import TurndownService from 'turndown';
+import { strikethrough, taskListItems } from 'turndown-plugin-gfm';
+import showdown from 'showdown';
 import { toast } from 'react-toastify';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7000';
 
 const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
   const { t } = useTranslation();
   const { fetchWithAuth, openLogin } = useAuth();
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  // const [content, setContent] = useState(''); // Content state not needed for uncontrolled editor
   const [summary, setSummary] = useState('');
   const [keywords, setKeywords] = useState('');
   const [category, setCategory] = useState('guides');
@@ -21,8 +25,37 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
   const [imageUrl, setImageUrl] = useState('');
   const [imagePreview, setImagePreview] = useState('');
   const [status, setStatus] = useState('draft'); // Default to draft
-  // const [message, setMessage] = useState({ type: '', text: '' }); // Replaced by toast
   const [loading, setLoading] = useState(false);
+  
+  const editorRef = useRef(null);
+  const initialContentRef = useRef('');
+
+  // No getSunEditorInstance needed for TinyMCE
+
+  // Converters
+  const turndownService = useMemo(() => {
+    const service = new TurndownService({
+      headingStyle: 'atx',
+      codeBlockStyle: 'fenced'
+    });
+    // Use specific GFM plugins, but EXCLUDE 'tables' so we can keep them as HTML
+    // This prevents loss of formatting and potential corruption during Markdown <-> HTML cycles
+    service.use([strikethrough, taskListItems]);
+    service.keep(['table']); // Keep tables as HTML to preserve structure
+    return service;
+  }, []);
+
+  const showdownConverter = useMemo(() => {
+    return new showdown.Converter({
+      tables: true,
+      simplifiedAutoLink: true,
+      strikethrough: true,
+      tasklists: true,
+      // Ensure we don't accidentally wrap images in paragraphs inside tables
+      // which might confuse the editor
+      simpleLineBreaks: false 
+    });
+  }, []);
 
 
   // Categories for dropdown
@@ -37,14 +70,22 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
   useEffect(() => {
     if (editingPost) {
       setTitle(editingPost.title || '');
-      setContent(editingPost.content || '');
       setSummary(editingPost.summary || '');
       setKeywords(editingPost.keywords || '');
       setCategory(editingPost.category || 'guides');
       setAuthor(editingPost.author || 'BlogHok');
-      setStatus(editingPost.status || 'published'); // Default to published for old posts
+      setStatus(editingPost.status || 'published');
       setImageUrl(editingPost.image || '');
       setImagePreview(editingPost.image || '');
+
+      const loadContent = (markdown) => {
+        const html = showdownConverter.makeHtml(markdown || '');
+        // Set initial content for TinyMCE
+        initialContentRef.current = html;
+        if (editorRef.current) {
+           editorRef.current.setContent(html);
+        }
+      };
 
       // If content is missing (e.g. from list view), fetch full details
       if (!editingPost.content) {
@@ -53,20 +94,28 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
             const res = await fetchWithAuth(`${API_URL}/api/news/${editingPost._id}`);
             if (res.ok) {
               const fullPost = await res.json();
-              setContent(fullPost.content || '');
-              setSummary(fullPost.summary || '');
-              setKeywords(fullPost.keywords || '');
+              // Only load content if we are still editing the same post
+              if (editingPost._id === fullPost._id) {
+                loadContent(fullPost.content);
+                if (!editingPost.summary) setSummary(fullPost.summary || '');
+                if (!editingPost.keywords) setKeywords(fullPost.keywords || '');
+              }
             }
           } catch (err) {
             console.error('Error fetching full post details:', err);
           }
         };
         fetchFullPost();
+      } else {
+        loadContent(editingPost.content);
       }
     } else {
       // Reset form
       setTitle('');
-      setContent('');
+      initialContentRef.current = '';
+      if (editorRef.current) {
+         editorRef.current.setContent('');
+      }
       setSummary('');
       setKeywords('');
       setCategory('guides');
@@ -76,7 +125,8 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
       setImageUrl('');
       setImagePreview('');
     }
-  }, [editingPost, fetchWithAuth]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingPost?._id, fetchWithAuth, showdownConverter]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -90,7 +140,7 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
     }
   };
 
-  const handleUpload = async (file) => {
+  const handleUpload = useCallback(async (file) => {
     const formData = new FormData();
     formData.append('image', file);
     const res = await fetchWithAuth(`${API_URL}/api/upload`, {
@@ -126,31 +176,23 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
     }
     const data = await res.json();
     return data.imageUrl;
-  };
+  }, [fetchWithAuth, openLogin]);
 
-  const handleVideoUpload = async (file) => {
-    const formData = new FormData();
-    formData.append('video', file);
-    const res = await fetchWithAuth(`${API_URL}/api/upload/video`, {
-      method: 'POST',
-      headers: {},
-      body: formData,
-    });
-    if (!res.ok) {
-      if (res.status === 401) {
-        openLogin();
-        return;
-      }
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || 'Upload video thất bại');
-    }
-    const data = await res.json();
-    return data.videoUrl;
-  };
+  // handleVideoUpload removed as unused for now
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title || !content) {
+    
+    // Get content from TinyMCE
+    let finalContentHTML = '';
+    if (editorRef.current) {
+        finalContentHTML = editorRef.current.getContent();
+    }
+    
+    // Convert to markdown only at submission time
+    const finalContentMarkdown = turndownService.turndown(finalContentHTML || '');
+
+    if (!title || !finalContentMarkdown) {
       toast.error('Vui lòng điền đầy đủ thông tin');
       return;
     }
@@ -176,7 +218,7 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
         },
         body: JSON.stringify({
           title,
-          content,
+          content: finalContentMarkdown,
           summary,
           keywords,
           category,
@@ -196,7 +238,10 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
         if (!editingPost) {
           // Reset form only if adding new
           setTitle('');
-          setContent('');
+          initialContentRef.current = '';
+          if (editorRef.current) {
+            editorRef.current.setContent('');
+          }
           setSummary('');
           setKeywords('');
           setCategory('guides');
@@ -289,12 +334,41 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
       </FormControl>
 
       <Typography variant="subtitle1" fontWeight={600} mt={2} mb={1}>{t('news.content', 'Nội dung')}</Typography>
-      <MarkdownEditor
-        value={content}
-        onChange={setContent}
-        onImageUpload={handleUpload}
-        onVideoUpload={handleVideoUpload}
-      />
+      
+      <Box sx={{ mb: 2, border: '1px solid #ccc', borderRadius: 1 }}>
+        <Editor
+          // Point to the CDN version explicitly. This ensures all plugins and skins are loaded correctly
+          // without needing complex webpack copy configurations for self-hosting.
+          tinymceScriptSrc="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js"
+          onInit={(evt, editor) => editorRef.current = editor}
+          initialValue={initialContentRef.current}
+          init={{
+            min_height: 500,
+            menubar: true,
+            plugins: [
+              'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+              'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+              'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount', 'autoresize'
+            ],
+            toolbar: 'undo redo | blocks | ' +
+              'bold italic forecolor | alignleft aligncenter ' +
+              'alignright alignjustify | bullist numlist outdent indent | ' +
+              'removeformat | help | image media table code',
+            toolbar_sticky: true,
+            toolbar_sticky_offset: 64, 
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px; img { max-width: 100%; height: auto; } }',
+            images_upload_handler: async (blobInfo) => {
+               try {
+                   const file = blobInfo.blob();
+                   const url = await handleUpload(file);
+                   return url;
+               } catch (err) {
+                   throw new Error("Upload failed: " + err.message);
+               }
+            }
+          }}
+        />
+      </Box>
 
       <TextField
         label={t('news.summary', 'Mô tả ngắn (SEO)')}

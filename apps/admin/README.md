@@ -1,5 +1,7 @@
 # Getting Started with Create React App
 
+**Note:** `React.StrictMode` has been disabled in `src/index.js` to prevent compatibility issues with `suneditor-react`, which causes crashes due to double-mounting in development mode (specifically "Uncaught TypeError: this._iframeAutoHeight is not a function").
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
