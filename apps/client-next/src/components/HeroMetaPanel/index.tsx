@@ -12,7 +12,7 @@ export default function HeroMetaPanel({ heroes = [], loading = false, lastUpdate
   const [sortBy, setSortBy] = useState('winRate');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
-  const laneMap = useMemo<Record<string, string[]>>(() => ({ All: [], Clash: ['Clash Lane', 'Abyssal Lane'], Mid: ['Mid Lane'], Farm: ['Farm Lane'], Roaming: ['Roam'], Jungling: ['Jungle'] }), []);
+  const laneMap = useMemo<Record<string, string[]>>(() => ({ All: [], Clash: ['Clash Lane', 'Abyssal Lane'], Mid: ['Mid Lane'], Farm: ['Farm Lane'], Roaming: ['Roamer'], Jungling: ['Jungler'] }), []);
 
   const pct = (v: any) => (typeof v === 'number' ? `${v.toFixed(2)}%` : '-');
 

@@ -1236,7 +1236,15 @@ const AdminHeroForm = ({ editingHero, onFormSubmit }) => {
                   type="date"
                   size="small"
                   InputLabelProps={{ shrink: true }}
-                  value={skin.createdAt ? new Date(skin.createdAt).toISOString().split('T')[0] : ''}
+                  // Ensure we parse the date correctly regardless of format
+                  value={(() => {
+                    if (!skin.createdAt) return '';
+                    try {
+                      return new Date(skin.createdAt).toISOString().split('T')[0];
+                    } catch (e) {
+                      return '';
+                    }
+                  })()}
                   onChange={e => setSkins(skins => skins.map((s, i) => i === idx ? { ...s, createdAt: e.target.value ? new Date(e.target.value) : undefined } : s))}
                 />
                 <Button
