@@ -7,11 +7,6 @@ export default function I18nProvider({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     setIsClient(true);
-    // Optional: Load saved language from localStorage if you have logic for it here
-    const savedLang = localStorage.getItem('i18nextLng');
-    if (savedLang && savedLang !== i18n.language) {
-      i18n.changeLanguage(savedLang);
-    }
   }, []);
 
   // To prevent hydration mismatch, we can simply render children.
