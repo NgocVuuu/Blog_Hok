@@ -243,28 +243,28 @@
   },
   {
     "_id": "689aa889e2dde85faa6ddd4c",
-    "name": "Daybreaker",
+    "name": "Daybreaker's Virtue",
     "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1754966149/BlogHok/svg/xthtgaw4ewvoewkldt52.svg",
     "description": "passive: Sunder - <span style=\"color: #ff7a00\">Physical Pierce +15%</span> (doubled for ranged heroes)",
     "category": "Physical",
     "tier": "Basic",
     "price": 2760,
     "attributes": {
-      "attack": 50,
+      "attack": 0,
       "defense": 0,
       "magic": 0,
       "health": 0,
       "mana": 0,
       "speed": 0,
-      "criticalRate": 10,
+      "criticalRate": 0,
       "criticalDamage": 0,
       "penetration": 0,
       "magicPenetration": 0,
       "lifeSteal": 0,
       "magicLifeSteal": 0,
       "cooldownReduction": 0,
-      "attackSpeed": 30,
-      "movementSpeed": 30,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
       "armor": 0,
       "magicResist": 0
     },
@@ -283,21 +283,21 @@
         "label": "physicalAttack",
         "value": "+50%",
         "description": "Physical Attack",
-        "_id": "689ef11cc9aa8394a95081a3"
+        "_id": "698056f43eb2775dd9958757"
       },
       {
         "type": "attackSpeed",
         "label": "attackSpeed",
         "value": "+30%",
         "description": "Attack Speed",
-        "_id": "689ef11cc9aa8394a95081a4"
+        "_id": "698056f43eb2775dd9958758"
       },
       {
         "type": "criticalRate",
         "label": "criticalRate",
         "value": "+10",
         "description": "Critical Rate",
-        "_id": "689ef11cc9aa8394a95081a5"
+        "_id": "698056f43eb2775dd9958759"
       }
     ],
     "buildPath": [],
@@ -305,7 +305,7 @@
     "recommendedFor": [],
     "tags": [],
     "createdAt": "2025-08-12T02:35:53.119Z",
-    "__v": 2
+    "__v": 3
   },
   {
     "_id": "689aa976e2dde85faa6ddd53",
@@ -988,7 +988,7 @@
   },
   {
     "_id": "689b14f533f08d686d17a853",
-    "name": "Crimson Shadow-Redemption",
+    "name": "Crimson Shadow - Redemption",
     "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755222929/BlogHok/dsr830mupzvyuz4xfw7b.png",
     "description": "passive: Agility - Grant Attack Speed by 20%, Cooldown Reduction by 15%, and restores 15 Mana every 5s\nactive: Recure - Grant a (240-480 +10% Health) Shield to team within range for 4s",
     "category": "Roaming",
@@ -998,7 +998,7 @@
       "attack": 0,
       "defense": 0,
       "magic": 0,
-      "health": 1000,
+      "health": 0,
       "mana": 0,
       "speed": 0,
       "criticalRate": 0,
@@ -1009,7 +1009,7 @@
       "magicLifeSteal": 0,
       "cooldownReduction": 0,
       "attackSpeed": 0,
-      "movementSpeed": 10,
+      "movementSpeed": 0,
       "armor": 0,
       "magicResist": 0
     },
@@ -1028,14 +1028,14 @@
         "label": "maxHealth",
         "value": "+1000",
         "description": "Max Health",
-        "_id": "689ea38ac6451acfaac30874"
+        "_id": "698056023eb2775dd99584d9"
       },
       {
         "type": "movementSpeed",
         "label": "movementSpeed",
         "value": "+10%",
         "description": "Movement Speed",
-        "_id": "689ea38ac6451acfaac30875"
+        "_id": "698056023eb2775dd99584da"
       }
     ],
     "buildPath": [],
@@ -1043,7 +1043,7 @@
     "recommendedFor": [],
     "tags": [],
     "createdAt": "2025-08-12T10:18:29.613Z",
-    "__v": 3
+    "__v": 4
   },
   {
     "_id": "689bec25d3d6b3176c4dc984",
@@ -1540,14 +1540,14 @@
   },
   {
     "_id": "689bf9f9faf99339a93315ed",
-    "name": "Tome of Wisdom",
+    "name": "Sage's Tome",
     "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755052534/BlogHok/svg/yzsoel9z7a6hs1eh6gvo.svg",
     "description": "passive: Enlightenment - For every 100 Magic Power, damage increases by 0.8%.\nMaximum 12%.",
     "category": "Magic",
     "tier": "Basic",
     "price": 2810,
     "attributes": {
-      "attack": 400,
+      "attack": 0,
       "defense": 0,
       "magic": 0,
       "health": 0,
@@ -1559,7 +1559,7 @@
       "magicPenetration": 0,
       "lifeSteal": 0,
       "magicLifeSteal": 0,
-      "cooldownReduction": 10,
+      "cooldownReduction": 0,
       "attackSpeed": 0,
       "movementSpeed": 0,
       "armor": 0,
@@ -1580,14 +1580,14 @@
         "label": "magicAttack",
         "value": "+400",
         "description": "Magical Attack",
-        "_id": "689bf9f9faf99339a93315ee"
+        "_id": "6980592e3eb2775dd9958cdb"
       },
       {
         "type": "cooldownReduction",
         "label": "cooldownReduction",
         "value": "+10%",
         "description": "Cooldown Reduction",
-        "_id": "689bf9f9faf99339a93315ef"
+        "_id": "6980592e3eb2775dd9958cdc"
       }
     ],
     "buildPath": [],
@@ -1595,7 +1595,7 @@
     "recommendedFor": [],
     "tags": [],
     "createdAt": "2025-08-13T02:35:37.748Z",
-    "__v": 0
+    "__v": 1
   },
   {
     "_id": "689bfa80334a0de59fc90b2c",
@@ -2033,7 +2033,7 @@
   },
   {
     "_id": "689e9a74c6451acfaac305cd",
-    "name": "Guardian-Redemption",
+    "name": "Guardian - Redemption",
     "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755224688/BlogHok/lotutfpzaa3mysn8mb5p.png",
     "description": "passive: Guardian Aura - Grants 65-130 Physical and Magical defense, and restore 0.6% Health/5s to allies allies within the range of 800\nactive: Rescue - Grant a (240-480 +10% Health) Shield to team within range for 4s",
     "category": "Roaming",
@@ -2043,7 +2043,7 @@
       "attack": 0,
       "defense": 0,
       "magic": 0,
-      "health": 1000,
+      "health": 0,
       "mana": 0,
       "speed": 0,
       "criticalRate": 0,
@@ -2054,7 +2054,7 @@
       "magicLifeSteal": 0,
       "cooldownReduction": 0,
       "attackSpeed": 0,
-      "movementSpeed": 10,
+      "movementSpeed": 0,
       "armor": 0,
       "magicResist": 0
     },
@@ -2073,14 +2073,14 @@
         "label": "maxHealth",
         "value": "+1000",
         "description": "Max-Health",
-        "_id": "689ea43bc6451acfaac30a81"
+        "_id": "698056743eb2775dd99585ac"
       },
       {
         "type": "movementSpeed",
         "label": "movementSpeed",
         "value": "+10%",
         "description": "Movement Speed",
-        "_id": "689ea43bc6451acfaac30a82"
+        "_id": "698056743eb2775dd99585ad"
       }
     ],
     "buildPath": [],
@@ -2088,7 +2088,7 @@
     "recommendedFor": [],
     "tags": [],
     "createdAt": "2025-08-15T02:24:52.918Z",
-    "__v": 1
+    "__v": 2
   },
   {
     "_id": "689e9b8dc6451acfaac30669",
@@ -3050,17 +3050,17 @@
   },
   {
     "_id": "68a1f933de1a05e6773650db",
-    "name": "Phantom",
+    "name": "Ravage - Phantom",
     "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755445549/BlogHok/svg/kul5po1xtwcsqdclzzje.svg",
     "description": "passive: Apoplexy - Basic Attack deals an extra (<span style=\"color: #43a047\">2% Health</span>) <span style=\"color: #ff7a00\">physical damage</span>. When Health drops below 50%, the damage increases by 75%",
     "category": "Defense",
     "tier": "Basic",
     "price": 3350,
     "attributes": {
-      "attack": 40,
+      "attack": 0,
       "defense": 0,
       "magic": 0,
-      "health": 800,
+      "health": 0,
       "mana": 0,
       "speed": 0,
       "criticalRate": 0,
@@ -3090,14 +3090,14 @@
         "label": "physicalAttack",
         "value": "+40",
         "description": "Physical Attack",
-        "_id": "68a1f933de1a05e6773650dc"
+        "_id": "698059913eb2775dd9958f4d"
       },
       {
         "type": "maxHealth",
         "label": "maxHealth",
         "value": "+800",
         "description": "Max Health",
-        "_id": "68a1f933de1a05e6773650dd"
+        "_id": "698059913eb2775dd9958f4e"
       }
     ],
     "buildPath": [],
@@ -3107,7 +3107,7 @@
     "passives": [],
     "actives": [],
     "createdAt": "2025-08-17T15:45:55.227Z",
-    "__v": 0
+    "__v": 1
   },
   {
     "_id": "68a1f9adde1a05e6773650e1",
@@ -3556,14 +3556,14 @@
   },
   {
     "_id": "68a276ecc8d168c7db1b841f",
-    "name": "Siege Breaker",
+    "name": "Overlord's Might",
     "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755477734/BlogHok/svg/qqy48ef48zzir57vsfnd.svg",
     "description": "passive: Siege Breaker - Deals 30% extra damage to enemies below 50% Health",
     "category": "Physical",
     "tier": "Basic",
     "price": 2680,
     "attributes": {
-      "attack": 170,
+      "attack": 0,
       "defense": 0,
       "magic": 0,
       "health": 0,
@@ -3596,7 +3596,14 @@
         "label": "physicalAttack",
         "value": "+170",
         "description": "Physical Attack",
-        "_id": "68a276ecc8d168c7db1b8420"
+        "_id": "698057563eb2775dd995881f"
+      },
+      {
+        "type": "cooldownReduction",
+        "label": "cooldownReduction",
+        "value": "+5%",
+        "description": "Cooldown Reduction",
+        "_id": "698057563eb2775dd9958820"
       }
     ],
     "buildPath": [],
@@ -3604,7 +3611,7 @@
     "recommendedFor": [],
     "tags": [],
     "createdAt": "2025-08-18T00:42:20.094Z",
-    "__v": 0
+    "__v": 1
   },
   {
     "_id": "68a2775fc8d168c7db1b8424",
@@ -4122,17 +4129,17 @@
   },
   {
     "_id": "68a28d34c8d168c7db1b89ad",
-    "name": "Sky Dome",
+    "name": "Immovable - Sky Dome",
     "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755483438/BlogHok/svg/hlfmw5gqzppqpkujm3jf.svg",
     "description": "passive: Maim - Skill slows the first enemy hit by 15%-30% for 3s and reduces damage taken from that enemy by 20% for 3s.",
     "category": "Physical",
     "tier": "Basic",
     "price": 3369,
     "attributes": {
-      "attack": 100,
+      "attack": 0,
       "defense": 0,
       "magic": 0,
-      "health": 500,
+      "health": 0,
       "mana": 0,
       "speed": 0,
       "criticalRate": 0,
@@ -4141,7 +4148,7 @@
       "magicPenetration": 0,
       "lifeSteal": 0,
       "magicLifeSteal": 0,
-      "cooldownReduction": 10,
+      "cooldownReduction": 0,
       "attackSpeed": 0,
       "movementSpeed": 0,
       "armor": 0,
@@ -4162,21 +4169,21 @@
         "label": "physicalAttack",
         "value": "+100",
         "description": "Physical Attack",
-        "_id": "68a28d34c8d168c7db1b89ae"
+        "_id": "698059013eb2775dd9958c0a"
       },
       {
         "type": "cooldownReduction",
         "label": "cooldownReduction",
         "value": "+10%",
         "description": "Cooldown Reduction",
-        "_id": "68a28d34c8d168c7db1b89af"
+        "_id": "698059013eb2775dd9958c0b"
       },
       {
         "type": "maxHealth",
         "label": "maxHealth",
         "value": "+500",
         "description": "Max Health",
-        "_id": "68a28d34c8d168c7db1b89b0"
+        "_id": "698059013eb2775dd9958c0c"
       }
     ],
     "buildPath": [],
@@ -4184,7 +4191,7 @@
     "recommendedFor": [],
     "tags": [],
     "createdAt": "2025-08-18T02:17:24.298Z",
-    "__v": 0
+    "__v": 1
   },
   {
     "_id": "68a2edbddc11203a72d7628a",
@@ -4393,18 +4400,18 @@
   },
   {
     "_id": "68a2efd0dc11203a72d763e6",
-    "name": "Ardent Dominator",
+    "name": "Ardent Dominion",
     "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755508682/BlogHok/svg/rpyvj5pi2xa8n8b0rf17.svg",
     "description": "passive: Mana shield - When HP is lower than 30%, the control will be immediately released, and at the same time, the shield will absorb (500 + 150% Magic Power ) damage and increase Movement Speed by 30%. Maximum 4s",
     "category": "Magic",
     "tier": "Basic",
     "price": 1950,
     "attributes": {
-      "attack": 200,
+      "attack": 0,
       "defense": 0,
       "magic": 0,
       "health": 0,
-      "mana": 15,
+      "mana": 0,
       "speed": 0,
       "criticalRate": 0,
       "criticalDamage": 0,
@@ -4433,21 +4440,21 @@
         "label": "magicAttack",
         "value": "+200",
         "description": "Magical Attack",
-        "_id": "68a2efd0dc11203a72d763e7"
+        "_id": "6980594c3eb2775dd9958dac"
       },
       {
         "type": "manaRegen",
         "label": "manaRegen",
         "value": "+600",
         "description": "Max Mana",
-        "_id": "68a2efd0dc11203a72d763e8"
+        "_id": "6980594c3eb2775dd9958dad"
       },
       {
         "type": "manaRegen",
         "label": "manaRegen",
         "value": "+15 ",
         "description": "Mana/5s",
-        "_id": "68a2efd0dc11203a72d763e9"
+        "_id": "6980594c3eb2775dd9958dae"
       }
     ],
     "buildPath": [],
@@ -4455,7 +4462,7 @@
     "recommendedFor": [],
     "tags": [],
     "createdAt": "2025-08-18T09:18:08.159Z",
-    "__v": 0
+    "__v": 1
   },
   {
     "_id": "68a2f051dc11203a72d763ed",
@@ -4518,14 +4525,14 @@
   },
   {
     "_id": "68a2f0d4dc11203a72d763f3",
-    "name": "Moon Goddess",
+    "name": "Enigma - Moon Goddess",
     "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1755508942/BlogHok/svg/wvxbbjnw4ou5074kh1tw.svg",
     "description": "passive: Moonguard - Grants immunity to effects but makes your hero unable to move, attack or use skills for 1.5s.\n\nAfter the effect ends, you will gain 60% Movement Speed that gradually decreases over 2s, and at the same time restore (1000 + <span style=\"color: #7b2ff2\">100% Magical damage</span> ) <span style=\"color: #43a047\">Health.</span>",
     "category": "Magic",
     "tier": "Basic",
-    "price": 3240,
+    "price": 3340,
     "attributes": {
-      "attack": 160,
+      "attack": 0,
       "defense": 0,
       "magic": 0,
       "health": 0,
@@ -4537,7 +4544,7 @@
       "magicPenetration": 0,
       "lifeSteal": 0,
       "magicLifeSteal": 0,
-      "cooldownReduction": 10,
+      "cooldownReduction": 0,
       "attackSpeed": 0,
       "movementSpeed": 0,
       "armor": 0,
@@ -4558,14 +4565,14 @@
         "label": "magicAttack",
         "value": "+160",
         "description": "Magical Attack",
-        "_id": "68a2f0d4dc11203a72d763f4"
+        "_id": "698059743eb2775dd9958e7d"
       },
       {
         "type": "cooldownReduction",
         "label": "cooldownReduction",
         "value": "+10%",
         "description": "Cooldown Reduction",
-        "_id": "68a2f0d4dc11203a72d763f5"
+        "_id": "698059743eb2775dd9958e7e"
       }
     ],
     "buildPath": [],
@@ -4573,7 +4580,7 @@
     "recommendedFor": [],
     "tags": [],
     "createdAt": "2025-08-18T09:22:28.059Z",
-    "__v": 0
+    "__v": 1
   },
   {
     "_id": "695c5dee7675d7e596628593",
@@ -4930,72 +4937,6 @@
     }
   },
   {
-    "_id": "695c626cb3a211b0b32853eb",
-    "name": "Giant's Grip",
-    "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1769438464/BlogHok/cmtp7ryfn54ktpknv2do.png",
-    "description": "HP +1,200, MSPD +5%, CDR +5%\nMonster kills boost HP",
-    "category": "Jungle",
-    "tier": "Epic",
-    "price": 2160,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
-    },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [
-      {
-        "type": "physicalAttack",
-        "label": "physicalAttack",
-        "value": "+90",
-        "description": "Physical Attack",
-        "_id": "69777d0628ceca2cb0b3cac9"
-      },
-      {
-        "type": "cooldownReduction",
-        "label": "cooldownReduction",
-        "value": "+5%",
-        "description": "Cooldown Reduction",
-        "_id": "69777d0628ceca2cb0b3caca"
-      },
-      {
-        "type": "movementSpeed",
-        "label": "movementSpeed",
-        "value": "+8%",
-        "description": "Movement Speed",
-        "_id": "69777d0628ceca2cb0b3cacb"
-      }
-    ],
-    "createdAt": "2026-01-06T01:16:28.755Z",
-    "__v": 1,
-    "active": {
-      "name": "",
-      "description": "",
-      "cooldown": 0
-    },
-    "passive": {
-      "name": "",
-      "description": ""
-    }
-  },
-  {
     "_id": "695c6293b3a211b0b328553a",
     "name": "Meteor",
     "image": "https://res.cloudinary.com/dt0t1ayoq/image/upload/v1769438576/BlogHok/wpxycvz9a0iijrynxbff.png",
@@ -5028,15 +4969,15 @@
     "tags": [],
     "quickStats": [
       {
-        "type": "",
-        "label": "",
+        "type": "physicalAttack",
+        "label": "physicalAttack",
         "value": " +55 ",
-        "description": "Physical Attack Passive ",
-        "_id": "69777d7628ceca2cb0b3cad6"
+        "description": "Physical Attack",
+        "_id": "698058c03eb2775dd9958b3a"
       }
     ],
     "createdAt": "2026-01-06T01:17:07.105Z",
-    "__v": 1,
+    "__v": 2,
     "active": {
       "name": "",
       "description": "",
@@ -5114,115 +5055,10 @@
     }
   },
   {
-    "_id": "695c6294b3a211b0b328556c",
-    "name": "Daybreaker's Virtue",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1155.png",
-    "description": "PATK +75, ASPD +30%, Crit Rate +15%\nGreat for marksmen",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2570,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
-    },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T01:17:08.206Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c6294b3a211b0b3285573",
-    "name": "Overlord's Might",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1138.png",
-    "description": "PATK +150, CDR +5%\nHigh-damage attack",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2540,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
-    },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T01:17:08.340Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c62adb3a211b0b32856a2",
-    "name": "Overlord's Platemail",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1332.png",
-    "description": "HP +1,800, PDEF +160, MDEF +80\nExtra HP",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2450,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
-    },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T01:17:33.876Z",
-    "__v": 0
-  },
-  {
     "_id": "695c62aeb3a211b0b32856ae",
     "name": "Knowledge Gem",
     "image": "https://camp.honorofkings.com/social/game/BattleEquip/1701.png",
-    "description": "Extra Gold & EXP (for roamers)",
+    "description": "passive: Guerrilla - Every 3s, grants 5 EXP and grants teammate lowest gold 5 Gold",
     "category": "Physical",
     "tier": "Basic",
     "price": 300,
@@ -5249,44 +5085,26 @@
     "buildsInto": [],
     "recommendedFor": [],
     "tags": [],
-    "quickStats": [],
+    "quickStats": [
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+5%",
+        "description": "Movement Speed",
+        "_id": "698057de3eb2775dd99588e2"
+      }
+    ],
     "createdAt": "2026-01-06T01:17:34.274Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c62aeb3a211b0b32856b6",
-    "name": "Crimson Shadow - Redemption",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1746.png",
-    "description": "HP +1,200, MSPD +7.5%\nDPS aura",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2080,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
+    "__v": 1,
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
     },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T01:17:34.453Z",
-    "__v": 0
+    "passive": {
+      "name": "Guerrilla",
+      "description": "Every 3s, grants 5 EXP and grants teammate lowest gold 5 Gold"
+    }
   },
   {
     "_id": "695c62b8b3a211b0b3285708",
@@ -5354,44 +5172,47 @@
     "buildsInto": [],
     "recommendedFor": [],
     "tags": [],
-    "quickStats": [],
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+40",
+        "description": "Physical Attack",
+        "_id": "698058653eb2775dd99589a5"
+      },
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+20% ",
+        "description": "Attack Speed",
+        "_id": "698058653eb2775dd99589a6"
+      },
+      {
+        "type": "criticalRate",
+        "label": "criticalRate",
+        "value": "+15%",
+        "description": "Critical Rate",
+        "_id": "698058653eb2775dd99589a7"
+      },
+      {
+        "type": "movementSpeed",
+        "label": "movementSpeed",
+        "value": "+7.5%",
+        "description": "Movement Speed",
+        "_id": "698058653eb2775dd99589a8"
+      }
+    ],
     "createdAt": "2026-01-06T01:17:45.406Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c62c6b3a211b0b32857cb",
-    "name": "Frostscar's Embrace",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/13310.png",
-    "description": "PATK +60, PDEF +300, CDR +10%\nEnhanced BAs slow",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2060,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
+    "__v": 1,
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
     },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T01:17:58.697Z",
-    "__v": 0
+    "passive": {
+      "name": "",
+      "description": ""
+    }
   },
   {
     "_id": "695c62c7b3a211b0b32857db",
@@ -5424,9 +5245,33 @@
     "buildsInto": [],
     "recommendedFor": [],
     "tags": [],
-    "quickStats": [],
+    "quickStats": [
+      {
+        "type": "physicalAttack",
+        "label": "physicalAttack",
+        "value": "+35",
+        "description": "Physical Attack",
+        "_id": "6980589b3eb2775dd9958a6f"
+      },
+      {
+        "type": "attackSpeed",
+        "label": "attackSpeed",
+        "value": "+15%",
+        "description": "Attack Speed",
+        "_id": "6980589b3eb2775dd9958a70"
+      }
+    ],
     "createdAt": "2026-01-06T01:17:59.227Z",
-    "__v": 0
+    "__v": 1,
+    "active": {
+      "name": "",
+      "description": "",
+      "cooldown": 0
+    },
+    "passive": {
+      "name": "",
+      "description": ""
+    }
   },
   {
     "_id": "695c62c7b3a211b0b32857e5",
@@ -5461,41 +5306,6 @@
     "tags": [],
     "quickStats": [],
     "createdAt": "2026-01-06T01:17:59.407Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c62dfb3a211b0b3285849",
-    "name": "Augur's Word",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1237.png",
-    "description": "MATK +140, MP +450, HP +900\nOffense & defense",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2150,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
-    },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T01:18:23.502Z",
     "__v": 0
   },
   {
@@ -5671,41 +5481,6 @@
     "tags": [],
     "quickStats": [],
     "createdAt": "2026-01-06T01:18:36.339Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c62ecb3a211b0b32858e6",
-    "name": "Immovable - Sky Dome",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1157.png",
-    "description": "PATK +80, PDEF +150, CDR +10%\nTemp. damage reduction",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 3280,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
-    },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T01:18:36.604Z",
     "__v": 0
   },
   {
@@ -5919,41 +5694,6 @@
     "__v": 0
   },
   {
-    "_id": "695c6416b3a211b0b32860d0",
-    "name": "Guardian - Redemption",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1751.png",
-    "description": "HP +1,200, MSPD +7.5%\nSurvivability aura",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2080,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
-    },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T01:23:34.655Z",
-    "__v": 0
-  },
-  {
     "_id": "695c6420b3a211b0b3286130",
     "name": "Bloodsoul",
     "image": "https://camp.honorofkings.com/social/game/BattleEquip/1158.png",
@@ -6021,41 +5761,6 @@
     "tags": [],
     "quickStats": [],
     "createdAt": "2026-01-06T01:23:58.512Z",
-    "__v": 0
-  },
-  {
-    "_id": "695c642eb3a211b0b328621d",
-    "name": "Dragon's Rage",
-    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1536.png",
-    "description": "HP +1,350, PDEF +180, MDEF +90\nBoosts BA damage",
-    "category": "Physical",
-    "tier": "Epic",
-    "price": 2040,
-    "attributes": {
-      "attack": 0,
-      "defense": 0,
-      "magic": 0,
-      "health": 0,
-      "mana": 0,
-      "speed": 0,
-      "criticalRate": 0,
-      "criticalDamage": 0,
-      "penetration": 0,
-      "magicPenetration": 0,
-      "lifeSteal": 0,
-      "magicLifeSteal": 0,
-      "cooldownReduction": 0,
-      "attackSpeed": 0,
-      "movementSpeed": 0,
-      "armor": 0,
-      "magicResist": 0
-    },
-    "buildPath": [],
-    "buildsInto": [],
-    "recommendedFor": [],
-    "tags": [],
-    "quickStats": [],
-    "createdAt": "2026-01-06T01:23:58.645Z",
     "__v": 0
   },
   {
@@ -6476,6 +6181,41 @@
     "tags": [],
     "quickStats": [],
     "createdAt": "2026-01-22T23:33:09.308Z",
+    "__v": 0
+  },
+  {
+    "_id": "697bedf664ad19692adb1929",
+    "name": "Tempest",
+    "image": "https://camp.honorofkings.com/social/game/BattleEquip/1159.png",
+    "description": "PATK +50, ASPD +30%, Max HP +600\nBoosts BA damage",
+    "category": "Physical",
+    "tier": "Epic",
+    "price": 2080,
+    "attributes": {
+      "attack": 0,
+      "defense": 0,
+      "magic": 0,
+      "health": 0,
+      "mana": 0,
+      "speed": 0,
+      "criticalRate": 0,
+      "criticalDamage": 0,
+      "penetration": 0,
+      "magicPenetration": 0,
+      "lifeSteal": 0,
+      "magicLifeSteal": 0,
+      "cooldownReduction": 0,
+      "attackSpeed": 0,
+      "movementSpeed": 0,
+      "armor": 0,
+      "magicResist": 0
+    },
+    "buildPath": [],
+    "buildsInto": [],
+    "recommendedFor": [],
+    "tags": [],
+    "quickStats": [],
+    "createdAt": "2026-01-29T23:32:06.862Z",
     "__v": 0
   }
 ]
