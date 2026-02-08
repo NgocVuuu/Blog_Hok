@@ -1,5 +1,6 @@
 const cron = require('node-cron');
 const { fetchAndSync } = require('./hokAutoFetcher');
+const { OfficialNewsScraper } = require('./OfficialNewsScraper');
 
 /**
  * Cron Job Scheduler for automated HoK meta sync
@@ -54,6 +55,20 @@ class HoKMetaSyncScheduler {
         this.jobs.push({ name: 'weekly-sync', job: mainJob });
         */
         this.logger.info('[HoK Scheduler] Internal Weekly Sync disabled (Moved to GitHub Actions)');
+
+        // MIGRATION: Moved to GitHub Actions (.github/workflows/daily-news.yml)
+        /*
+        // Official News Scraper - Daily at 7:00 AM
+        const newsJob = cron.schedule('0 7 * * *', async () => {
+            this.logger.info('[HoK Scheduler] ⏰ Daily News Scrape triggered!');
+            await this.runNewsScrape();
+        }, {
+            scheduled: true,
+            timezone: 'Asia/Ho_Chi_Minh'
+        });
+        this.jobs.push({ name: 'news-scraper', job: newsJob });
+        */
+        this.logger.info('[HoK Scheduler] Internal Daily News Scraper disabled (Moved to GitHub Actions)');
 
 
         // Optional: Add a daily check at 6 AM for testing (comment out in production)
@@ -224,6 +239,22 @@ class HoKMetaSyncScheduler {
     /**
      * Get scheduler status
      */
+    /**
+     * Run the official news scraper manually or via cron
+     */
+    async runNewsScrape() {
+        this.logger.info('[HoK Scheduler] 📰 Starting Official News Scraper...');
+        try {
+            const scraper = new OfficialNewsScraper(this.logger);
+            const count = await scraper.scrapeOfficialNews();
+            this.logger.info(`[HoK Scheduler] 📰 Scrape complete. Created ${count} drafts.`);
+            return { success: true, created: count };
+        } catch (error) {
+            this.logger.error('[HoK Scheduler] 📰 Scrape failed:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
     getStatus() {
         return {
             isRunning: this.isRunning,

@@ -25,6 +25,7 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
   const [imageUrl, setImageUrl] = useState('');
   const [imagePreview, setImagePreview] = useState('');
   const [status, setStatus] = useState('draft'); // Default to draft
+  const [createdAt, setCreatedAt] = useState(''); // Allow editing creation date
   const [loading, setLoading] = useState(false);
   
   const editorRef = useRef(null);
@@ -77,6 +78,15 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
       setStatus(editingPost.status || 'published');
       setImageUrl(editingPost.image || '');
       setImagePreview(editingPost.image || '');
+      
+      // Initialize CreatedAt in Local Time
+      if (editingPost.createdAt) {
+        const date = new Date(editingPost.createdAt);
+        const localIsoString = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+        setCreatedAt(localIsoString);
+      } else {
+        setCreatedAt('');
+      }
 
       const loadContent = (markdown) => {
         const html = showdownConverter.makeHtml(markdown || '');
@@ -121,6 +131,7 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
       setCategory('guides');
       setAuthor('BlogHok');
       setStatus('draft');
+      setCreatedAt('');
       setImageFile(null);
       setImageUrl('');
       setImagePreview('');
@@ -225,6 +236,9 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
           author,
           status,
           image: img,
+          updatedAt: new Date().toISOString(),
+          // Only send createdAt if it has a value
+          ...(createdAt && { createdAt: new Date(createdAt).toISOString() })
         }),
       });
 
@@ -332,6 +346,19 @@ const AdminPostForm = ({ editingPost, onFormSubmit, onPostUpdated }) => {
           <MenuItem value="published">{t('news.published', 'Công khai (Published)')}</MenuItem>
         </Select>
       </FormControl>
+
+      <TextField
+        label={t('news.createdAt', 'Ngày tạo (Tùy chỉnh)')}
+        type="datetime-local"
+        value={createdAt}
+        onChange={(e) => setCreatedAt(e.target.value)}
+        fullWidth
+        margin="normal"
+        InputLabelProps={{
+          shrink: true,
+        }}
+        helperText={t('news.createdAtHelper', 'Để trống nếu muốn mặc định')}
+      />
 
       <Typography variant="subtitle1" fontWeight={600} mt={2} mb={1}>{t('news.content', 'Nội dung')}</Typography>
       

@@ -8,6 +8,7 @@ import PostList from './PostList';
 import HeroList from './HeroList';
 import ArcanaList from './ArcanaList';
 import EquipmentList from './EquipmentList';
+import CommentList from './CommentList';
 import DraftChangesPage from '../pages/DraftChangesPage';
 import DataHealthPage from '../pages/DataHealthPage';
 
@@ -120,6 +121,7 @@ const AdminDashboard = () => {
         <Tab label="Tướng" />
         <Tab label="Arcana" />
         <Tab label="Trang bị" />
+        <Tab label="Bình luận" />
         <Tab label={
           <Badge badgeContent={draftCount} color="error">
             Bản nháp
@@ -177,9 +179,12 @@ const AdminDashboard = () => {
         />
       </TabPanel>
       <TabPanel value={tab} index={4}>
-        <DraftChangesPage />
+        <CommentList />
       </TabPanel>
       <TabPanel value={tab} index={5}>
+        <DraftChangesPage />
+      </TabPanel>
+      <TabPanel value={tab} index={6}>
         <DataHealthPage />
       </TabPanel>
     </Container>

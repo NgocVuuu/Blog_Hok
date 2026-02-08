@@ -1,0 +1,347 @@
+<html lang="en"><head><!-- OneTrust Cookies Consent Notice start for honorofkings.com -->
+<script type="text/javascript" src="https://cdn-apac.onetrust.com/consent/6e4ef2af-43cd-4fff-b4a0-3ec33aa9c89f/OtAutoBlock.js"></script>
+<script src="https://cdn-apac.onetrust.com/scripttemplates/otSDKStub.js" data-document-language="true" type="text/javascript" charset="UTF-8" data-ot-ignore="sg-gpts.playerinfinite.com/comm/assets/lib/cmssdk.min.js" data-domain-script="6e4ef2af-43cd-4fff-b4a0-3ec33aa9c89f"></script>
+<script type="text/javascript">
+function OptanonWrapper() { }
+</script>
+<!-- OneTrust Cookies Consent Notice end for honorofkings.com --><script src="https://tam.cdn-go.cn/aegis-sdk/latest/aegis.min.js"></script>
+<script>
+const log_filter = (log) => {
+  try {
+    if (!log || !log.data || typeof log.data !== "string") {
+      return log;
+    }
+    var logdata = JSON.parse(log.data);
+    if (!logdata.msg || !logdata.msg.length) {
+      return log;
+    }
+    for (var index = 0; index < logdata.msg.length; index++) {
+      var logmsg = logdata.msg[index];
+      if (typeof logmsg !== "string") {
+        continue;
+      }
+      if (logmsg.indexOf("Script error") !== -1) {
+        return false;
+      }
+      if (logmsg.indexOf("Out of bounds") !== -1) {
+        return false;
+      }
+      if (logmsg.indexOf("out of bounds") !== -1) {
+        return false;
+      }
+    }
+  } catch (err) {
+    return false;
+  }
+  return log;
+};
+
+const aegis = new Aegis({
+  id: "vqnv9U4bLZZnR1y6p8",
+  reportApiSpeed: true,
+  reportAssetSpeed: true,
+  hostUrl: "https://rumt-sg.com",
+  onBeforeRequest: log_filter,
+  beforeReport: log_filter,
+});
+
+window.aegis = aegis;
+</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-233183087-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-233183087-1');
+
+    function clickEvent(click_event) {
+        gtag('event', 'x_click', {
+            'event_category': 'web-hok',
+            'event_label': click_event
+        })
+    }
+</script>
+
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LBYSZ1LE8L"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-LBYSZ1LE8L');
+</script>
+  <meta charset="utf-8">
+  <meta name="applicable-device" content="mobile">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,maximum-scale=1">
+  <meta name="format-detection" content="telephone=no">
+  <meta content="yes" name="mobile-web-app-capable">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta name="robots" content="all">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title data-lang="meta-title">Welcome to Honor of Kings: The World's Most-Played Mobile MOBA</title>
+  <meta data-content="meta-description" name="Description" content="Dive into the world of 'Honor of Kings,' and engage in 5v5 battles, selecting legendary heroes from mythological lore, each with distinct skills. Join players worldwide in this game of action, strategy and tactical expertise, where every victory creates a new legend.">
+  <meta data-content="meta-keywords" name="Keywords" content="Honor of Kings, Honor of Kings mobile, Moba, 5v5, 5v5 battle, HoK, Arena of Valor, AoV, Kings Glory, free download, hero, heroes, champion, skin, Mobile Legends, MLBB, League of Legends, Wild Rift, Mobile games, Mobile">
+  <meta data-content="meta-name" itemprop="name" content="www.honorofkings.com">
+  <meta data-content="meta-image" itemprop="image" content="https://www.honorofkings.com/img/share.jpg">
+
+  <!-- facebook分享图 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" data-content="meta-og-site_name" content="www.honorofkings.com">
+  <meta property="og:title" data-content="meta-og-title" content="Welcome to Honor of Kings: The World's Most-Played Mobile MOBA">
+  <meta property="og:description" data-content="meta-og-description" content="Dive into the world of 'Honor of Kings,' and engage in 5v5 battles, selecting legendary heroes from mythological lore, each with distinct skills. Join players worldwide in this game of action, strategy and tactical expertise, where every victory creates a new legend.">
+  <meta property="og:url" data-content="meta-og-url" content="https://www.honorofkings.com/global-en/">
+  <meta property="og:image" data-content="meta-og-image" content="https://www.honorofkings.com/img/share.jpg">
+  <meta property="og:image:width" content="800">
+  <meta property="og:image:height" content="451">
+  <!-- twitter分享图 -->
+  <meta property="twitter:site" data-content="meta-twitter-site" content="www.honorofkings.com">
+  <meta property="twitter:title" data-content="meta-twitter-title" content="Welcome to Honor of Kings: The World's Most-Played Mobile MOBA">
+  <meta property="twitter:description" data-content="meta-twitter-description" content="Dive into the world of 'Honor of Kings,' and engage in 5v5 battles, selecting legendary heroes from mythological lore, each with distinct skills. Join players worldwide in this game of action, strategy and tactical expertise, where every victory creates a new legend.">
+  <meta property="twitter:url" data-content="meta-twitter-url" content="https://www.honorofkings.com/global-en/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" data-content="meta-twitter-image" content="https://www.honorofkings.com/img/share.jpg">
+  <link rel="icon" href="/assets/favicon-CaeYdbfs.ico">
+  <link rel="dns-prefetch" href="https://sg-gpts.playerinfinite.com/">
+  <script type="module" crossorigin="" src="/assets/news-list.html-ibKVNTcl.js"></script>
+  <link rel="modulepreload" crossorigin="" href="/assets/const-DEJ9aXbK.js">
+  <link rel="modulepreload" crossorigin="" href="/assets/cms-DSDF3GN_.js">
+  <link rel="modulepreload" crossorigin="" href="/assets/utils-C3wSiNDH.js">
+  <link rel="modulepreload" crossorigin="" href="/assets/report-BSYbqBYN.js">
+  <link rel="modulepreload" crossorigin="" href="/assets/lang-switch--xzxYTfb.js">
+  <link rel="modulepreload" crossorigin="" href="/assets/header-iKmU0Vql.js">
+  <link rel="stylesheet" crossorigin="" href="/assets/header-CIklU_J1.css">
+  <link rel="stylesheet" crossorigin="" href="/assets/stym-DGO08x_2.css">
+  <link rel="stylesheet" crossorigin="" href="/assets/newsList-eyAvY59y.css">
+  <link rel="stylesheet" crossorigin="" href="/assets/cok-xU5Ml3wn.css">
+<script src="https://sg-gpts.playerinfinite.com/comm/assets/lib/cmssdk.min.js"></script>  <script type="module">import.meta.url;import("_").catch(()=>1);(async function*(){})().next();if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+</head>
+
+<body>
+  <div id="orientLayer" class="mod-orient-layer">
+    <div class="mod-orient-layer__content"> <i class="icon mod-orient-layer__icon-orient"></i> </div>
+  </div>
+  <div class="wrap">
+    <div class="news_head">
+      <div class="news_head_change">
+        <ul class="swiper-wrapper">
+          <li class="swiper-slide">
+            <img src="/assets/news_img-Cl8uqAXX.jpg" class="pcshow">
+            <img src="/assets/m_news_img-CIqft6CV.jpg" class="h5show">
+            <div class="news_list_mask">
+              <!-- <div class="news_top_main"> -->
+              <!-- <p class="news_top_time">2023/03/08<span class="news_time_d"></span><span data-lang="news-lang3">NOTICE</span></p> -->
+              <!-- <p class="news_top_tit"><strong data-lang="news_tptit"><span>HONOR OF KINGS PRE-</span><span>REGISTRATIONLIVE IN BRAZIL</span></strong></p> -->
+              <!-- <p class="news_top_des" data-lang="news_tpdes">TiMi teases world’s most-played mobile MOBA with announcement video</p> -->
+              <!-- <a href="news-detail-hoken.html" onclick="clickEvent('news_banner1')" class="news_read_more" title=""><span data-lang="news-lang8">READ MORE</span></a> -->
+              <!-- </div> -->
+            </div>
+          </li>
+        </ul>
+        <div class="m_kv_rpg"></div>
+      </div>
+    </div>
+    <div class="news_cont">
+      <div class="news_contin">
+        <!-- <strong class="news_list_tit radikal"><span data-lang="news-lang1">NEWS</span></strong> -->
+        <ul class="news_tab_list">
+          <!-- <li class="cur" onclick="clickEvent('news_cg_all')" data-lang="news-lang2">ALL</li>
+          <li onclick="clickEvent('news_cg_notice')" data-lang="news-lang3">NOTICE</li>
+          <li onclick="clickEvent('news_cg_events')" data-lang="news-lang4">EVENTS</li>
+          <li onclick="clickEvent('news_cg_news')" data-lang="news-lang5">NEWS</li>
+          <li onclick="clickEvent('news_cg_devtalk')"><a href="./devtalk.html" title="">DEV TALK</a></li> -->
+        </ul>
+        <div class="news_tab_selec">
+          <div class="sele">
+            <span>ALL</span>
+            <ul class="news_mtab_xl">
+              <!-- <li class="cur" onclick="clickEvent('news_mcg_news')" data-lang="news-lang2">ALL</li>
+              <li onclick="clickEvent('news_mcg_news2')" data-lang="news-lang3">NOTICE</li>
+              <li onclick="clickEvent('news_mcg_news3')" data-lang="news-lang4">EVENTS</li>
+              <li onclick="clickEvent('news_mcg_news4')" data-lang="news-lang5">NEWS</li>
+              <li onclick="clickEvent('news_mcg_news5')"><a href="./devtalk.html" title="">DEV TALK</a></li> -->
+            </ul>
+          </div>
+        </div>
+        <ul class="news_list">
+          <!-- <li> -->
+            <!-- <a href="./news-detail.html?secondary_label=576&amp;news_type=&amp;father_content_id=f66b6e38a7e1ba4a6ca89e9a4e6274626136&amp;content_id=f66b6e38a7e1ba4a6ca89e9a4e6274626136" target="__blank" class="hokpage" title="">
+              <div class="news_list_img"> -->
+                <!-- 视频类型添加isvideo -->
+                <!-- <div class="news_list_imgin isvideo">
+                  <img src="https://sg-hok.playerinfinite.com/cms/nrft/feeds/pic/_f961626f200e30241d41ee6ab01e589dd8fc7cf7-2000x1125-ori_s_80_50_ori_q_80.jpeg" alt="img">
+                </div>
+              </div>
+              <div class="news_rt_det">
+                <p class="news_rt_time"><i>2025/01/13</i>
+                <span class="news_time_d2"></span>ALL NEWS</p>
+                <p class="news_rt_tit">Anti-Cheat Measures</p>
+                <p class="news_rt_des">Hey everyone!
+      We're constantly exploring new methods to combat cheaters and ensure an enjoyable experience for all players. As part of this effort, we'll be penalizing cheating based on the nature and severity of the offense. Our team will be actively monitoring the game around the clock to detect and take action against cheaters on a daily basis. Additionally, we'll share updates on our progress periodically. If you encounter cheating behaviors in the game, please don't hesitate to report them.</p>
+              </div>
+            </a>
+          </li> -->
+          <!-- <li class="no_img">
+            <a href="news-detail.html" class="hokpage" title="">
+              <p class="news_rpara">HOK News TitleI 001 HOK News TitleI 001</p>
+              <p class="news_rtime">2022/6/28</p>
+            </a>
+          </li> -->
+        </ul>
+        <p class="is_empty" data-lang="nmp" style="display: none;">NO MORE</p>
+        <div class="news_btnbox">
+          <a href="javascript:;" onclick="clickEvent('news_more')" class="more_btn" title="">
+            <div class="more_ibg"></div><span data-lang="news-lang7">MORE</span>
+          </a>
+        </div>
+        <div class="mnews_fpage">
+          <!-- <a href="javascript:;" onclick="clickEvent('news_fpg1')" class="fpg cur" title="">1</a>
+              <a href="javascript:;" onclick="clickEvent('news_fpg2')" class="fpg" title="">2</a>
+              <a href="javascript:;" onclick="clickEvent('news_fpg3')" class="fpg" title="">3</a>
+              <a href="javascript:;" onclick="clickEvent('news_fpg4')" class="fpg" title="">4</a>
+              <a href="javascript:;" onclick="clickEvent('news_fpg5')" class="fpg" title="">5</a> -->
+  
+          <!-- 灰态添加disable -->
+          <a href="javascript:;" onclick="clickEvent('news_mprev')" class="mprev disable" title=""></a>
+          <a href="javascript:;" onclick="clickEvent('news_mnext')" class="mnext" title=""></a>
+        </div>
+        <a href="javascript:;" onclick="clickEvent('news_top')" class="bck_totop" title="" data-lang="bctop">BACK TO TOP</a>
+      </div>
+    </div>
+    <div class="hok_fot">
+      <div class="hok_store">
+        <div class="hok_store_btnbox">
+          <a href="javascript:;" onclick="clickEvent('foot_discord')" class="hok_store_btn1 disclink" title=""></a>
+          <a href="javascript:;" onclick="clickEvent('foot_facebook')" class="hok_store_btn2 fclink" title=""></a>
+          <a href="javascript:;" onclick="clickEvent('foot_twitter')" class="hok_store_btn3 twlink" title=""></a>
+          <a href="javascript:;" onclick="clickEvent('foot_youtube')" class="hok_store_btn4 ytlink" title=""></a>
+        </div>
+        <p class="hok_store_para"></p>
+        <div class="hok_stbox hok_stbox2">
+          <a href="javascript:;" target="_blank" onclick="clickEvent('foot_googleplay')" class="hok_store_pay apstorebtn" data-store="yes" title=""><img src="/assets/google_play--9bIlvfQ.png" alt=""></a>
+          <a href="javascript:;" onclick="clickEvent('foot_appstore')" class="hok_app_pay apstorebtn" data-store="ap" title=""><img src="data:image/png;base64,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" alt=""></a>
+          <a href="javascript:;" onclick="clickEvent('foot_apkdownload')" class="hok_apk_download" data-store="apk-download" title=""><img src="data:image/png;base64,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" alt=""></a>
+        </div>
+      </div>
+      <div class="fot_logo">
+        <a href="https://www.levelinfinite.com/" target="_blank" onclick="clickEvent('foot_level')" title=""><img src="/assets/fot_logo1-DicZFLmd.png"></a>
+        <a href="https://www.timistudios.com/" target="_blank" onclick="clickEvent('foot_timi')" title=""><img src="data:image/png;base64,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"></a>
+      </div>
+      <p class="copyright" data-lang="fot1">©2025 Proxima Beta Pte. Ltd. All rights reserved.</p>
+      <p class="copyright_link">
+        <a href="https://eulaforgames.com/rule/202312280001/ALL" target="_blank" onclick="clickEvent('foot_eula')" class="hokpage" title="" data-lang="fot2">END USER LICENSE AGREEMENT</a>
+        <a href="/policy/privacy.html" target="_blank" onclick="clickEvent('foot_privacy')" class="hokpage" data-lang="fot3" title="">PRIVACY POLICY</a>
+        <a href="/policy/cookies.html" target="_blank" onclick="clickEvent('foot_cookies')" class="hokpage" data-lang="fot4" title="">COOKIES POLICY</a>
+        <a href="javascript:;" id="ot-sdk-btn" class="ot-sdk-show-settings" onclick="clickEvent('foot_cookiessetting')" data-lang="fot7" title="">COOKIE PREFERENCES</a>
+        <a href="/notification.html" target="_blank" onclick="clickEvent('foot_legal')" class="hokpage" title="" data-lang="fot5">LEGAL NOTICES</a>
+        <a href="/policy/dma.html" target="_blank" onclick="clickEvent('foot_advertising_notice')">ADVERTISING NOTICE</a>
+        <a href="mailto:support@honorofkings.com" target="_blank" onclick="clickEvent('foot_contact')" data-lang="fot6" title="">CONTACT US</a>
+        <a href="https://eulaforgames.com/rule/202502110006/ALL" target="_blank">Digital Services Act</a>
+        <a href="https://www.honorofkings.com/lawts.html" target="_blank" lang-inline-block="onlyja" onclick="clickEvent('lawts')">特定商取引法に基づく表示</a>
+        <a href="https://www.honorofkings.com/lawzj.html" target="_blank" lang-inline-block="onlyja" onclick="clickEvent('lawzj')">資金決済法に基づく表示</a>
+      </p>
+    </div>
+  </div>
+  <div class="hok_nav">
+    <a href="index.html" onclick="clickEvent('nvlogo')" class="hd_nv_logo" title="logo"></a>
+    <ul class="hd_nv_list radikal clearfix">
+    </ul>
+    <div class="nv_rtbox">
+      <div class="nv_rt">
+        <a href="javascript:;" onclick="clickEvent('region_lan')" class="language_btn radikal" title=""></a>
+        <a href="javascript:;" onclick="clickEvent('region_download')" class="nv_rt_dn" title=""></a>
+      </div>
+      <a href="javascript:;" onclick="clickEvent('nav_mlanmore')" class="nv_m_more mbl" title=""></a>
+      <a href="javascript:;" onclick="clickEvent('region_mdownload')" class="nv_rt_mdn" title=""></a>
+      <a href="javascript:;" onclick="clickEvent('nav_mlan')" class="nv_m_lan mbl" title=""></a>
+      <a href="https://www.midasbuy.com/midasbuy/br/buy/hok?from=__mds_buy_hok.homepage_br" target="_blank" onclick="clickEvent('nav_compra_br')" class="compra_btn radikal" data-href="buybtnhref" title=""><span class="compra_icon"></span></a>
+      <div class="hok_lang_xl show">
+        <ul class="hok_lang_xllist ">
+          <li class="cur"><a href="javascript:;" onclick="clickEvent('region_en')" data-lug="EN" title="">English</a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_tr')" data-lug="TR" title="">Türkçe</a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_br')" data-lug="BR" title="">Português - Brasil</a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_ru')" data-lug="RU" title="">Русский язык</a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_mena')" data-lug="AR" title="">العربية</a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_tw')" data-lug="TW" title="">中文（繁體）</a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_zh')" data-lug="ZH" title="">中文（简体）</a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_id')" data-lug="ID" title="">Indonesia</a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_ms')" data-lug="MS" title="">Melayu</a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_es')" data-lug="ES" title="">Español</a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_my')" data-lug="MY" title="">မြန်မာဘာသာ </a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_fr')" data-lug="FR" title="">Français</a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_de')" data-lug="DE" title="">Deutsch </a></li>
+          <li><a href="javascript:;" onclick="clickEvent('region_ja')" data-lug="JP" title="">日本語 </a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="hov_m_morebox mbl">
+    <ul class="hd_nv_list radikal clearfix">
+      <li onclick="clickEvent('nav_camp2')"><a href="javascript:;" class="nv_camp_btn" data-href="nvcamp" target="_blank" title=""></a></li>
+    </ul>
+  </div>
+  
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery.qrcode.min.js"></script>
+  <script src="/js/swiper.min.js"></script>
+  <script src="./js/Glanguage.js"></script>
+  <script src="/js/language-2.0.js"></script>
+  <script src="/js/common.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/5.4.5./js/swiper.min.js"></script> -->
+
+  <script type="text/javascript">
+  // var storyChange = new Swiper('.news_head_change',{
+  //     effect:'fade',
+  //     speed:200,
+  //     loop:true,
+  //     autoplay: {
+  //         disableOnInteraction: false,
+  //     },
+  //     pagination: {
+  //         el: '.m_kv_rpg',
+  //         clickable :true,
+  //     },
+  // })
+
+  //top
+  $('.hd_nv_logo,.top_btn,.bck_totop').on('click',function(){
+      $('html,body').stop(true).animate({
+          scrollTop:0
+      },500)
+  })
+
+  $(window).on('scroll',function(){
+    showTop()
+  })
+  function showTop(){
+    var st = $('html,body').scrollTop();
+    if(st>=500){
+      $('.top_btn').show();
+    }else{
+      $('.top_btn').hide();
+    }
+  }
+  showTop()
+
+  $('.sele').on('click',function(ev){
+    $(this).find('.news_mtab_xl').show();
+    ev.stopPropagation();
+  })
+  $('.news_mtab_xl').on('click','li',function(ev){
+    $(this).addClass('cur').siblings().removeClass('cur');
+    $('.sele').find('span').html($(this).html());
+    $('.sele').find('.news_mtab_xl').hide();
+    ev.stopPropagation();
+  })
+  $('html,body').on('click',function(){
+    $('.sele').find('.news_mtab_xl').hide();
+  })
+
+  </script>
+
+  <script nomodule="">!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule="" crossorigin="" id="vite-legacy-polyfill" src="/assets/polyfills-legacy-CO3rFlgb.js"></script>
+  <script nomodule="" crossorigin="" id="vite-legacy-entry" data-src="/assets/news-list.html-legacy-D9hWjnhr.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body></html>

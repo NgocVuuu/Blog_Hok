@@ -33,6 +33,10 @@ export const AuthProvider = ({ children }) => {
     openLogin();
   }, [openLogin]);
 
+  const handleSessionExpired = useCallback(() => {
+    openLogin();
+  }, [openLogin]);
+
   // Decode JWT (no verification, just base64 decode) to read exp
   const decodeJwt = (jwt) => {
     try {
@@ -51,9 +55,9 @@ export const AuthProvider = ({ children }) => {
     const data = decodeJwt(token);
     if (!data || (data.exp && Date.now() >= data.exp * 1000)) {
       // Expired or invalid
-      logout();
+      handleSessionExpired();
     }
-  }, [token, logout]);
+  }, [token, handleSessionExpired]);
 
   const isAuthenticated = useMemo(() => !!token, [token]);
 
@@ -72,14 +76,14 @@ export const AuthProvider = ({ children }) => {
     }
     if (response.status === 401) {
       // Trigger re-login UI
-      logout();
+      handleSessionExpired();
     }
     return response;
-  }, [logout]);
+  }, [handleSessionExpired]);
 
   const handleUnauthorized = useCallback(() => {
-    logout();
-  }, [logout]);
+    handleSessionExpired();
+  }, [handleSessionExpired]);
 
   return (
     <AuthContext.Provider value={{

@@ -424,6 +424,12 @@ export default function NewsDetailClient({
               ) : <Box flex={1} />}
             </Box>
 
+            {/* Comments (Mobile & Desktop - Removed from Sidebar, added here) */}
+            <Divider sx={{ my: 4 }} />
+            <Box id="comments-section">
+               <CommentSection targetType="News" targetId={post.slug || post._id} />
+            </Box>
+
             {/* Mobile Sidebar Content (Mobile Only) */}
             <Box sx={{ display: { xs: 'block', md: 'none' }, mt: 4 }}>
               {/* 1. Related Posts (Same Category) */}
@@ -511,6 +517,8 @@ export default function NewsDetailClient({
                   </Box>
                 );
               })}
+              
+              {/* Comments (Mobile) removed - now in main content */}
             </Box>
           </Box>
         </Grid>
@@ -603,9 +611,7 @@ export default function NewsDetailClient({
                 </Box>
               );
             })}
-            {/* Comments */}
-            <Divider sx={{ my: 4 }} />
-            <CommentSection targetType="News" targetId={post.slug || post._id} />
+
           </Box>
         </Grid>
       </Grid>

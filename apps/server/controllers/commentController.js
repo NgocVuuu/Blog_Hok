@@ -102,3 +102,37 @@ exports.toggleLike = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server Error' });
     }
 };
+
+// Get All Comments (Admin)
+exports.getAllComments = async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+             return res.status(403).json({ success: false, message: 'Not authorized' });
+        }
+
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = parseInt(req.query.limit, 10) || 50;
+        const startIndex = (page - 1) * limit;
+
+        const total = await Comment.countDocuments();
+        
+        const comments = await Comment.find()
+            .populate('user', 'name avatar email')
+            .sort({ createdAt: -1 })
+            .skip(startIndex)
+            .limit(limit);
+
+        res.json({
+            success: true,
+            data: comments,
+            pagination: {
+                total,
+                page,
+                pages: Math.ceil(total / limit)
+            }
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Server Error' });
+    }
+};

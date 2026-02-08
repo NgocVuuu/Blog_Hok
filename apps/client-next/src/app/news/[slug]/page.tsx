@@ -122,8 +122,8 @@ export default async function PostDetail({ params }: Props) {
     const data = await res.json();
     post = data.success ? data.data : data;
 
-    // Fetch all posts for related content with caching
-    const allRes = await fetch(`${API_URL}/api/news`, {
+    // Fetch all posts for related content with caching (increased limit to fill sidebars)
+    const allRes = await fetch(`${API_URL}/api/news?limit=100`, {
       next: { revalidate: 600 } // Cache 10 min
     });
     if (allRes.ok) {
@@ -138,7 +138,7 @@ export default async function PostDetail({ params }: Props) {
         categoryLists[cat] = allPosts
           .filter((p: any) => p.category === cat && p._id !== post._id)
           .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-          .slice(0, 8);
+          .slice(0, 20);
       });
 
       // Same category posts (Related)
