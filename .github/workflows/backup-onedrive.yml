@@ -33,32 +33,18 @@ jobs:
           # Dump specific database from URI connection string
           mongodump --uri="$MONGODB_URI" --archive="$FILENAME" --gzip
 
-      # 3. Setup Rclone (Manual Install - Python Config)
+      # 3. Setup Rclone
       - name: Setup Rclone
         env:
-          RCLONE_TOKEN_JSON: ${{ secrets.RCLONE_CONFIG }}
+          RCLONE_CONFIG_CONTENT: ${{ secrets.RCLONE_CONFIG }}
         run: |
           # Install Rclone
           sudo -v ; curl https://rclone.org/install.sh | sudo bash
           
-          # Create Config using Python to ensure valid INI format and avoid interactive prompts
+          # Create Config from Secret
           mkdir -p ~/.config/rclone
-          python3 -c '
-          import os, configparser
-
-          token_json = os.environ["RCLONE_TOKEN_JSON"]
-          config = configparser.ConfigParser()
-          config["onedrive"] = {
-              "type": "onedrive",
-              "drive_type": "business",
-              "token": token_json
-          }
+          echo "$RCLONE_CONFIG_CONTENT" > ~/.config/rclone/rclone.conf
           
-          with open(os.path.expanduser("~/.config/rclone/rclone.conf"), "w") as configfile:
-              config.write(configfile)
-          '
-          
-          # Verify config (masking token for security)
           echo "Rclone config created successfully."
 
       # 4. Upload to OneDrive
