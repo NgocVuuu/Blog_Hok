@@ -1,0 +1,49 @@
+name: Weekly OneDrive Backup
+
+on:
+  schedule:
+    # 5:00 AM VN Time (Friday) = 22:00 UTC (Thursday)
+    - cron: '0 22 * * 4'
+  workflow_dispatch:
+
+jobs:
+  backup-to-onedrive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 1. Install MongoDB Tools to get 'mongodump'
+      - name: Install MongoDB Tools
+        run: |
+          wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+          echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+          sudo apt-get update
+          sudo apt-get install -y mongodb-org-tools
+
+      # 2. Create Backup File (Compressed)
+      - name: Create Backup
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: |
+          TIMESTAMP=$(date +'%Y-%m-%d_%H-%M')
+          FILENAME="hok-backup-$TIMESTAMP.archive.gz"
+          echo "FILENAME=$FILENAME" >> $GITHUB_ENV
+          
+          # Dump specific database from URI connection string
+          mongodump --uri="$MONGODB_URI" --archive="$FILENAME" --gzip
+
+      # 3. Setup Rclone (Tool to sync with OneDrive)
+      - name: Setup Rclone
+        uses: animin/setup-rclone@v1
+        with:
+          rclone_config: ${{ secrets.RCLONE_CONFIG }}
+
+      # 4. Upload to OneDrive
+      - name: Upload to OneDrive
+        run: |
+          # Copy the backup file to your OneDrive folder
+          # Format: rclone copy <source> <remote_name>:<remote_path>
+          rclone copy "$FILENAME" "onedrive:/BlogHok/Backups/"
+          
+          echo "✅ Backup uploaded to OneDrive: /BlogHok/Backups/$FILENAME"
