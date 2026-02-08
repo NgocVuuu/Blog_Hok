@@ -33,11 +33,15 @@ jobs:
           # Dump specific database from URI connection string
           mongodump --uri="$MONGODB_URI" --archive="$FILENAME" --gzip
 
-      # 3. Setup Rclone (Tool to sync with OneDrive)
+      # 3. Setup Rclone (Manual Install)
       - name: Setup Rclone
-        uses: animin/setup-rclone@v1
-        with:
-          rclone_config: ${{ secrets.RCLONE_CONFIG }}
+        run: |
+          # Install Rclone
+          sudo -v ; curl https://rclone.org/install.sh | sudo bash
+          
+          # Configure Rclone
+          mkdir -p ~/.config/rclone
+          echo "${{ secrets.RCLONE_CONFIG }}" > ~/.config/rclone/rclone.conf
 
       # 4. Upload to OneDrive
       - name: Upload to OneDrive
