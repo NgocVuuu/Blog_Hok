@@ -39,9 +39,11 @@ jobs:
           # Install Rclone
           sudo -v ; curl https://rclone.org/install.sh | sudo bash
           
-          # Configure Rclone
-          mkdir -p ~/.config/rclone
-          echo "${{ secrets.RCLONE_CONFIG }}" > ~/.config/rclone/rclone.conf
+          # Create Config safely using 'config create' command
+          # This avoids JSON parsing errors from direct file writing
+          rclone config create onedrive onedrive \
+            token '${{ secrets.RCLONE_CONFIG }}' \
+            drive_type business
 
       # 4. Upload to OneDrive
       - name: Upload to OneDrive
