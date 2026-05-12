@@ -199,7 +199,7 @@ The most popular picks in the current meta:
             title: `Weekly Meta Report [${dateStr}]: The Complete Breakdown`,
             content: content,
             summary: `Comprehensive analysis of Week ${weekNumber} meta: Top Win Rate heroes by lane, Most Banned threats, and Rising Stars.`,
-            status: 'draft',
+            status: 'published',
             category: 'updates',
             image: 'https://res.cloudinary.com/dt0t1ayoq/image/upload/v1769958473/BlogHok/tkldlpcwja6khzkfi86r.jpg',
             keywords: 'Honor of Kings Meta, Tier List, Win Rate, Ranked Guide'

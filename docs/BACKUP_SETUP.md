@@ -69,3 +69,36 @@ drive_type = business
 6. Nhấn **Add secret**.
 
 ✅ **Hoàn tất!** Hệ thống sẽ tự động backup vào 5:00 sáng Thứ 6 hàng tuần.
+
+---
+
+# ♻️ Hướng dẫn Khôi phục Dữ liệu (Restore)
+
+Khi cần sử dụng lại dữ liệu đã backup (ví dụ: phục hồi sau lỗi, chuyển server...), hãy làm theo các bước sau:
+
+## Bước 1: Tải file backup từ OneDrive
+1. Truy cập [OneDrive của bạn](https://onedrive.live.com/).
+2. Vào thư mục: `BlogHok` > `Backups`.
+3. Tìm file backup muốn khôi phục (ví dụ: `hok-backup-YYYY-MM-DD.archive.gz`) và **Tải xuống** máy tính.
+
+## Bước 2:  Khôi phục Database
+Bạn sử dụng công cụ `mongorestore` để đẩy dữ liệu từ file backup ngược lên MongoDB Atlas (hoặc MongoDB local).
+
+Cú pháp lệnh:
+```powershell
+mongorestore --uri="<CHUỖI_MONGODB_URI>" --archive="<TÊN_FILE_VỪA_TẢI>" --gzip --drop
+```
+
+**Ví dụ cụ thể:**
+Giả sử file tải về tên là `backup.gz` và URI của bạn là `mongodb+srv://user:pass@cluster0...`
+
+```powershell
+mongorestore --uri="mongodb+srv://admin:123456@cluster0.mongodb.net/my_db" --archive="backup.gz" --gzip --drop
+```
+
+### Giải thích các tham số:
+- `--gzip`: Bắt buộc, vì file backup đã được nén.
+- `--drop`: Tuỳ chọn. Nếu dùng, nó sẽ **XÓA SẠCH** dữ liệu cũ trong database trước khi khôi phục. (Khuyên dùng để tránh lỗi trùng lặp key, nhưng hãy cẩn thận).
+- `--nsInclude`: Nếu bạn chỉ muốn khôi phục một database cụ thể nào đó (ví dụ chỉ khôi phục db `test`).
+  - Ví dụ: `--nsInclude="test.*"`
+
